@@ -103,6 +103,6 @@ get_add_dep_cmd() {
 get_dep_cmd() {
 	local REPO="$1"
 	local DIR="$2"
-	local CMD="[[ -f $DIR/.git ]] || git clone --recurse-submodules $REPO $DIR"
+	local CMD="[[ -d $DIR/.git ]] || git clone --recurse-submodules $REPO $DIR"
 	printf "%s\n" "$CMD"
 }
