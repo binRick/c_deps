@@ -18,7 +18,7 @@
 #include "submodules/greatest/greatest.h"
 #include "submodules/libmutotp/base32codec.h"
 #include "submodules/libmutotp/base32codec.h"
-#include "submodules/libmutotp/qrcode/qrcode.h"
+//#include "submodules/libmutotp/qrcode/qrcode.h"
 #include "submodules/libmutotp/sha1.h"
 #include "submodules/libmutotp/totp.h"
 #include "submodules/libspinner/spinner.h"

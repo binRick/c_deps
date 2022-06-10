@@ -310,3 +310,6 @@
 [submodule "submodules/str-ends-with.c"]
 	path = submodules/str-ends-with.c
 	url = https://github.com/stephenmathieson/str-ends-with.c
+[submodule "submodules/libutotp"]
+	path = submodules/libutotp
+	url = https://github.com/RunnerScrab/libmutotp
