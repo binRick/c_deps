@@ -1,3 +1,4 @@
+####################################
 subdir('deps/asprintf')
 subdir('deps/debug_print_h')
 subdir('deps/assertf')
@@ -38,7 +39,6 @@ subdir('deps/incbin')
 subdir('deps/libyaml')
 subdir('deps/dbg')
 subdir('deps/generic_print')
-subdir('deps/cflag')
 subdir('deps/occurrences')
 subdir('deps/libspinner')
 subdir('deps/ctable')

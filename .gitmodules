@@ -22,9 +22,6 @@
 [submodule "submodules/bestline"]
 	path = submodules/bestline
 	url = https://github.com/jart/bestline
-[submodule "submodules/boydemdb"]
-	path = submodules/boydemdb
-	url = https://github.com/dimkr/boydemdb
 [submodule "submodules/bytes"]
 	path = submodules/bytes
 	url = https://github.com/clibs/bytes

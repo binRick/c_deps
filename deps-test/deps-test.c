@@ -3,16 +3,19 @@
 #define SLEEP_US    100000
 
 
-#define feed(x)          { do{                                                                                        \
-                             struct color_char ch = cansid_process(&state, x);                                        \
-                             DEBUG_PRINT((int)ch.ascii, .colorscheme = FORE_CYAN BACK_BLACK, .filestream = stdout);   \
-                             DEBUG_PRINT((int)ch.style, .colorscheme = FORE_YELLOW BACK_BLACK, .filestream = stdout); \
+#define feed(x)          { do{                                                                                                   \
+                             struct color_char ch = cansid_process(&state, x);                                                   \
+                             if (false) DEBUG_PRINT((int)ch.ascii, .colorscheme = FORE_CYAN BACK_BLACK, .filestream = stdout);   \
+                             if (true) DEBUG_PRINT((int)ch.style, .colorscheme  = FORE_YELLOW BACK_BLACK, .filestream = stdout); \
+                             DEBUG_PRINT((char)ch.ascii, .colorscheme           = FORE_CYAN BACK_BLACK, .filestream = stdout);   \
                            }while (0); }
 
-#define DEBUG_STATE()    { do {                                                                                                \
-                             DEBUG_PRINT((int)state.style, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
-                             DEBUG_PRINT((int)state.state, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
-                             DEBUG_PRINT((int)state.next_style, .colorscheme = FORE_MAGENTA BACK_BLACK, .filestream = stdout); \
+#define DEBUG_STATE()    { do {                                                                                                  \
+                             if (false) {                                                                                        \
+                               DEBUG_PRINT((int)state.style, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
+                               DEBUG_PRINT((int)state.state, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
+                               DEBUG_PRINT((int)state.next_style, .colorscheme = FORE_MAGENTA BACK_BLACK, .filestream = stdout); \
+                             }                                                                                                   \
                            }while (0); }
 
 
@@ -59,21 +62,22 @@ void do_test_cansid(void){
   struct cansid_state state;
 
   state = cansid_init();
-  DEBUG_STATE();
   feed('\x1B');
-  feed('[');
-  feed('3');
-  feed('1');
-  feed(';');
-  feed('4');
-  feed('1');
-  feed('m');
+  char *as = malloc(1024);
+
   DEBUG_STATE();
-  feed('\x1B');
-  feed('[');
-  feed('0');
-  feed('m');
-  DEBUG_STATE();
+  as = "OK1";
+  for (int i = 0; i < strlen(as); i++) {
+    feed(as[i]);
+  }
+  as = "\x1b[31m\x1b[40mRED_BLACK\x1b[0m";
+  for (int i = 0; i < strlen(as); i++) {
+    feed(as[i]);
+  }
+  as = "\x1b[32mRED\x1b[0mRR";
+  for (int i = 0; i < strlen(as); i++) {
+    feed(as[i]);
+  }
 }
 
 
