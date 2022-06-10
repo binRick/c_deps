@@ -1,11 +1,14 @@
-b64_lib = library('b64', 
-'../../../submodules/b64.c/decode.c',
-'../../../submodules/b64.c/encode.c',
-'../../../submodules/b64.c/buffer.c',
-install: false, dependencies: [], 
+b64_srcs = [
+  pwd + '/submodules/b64.c/decode.c',
+  pwd + '/submodules/b64.c/encode.c',
+  pwd + '/submodules/b64.c/buffer.c',
+
+]
+b64_lib = static_library('b64', b64_srcs,
+  install: false, dependencies: [
+  ], 
   include_directories: [
-    '../../../submodules/b64.c',
+    inc,
   ]
 )
-b64_dep = declare_dependency(include_directories: ['../../../submodules/b64.c'], link_with: b64_lib)
-#deps += b64_dep
+b64_dep = declare_dependency(include_directories: inc, link_with: b64_lib)
