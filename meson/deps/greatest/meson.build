@@ -1,7 +1,7 @@
 greatest_lib = library('greatest', 
   install: false, dependencies: [], 
   include_directories: [
-    '../../../submodules/greatest',
+    inc,
   ]
 )
-greatest_dep = declare_dependency(include_directories: ['../../../submodules/greatest'], link_with: greatest_lib)
+greatest_dep = declare_dependency(include_directories: [inc], link_with: greatest_lib)

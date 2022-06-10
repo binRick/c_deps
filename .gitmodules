@@ -46,9 +46,6 @@
 [submodule "submodules/c_kat"]
 	path = submodules/c_kat
 	url = https://github.com/binRick/c_kat
-[submodule "submodules/c_palettes"]
-	path = submodules/c_palettes
-	url = https://github.com/binRick/c_palettes
 [submodule "submodules/c_printf"]
 	path = submodules/c_printf
 	url = git@github.com:binRick/c_printf.git
@@ -123,7 +120,7 @@
 	url = https://github.com/sagiegurari/c_fsio
 [submodule "submodules/generic-print"]
 	path = submodules/generic-print
-	url = https://github.com/exebook/generic-print
+	url = https://github.com/exebook/generic-print.git
 [submodule "submodules/greatest"]
 	path = submodules/greatest
 	url = https://github.com/silentbicycle/greatest
