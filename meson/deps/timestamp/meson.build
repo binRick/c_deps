@@ -1,9 +1,7 @@
-timestamp_lib = library('timestamp', 
-  '../../../submodules/timestamp/timestamp.c',
+timestamp_lib = static_library('timestamp', 
+  pwd + '/submodules/timestamp/timestamp.c',
     install: false,
   dependencies: [],
-  include_directories: [
-  '../../../submodules/timestamp',
-  ]
+  include_directories: [inc],
 )
-timestamp_dep = declare_dependency(include_directories: [], link_with: timestamp_lib)
+timestamp_dep = declare_dependency(include_directories: [inc], link_with: timestamp_lib)

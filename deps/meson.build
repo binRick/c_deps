@@ -23,6 +23,7 @@ deps_deps = [
   #  cflag_dep,
   chan_dep,
   cstructs_json_dep,
+  debug_print_h_dep,
   dbg_dep,
   debug_memory_dep,
   djbhash_dep,

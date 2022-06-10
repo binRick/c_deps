@@ -1,4 +1,4 @@
-strdup_lib = library('strdup', 
+strdup_lib = static_library('strdup', 
 pwd + '/submodules/strdup/strdup.c',
 install: false, dependencies: [
   ], 

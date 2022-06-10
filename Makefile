@@ -19,7 +19,7 @@ do-setup:
 	@[[ -d submodules ]] || mkdir submodules
 
 
-all: tidy
+all: do-setup do-build do-test
 	@echo ALL
 
 git-add:
@@ -44,7 +44,7 @@ fix-dbg:
 	@$(SED) 's|, % d);|, %d);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % zu);|, %zu);|g' -i $(TIDIED_FILES)
 
-do-build: do-meson do-ninja
+do-build: do-meson do-ninja do-ninja-test
 
 do-meson:
 	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; }
@@ -55,8 +55,11 @@ do-ninja:
 do-ninja-test:
 	@eval cd . && { ninja test -C build -v; }
 
-do-test: do-ninja-test
+do-deps-test:
+	@./build/deps-test/deps-test -v
 
+do-test: do-ninja-test do-deps-test
+test: do-test
 build: do-meson do-build
 
 do-sync:
@@ -75,3 +78,20 @@ tidy: \
 	do-build \
 	do-test \
 	git-add
+
+dev: tidy do-nodemon
+
+do-nodemon:
+	@$(PASSH) -L .nodemon.log $(NODEMON) \
+		-I \
+		--delay .1 \
+		-w '*/meson.build' -w 'meson/meson.build' -w 'meson/deps/*/meson.build' -w 'meson.build' \
+		-w 'deps*/*.c' -w 'deps*/*.h' \
+		-w Makefile \
+		-i 'build/*' -i '*/embeds/*' -i 'subprojects/*/' \
+			-e Makefile,tpl,build,sh,c,h,Makefile \
+			-x env -- \
+				bash -c \
+					'make||true'
+
+

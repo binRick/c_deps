@@ -2,3 +2,5 @@ submodules subprojects
 submodules/
 subprojects/*/
 .attic
+.cache
+.nodemon.log

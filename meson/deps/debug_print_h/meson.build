@@ -1,5 +1,5 @@
-debug_print_h_lib = library('debug_print_h', 
-  pwd+'/submodules/debug_print_h/debug_print.h',
+
+debug_print_h_lib = static_library('debug_print_h', pwd + '/submodules/debug_print_h/src/debug_print.c',
   install: false, dependencies: [
    asprintf_dep,
   ], 
@@ -7,6 +7,10 @@ debug_print_h_lib = library('debug_print_h',
     inc,
   ]
 )
-debug_print_h_dep = declare_dependency(include_directories: [
-  inc,
-  ], link_with: debug_print_h_lib)
+
+debug_print_h_dep = declare_dependency(
+  include_directories: [
+    inc,
+  ], 
+  link_with: debug_print_h_lib,
+)
