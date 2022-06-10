@@ -32,13 +32,12 @@ add_project_arguments('-Wno-gnu-alignof-expression', language : 'c')
 add_project_arguments('-Wno-varargs', language : 'c')
 add_project_arguments('-Wno-return-type', language : 'c')
 #############################################################################
-osx_ldflags += ['-Wl,-framework,CoreFoundation']
-osx_ldflags += '-Wl,-framework,Carbon'
-osx_ldflags += ['-Wl,-framework,Foundation', '-Wl,-framework,AppKit']
-
+#osx_ldflags += ['-Wl,-framework,CoreFoundation']
+#osx_ldflags += '-Wl,-framework,Carbon'
+#osx_ldflags += ['-Wl,-framework,Foundation', '-Wl,-framework,AppKit']
+#add_project_link_arguments(osx_ldflags, language : ['objc', 'c'])
 pwd_bin = find_program('pwd', required : true)
 pwd = run_command(pwd_bin, check: true).stdout().strip()
-add_project_link_arguments(osx_ldflags, language : ['objc', 'c'])
 #############################################################################
 inc = [
   include_directories('submodules'),

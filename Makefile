@@ -59,7 +59,7 @@ do-nodemon:
 		-w Makefile \
 		-i 'build/*' -i '*/embeds/*' -i 'subprojects/*/' \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
-			-x make
+			-x sh -- -c 'make||true'
 
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
 do-build: do-meson do-ninja do-ninja-test
