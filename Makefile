@@ -29,6 +29,8 @@ uncrustify:
 	@$(UNCRUSTIFY) -c etc/uncrustify.cfg --replace $(TIDIED_FILES)
 uncrustify-clean:
 	@find  . -type f -name "*unc-back*"|xargs -I % unlink %
+clean:
+	@rm -rf build/
 fix-dbg:
 	@$(SED) 's|, % s);|, %s);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % lu);|, %lu);|g' -i $(TIDIED_FILES)
@@ -39,9 +41,9 @@ do-meson:
 do-ninja:
 	@eval cd . && { ninja -C build; }
 do-ninja-test:
-	@eval cd . && { ninja test -C build -v; }
+	@eval cd . && { passh ninja test -C build -v; }
 do-deps-test:
-	@./build/deps-test/deps-test -v
+	@passh ./build/deps-test/deps-test -v
 do-sync:
 	rsync -arv ~/repos/meson_deps \
 		~/repos/c_ansi/submodules/. \
@@ -50,16 +52,14 @@ do-ansi-make:
 	@cd ~/repos/c_ansi && make
 do-nodemon:
 	@$(PASSH) -L .nodemon.log $(NODEMON) \
-		-I \
-		--delay .1 \
+	-I \
+		--delay .3 \
 		-w '*/meson.build' -w 'meson/meson.build' -w 'meson/deps/*/meson.build' -w 'meson.build' \
 		-w 'deps*/*.c' -w 'deps*/*.h' \
 		-w Makefile \
 		-i 'build/*' -i '*/embeds/*' -i 'subprojects/*/' \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
-			-x env -- \
-				bash -c \
-					'make||true'
+			-x make
 
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
 do-build: do-meson do-ninja do-ninja-test

@@ -50,29 +50,14 @@ inc = [
   include_directories('submodules/debug_print_h/include'),
   include_directories('submodules/progressbar/include/progressbar'),
   include_directories('submodules/fs.c'),
+  include_directories('submodules/slug.c/deps'),
+  include_directories('submodules/which/src'),
+  include_directories('submodules/str-ends-with'),
   include_directories('.'),
 ]  
-#//////////////////////////////////////////////////////////////////////
+###########################################
 subdir('meson')
-#//////////////////////////////////////////////////////////////////////
-#subdir('meson/deps/parson')
-#subdir('meson/deps/cargs')
-#subdir('meson/deps/greatest')
-#subdir('meson/deps/c_stringfn')
-subdir('meson/deps/cflag')
-subdir('meson/deps/chan')
-subdir('meson/deps/cstructs_json')
-subdir('meson/deps/dbg')
-subdir('meson/deps/debug-memory')
-subdir('meson/deps/generic_print')
-subdir('meson/deps/incbin')
-subdir('meson/deps/libyaml')
-subdir('meson/deps/occurrences')
-subdir('meson/deps/progress')
-subdir('meson/deps/rgba')
-subdir('meson/deps/smaz')
-subdir('meson/deps/sqlite3')
-#//////////////////////////////////////////////////////////////////////
+###########################################
 subdir('deps')
 subdir('deps-test')
-#//////////////////////////////////////////////////////////////////////
+###########################################

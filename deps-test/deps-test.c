@@ -1,13 +1,88 @@
 #include "deps-test.h"
+#include <assert.h>
 #define SLEEP_US    100000
 
 
+#define feed(x)          { do{                                                                                        \
+                             struct color_char ch = cansid_process(&state, x);                                        \
+                             DEBUG_PRINT((int)ch.ascii, .colorscheme = FORE_CYAN BACK_BLACK, .filestream = stdout);   \
+                             DEBUG_PRINT((int)ch.style, .colorscheme = FORE_YELLOW BACK_BLACK, .filestream = stdout); \
+                           }while (0); }
+
+#define DEBUG_STATE()    { do {                                                                                                \
+                             DEBUG_PRINT((int)state.style, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
+                             DEBUG_PRINT((int)state.state, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
+                             DEBUG_PRINT((int)state.next_style, .colorscheme = FORE_MAGENTA BACK_BLACK, .filestream = stdout); \
+                           }while (0); }
+
+
+void do_test_libspinner(){
+  spinner_t *s = spinner_new(32);
+
+  s->delay     = 100000;
+  s->prefix    = "Running ";
+  s->suffix    = " I'm a suffix";
+  s->final_msg = "Complete!\n";
+  spinner_start(s);
+  sleep(2);
+  spinner_stop(s);
+  spinner_free(s);
+}
+
+
+void do_test_which(){
+  char *name = "ls";
+  char *path = (char *)which(name);
+
+  printf("\n<WHICH>%s: %s\n\n", name, path ? path : "not found");
+
+  name = "ls1";
+  path = (char *)which(name);
+  printf("\n<WHICH>%s: %s\n\n", name, path ? path : "not found");
+
+  free(path);
+}
+
+
+void do_test_slug(){
+  char *s0 = "foo b ar@-";
+  char s01[32];
+
+  sprintf(s01, "%s", s0);
+  char *s1 = slug(s01);
+
+  fprintf(stdout, "\nSLUG: '%s'->'%s'\n", s0, s01);
+}
+
+
+void do_test_cansid(void){
+  struct cansid_state state;
+
+  state = cansid_init();
+  DEBUG_STATE();
+  feed('\x1B');
+  feed('[');
+  feed('3');
+  feed('1');
+  feed(';');
+  feed('4');
+  feed('1');
+  feed('m');
+  DEBUG_STATE();
+  feed('\x1B');
+  feed('[');
+  feed('0');
+  feed('m');
+  DEBUG_STATE();
+}
+
+
 void do_test_progressbar(void){
-  int         max     = 60;
+  int         max     = 60 / 1;
   progressbar *smooth = progressbar_new("Smooth", max);
 
   for (int i = 0; i < max; i++) {
-    usleep(SLEEP_US);
+    usleep(SLEEP_US / 10);
     progressbar_inc(smooth);
   }
   progressbar_finish(smooth);
@@ -16,14 +91,14 @@ void do_test_progressbar(void){
 
   for (int i = 0; i < 3; i++) {
     progressbar_inc(longlabel);
-    sleep(1);
+    usleep(SLEEP_US / 10);
   }
   progressbar_finish(longlabel);
 
   progressbar *fast = progressbar_new("Fast", 20);
 
   for (int i = 0; i < 20; i++) {
-    usleep(SLEEP_US);
+    usleep(SLEEP_US / 10);
     progressbar_inc(fast);
   }
   progressbar_finish(fast);
@@ -31,7 +106,7 @@ void do_test_progressbar(void){
   progressbar *custom = progressbar_new_with_format("Custom", max, "<.>");
 
   for (int i = 0; i < max; i++) {
-    usleep(SLEEP_US);
+    usleep(SLEEP_US / 10);
     progressbar_inc(custom);
   }
   progressbar_finish(custom);
@@ -42,7 +117,7 @@ void do_test_statusbar(void){
   statusbar *status = statusbar_new("Indeterminate");
 
   for (int i = 0; i < 30; i++) {
-    usleep(SLEEP_US);
+    usleep(SLEEP_US / 10);
     statusbar_inc(status);
   }
   statusbar_finish(status);
@@ -50,7 +125,7 @@ void do_test_statusbar(void){
   statusbar *longStatus = statusbar_new("Status bar with a really long label");
 
   for (int i = 0; i < 10; i++) {
-    usleep(SLEEP_US);
+    usleep(SLEEP_US / 10);
     statusbar_inc(longStatus);
   }
   statusbar_finish(longStatus);
@@ -160,10 +235,33 @@ TEST test_spin(void){
 }
 
 
+TEST test_cansid(void){
+  do_test_cansid();
+}
+
+
 TEST test_timestamp(void){
   int ts = (int)timestamp();
 
   DEBUG_PRINT(ts, .colorscheme = FORE_BLUE BACK_BLACK, .filestream = stdout);
+  PASS();
+}
+
+
+TEST test_libspinner(void){
+  do_test_libspinner();
+  PASS();
+}
+
+
+TEST test_which(void){
+  do_test_which();
+  PASS();
+}
+
+
+TEST test_slug(void){
+  do_test_slug();
   PASS();
 }
 
@@ -183,6 +281,10 @@ SUITE(suite_0) {
   RUN_TEST(test_timestamp);
   RUN_TEST(test_libmutotp_qrcode);
   RUN_TEST(test_libmutotp_totp);
+  RUN_TEST(test_cansid);
+  RUN_TEST(test_slug);
+  RUN_TEST(test_which);
+//  RUN_TEST(test_libspinner);
   RUN_TEST(test_progressbar);
   RUN_TEST(test_statusbar);
   RUN_TEST(test_spin);

@@ -301,3 +301,15 @@
 [submodule "submodules/libmutotp"]
 	path = submodules/libmutotp
 	url = https://github.com/RunnerScrab/libmutotp
+[submodule "submodules/cansid"]
+	path = submodules/cansid
+	url = https://github.com/64/cansid
+[submodule "submodules/which"]
+	path = submodules/which
+	url = https://github.com/clibs/which
+[submodule "submodules/libspinner"]
+	path = submodules/libspinner
+	url = https://github.com/briandowns/libspinner
+[submodule "submodules/str-ends-with.c"]
+	path = submodules/str-ends-with.c
+	url = https://github.com/stephenmathieson/str-ends-with.c

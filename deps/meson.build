@@ -48,6 +48,10 @@ deps_deps = [
   libmutotp_dep,
   progressbar_dep,
   curses_dep,
+  cansid_dep,
+  slug_dep,
+  which_dep,
+  libspinner_dep,
 ]
 
 deps_lib = static_library('deps',
