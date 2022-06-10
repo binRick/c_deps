@@ -1,6 +1,6 @@
 #####################################################################################
 asprintf_name = 'asprintf'
-asprintf_dir = '../../../submodules/asprintf.c'
+asprintf_dir = pwd + '/submodules/asprintf.c'
 asprintf_srcs = [
    asprintf_dir + '/asprintf.c',
 ]
