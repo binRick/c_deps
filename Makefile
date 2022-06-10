@@ -61,6 +61,9 @@ do-nodemon:
 			-e Makefile,tpl,build,sh,c,h,Makefile \
 			-x sh -- -c 'make||true'
 
+git-submodules-pull:
+	@git submodule foreach git pull origin master
+
 git-submodules-update:
 	@git submodule update --init --recursive
 
