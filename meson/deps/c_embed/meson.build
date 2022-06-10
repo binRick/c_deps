@@ -4,12 +4,8 @@ install: false, dependencies: [
   asprintf_dep,
   ], 
   include_directories: [
-    'submodules/c_embed/loader/include',
-    'submodules/c_embed/loader',
-    'submodules/c_embed',
-    'submodules',
+    inc,
   ]
 )
-c_embed_dep = declare_dependency(include_directories: [
-'submodules/c_embed',
-  ], link_with: c_embed_lib)
+c_embed_dep = declare_dependency(include_directories: [inc],
+link_with: c_embed_lib)
