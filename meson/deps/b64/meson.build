@@ -7,8 +7,7 @@ b64_srcs = [
 b64_lib = static_library('b64', b64_srcs,
   install: false, dependencies: [
   ], 
-  include_directories: [
-    inc,
+  include_directories: [ inc,
   ]
 )
-b64_dep = declare_dependency(include_directories: inc, link_with: b64_lib)
+b64_dep = declare_dependency(include_directories: [inc], link_with: b64_lib)
