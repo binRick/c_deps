@@ -1,5 +1,5 @@
 c_timer_lib = library('c_timer', 
-  '../../../submodules/c_timer/src/c_timer.c',
+  pwd + '/submodules/c_timer/src/c_timer.c',
   install: false, 
   dependencies: [], 
   include_directories: [
