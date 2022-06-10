@@ -298,3 +298,6 @@
 [submodule "submodules/wildcardcmp"]
 	path = submodules/wildcardcmp
 	url = https://github.com/clibs/wildcardcmp
+[submodule "submodules/libmutotp"]
+	path = submodules/libmutotp
+	url = https://github.com/RunnerScrab/libmutotp

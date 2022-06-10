@@ -45,6 +45,9 @@ deps_deps = [
   tempdir_dep,
   termpaint_dep,
   timestamp_dep,
+  libmutotp_dep,
+  progressbar_dep,
+  curses_dep,
 ]
 
 deps_lib = static_library('deps',

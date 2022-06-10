@@ -48,6 +48,7 @@ inc = [
   include_directories('submodules/djbhash/src'),
   include_directories('submodules/incbin'),
   include_directories('submodules/debug_print_h/include'),
+  include_directories('submodules/progressbar/include/progressbar'),
   include_directories('submodules/fs.c'),
   include_directories('.'),
 ]  
