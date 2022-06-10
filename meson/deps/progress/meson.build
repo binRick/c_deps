@@ -2,7 +2,7 @@ progress_cargs = [
   '-Wno-macro-redefined',
   ]
 progress_lib = library('process', 
-'../../../submodules/progress.c/progress.c',
+pwd + '/submodules/progress.c/progress.c',
 install: false, dependencies: [
   ], 
   include_directories: [

@@ -1,5 +1,5 @@
 smaz_lib = library('smaz', 
-  '../../../submodules/smaz/smaz.c',
+  pwd + '/submodules/smaz/smaz.c',
   install: false, 
   dependencies: [], 
   include_directories: [
