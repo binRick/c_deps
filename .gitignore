@@ -1,0 +1,4 @@
+submodules subprojects
+submodules/
+subprojects/*/
+.attic
