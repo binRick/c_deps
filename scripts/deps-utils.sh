@@ -1,5 +1,5 @@
 get_meson_deps() {
-	find meson/deps/*/meson.build -type f | sort -u | xargs -I % dirname %
+	find meson/deps/*/meson.build -type f | sort -u | xargs -I % dirname % | egrep -v 'meson_deps'
 }
 
 get_missing_meson_build_subdir_deps() {
@@ -33,7 +33,7 @@ clone_deps() {
 }
 
 get_deps_array() {
-	cat ../c_*/.gitmodules | grep '=' | cut -d= -f2 | gsed 's/^[[:space:]]//g' | paste -s -d' \n' | sort -u
+	cat ../c_*/.gitmodules | grep '=' | cut -d= -f2 | gsed 's/^[[:space:]]//g' | paste -s -d' \n' | sort -u | grep -v 'meson_deps'
 }
 
 get_add_deps_cmds() {
@@ -97,12 +97,12 @@ get_deps_props() {
 get_add_dep_cmd() {
 	local REPO="$1"
 	local DIR="$2"
-	local CMD="[[ -d $DIR ]] || git submodule add -f $REPO $DIR"
+	local CMD="[[ -d $DIR && -d $DIR/.git ]] || git submodule add -f $REPO $DIR"
 	printf "%s\n" "$CMD"
 }
 get_dep_cmd() {
 	local REPO="$1"
 	local DIR="$2"
-	local CMD="[[ -d $DIR ]] || git clone --recurse-submodules $REPO $DIR"
+	local CMD="[[ -d $DIR && -f $DIR/.git ]] || git clone --recurse-submodules $REPO $DIR"
 	printf "%s\n" "$CMD"
 }
