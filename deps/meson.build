@@ -22,7 +22,6 @@ deps_deps = [
   cargs_dep,
   #  cflag_dep,
   chan_dep,
-  cstringfn_dep,
   cstructs_json_dep,
   dbg_dep,
   debug_memory_dep,

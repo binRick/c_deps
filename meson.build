@@ -35,16 +35,21 @@ add_project_arguments('-Wno-return-type', language : 'c')
 osx_ldflags += ['-Wl,-framework,CoreFoundation']
 osx_ldflags += '-Wl,-framework,Carbon'
 osx_ldflags += ['-Wl,-framework,Foundation', '-Wl,-framework,AppKit']
+
+pwd_bin = find_program('pwd', required : true)
+pwd = run_command(pwd_bin, check: true).stdout().strip()
 add_project_link_arguments(osx_ldflags, language : ['objc', 'c'])
 #############################################################################
-inc = include_directories(
-  './',
-  '../',
-  '../../',
-  '../../../',
-  './submodules/',
-  '../submodules',
-)
+inc = [
+  include_directories('submodules'),
+  include_directories('submodules/c_fsio/include'),
+  include_directories('submodules/c_string_buffer/include'),
+  include_directories('submodules/c_stringfn/include'),
+  include_directories('.'),
+]  
+  #  '../../../submodules',
+  #'../../../submodules/meson_deps',
+  #'../../../submodules/meson_deps/submodules',
 #//////////////////////////////////////////////////////////////////////
 subdir('meson/deps/parson')
 subdir('meson/deps/cargs')
@@ -63,7 +68,6 @@ subdir('meson/deps/c_fsio')
 subdir('meson/deps/c_timer')
 subdir('meson/deps/cflag')
 subdir('meson/deps/chan')
-subdir('meson/deps/cstringfn')
 subdir('meson/deps/cstructs_json')
 subdir('meson/deps/dbg')
 subdir('meson/deps/debug-memory')

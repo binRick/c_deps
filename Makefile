@@ -59,6 +59,16 @@ do-test: do-ninja-test
 
 build: do-meson do-build
 
+do-sync:
+	rsync -arv ~/repos/meson_deps \
+		~/repos/c_ansi/submodules/. \
+		--exclude="*/submodules/*" --exclude="*/.git/*" --exclude '.git/' --exclude 'submodules/'
+
+do-ansi-make:
+	@cd ~/repos/c_ansi && make
+
+ansi: all do-sync do-ansi-make
+
 tidy: \
 	do-setup \
 	fmt-scripts do-uncrustify \

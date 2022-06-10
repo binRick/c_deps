@@ -1,15 +1,16 @@
-ms_lib = library('ms', 
-'../../../submodules/ms/ms.c',
-install: false, dependencies: [
-  asprintf_dep,
+
+ms_inc = [
+    inc,
+]
+ms_lib = static_library('ms', 
+  pwd + '/submodules/ms/ms.c',
+  install: false, 
+  dependencies: [
+    asprintf_dep,
   ], 
-  include_directories: [
-    '../../../submodules/ms',
-    '../../../submodules',
-    '../../../submodules/asprintf',
-  ]
+  include_directories: ms_inc,
 )
-ms_dep = declare_dependency(include_directories: [
-'../../../submodules/ms',
-  ], link_with: ms_lib)
-#deps += b64_dep
+ms_dep = declare_dependency(
+  include_directories: ms_inc,
+  link_with: ms_lib,
+)

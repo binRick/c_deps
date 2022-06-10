@@ -1,14 +1,18 @@
-djbhash_lib = library('djbhash', 
-    '../../../submodules/djbhash/src/djbhash.c', 
-    install: false, dependencies: [], 
-    include_directories: [
-        '../../../submodules/djbhash/src',
-    ]
-)
 
-djbhash_dep = declare_dependency(include_directories: [
-        '../../../submodules/djbhash/src',
-    ], link_with: djbhash_lib
+djbhash_dir =  'submodules/djbhash'
+djbhash_srcs = [
+  pwd + '/' + djbhash_dir + '/src/djbhash.c',
+]
+djbhash_inc = [
+  inc,
+]
+djbhash_lib = static_library('djbhash', djbhash_srcs,
+  install: false, 
+  dependencies: [
+  ], 
+  include_directories: djbhash_inc,
 )
-
-#deps += djbhash_dep
+djbhash_dep = declare_dependency(
+  include_directories: djbhash_inc,
+  link_with: djbhash_lib,
+)
