@@ -46,6 +46,7 @@ inc = [
   include_directories('submodules/c_string_buffer/include'),
   include_directories('submodules/c_stringfn/include'),
   include_directories('submodules/djbhash/src'),
+  include_directories('submodules/fs.c'),
   include_directories('.'),
 ]  
 #//////////////////////////////////////////////////////////////////////
