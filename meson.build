@@ -45,11 +45,9 @@ inc = [
   include_directories('submodules/c_fsio/include'),
   include_directories('submodules/c_string_buffer/include'),
   include_directories('submodules/c_stringfn/include'),
+  include_directories('submodules/djbhash/src'),
   include_directories('.'),
 ]  
-  #  '../../../submodules',
-  #'../../../submodules/meson_deps',
-  #'../../../submodules/meson_deps/submodules',
 #//////////////////////////////////////////////////////////////////////
 subdir('meson/deps/parson')
 subdir('meson/deps/cargs')
@@ -58,6 +56,7 @@ subdir('meson/deps/c_stringfn')
 subdir('meson/deps/ansicodes')
 subdir('meson/deps/bytes')
 subdir('meson/deps/c_string_buffer')
+subdir('meson/deps/djbhash')
 subdir('meson/deps/fs')
 subdir('meson/deps/asprintf')
 subdir('meson/deps/assertf')
@@ -72,7 +71,7 @@ subdir('meson/deps/cstructs_json')
 subdir('meson/deps/dbg')
 subdir('meson/deps/debug-memory')
 #subdir('meson/deps/debug_print_h')
-subdir('meson/deps/djbhash')
+#subdir('meson/deps/djbhash')
 #subdir('meson/deps/embedded_palettes')
 subdir('meson/deps/generic_print')
 subdir('meson/deps/http-get')
