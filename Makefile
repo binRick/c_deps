@@ -61,6 +61,12 @@ do-nodemon:
 			-e Makefile,tpl,build,sh,c,h,Makefile \
 			-x sh -- -c 'make||true'
 
+git-submodules-update:
+	@git submodule update --init --recursive
+
+git-pull:
+	@git pull --recurse-submodules
+
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
 do-build: do-meson do-ninja do-ninja-test
 do-test: do-ninja-test do-deps-test
