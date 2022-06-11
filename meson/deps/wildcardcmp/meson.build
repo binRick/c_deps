@@ -1,5 +1,5 @@
 wildcardcmp_lib = static_library('wildcardcmp',
-  pwd + '/submodules/wildcardcmp/src/wildcardcmp.c',
+  'submodules/wildcardcmp/wildcardcmp.c',
   install: false, 
   dependencies: [
   ], 
