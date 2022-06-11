@@ -322,3 +322,6 @@
 [submodule "submodules/libspng"]
 	path = submodules/libspng
 	url = https://github.com/randy408/libspng
+[submodule "submodules/submodules/generic-print"]
+	path = submodules/submodules/generic-print
+	url = https://github.com/exebook/generic-print.git

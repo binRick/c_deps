@@ -38,7 +38,7 @@ add_project_arguments('-Wno-return-type', language : 'c')
 #add_project_link_arguments(osx_ldflags, language : ['objc', 'c'])
 pwd_bin = find_program('pwd', required : true)
 pwd = run_command(pwd_bin, check: true).stdout().strip()
-meson_deps_dir = pwd + '/submodules/meson_deps'
+meson_deps_dir = pwd
 #############################################################################
 inc = [
   include_directories('submodules/libspng/spng'),
