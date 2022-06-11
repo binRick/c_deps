@@ -1,4 +1,5 @@
 ####################################
+subdir('deps/libspng')
 subdir('deps/asprintf')
 subdir('deps/debug_print_h')
 subdir('deps/assertf')

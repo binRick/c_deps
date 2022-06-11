@@ -1,5 +1,5 @@
 libspng_lib = static_library('libspng',
-  pwd + '/submodules/libspng/spng/spng.c',
+  meson_deps_dir + '/submodules/libspng/spng/spng.c',
   install: false, 
   dependencies: [
   ], 

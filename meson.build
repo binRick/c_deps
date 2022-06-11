@@ -41,6 +41,7 @@ pwd = run_command(pwd_bin, check: true).stdout().strip()
 meson_deps_dir = pwd + '/submodules/meson_deps'
 #############################################################################
 inc = [
+  include_directories('submodules/libspng/spng'),
   include_directories('submodules/debug_print_h'),
   include_directories('submodules/debug_print_h/src'),
   include_directories('submodules'),
