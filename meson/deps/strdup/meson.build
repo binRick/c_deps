@@ -1,5 +1,5 @@
 strdup_lib = static_library('strdup', 
-pwd + '/submodules/strdup/strdup.c',
+meson_deps_dir + '/submodules/strdup/strdup.c',
 install: false, dependencies: [
   ], 
   include_directories: inc,
