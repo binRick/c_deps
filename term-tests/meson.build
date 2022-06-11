@@ -4,15 +4,14 @@ term_tests_srcs = [
 
 term_tests_include_dirs = [
     inc,
-  '../submodules/termpaint',
-  '../',
-  '../submodules',
 ]
 
 term_tests_deps = [
-  c_stringfn_dep,  
-  c_stringfn_dep,  
   termpaint_dep,  
+  c_stringfn_dep,  
+  c_string_buffer_dep,  
+  ansicodes_dep,  
+  timestamp_dep,  
 ]
 
 term_tests_lib = library('term-tests',

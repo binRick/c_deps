@@ -17,6 +17,7 @@ TESTS_SUITES_LOG_FILE=$(shell pwd)/.tests-suites.log
 TESTS_TESTS_LOG_FILE=$(shell pwd)/.tests-tests.log
 ##############################################################
 TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h
+TRIGGER_FILE=.trigger.c
 ##############################################################
 do-setup:
 	@[[ -d submodules ]] || mkdir submodules
@@ -29,7 +30,7 @@ git-add:
 fmt-scripts:
 	@shfmt -w scripts/*.sh
 uncrustify:
-	@$(UNCRUSTIFY) -c etc/uncrustify.cfg --replace $(TIDIED_FILES)
+	@$(UNCRUSTIFY) -c etc/uncrustify.cfg --replace $(TIDIED_FILES)||true
 uncrustify-clean:
 	@find  . -type f -name "*unc-back*"|xargs -I % unlink %
 clean:
@@ -40,7 +41,7 @@ fix-dbg:
 	@$(SED) 's|, % d);|, %d);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % zu);|, %zu);|g' -i $(TIDIED_FILES)
 do-meson:
-	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; }
+	@eval cd . && {  meson build 2>/dev/null || { meson build --reconfigure 2>/dev/null || { meson build --wipe; } && meson build; }; }
 do-ninja:
 	@eval cd . && { ninja -C build; }
 do-ninja-test:
@@ -53,14 +54,17 @@ do-sync:
 		--exclude="*/submodules/*" --exclude="*/.git/*" --exclude '.git/' --exclude 'submodules/'
 do-ansi-make:
 	@cd ~/repos/c_ansi && make
+unlink-term-tests-test:
+	@unlink build/term-tests-test/term-tests-test||true
 do-nodemon:
 	@$(PASSH) -L .nodemon.log $(NODEMON) \
-	-I \
+	-V \
 		--delay .3 \
-		-w '*/meson.build' -w 'meson/meson.build' -w 'meson/deps/*/meson.build' -w 'meson.build' \
-		-w 'deps*/*.c' -w 'deps*/*.h' \
+		-w 'meson/meson.build' -w 'meson/deps/*/meson.build' -w 'meson.build' \
 		-w Makefile \
-		-i 'build/*' -i '*/embeds/*' -i 'subprojects/*/' \
+		-i '*/embeds/*' -i 'subprojects/*/' -i submodules -i 'build/*' \
+		-w "term-tests" \
+		-w "term-tests-test" \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
 			-x sh -- -c 'make||true'
 
@@ -99,7 +103,6 @@ git-pull:
 
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
 do-build: do-meson do-ninja
-	#do-ninja-test
 do-test: do-ninja-test do-deps-test
 test: do-test
 build: do-meson do-build
@@ -108,7 +111,9 @@ tidy: \
 	do-setup \
 	fmt-scripts do-uncrustify \
 	do-build \
-	test \
 	git-add
-dev: tidy do-nodemon
-all: do-setup do-build tests
+dev: do-nodemon
+all: do-setup do-build trigger
+trigger:
+	@[[ -f $(TRIGGER_FILE) ]] && unlink $(TRIGGER_FILE)
+	@touch $(TRIGGER_FILE)
