@@ -319,3 +319,6 @@
 [submodule "submodules/occurences.c"]
 	path = submodules/occurences.c
 	url = https://github.com/stephenmathieson/occurrences.c
+[submodule "submodules/libspng"]
+	path = submodules/libspng
+	url = https://github.com/randy408/libspng
