@@ -1,5 +1,5 @@
 wildcardcmp_lib = static_library('wildcardcmp',
-  'submodules/wildcardcmp/wildcardcmp.c',
+  meson_deps_dir + '/submodules/wildcardcmp/wildcardcmp.c',
   install: false, 
   dependencies: [
   ], 
