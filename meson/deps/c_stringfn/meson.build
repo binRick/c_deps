@@ -20,4 +20,5 @@ c_stringfn_dep = declare_dependency(
   include_directories: c_stringfn_inc,
   link_with: c_stringfn_lib,
 )
+cstringfn_dep = c_stringfn_dep
 
