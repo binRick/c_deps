@@ -28,7 +28,7 @@ cmd="nodemon --delay .01 -I \
     -w ./build/term-tests-test/term-tests-test \
     -x ./build/term-tests-test/term-tests-test \
 "
-#ansi --yellow --italic --bg-black "$cmd"
+ansi --yellow --italic --bg-black "$cmd"
 
-as_on >/dev/null 2>&1
+as_on >/dev/null 2>&1||true
 eval "$cmd" 2>.err

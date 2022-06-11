@@ -41,11 +41,11 @@ fix-dbg:
 	@$(SED) 's|, % d);|, %d);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % zu);|, %zu);|g' -i $(TIDIED_FILES)
 do-meson:
-	@eval cd . && {  meson build 2>/dev/null || { meson build --reconfigure 2>/dev/null || { meson build --wipe; } && meson build; }; }
+	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; echo MESON OK; }
 do-ninja:
-	@eval cd . && { ninja -C build; }
+	@eval cd . && { ninja -C build; echo NINJA OK; }
 do-ninja-test:
-	@eval cd . && { passh ninja test -C build -v; }
+	@eval cd . && { passh ninja test -C build -v; echo NINJA TEST OK; }
 do-deps-test:
 	@passh ./build/deps-test/deps-test -v
 do-sync:
@@ -66,7 +66,7 @@ do-nodemon:
 		-w "term-tests" \
 		-w "term-tests-test" \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
-			-x sh -- -c 'make||true'
+			-x env -- bash -xc 'make'
 
 tests-log:
 	@rm .test*.log 2>/dev/null||true

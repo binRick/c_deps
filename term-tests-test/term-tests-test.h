@@ -1,7 +1,7 @@
 #pragma once
 #ifndef TERM_TESTS_TEST_H
 #define TERM_TESTS_TEST_H
-#include "submodules/cargs/include/cargs.h"
+#include "cargs/include/cargs.h"
 #include "term-tests/term-tests.h"
 #include <ctype.h>
 #include <stdarg.h>
