@@ -1,5 +1,5 @@
 debug_memory_lib = library('debug-memory', 
-  pwd + '/submodules/debug-memory/debug_memory.c',
+  meson_deps_dir + '/submodules/debug-memory/debug_memory.c',
   install: false, 
   dependencies: [], 
   include_directories: inc,
