@@ -40,13 +40,16 @@ pwd_bin = find_program('pwd', required : true)
 pwd = run_command(pwd_bin, check: true).stdout().strip()
 #############################################################################
 inc = [
+  include_directories('submodules/debug_print_h'),
+  include_directories('submodules/debug_print_h/src'),
   include_directories('submodules'),
   include_directories('submodules/c_fsio/include'),
   include_directories('submodules/c_string_buffer/include'),
   include_directories('submodules/c_stringfn/include'),
   include_directories('submodules/djbhash/src'),
-  include_directories('submodules/incbin'),
+  #  include_directories('submodules/incbin'),
   include_directories('submodules/greatest'),
+  include_directories('submodules/debug_print_h/src'),
   include_directories('submodules/debug_print_h/include'),
   include_directories('submodules/progressbar/include/progressbar'),
   include_directories('submodules/fs.c'),
