@@ -1,7 +1,7 @@
 b64_srcs = [
-  pwd + '/submodules/b64.c/decode.c',
-  pwd + '/submodules/b64.c/encode.c',
-  pwd + '/submodules/b64.c/buffer.c',
+  pwd+'/submodules/meson_deps/submodules/b64.c/decode.c',
+  pwd+'/submodules/meson_deps/submodules/b64.c/encode.c',
+  pwd+'/submodules/meson_deps/submodules/b64.c/buffer.c',
 
 ]
 b64_lib = static_library('b64', b64_srcs,

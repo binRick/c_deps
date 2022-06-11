@@ -1,5 +1,5 @@
 
-debug_print_h_lib = static_library('debug_print_h', pwd + '/submodules/debug_print_h/src/debug_print.c',
+debug_print_h_lib = library('debug_print_h', pwd + '/submodules/meson_deps/submodules/debug_print_h/debug_print.h',
   install: false, dependencies: [
    asprintf_dep,
   ], 

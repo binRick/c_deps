@@ -310,3 +310,12 @@
 [submodule "submodules/libutotp"]
 	path = submodules/libutotp
 	url = https://github.com/RunnerScrab/libmutotp
+[submodule "submodules/c_palettes"]
+	path = submodules/c_palettes
+	url = https://github.com/binRick/c_palettes
+[submodule "submodules/occurences"]
+	path = submodules/occurences
+	url = https://github.com/stephenmathieson/occurrences.c
+[submodule "submodules/occurences.c"]
+	path = submodules/occurences.c
+	url = https://github.com/stephenmathieson/occurrences.c
