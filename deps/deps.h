@@ -6,6 +6,9 @@
 #include <string.h>
 #include <termcap.h>
 //////////////////////////////////////////////////////
+#include "submodules/c_fsio/include/fsio.h"
+#include "submodules/c_string_buffer/include/stringbuffer.h"
+#include "submodules/c_stringfn/include/stringfn.h"
 #include "submodules/cansid/cansid.h"
 #include "submodules/cansid/minunit.h"
 #include "submodules/ctable/src/alloc_wrappers.h"
@@ -18,6 +21,7 @@
 #include "submodules/greatest/greatest.h"
 #include "submodules/libmutotp/base32codec.h"
 #include "submodules/libmutotp/base32codec.h"
+#include "submodules/parson/parson.h"
 //#include "submodules/libmutotp/qrcode/qrcode.h"
 #include "submodules/libmutotp/sha1.h"
 #include "submodules/libmutotp/totp.h"

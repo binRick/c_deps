@@ -198,15 +198,14 @@ TEST test_progressbar(void){
 }
 
 
-TEST test_libmutotp_totp(void){
+TEST test_totp(void){
   demo_totp_calculation();
   PASS();
 }
 
 
-TEST test_libmutotp_qrcode(void){
+TEST test_qrcode(void){
   demo_ansi_qrcode();
-  printf("libmutotp OK!\n");
   PASS();
 }
 
@@ -280,18 +279,108 @@ TEST test_debug_print(void){
   PASS();
 }
 
-SUITE(suite_0) {
-  RUN_TEST(test_debug_print);
+SUITE(test_time) {
   RUN_TEST(test_timestamp);
-  RUN_TEST(test_libmutotp_qrcode);
-  RUN_TEST(test_libmutotp_totp);
-  RUN_TEST(test_cansid);
-  RUN_TEST(test_slug);
-  RUN_TEST(test_which);
-//  RUN_TEST(test_libspinner);
-  RUN_TEST(test_progressbar);
-  RUN_TEST(test_statusbar);
+  PASS();
+}
+SUITE(test_spinner) {
+  RUN_TEST(test_libspinner);
   RUN_TEST(test_spin);
+  PASS();
+}
+SUITE(suite_totp) {
+  RUN_TEST(test_totp);
+  PASS();
+}
+SUITE(suite_qrcode) {
+  RUN_TEST(test_qrcode);
+  PASS();
+}
+SUITE(test_status) {
+  RUN_TEST(test_statusbar);
+  PASS();
+}
+SUITE(test_progress) {
+  RUN_TEST(test_progressbar);
+  PASS();
+}
+
+SUITE(test_path) {
+  RUN_TEST(test_which);
+  PASS();
+}
+SUITE(test_debug) {
+  RUN_TEST(test_debug_print);
+  PASS();
+}
+SUITE(test_parse) {
+  RUN_TEST(test_cansid);
+  PASS();
+}
+SUITE(test_string) {
+  RUN_TEST(test_slug);
+  PASS();
+}
+/////////////////////////////////////////
+char JSON_TESTS_FILE[] = ".tests.json";
+char *JSON_TESTS_CONTENT;
+
+
+TEST process_json_lines(void){
+  struct StringFNStrings LINES = stringfn_split_lines_and_trim(JSON_TESTS_CONTENT);
+
+  free(JSON_TESTS_CONTENT);
+  if (false) {
+    DEBUG_PRINT(LINES.count, .colorscheme = FORE_BLUE BACK_BLACK, .filestream = stdout);
+  }
+  for (int i = 0; i < LINES.count; i++) {
+    if (strlen(LINES.strings[i]) < 2) {
+      continue;
+    }
+    if (false) {
+      DEBUG_PRINT(LINES.strings[i], .colorscheme = FORE_GREEN BACK_BLACK, .filestream = stdout);
+    }
+    JSON_Value  *Line        = json_parse_string(LINES.strings[i]);
+    JSON_Object *LineObject  = json_object(Line);
+    char        *suite_name  = json_object_get_string(LineObject, "suite");
+    char        *binary_name = json_object_get_string(LineObject, "binary");
+    if (false) {
+      DEBUG_PRINT(suite_name, .colorscheme = FORE_GREEN BACK_BLACK, .filestream = stdout);
+    }
+    JSON_Array *Tests    = json_object_get_array(LineObject, "tests");
+    size_t     tests_qty = json_array_get_count(Tests);
+    if (false) {
+      DEBUG_PRINT((int)tests_qty, .colorscheme = FORE_YELLOW BACK_BLACK, .filestream = stdout);
+    }
+    for (size_t i = 0; i < tests_qty; i++) {
+      char *test_name = json_array_get_string(Tests, i);
+      fprintf(stdout, "[%s] %15s %3lu/%lu  %12s\n",
+              binary_name,
+              suite_name,
+              i + 1,
+              tests_qty,
+              test_name
+              );
+      free(test_name);
+    }
+    json_value_free(LineObject);
+    free(suite_name);
+    free(binary_name);
+  }
+  stringfn_release_strings_struct(LINES);
+  PASS();
+} /* process_json_lines */
+
+
+TEST read_json_file(void){
+  DEBUG_PRINT(JSON_TESTS_FILE, .colorscheme    = FORE_BLUE BACK_BLACK, .filestream = stdout);
+  JSON_TESTS_CONTENT                           = fsio_read_text_file(JSON_TESTS_FILE);
+  DEBUG_PRINT(JSON_TESTS_CONTENT, .colorscheme = FORE_BLUE BACK_BLACK, .filestream = stdout);
+  PASS();
+}
+SUITE(tests) {
+  RUN_TEST(read_json_file);
+  RUN_TEST(process_json_lines);
   PASS();
 }
 
@@ -301,6 +390,15 @@ GREATEST_MAIN_DEFS();
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
-  RUN_SUITE(suite_0);
+  RUN_SUITE(tests);
+  RUN_SUITE(test_parse);
+  RUN_SUITE(test_string);
+  RUN_SUITE(test_debug);
+  RUN_SUITE(test_time);
+  RUN_SUITE(test_path);
+  RUN_SUITE(test_progress);
+  RUN_SUITE(suite_qrcode);
+  RUN_SUITE(suite_totp);
+  RUN_SUITE(test_spinner);
   GREATEST_MAIN_END();
 }

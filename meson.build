@@ -64,3 +64,9 @@ subdir('meson')
 subdir('deps')
 subdir('deps-test')
 ###########################################
+subdir('term-tests')
+subdir('term-tests-test')
+###########################################
+subdir('ctable')
+subdir('tests-table')
+###########################################

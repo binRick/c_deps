@@ -11,9 +11,12 @@ PWD=$(shell command -v pwd)
 FIND=$(shell command -v find)
 EMBED_BINARY=$(shell command -v embed)
 JQ_BIN=$(shell command -v jq)
-DIR=$(shell $(PWD))	
+DIR=$(shell pwd)	
+TESTS_LIST_LOG_FILE = $(shell pwd)/.tests-list.log
+TESTS_SUITES_LOG_FILE=$(shell pwd)/.tests-suites.log
+TESTS_TESTS_LOG_FILE=$(shell pwd)/.tests-tests.log
 ##############################################################
-TIDIED_FILES = deps*/*.c deps*/*.h
+TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h
 ##############################################################
 do-setup:
 	@[[ -d submodules ]] || mkdir submodules
@@ -61,6 +64,30 @@ do-nodemon:
 			-e Makefile,tpl,build,sh,c,h,Makefile \
 			-x sh -- -c 'make||true'
 
+tests-log:
+	@rm .test*.log 2>/dev/null||true
+	@./build/deps-test/deps-test -l | tee $(TESTS_LIST_LOG_FILE) >/dev/null
+
+tests-tests: tests-log
+	@grep -v "^* Suite .*:" $(TESTS_LIST_LOG_FILE)\
+		|cut -d: -f1|cut -d ' ' -f3|sort -u | tee $(TESTS_TESTS_LOG_FILE) >/dev/null
+
+tests-suite-tests: tests-tests tests-suites
+tests-clean:
+	@rm .test*.log
+
+tests-suites:
+	@grep "^* Suite .*:" $(TESTS_LIST_LOG_FILE)\
+		|cut -d: -f1|cut -d ' ' -f3\
+		|sort -u \
+		|tee $(TESTS_SUITES_LOG_FILE) >/dev/null
+
+tests: do-encode-tests
+do-encode-tests: do-build do-tests tests-clean
+do-tests: tests-log tests-suite-tests tests-suites 
+	@rm .tests.json 2>/dev/null||true
+	@./scripts/tests-encoder.sh > .tests.json && clear && jq -c < .tests.json
+
 git-submodules-pull:
 	@git submodule foreach git pull origin master --jobs=10
 
@@ -71,7 +98,8 @@ git-pull:
 	@git pull --recurse-submodules
 
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
-do-build: do-meson do-ninja do-ninja-test
+do-build: do-meson do-ninja
+	#do-ninja-test
 do-test: do-ninja-test do-deps-test
 test: do-test
 build: do-meson do-build
@@ -83,4 +111,4 @@ tidy: \
 	test \
 	git-add
 dev: tidy do-nodemon
-all: do-setup do-build do-test
+all: do-setup do-build tests

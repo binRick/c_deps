@@ -4,3 +4,5 @@ subprojects/*/
 .attic
 .cache
 .nodemon.log
+.tests-list.log
+.tests.json
