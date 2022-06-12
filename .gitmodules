@@ -340,3 +340,6 @@
 [submodule "submodules/ee.c"]
 	path = submodules/ee.c
 	url = https://github.com/thlorenz/ee.c
+[submodule "submodules/cgif"]
+	path = submodules/cgif
+	url = https://github.com/dloebl/cgif

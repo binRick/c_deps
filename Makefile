@@ -16,7 +16,7 @@ TESTS_LIST_LOG_FILE = $(shell pwd)/.tests-list.log
 TESTS_SUITES_LOG_FILE=$(shell pwd)/.tests-suites.log
 TESTS_TESTS_LOG_FILE=$(shell pwd)/.tests-tests.log
 ##############################################################
-TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h gumbo-test/*.c gumbo-test/*.h
+TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h gumbo-test/*.c gumbo-test/*.h cgif-test/*.c 
 TRIGGER_FILE=.trigger.c
 ##############################################################
 do-setup:

@@ -6,3 +6,4 @@ subprojects/*/
 .nodemon.log
 .tests-list.log
 .tests.json
+.trigger.c
