@@ -331,3 +331,12 @@
 [submodule "submodules/wrapdb"]
 	path = submodules/wrapdb
 	url = https://github.com/mesonbuild/wrapdb
+[submodule "submodules/parse-repo"]
+	path = submodules/parse-repo
+	url = https://github.com/stephenmathieson/parse-repo.c
+[submodule "submodules/log.h"]
+	path = submodules/log.h
+	url = https://github.com/thlorenz/log.h
+[submodule "submodules/ee.c"]
+	path = submodules/ee.c
+	url = https://github.com/thlorenz/ee.c
