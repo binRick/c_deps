@@ -7,3 +7,4 @@ subprojects/*/
 .tests-list.log
 .tests.json
 .trigger.c
+*.gif
