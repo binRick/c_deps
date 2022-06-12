@@ -2,7 +2,7 @@ bytes_inc = [
   inc,
 ]
 bytes_lib = static_library('bytes', 
-  pwd + '/submodules/bytes/bytes.c',
+  meson_deps_dir + '/submodules/bytes/bytes.c',
   install: false, 
   dependencies: [
   ], 

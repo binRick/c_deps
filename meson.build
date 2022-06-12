@@ -59,11 +59,14 @@ inc = [
   include_directories('submodules/which/src'),
   include_directories('submodules/str-ends-with'),
   include_directories('submodules/cgif/inc'),
+  include_directories('submodules/SDL_DBGP'),
   include_directories('.'),
 ]  
 ###########################################
+subdir('meson/deps/sdl2')
 subdir('meson/deps/gumbo')
 subdir('meson/deps/cgif')
+subdir('meson/deps/dbgp')
 subdir('meson')
 ###########################################
 subdir('deps')
@@ -78,3 +81,4 @@ subdir('tests-table')
 subdir('gumbo-test')
 subdir('cgif-test')
 ###########################################
+subdir('dbgp-test')

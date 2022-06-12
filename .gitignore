@@ -8,3 +8,5 @@ subprojects/*/
 .tests.json
 .trigger.c
 *.gif
+.err
+screenshot.bmp

@@ -16,7 +16,7 @@ TESTS_LIST_LOG_FILE = $(shell pwd)/.tests-list.log
 TESTS_SUITES_LOG_FILE=$(shell pwd)/.tests-suites.log
 TESTS_TESTS_LOG_FILE=$(shell pwd)/.tests-tests.log
 ##############################################################
-TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h gumbo-test/*.c gumbo-test/*.h cgif-test/*.c 
+TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h gumbo-test/*.c gumbo-test/*.h cgif-test/*.c *-test/*.c *-test/*.h
 TRIGGER_FILE=.trigger.c
 ##############################################################
 do-setup:
@@ -33,8 +33,10 @@ uncrustify:
 	@$(UNCRUSTIFY) -c etc/uncrustify.cfg --replace $(TIDIED_FILES)||true
 uncrustify-clean:
 	@find  . -type f -name "*unc-back*"|xargs -I % unlink %
+
 clean:
-	@rm -rf build/
+	@rm -rf vendor build meson .cache subprojects
+
 fix-dbg:
 	@$(SED) 's|, % s);|, %s);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % lu);|, %lu);|g' -i $(TIDIED_FILES)

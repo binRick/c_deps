@@ -1,7 +1,7 @@
 slug_lib = static_library('slug',
-  pwd + '/submodules/slug.c/src/slug.c',
-  pwd + '/submodules/slug.c/deps/case.c',
-  pwd + '/submodules/slug.c/deps/trim.c',
+  meson_deps_dir + '/submodules/slug.c/src/slug.c',
+  meson_deps_dir + '/submodules/slug.c/deps/case.c',
+  meson_deps_dir + '/submodules/slug.c/deps/trim.c',
   install: false, 
   dependencies: [
   ], 

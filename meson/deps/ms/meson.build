@@ -3,7 +3,7 @@ ms_inc = [
     inc,
 ]
 ms_lib = static_library('ms', 
-  pwd + '/submodules/ms/ms.c',
+  meson_deps_dir + '/submodules/ms/ms.c',
   install: false, 
   dependencies: [
     asprintf_dep,

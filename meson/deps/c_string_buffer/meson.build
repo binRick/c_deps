@@ -1,6 +1,6 @@
 c_string_buffer_dir =  'submodules/c_string_buffer'
 c_string_buffer_srcs = [
-  pwd + '/' + c_string_buffer_dir + '/src/stringbuffer.c',
+  meson_deps_dir + '/' + c_string_buffer_dir + '/src/stringbuffer.c',
 ]
 c_string_buffer_inc = [
   inc,

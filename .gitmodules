@@ -343,3 +343,6 @@
 [submodule "submodules/cgif"]
 	path = submodules/cgif
 	url = https://github.com/dloebl/cgif
+[submodule "submodules/SDL_DBGP"]
+	path = submodules/SDL_DBGP
+	url = https://github.com/superzazu/SDL_DBGP

@@ -1,0 +1,4 @@
+[wrap-git]
+directory=SDL_DBGP
+url=https://github.com/superzazu/SDL_DBGP
+revision=head

@@ -1,6 +1,6 @@
 
 timestamp_srcs = [
-  files(pwd + '/submodules/timestamp/timestamp.c'),
+  files(meson_deps_dir + '/submodules/timestamp/timestamp.c'),
 ]
 
 timestamp_lib = static_library('timestamp', timestamp_srcs,

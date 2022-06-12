@@ -1,7 +1,7 @@
 
 djbhash_dir =  'submodules/djbhash'
 djbhash_srcs = [
-  pwd + '/' + djbhash_dir + '/src/djbhash.c',
+  meson_deps_dir + '/' + djbhash_dir + '/src/djbhash.c',
 ]
 djbhash_inc = [
   inc,
