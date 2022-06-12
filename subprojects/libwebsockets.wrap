@@ -1,0 +1,13 @@
+[wrap-file]
+directory = libwebsockets-v4.0.21
+source_url = https://libwebsockets.org/git/libwebsockets/snapshot/libwebsockets-v4.0.21.tar.xz
+source_filename = libwebsockets-v4.0.21.tar.xz
+source_hash = 57ef0c4c951b056532d88ad618badd5c3615b7c71418dd26800dc886032a32b4
+patch_filename = libwebsockets_4.0.21-1_patch.zip
+patch_url = https://wrapdb.mesonbuild.com/v2/libwebsockets_4.0.21-1/get_patch
+patch_hash = d3827011f6049b44b6382ecb09f6f29abe1fe3fc507b665f99fda6c991268351
+wrapdb_version = 4.0.21-1
+
+[provide]
+libwebsockets = libwebsockets_dep
+

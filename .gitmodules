@@ -57,7 +57,7 @@
 	url = https://github.com/sagiegurari/c_stringfn
 [submodule "submodules/c_timer"]
 	path = submodules/c_timer
-	url = https://github.com/binRick/c_timer
+	url = ssh://git@github.com/binRick/c_timer
 [submodule "submodules/cargs"]
 	path = submodules/cargs
 	url = https://github.com/likle/cargs
@@ -325,3 +325,9 @@
 [submodule "submodules/submodules/generic-print"]
 	path = submodules/submodules/generic-print
 	url = https://github.com/exebook/generic-print.git
+[submodule "submodules/gumbo-parser"]
+	path = submodules/gumbo-parser
+	url = https://github.com/google/gumbo-parser
+[submodule "submodules/wrapdb"]
+	path = submodules/wrapdb
+	url = https://github.com/mesonbuild/wrapdb

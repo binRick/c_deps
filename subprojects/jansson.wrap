@@ -1,0 +1,12 @@
+[wrap-file]
+directory = jansson-2.13
+source_url = http://www.digip.org/jansson/releases/jansson-2.13.tar.bz2
+source_filename = jansson-2.13.tar.bz2
+source_hash = a03924668e2df1b0096a6ecdf17b29b428c71d2710dbebd7edd65906f5cba447
+patch_filename = jansson_2.13-1_patch.zip
+patch_url = https://wrapdb.mesonbuild.com/v2/jansson_2.13-1/get_patch
+patch_hash = 89e1ef7c8a7c424552ceeb056073e3645aa8360282b6101c985acb5f46b3bb5e
+
+[provide]
+jansson = jansson_dep
+

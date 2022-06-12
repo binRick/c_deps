@@ -43,4 +43,5 @@ subdir('deps/generic_print')
 #subdir('deps/occurrences')
 subdir('deps/libspinner')
 subdir('deps/ctable')
+subdir('deps/libuv')
 ####################################
