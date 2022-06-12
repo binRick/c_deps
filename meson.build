@@ -7,7 +7,6 @@ project('meson_deps', ['c'],
 #############################################################
 cc = meson.get_compiler('c')
 #//***********************************************************/
-osx_ldflags = []
 deps = []
 bin_srcs = []
 submodule_srcs = []
@@ -32,15 +31,12 @@ add_project_arguments('-Wno-gnu-alignof-expression', language : 'c')
 add_project_arguments('-Wno-varargs', language : 'c')
 add_project_arguments('-Wno-return-type', language : 'c')
 #############################################################################
-#osx_ldflags += ['-Wl,-framework,CoreFoundation']
-#osx_ldflags += '-Wl,-framework,Carbon'
-#osx_ldflags += ['-Wl,-framework,Foundation', '-Wl,-framework,AppKit']
-#add_project_link_arguments(osx_ldflags, language : ['objc', 'c'])
 pwd_bin = find_program('pwd', required : true)
 pwd = run_command(pwd_bin, check: true).stdout().strip()
 meson_deps_dir = pwd
 #############################################################################
 inc = [
+  include_directories('submodules/list/src'),
   include_directories('submodules/libspng/spng'),
   include_directories('submodules/debug_print_h'),
   include_directories('submodules/debug_print_h/src'),
@@ -63,10 +59,6 @@ inc = [
   include_directories('.'),
 ]  
 ###########################################
-subdir('meson/deps/sdl2')
-subdir('meson/deps/gumbo')
-subdir('meson/deps/cgif')
-subdir('meson/deps/dbgp')
 subdir('meson')
 ###########################################
 subdir('deps')
@@ -82,3 +74,4 @@ subdir('gumbo-test')
 subdir('cgif-test')
 ###########################################
 subdir('dbgp-test')
+subdir('ee-test')

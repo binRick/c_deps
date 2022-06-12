@@ -15,6 +15,6 @@ if get_option('enable-binaries')
      include_directories: gumbo_test_inc,
   )
   if get_option('enable-binary-tests')
-    test('gumbo-test', gumbo_test_exec, args: ['--test'])
+    test('gumbo-test', gumbo_test_exec, args: ['../submodules/gumbo-parser/benchmarks/wikipedia.html'])
   endif
 endif

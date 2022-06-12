@@ -346,3 +346,15 @@
 [submodule "submodules/SDL_DBGP"]
 	path = submodules/SDL_DBGP
 	url = https://github.com/superzazu/SDL_DBGP
+[submodule "submodules/libgit2"]
+	path = submodules/libgit2
+	url = https://github.com/libgit2/libgit2
+[submodule "submodules/isalloc"]
+	path = submodules/isalloc
+	url = https://github.com/struct/isoalloc
+[submodule "submodules/list"]
+	path = submodules/list
+	url = https://github.com/clibs/list
+[submodule "submodules/gumbo-get-element-by-id.c"]
+	path = submodules/gumbo-get-element-by-id.c
+	url = https://github.com/stephenmathieson/gumbo-get-element-by-id.c

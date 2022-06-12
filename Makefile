@@ -35,7 +35,7 @@ uncrustify-clean:
 	@find  . -type f -name "*unc-back*"|xargs -I % unlink %
 
 clean:
-	@rm -rf vendor build meson .cache subprojects
+	@rm -rf build .cache
 
 fix-dbg:
 	@$(SED) 's|, % s);|, %s);|g' -i $(TIDIED_FILES)
