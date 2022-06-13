@@ -1,5 +1,5 @@
 fs_lib = static_library('fs', 
-  pwd + '/submodules/fs.c/fs.c',
+  '../../../submodules/fs.c/fs.c',
   install: false, 
   dependencies: [], 
   include_directories: [

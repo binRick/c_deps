@@ -1,5 +1,5 @@
 embedded_palettes_lib = library('embedded_palettes', 
-  meson_deps_dir+'/submodules/c_palettes/embeds/tbl1.c',
+  pwd+'/submodules/c_palettes/embeds/tbl1.c',
   install: false, 
   dependencies: [], 
   include_directories: [

@@ -1,5 +1,5 @@
 c_embed_lib = library('c_embed', 
-pwd+'/submodules/c_embed/loader/include/embeds.h',
+'../../../submodules/c_embed/loader/include/embeds.h',
 install: false, dependencies: [
   asprintf_dep,
   ], 

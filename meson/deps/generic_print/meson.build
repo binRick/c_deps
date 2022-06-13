@@ -1,5 +1,5 @@
 generic_print_lib = library('generic_print', 
-pwd + '/submodules/generic-print/print.h',
+'../../../submodules/generic-print/print.h',
 install: false, dependencies: [
   asprintf_dep,
   ], 
