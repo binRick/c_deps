@@ -1,3 +1,7 @@
+libmutotp_c_args = [
+  '-Wno-format-security',
+]
+
 libmutotp_lib = static_library('libmutotp',
   pwd + '/submodules/libmutotp/totp.c',
   pwd + '/submodules/libmutotp/sha1.c',
@@ -7,6 +11,7 @@ libmutotp_lib = static_library('libmutotp',
   dependencies: [], 
   include_directories: [
     inc,
-  ]
+  ],
+  c_args: libmutotp_c_args,
 )
 libmutotp_dep = declare_dependency(include_directories: [inc], link_with: libmutotp_lib)

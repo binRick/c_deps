@@ -1,14 +1,18 @@
 progress_cargs = [
   '-Wno-macro-redefined',
-  ]
+]
 progress_lib = library('process', 
-pwd + '/submodules/progress.c/progress.c',
-install: false, dependencies: [
+  pwd + '/submodules/progress.c/progress.c',
+  install: false, 
+  dependencies: [
   ], 
   include_directories: [
   ],
   c_args: progress_cargs,
 )
-progress_dep = declare_dependency(include_directories: [
-  ], link_with: progress_lib,
+
+progress_dep = declare_dependency(
+  include_directories: [
+  ], 
+  link_with: progress_lib,
   )

@@ -3,6 +3,8 @@ sqlite = [
 ]
 
 sqlite_cflags = [
+    '-Wno-pointer-to-int-cast',
+    '-Wno-int-to-void-pointer-cast',
 	'-DSQLITE_OMIT_LOAD_EXTENSION',
 	'-DSQLITE_THREADSAFE=0',
 	'-DSQLITE_DEFAULT_AUTOVACUUM=1',

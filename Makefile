@@ -16,7 +16,7 @@ TESTS_LIST_LOG_FILE = $(shell pwd)/.tests-list.log
 TESTS_SUITES_LOG_FILE=$(shell pwd)/.tests-suites.log
 TESTS_TESTS_LOG_FILE=$(shell pwd)/.tests-tests.log
 ##############################################################
-TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h gumbo-test/*.c gumbo-test/*.h cgif-test/*.c *-test/*.c *-test/*.h
+TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h gumbo-test/*.c gumbo-test/*.h cgif-test/*.c *-test/*.c *-test/*.h chan-test/*.c chan-test/*.h
 TRIGGER_FILE=.trigger.c
 ##############################################################
 do-setup:
@@ -32,7 +32,7 @@ fmt-scripts:
 uncrustify:
 	@$(UNCRUSTIFY) -c etc/uncrustify.cfg --replace $(TIDIED_FILES)||true
 uncrustify-clean:
-	@find  . -type f -name "*unc-back*"|xargs -I % unlink %
+	@find  . -type f -maxdepth 2 -name "*unc-back*"|xargs -I % unlink %
 
 clean:
 	@rm -rf build .cache
@@ -66,6 +66,7 @@ do-nodemon:
 		-w Makefile \
 		-i '*/embeds/*' -i 'subprojects/*/' -i submodules -i 'build/*' \
 		-w "term-tests" \
+		-w "chan-test/*.c" -w "chan-test/*.h" \
 		-w "term-tests-test" \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
 			-x env -- bash -xc 'make'
