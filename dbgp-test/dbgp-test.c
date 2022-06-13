@@ -93,6 +93,7 @@ int dbgp_main(void) {
   int       should_quit = 0;
   SDL_Event event;
   while (!should_quit) {
+//          screenshot(renderer, "screenshot.bmp");
     while (SDL_PollEvent(&event)) {
       switch (event.type) {
       case SDL_QUIT: should_quit = 1; break;

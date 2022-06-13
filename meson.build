@@ -17,6 +17,7 @@ subdir('meson/args')
 subdir('meson/inc')
 ###########################################
 subdir('meson')
+subdir('meson/deps/c_timer')
 ###########################################
 subdir('deps')
 subdir('deps-test')

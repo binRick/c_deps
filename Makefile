@@ -121,3 +121,8 @@ all: do-setup do-build trigger
 trigger:
 	@[[ -f $(TRIGGER_FILE) ]] && unlink $(TRIGGER_FILE)
 	@touch $(TRIGGER_FILE)
+introspect:
+	@meson introspect --targets -i meson.build
+
+meson-binaries:
+	@meson introspect --targets  meson.build -i | jq 'map(select(.type == "executable").filename)|flatten|join("\n")' -Mrc

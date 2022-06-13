@@ -1,19 +1,8 @@
 #pragma once
 #include "cargs/include/cargs.h"
+#include "submodules/c_timer/include/c_timer.h"
 #include "submodules/chan/src/chan.h"
 #include "submodules/greatest/greatest.h"
 #include "submodules/log.h/log.h"
-#include <ctype.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdlib.h>
-#include <string.h>
-#include <string.h>
-#include <sys/time.h>
-
+#include "submodules/ms/ms.h"
+#include "submodules/timestamp/timestamp.h"
