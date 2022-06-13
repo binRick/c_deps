@@ -18,6 +18,7 @@ introspect_test_deps = [
  introspect_dep,
  parson_dep,
  ee_dep,
+ debug_memory_dep,
 ]
 
 if get_option('enable-binaries')

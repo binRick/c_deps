@@ -1,3 +1,5 @@
+#include <stdbool.h>
+#define DEBUG_MEMORY_ENABLED    true
 #include "introspect-test.h"
 #include "parson.h"
 #include "submodules/log.h/log.h"
@@ -7,6 +9,9 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+#ifdef DEBUG_MEMORY_ENABLED
+#include "submodules/debug-memory/debug_memory.h"
+#endif
 //////////////////////////////////////////////
 #define NUM_CHILDREN        1
 #define MAX_OUTPUT_BYTES    1024 * 1024
@@ -64,7 +69,7 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
   ee_on(ee, "static library", on_static_library_target_json_value);
 
   iterate_targets(ee, A);
-
+  free(OUTPUT);
   PASS();
 }
 
@@ -76,6 +81,7 @@ TEST t_introspect_parse_execution(void *MESON_FILE_PATH){
   JSON_Array *A = parse_execution_result(OUTPUT);
 
   ASSERT_NEQ(A, NULL);
+  free(OUTPUT);
   PASS();
 }
 
@@ -83,7 +89,9 @@ TEST t_introspect_parse_execution(void *MESON_FILE_PATH){
 TEST t_introspect_ansi(void){
   char meson_build_file[] = "../c_ansi/meson.build";
 
-  execute_processes(meson_build_file);
+  char *OUTPUT = execute_processes(meson_build_file);
+
+  free(OUTPUT);
   PASS();
 }
 
@@ -91,7 +99,9 @@ TEST t_introspect_ansi(void){
 TEST t_introspect_db(void){
   char meson_build_file[] = "../c_db/meson.build";
 
-  execute_processes(meson_build_file);
+  char *OUTPUT = execute_processes(meson_build_file);
+
+  free(OUTPUT);
   PASS();
 }
 
@@ -99,7 +109,9 @@ TEST t_introspect_db(void){
 TEST t_introspect_palettes(void){
   char meson_build_file[] = "./../c_palettes/meson.build";
 
-  execute_processes(meson_build_file);
+  char *OUTPUT = execute_processes(meson_build_file);
+
+  free(OUTPUT);
   PASS();
 }
 
@@ -107,7 +119,9 @@ TEST t_introspect_palettes(void){
 TEST t_introspect_meson_deps(void){
   char meson_build_file[] = "./meson.build";
 
-  execute_processes(meson_build_file);
+  char *OUTPUT = execute_processes(meson_build_file);
+
+  free(OUTPUT);
   PASS();
 }
 
@@ -123,7 +137,9 @@ int main(int argc, char **argv) {
   RUN_TEST(t_introspect_palettes);
   RUN_TESTp(t_introspect_parse_execution, "../c_colors/meson.build");
   RUN_TESTp(t_introspect_iterate, "../c_colors/meson.build");
-
+#ifdef DEBUG_MEMORY_ENABLED
+  print_allocated_memory();
+#endif
   GREATEST_MAIN_END();
   return(0);
 }

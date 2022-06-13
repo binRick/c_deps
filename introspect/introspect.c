@@ -1,3 +1,5 @@
+#include <stdbool.h>
+#define DEBUG_MEMORY_ENABLED    true
 #include "introspect.h"
 #include "submodules/log.h/log.h"
 #include <assert.h>
@@ -12,6 +14,9 @@
 #define D                   log_debug
 #define E                   log_error
 //////////////////////////////////////////////
+#ifdef DEBUG_MEMORY_ENABLED
+#include "submodules/debug-memory/debug_memory.h"
+#endif
 
 
 void iterate_targets(ee_t *ee, JSON_Array *A){

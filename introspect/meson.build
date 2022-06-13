@@ -18,6 +18,7 @@ introspect_deps = [
  logh_dep,
  parson_dep,
  ee_dep,
+ debug_memory_dep,
 ]
 
 
