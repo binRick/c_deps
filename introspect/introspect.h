@@ -6,6 +6,8 @@
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
 #include "cargs/include/cargs.h"
+#include "parson.h"
+#include "submodules/ee.c/src/ee.h"
 #include "submodules/greatest/greatest.h"
 #include "submodules/log.h/log.h"
 #include <ctype.h>
@@ -22,5 +24,8 @@
 #include <string.h>
 #include <sys/time.h>
 
+typedef void (*ee_target_handler)(JSON_Object *Target);
 
-int execute_processes();
+char *execute_processes();
+JSON_Array *parse_execution_result(char *OUTPUT);
+void iterate_targets(ee_t *ee, JSON_Array *A);

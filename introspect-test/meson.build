@@ -16,6 +16,8 @@ introspect_test_deps = [
  ansicodes_dep,
  logh_dep,
  introspect_dep,
+ parson_dep,
+ ee_dep,
 ]
 
 if get_option('enable-binaries')

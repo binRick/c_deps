@@ -16,6 +16,8 @@ introspect_deps = [
  greatest_dep,
  ansicodes_dep,
  logh_dep,
+ parson_dep,
+ ee_dep,
 ]
 
 

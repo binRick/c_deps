@@ -9,24 +9,54 @@
 //////////////////////////////////////////////
 #define NUM_CHILDREN        1
 #define MAX_OUTPUT_BYTES    1024 * 1024
-//////////////////////////////////////////////
-int execute_processes();
-static inline void millisleep(long ms);
-
+#define D                   log_debug
+#define E                   log_error
 //////////////////////////////////////////////
 
 
-static inline void millisleep(long ms){
-  struct timespec ts = {
-    .tv_sec  = (ms) / 1000,
-    .tv_nsec = ((ms) % 1000L) * 1000000,
-  };
+void iterate_targets(ee_t *ee, JSON_Array *A){
+  JSON_Value  *V = json_value_init_object();
+  JSON_Object *O = json_value_init_object();
+  char        *name, *type;
 
-  nanosleep(&ts, NULL);
+  for (size_t i = 0; i < json_array_get_count(A); i++) {
+    V = json_array_get_value(A, i);
+    O = json_array_get_object(A, i);
+    size_t props_qty = json_object_get_count(O);
+    assert(json_value_get_type(V) == JSONObject);
+    type = json_object_get_string(O, "type");
+    if (ee_listener_count(ee, type) > 0) {
+      ee_emit(ee, type, V);
+    }else{
+      E("NOT HANDLED> type: '%s' qty:%d", type, ee_listener_count(ee, type));
+    }
+  }
+  json_value_free(V);
 }
 
 
-int execute_processes(char *MESON_BUILD_FILE){
+JSON_Array *parse_execution_result(char *OUTPUT){
+  JSON_Array *A = NULL;
+
+  assert(strlen(OUTPUT) > 0);
+  JSON_Value *V = json_parse_string(OUTPUT);
+
+  assert(V != NULL);
+  assert(json_value_get_type(V) == JSONArray);
+
+  A = json_value_get_array(V);
+  assert(A != NULL);
+  size_t qty = json_array_get_count(A);
+
+  assert(qty > 0);
+  log_debug("output is %lub and %lu properties", strlen(OUTPUT), json_array_get_count(A));
+  D("parse........%lu", json_array_get_count(A));
+  return(A);
+}
+
+
+char *execute_processes(char *MESON_BUILD_FILE){
+  uint8_t             output[MAX_OUTPUT_BYTES];
   reproc_event_source children[NUM_CHILDREN] = { { 0 } };
   int                 r                      = -1;
 
@@ -58,7 +88,6 @@ int execute_processes(char *MESON_BUILD_FILE){
       if (children[i].process == NULL || !children[i].events) {
         continue;
       }
-      uint8_t output[MAX_OUTPUT_BYTES];
       r = reproc_read(children[i].process, REPROC_STREAM_OUT, output, sizeof(output));
       if (r == REPROC_EPIPE) {
         children[i].process = reproc_destroy(children[i].process);
@@ -70,9 +99,11 @@ int execute_processes(char *MESON_BUILD_FILE){
       }
       output[r] = '\0';
 
-      char msg[strlen(output) + 1024];
-      sprintf(&msg, "<%d> " AC_RESETALL AC_YELLOW_BLACK AC_REVERSED AC_ITALIC "%s" AC_RESETALL, getpid(), stringfn_trim(output));
-      log_debug("%s", msg);
+      if (false) {
+        char msg[strlen(output) + 1024];
+        sprintf(&msg, "<%d> " AC_RESETALL AC_YELLOW_BLACK AC_REVERSED AC_ITALIC "%s" AC_RESETALL, getpid(), stringfn_trim(output));
+        log_debug("%s", msg);
+      }
     }
   }
 
@@ -85,6 +116,11 @@ finish:
     log_error("%s", reproc_strerror(r));
   }
 
+//log_debug("%s",output);
+  char *o = malloc(strlen(output));
 
-  return(abs(r));
+  sprintf(o, "%s", stringfn_trim(output));
+//assert(strlen(o)>0);
+//log_debug("%s",o);
+  return(o);
 } /* execute_processes */

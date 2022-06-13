@@ -129,7 +129,7 @@ all: do-setup do-build trigger
 trigger:
 	@[[ -f $(TRIGGER_FILE) ]] && unlink $(TRIGGER_FILE)
 	@touch $(TRIGGER_FILE)
-introspect:
+meson-introspect-targets:
 	@meson introspect --targets -i meson.build
 
 meson-binaries:

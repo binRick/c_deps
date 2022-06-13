@@ -5,6 +5,7 @@
 #include "c_stringfn/include/stringfn.h"
 #include "cargs/include/cargs.h"
 #include "introspect.h"
+#include "parson.h"
 #include "submodules/greatest/greatest.h"
 #include "submodules/log.h/log.h"
 #include <ctype.h>
