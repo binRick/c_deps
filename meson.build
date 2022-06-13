@@ -18,6 +18,7 @@ subdir('meson/inc')
 ###########################################
 subdir('meson')
 subdir('meson/deps/c_timer')
+subdir('meson/deps/reproc')
 ###########################################
 subdir('deps')
 subdir('deps-test')
@@ -34,3 +35,4 @@ subdir('cgif-test')
 subdir('dbgp-test')
 subdir('ee-test')
 subdir('chan-test')
+subdir('reproc-test')

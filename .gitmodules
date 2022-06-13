@@ -358,3 +358,6 @@
 [submodule "submodules/gumbo-get-element-by-id.c"]
 	path = submodules/gumbo-get-element-by-id.c
 	url = https://github.com/stephenmathieson/gumbo-get-element-by-id.c
+[submodule "submodules/reproc"]
+	path = submodules/reproc
+	url = https://github.com/DaanDeMeyer/reproc

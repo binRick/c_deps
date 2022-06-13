@@ -5,10 +5,16 @@ dbgp_include_dirs = [
   inc,
 ]
 dbgp_test_dbgp = [
-  dbgp_dep,
-  sdl2_dep,
-  dbgp_dep,
-  greatest_dep,
+ sdl2_dep,
+ dbgp_dep,
+ chan_dep,
+ greatest_dep,
+ ansicodes_dep,
+ logh_dep,
+ ms_dep,
+ timestamp_dep,
+ c_timer_dep,
+ bytes_dep,  
 ]
 
 if get_option('enable-binaries')
