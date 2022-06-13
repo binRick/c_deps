@@ -1,8 +1,10 @@
+#define DEBUG_WORKERS      false
 #define WINDOW_TITLE       "Application Title"
 #define WINDOW_X_OFFSET    670
 #define WINDOW_Y_OFFSET    81
 #define WIN_WIDTH          800
 #define WIN_HEIGHT         300
+#define GLYPHS_PER_LINE    (256 / 8)
 #include "ansicodes.h"
 #include "dbgp-test.h"
 #include "SDL_DBGP.h"
@@ -27,17 +29,7 @@
 #define I    log_info
 #define E    log_error
 /////////////////////////////////////////////////////////////
-typedef struct WORKER_T {
-  int  delay_ms;
-  int  thread_index;
-  char msg[1024];
-} worker_t;
-/////////////////////////////////////////////////////////////
-int dbgp_main(void);
-void render_screen(void);
-
-/////////////////////////////////////////////////////////////
-SDL_Renderer    *renderer;
+SDL_Renderer *renderer;
 int             should_quit = 0;
 char            msg[1024 * 4];
 volatile size_t keypresses = 0;
@@ -45,6 +37,7 @@ SDL_Event       event;
 DBGP_Font       unscii8;
 DBGP_Font       unscii16;
 char            *iso_string;
+SDL_Window      *window;
 /////////////////////////////////////////////////////////////
 pthread_t       worker_threads[10];
 worker_t        *workers;
@@ -52,21 +45,33 @@ volatile int    processed_jobs_qty = 0, processed_qtys[1024];
 chan_t          *JOBS_CHANNEL, *DONE_CHANNEL;
 char            msg0[1024 * 2];
 /////////////////////////////////////////////////////////////
-#define BUFFER_QTY         4100
-#define JOBS_QTY           4000
-#define WORKER_SLEEP_MS    10
+#define BUFFER_QTY         50000
+#define JOBS_QTY           45500
+#define WORKER_SLEEP_MS    100
 
 
 /////////////////////////////////////////////////////////////
 void *worker(void *WID){
   void   *job;
   size_t WORKER_ID = (size_t)WID;
+  int    width = 1, height = -1, rw = -1, rh = -1;
 
   L("%lu> Worker waing for jobs....", WORKER_ID);
   while (chan_recv(JOBS_CHANNEL, &job) == 0) {
     usleep(WORKER_SLEEP_MS * 1000 * WORKER_ID);
     processed_qtys[WORKER_ID]++;
-    sprintf(msg, "OK- %lu: %d", WORKER_ID, processed_qtys[WORKER_ID]);
+    SDL_GetWindowSize(window, &width, &height);
+    SDL_GetRendererOutputSize(renderer, &rw, &rh);
+    sprintf(msg,
+            "OK- %lu: %d> [window:%dx%d][renderer:%dx%d][font:%dx%d][cols:%d][rows:%d]",
+            WORKER_ID,
+            processed_qtys[WORKER_ID],
+            width, height,
+            rw, rh,
+            unscii16.glyph_width, unscii16.glyph_height,
+            (rw / DBGP_UNSCII16_WIDTH),
+            (rh / DBGP_UNSCII16_HEIGHT)
+            );
     sprintf(workers[WORKER_ID].msg,
             "\t"
             AC_RESETALL AC_YELLOW "<%d>" AC_RESETALL
@@ -84,16 +89,15 @@ void *worker(void *WID){
             processed_qtys[WORKER_ID],
             chan_size(JOBS_CHANNEL)
             );
-    I("%s", workers[WORKER_ID].msg);
-    //   pthread_t th;
-//    pthread_create(&th, NULL, render_screen, NULL);
-    //render_screen();
+    if (DEBUG_WORKERS) {
+      I("%s", workers[WORKER_ID].msg);
+    }
   }
 
   L(AC_RESETALL AC_GREEN_BLACK AC_ITALIC "%lu> received all jobs> " AC_RESETALL, WORKER_ID);
   chan_send(DONE_CHANNEL, (void *)WORKER_ID);
   return(NULL);
-}
+} /* worker */
 
 
 void test_send_channel(void){
@@ -103,12 +107,14 @@ void test_send_channel(void){
 
   for (size_t i = 1; i <= JOBS_QTY; i++) {
     chan_send(JOBS_CHANNEL, (void *)i);
-    I(
-      "          "
-      AC_RESETALL AC_YELLOW AC_ITALIC "sent job "
-      AC_RESETALL AC_BLUE "%3lu" AC_RESETALL,
-      i
-      );
+    if (DEBUG_WORKERS) {
+      I(
+        "          "
+        AC_RESETALL AC_YELLOW AC_ITALIC "sent job "
+        AC_RESETALL AC_BLUE "%3lu" AC_RESETALL,
+        i
+        );
+    }
   }
 
   sent_dur = ct_stop("");
@@ -127,7 +133,6 @@ void test_setup_channels(void){
   DONE_CHANNEL = chan_init(0);
   workers      = malloc(sizeof(worker_t) * 1);
 
-//  pthread_create(&worker_threads[1], NULL, test_send_channel, NULL);
   test_send_channel();
   processed_qtys[1] = 0;
   int res = pthread_create(&worker_threads[1], NULL, worker, (void *)1);
@@ -230,7 +235,7 @@ int dbgp_main(void) {
   }
   SDL_SetHint(SDL_HINT_BMP_SAVE_LEGACY_FORMAT, "1");
 
-  SDL_Window *window = SDL_CreateWindow(
+  window = SDL_CreateWindow(
     WINDOW_TITLE,
     WINDOW_X_OFFSET, WINDOW_Y_OFFSET,
     WIN_WIDTH, WIN_HEIGHT,

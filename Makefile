@@ -20,6 +20,8 @@ TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *
 			   introspect-test/*.c introspect-test/*.h \
 			   introspect/*.c introspect/*.h \
 			   reproc-test/*.c reproc-test/*.h \
+			   list-test/*.c list-test/*.h \
+			   *-test/*.c *-test/*.h \
 ########################################################
 TRIGGER_FILE=.trigger.c
 ##############################################################
@@ -73,6 +75,7 @@ do-nodemon:
 		-w "term-tests" \
 		-w "chan-test/*.c" -w "chan-test/*.h" \
 		-w "reproc-test/*.c" -w "reproc-test/*.h" \
+		-w "*-test/*.c" -w "*-test/*.h" \
 	    -w "introspect-test/*.c" -w "introspect-test/*.h" \
 	    -w "introspect/*.c" -w "introspect/*.h" \
 		-w "term-tests-test" \
