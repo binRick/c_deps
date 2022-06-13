@@ -17,7 +17,10 @@ TESTS_SUITES_LOG_FILE=$(shell pwd)/.tests-suites.log
 TESTS_TESTS_LOG_FILE=$(shell pwd)/.tests-tests.log
 ##############################################################
 TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h gumbo-test/*.c gumbo-test/*.h cgif-test/*.c *-test/*.c *-test/*.h chan-test/*.c chan-test/*.h \
-			   reproc-test/*.c reproc-test/*.h
+			   introspect-test/*.c introspect-test/*.h \
+			   introspect/*.c introspect/*.h \
+			   reproc-test/*.c reproc-test/*.h \
+########################################################
 TRIGGER_FILE=.trigger.c
 ##############################################################
 do-setup:
@@ -70,6 +73,8 @@ do-nodemon:
 		-w "term-tests" \
 		-w "chan-test/*.c" -w "chan-test/*.h" \
 		-w "reproc-test/*.c" -w "reproc-test/*.h" \
+	    -w "introspect-test/*.c" -w "introspect-test/*.h" \
+	    -w "introspect/*.c" -w "introspect/*.h" \
 		-w "term-tests-test" \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
 			-x env -- bash -xc 'make'

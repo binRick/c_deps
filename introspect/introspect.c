@@ -1,4 +1,4 @@
-#include "reproc-test.h"
+#include "introspect.h"
 #include "submodules/log.h/log.h"
 #include <assert.h>
 #include <stdio.h>
@@ -7,30 +7,13 @@
 #include <time.h>
 #include <unistd.h>
 //////////////////////////////////////////////
-#define NUM_CHILDREN    10
+#define NUM_CHILDREN        1
+#define MAX_OUTPUT_BYTES    1024 * 1024
 //////////////////////////////////////////////
-static int execute_processes();
+int execute_processes();
 static inline void millisleep(long ms);
 
 //////////////////////////////////////////////
-
-
-TEST t_reproc_0(void){
-  execute_processes();
-  PASS();
-}
-
-GREATEST_MAIN_DEFS();
-
-
-int main(int argc, char **argv) {
-  GREATEST_MAIN_BEGIN();
-  (void)argc; (void)argv;
-  RUN_TEST(t_reproc_0);
-
-  GREATEST_MAIN_END();
-  return(0);
-}
 
 
 static inline void millisleep(long ms){
@@ -43,14 +26,17 @@ static inline void millisleep(long ms){
 }
 
 
-static int execute_processes(){
+int execute_processes(char *MESON_BUILD_FILE){
   reproc_event_source children[NUM_CHILDREN] = { { 0 } };
   int                 r                      = -1;
 
   for (int i = 0; i < NUM_CHILDREN; i++) {
     reproc_t   *process = reproc_new();
 
-    const char *date_args[] = { "date", NULL };
+    const char *date_args[] = {
+      "meson", "introspect", "--targets", MESON_BUILD_FILE,
+      NULL
+    };
 
     r = reproc_start(process, date_args, (reproc_options){ .nonblocking = true });
     if (r < 0) {
@@ -72,7 +58,7 @@ static int execute_processes(){
       if (children[i].process == NULL || !children[i].events) {
         continue;
       }
-      uint8_t output[4096];
+      uint8_t output[MAX_OUTPUT_BYTES];
       r = reproc_read(children[i].process, REPROC_STREAM_OUT, output, sizeof(output));
       if (r == REPROC_EPIPE) {
         children[i].process = reproc_destroy(children[i].process);
@@ -84,7 +70,7 @@ static int execute_processes(){
       }
       output[r] = '\0';
 
-      char msg[1024];
+      char msg[strlen(output) + 1024];
       sprintf(&msg, "<%d> " AC_RESETALL AC_YELLOW_BLACK AC_REVERSED AC_ITALIC "%s" AC_RESETALL, getpid(), stringfn_trim(output));
       log_debug("%s", msg);
     }

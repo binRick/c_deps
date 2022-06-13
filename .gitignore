@@ -10,3 +10,4 @@ subprojects/*/
 *.gif
 .err
 screenshot.bmp
+tmp
