@@ -1,4 +1,5 @@
 ####################################
+subdir('deps/subprocess')
 subdir('deps/ansicodes')
 subdir('deps/log.h')
 subdir('deps/libspng')
