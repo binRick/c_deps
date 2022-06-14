@@ -68,7 +68,6 @@ unlink-term-tests-test:
 	@unlink build/term-tests-test/term-tests-test||true
 do-nodemon:
 	@$(PASSH) -L .nodemon.log $(NODEMON) \
-	-V \
 		--delay .3 \
 		-w "dbgp-test/*.h" -w "dbgp-test/*.c"\
 		-w 'meson/meson.build' -w 'meson/deps/*/meson.build' -w 'meson.build' \

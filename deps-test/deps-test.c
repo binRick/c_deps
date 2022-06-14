@@ -282,7 +282,7 @@ TEST test_spin(void){
 }
 
 
-TEST test_cansid(void){
+TEST t_cansid(void){
   do_test_cansid();
 }
 
@@ -357,8 +357,8 @@ SUITE(test_debug) {
   RUN_TEST(test_debug_print);
   PASS();
 }
-SUITE(test_parse) {
-  RUN_TEST(test_cansid);
+SUITE(s_cansid) {
+  RUN_TEST(t_cansid);
   PASS();
 }
 SUITE(test_string) {
@@ -516,6 +516,75 @@ TEST t_eventemitter(void){
 } /* t_eventemitter */
 
 
+TEST t_dmt(void){
+  char *a = dmt_malloc(16);
+  char *b = dmt_calloc(16, 2);
+  char *c = dmt_malloc(128);
+
+  a = dmt_realloc(a, 128);
+
+  printf("Current memory usage: %lu bytes\n", dmt_usage());
+  printf("Size of 'a' variable's allocation: %lu bytes\n", dmt_size(a));
+
+  dmt_free(c);
+
+  dmt_dump(stdout);
+
+  printf("done\n");
+  PASS();
+}
+
+
+TEST t_microtar_read(void){
+  mtar_t        tar;
+  mtar_header_t h;
+  char          *p;
+
+/* Open archive for reading */
+  mtar_open(&tar, "test.tar", "r");
+
+/* Print all file names and sizes */
+  while ((mtar_read_header(&tar, &h)) != MTAR_ENULLRECORD) {
+    printf("%s (%d bytes)\n", h.name, h.size);
+    mtar_next(&tar);
+  }
+
+/* Load and print contents of file "test.txt" */
+  mtar_find(&tar, "test.txt", &h);
+  p = calloc(1, h.size + 1);
+  mtar_read_data(&tar, p, h.size);
+  printf("%s", p);
+  free(p);
+
+/* Close archive */
+  mtar_close(&tar);
+  PASS();
+}
+
+
+TEST t_microtar_write(void){
+  mtar_t     tar;
+  const char *str1 = "Hello world";
+  const char *str2 = "Goodbye world";
+
+/* Open archive for writing */
+  mtar_open(&tar, "test.tar", "w");
+
+/* Write strings to files `test1.txt` and `test2.txt` */
+  mtar_write_file_header(&tar, "test1.txt", strlen(str1));
+  mtar_write_data(&tar, str1, strlen(str1));
+  mtar_write_file_header(&tar, "test2.txt", strlen(str2));
+  mtar_write_data(&tar, str2, strlen(str2));
+
+/* Finalize -- this needs to be the last thing done before closing */
+  mtar_finalize(&tar);
+
+/* Close archive */
+  mtar_close(&tar);
+  PASS();
+}
+
+
 TEST t_workqueue(void){
   printf("Library Examples:\n");
 
@@ -611,6 +680,11 @@ TEST test_occurrences(void){
 }
 
 
+/*TEST t_microui(){
+ * PASS();
+ * }*/
+
+
 TEST test_str_replace(){
   char *replaced = str_replace("hello world", "hello", "goodbye");
 
@@ -618,12 +692,26 @@ TEST test_str_replace(){
   free(replaced);
   PASS();
 }
+/*
+ * SUITE(s_microui){
+ * RUN_TEST(t_microui);
+ * PASS();
+ * }*/
 SUITE(s_eventemitter){
   RUN_TEST(t_eventemitter);
   PASS();
 }
 SUITE(s_forever){
   RUN_TEST(t_forever);
+  PASS();
+}
+SUITE(s_dmt){
+  RUN_TEST(t_dmt);
+  PASS();
+}
+SUITE(s_microtar){
+  RUN_TEST(t_microtar_write);
+  RUN_TEST(t_microtar_read);
   PASS();
 }
 SUITE(s_workqueue){
@@ -648,6 +736,51 @@ TEST read_json_file(void){
   DEBUG_PRINT(JSON_TESTS_CONTENT, .colorscheme = FORE_BLUE BACK_BLACK, .filestream = stdout);
   PASS();
 }
+
+
+TEST t_catpath(void){
+  char *some_path = NULL; // You must init the first path with NULL!
+
+  // Create a new allocated pointer for `some_path` with contents of: `/starts/with/slash-and-end-with-slash` (removes the suffix '/')
+  catpath(&some_path, "/starts/with/slash-and-end-with-slash/");
+
+  // Append a path to `some_path`, will automatically free/alloc a new pointer and return it
+  catpath(&some_path, "/other/path");
+
+  printf("some_path: %s\n", some_path);
+  // some_path contents: /starts/with/slash-and-end-with-slash/other/path
+
+  // When you are done, make sure you `free()` the path.
+  free(some_path);
+  PASS();
+}
+
+
+TEST t_regex(void){
+  int match_length;
+
+/* Standard null-terminated C-string to search: */
+  const char *string_to_search = "ahem.. 'hello world !' ..";
+
+/* Compile a simple regular expression using character classes, meta-char and greedy + non-greedy quantifiers: */
+  re_t pattern = re_compile("[Hh]ello [Ww]orld\\s*[!]?");
+
+/* Check if the regex matches the text: */
+  int match_idx = re_matchp(pattern, string_to_search, &match_length);
+
+  if (match_idx != -1) {
+    printf("match at idx %i, %i chars long.\n", match_idx, match_length);
+  }
+  PASS();
+}
+SUITE(s_catpath) {
+  RUN_TEST(t_catpath);
+  PASS();
+}
+SUITE(s_regex) {
+  RUN_TEST(t_regex);
+  PASS();
+}
 SUITE(tests) {
   RUN_TEST(read_json_file);
   RUN_TEST(process_json_lines);
@@ -661,7 +794,7 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
   RUN_SUITE(tests);
-  RUN_SUITE(test_parse);
+  RUN_SUITE(s_cansid);
   RUN_SUITE(test_string);
   RUN_SUITE(test_debug);
   RUN_SUITE(test_time);
@@ -673,7 +806,12 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_deps);
   RUN_SUITE(s_vector);
   RUN_SUITE(s_workqueue);
+  RUN_SUITE(s_microtar);
+  RUN_SUITE(s_dmt);
   RUN_SUITE(s_forever);
   RUN_SUITE(s_eventemitter);
+//  RUN_SUITE(s_microui);
+  RUN_SUITE(s_regex);
+  RUN_SUITE(s_catpath);
   GREATEST_MAIN_END();
 }

@@ -385,3 +385,15 @@
 [submodule "submodules/c_workqueue"]
 	path = submodules/c_workqueue
 	url = https://github.com/sagiegurari/c_workqueue
+[submodule "submodules/microtar"]
+	path = submodules/microtar
+	url = https://github.com/rxi/microtar
+[submodule "submodules/dmt"]
+	path = submodules/dmt
+	url = https://github.com/rxi/dmt
+[submodule "submodules/microui"]
+	path = submodules/microui
+	url = https://github.com/rxi/microui
+[submodule "submodules/catpath"]
+	path = submodules/catpath
+	url = https://github.com/WestleyR/catpath
