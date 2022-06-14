@@ -10,13 +10,17 @@ inc = [
   include_directories('submodules/progressbar/include/progressbar'),
   include_directories('submodules/cgif/inc'),
   include_directories('submodules/SDL_DBGP'),
+  include_directories('submodules/c_sdl/sdl-app-fonts'),
   include_directories('submodules'),
   include_directories('.'),
 ]  
+subdir('meson/osx')
 subdir('meson/args')
 subdir('meson/inc')
-###########################################
 subdir('meson')
+subdir('submodules')
+###########################################
+###########################################
 subdir('meson/deps/c_timer')
 subdir('meson/deps/reproc')
 ###########################################
@@ -40,3 +44,4 @@ subdir('introspect')
 subdir('introspect-test')
 subdir('list-test')
 subdir('tinydir-test')
+subdir('submodules/c_sdl/sdl-app-test')

@@ -361,3 +361,9 @@
 [submodule "submodules/reproc"]
 	path = submodules/reproc
 	url = https://github.com/DaanDeMeyer/reproc
+[submodule "submodules/c_sdl"]
+	path = submodules/c_sdl
+	url = ssh://git@github.com/binRick/c_sdl
+[submodule "submodules/c_darwin"]
+	path = submodules/c_darwin
+	url = ssh://git@github.com/binRick/c_darwin
