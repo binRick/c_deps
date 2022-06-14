@@ -1,17 +1,19 @@
 #define DEBUG_WORKERS      false
 #define WINDOW_TITLE       "Application Title"
 #define WINDOW_X_OFFSET    670
-#define WINDOW_Y_OFFSET    81
+#define WINDOW_Y_OFFSET    100
 #define WIN_WIDTH          800
 #define WIN_HEIGHT         300
 #define GLYPHS_PER_LINE    (256 / 8)
+#define SDL_WINDOW_OPTIONS                        \
+  SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI \
+  | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALWAYS_ON_TOP
 #include "ansicodes.h"
 #include "dbgp-test.h"
 #include "SDL_DBGP.h"
 #include "SDL_DBGP_unscii16.h"
 #include "SDL_DBGP_unscii8.h"
 #include <assert.h>
-#include <ctype.h>
 #include <ctype.h>
 #include <pthread.h>
 #include <stdarg.h>
@@ -23,6 +25,9 @@
 #include <string.h>
 #include <sys/time.h>
 #include <SDL.h>
+//#include <SDL2/SDL.h>
+#include "submodules/c_darwin/active-app/active-app.h"
+#include "submodules/c_darwin/window-utils/window-utils.h"
 #include <time.h>
 #include <unistd.h>
 #define L    log_debug
@@ -52,25 +57,41 @@ char            msg0[1024 * 2];
 
 /////////////////////////////////////////////////////////////
 void *worker(void *WID){
-  void   *job;
-  size_t WORKER_ID = (size_t)WID;
-  int    width = 1, height = -1, rw = -1, rh = -1;
+  void      *job;
+  size_t    WORKER_ID = (size_t)WID;
+  int       width = 1, height = -1, rw = -1, rh = -1;
+  char      c[1024] = "t1";
+
+  focused_t *fp     = get_focused_process();
+  int       win_qty = GetWindowsQty();
 
   L("%lu> Worker waing for jobs....", WORKER_ID);
   while (chan_recv(JOBS_CHANNEL, &job) == 0) {
     usleep(WORKER_SLEEP_MS * 1000 * WORKER_ID);
     processed_qtys[WORKER_ID]++;
+    if ((processed_qtys[WORKER_ID] % 50) == 1) {
+    }
+    if ((processed_qtys[WORKER_ID] % 10) == 1) {
+      //   fp = get_focused_process();
+      win_qty = GetWindowsQty();
+//      SDL_SetCaption(c,NULL);
+    }
     SDL_GetWindowSize(window, &width, &height);
     SDL_GetRendererOutputSize(renderer, &rw, &rh);
     sprintf(msg,
-            "OK- %lu: %d> [window:%dx%d][renderer:%dx%d][font:%dx%d][cols:%d][rows:%d]",
+            "OK- %lu: %d> [window:%dx%d][renderer:%dx%d][font:%dx%d][cols:%d][rows:%d]"
+            "\n"
+            "[windows:%d][focus:%s|%d][mod:%d]",
             WORKER_ID,
             processed_qtys[WORKER_ID],
             width, height,
             rw, rh,
             unscii16.glyph_width, unscii16.glyph_height,
             (rw / DBGP_UNSCII16_WIDTH),
-            (rh / DBGP_UNSCII16_HEIGHT)
+            (rh / DBGP_UNSCII16_HEIGHT),
+            win_qty,
+            fp->name, fp->pid,
+            (processed_qtys[WORKER_ID] % 10 == 0)
             );
     sprintf(workers[WORKER_ID].msg,
             "\t"
@@ -186,7 +207,7 @@ void render_screen(void){
     DBGP_Print(&unscii16, renderer, 0, 15 * 16, DBGP_DEFAULT_COLORS, msg0);
   }
   if (strlen(msg) > 0) {
-    DBGP_Print(&unscii16, renderer, 0, 14 * 16, DBGP_DEFAULT_COLORS, msg);
+    DBGP_Print(&unscii16, renderer, 0, 13 * 16, DBGP_DEFAULT_COLORS, msg);
   }
 
   DBGP_Print(
@@ -234,12 +255,12 @@ int dbgp_main(void) {
     return(1);
   }
   SDL_SetHint(SDL_HINT_BMP_SAVE_LEGACY_FORMAT, "1");
+//  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
   window = SDL_CreateWindow(
     WINDOW_TITLE,
     WINDOW_X_OFFSET, WINDOW_Y_OFFSET,
-    WIN_WIDTH, WIN_HEIGHT,
-    SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
+    WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_OPTIONS
     );
 
   if (window == NULL) {
@@ -286,7 +307,8 @@ int dbgp_main(void) {
               " %sGREEN$0F "
               " %sRED$0F "
               " %sCYAN$0F "
-              " %sYELLOW$0F ",
+              " %sYELLOW$0F "
+              " %sTEST$0F ",
               "$20", "#",
               "$E0", keypresses,
               "$04", event.type,
@@ -295,7 +317,8 @@ int dbgp_main(void) {
               "$20",
               "$40",
               "$A0",
-              "$E0"
+              "$E0",
+              "$3F"
               );
       fprintf(stderr, "%s\n", msg0);
 

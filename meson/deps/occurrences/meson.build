@@ -1,12 +1,17 @@
-occurrences_lib = library('c_string_buffer', 
-  'submodules/meson_deps/submodules/occurences.c/occurrences.c',
+occurrences_lib = static_library('occurrences',
+  '../../../submodules/occurrences/occurrences.c',
   install: false, 
-  dependencies: [], 
-  include_directories: [inc,
+  dependencies: [
+  ], 
+  include_directories: [
+    inc,
+    '../../../submodules/occurrences',
   ]
 )
 occurrences_dep = declare_dependency(include_directories: 
-  [inc,
-    ], 
-  link_with: occurrences_lib)
-#deps += stringbuffer_dep
+  [
+    inc,
+    '../../../submodules/occurrences',
+  ], 
+  link_with: occurrences_lib
+)

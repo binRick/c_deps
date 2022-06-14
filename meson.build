@@ -11,6 +11,8 @@ inc = [
   include_directories('submodules/cgif/inc'),
   include_directories('submodules/SDL_DBGP'),
   include_directories('submodules/c_sdl/sdl-app-fonts'),
+  include_directories('submodules/c_darwin/app-utils'),
+  include_directories('submodules/c_darwin/active-app'),
   include_directories('submodules'),
   include_directories('.'),
 ]  
@@ -44,6 +46,7 @@ subdir('reproc-test')
 subdir('introspect')
 subdir('introspect-test')
 subdir('list-test')
+subdir('fort-test')
 subdir('tinydir-test')
 subdir('tmt-test')
 subdir('subprocess-test')

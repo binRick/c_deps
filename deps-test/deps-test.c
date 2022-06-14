@@ -383,6 +383,36 @@ TEST process_json_lines(void){
 } /* process_json_lines */
 
 
+TEST test_occurrences(void){
+  int qty;
+
+  qty = occurrences("l", "hello");
+  ASSERT_EQ(2, qty);
+  qty = occurrences("L", "hello");
+  ASSERT_EQ(0, qty);
+  qty = occurrences(NULL, "hello");
+  ASSERT_EQ(-1, qty);
+  qty = occurrences("hello", NULL);
+  ASSERT_EQ(-1, qty);
+  PASS();
+}
+
+
+TEST test_str_replace(){
+  char *replaced = str_replace("hello world", "hello", "goodbye");
+
+  printf("%s\n", replaced);
+  free(replaced);
+  PASS();
+}
+
+SUITE(s_deps){
+  RUN_TEST(test_occurrences);
+  RUN_TEST(test_str_replace);
+  PASS();
+}
+
+
 TEST read_json_file(void){
   DEBUG_PRINT(JSON_TESTS_FILE, .colorscheme    = FORE_BLUE BACK_BLACK, .filestream = stdout);
   JSON_TESTS_CONTENT                           = fsio_read_text_file(JSON_TESTS_FILE);
@@ -411,5 +441,6 @@ int main(int argc, char **argv) {
   RUN_SUITE(suite_qrcode);
   RUN_SUITE(suite_totp);
   RUN_SUITE(test_spinner);
+  RUN_SUITE(s_deps);
   GREATEST_MAIN_END();
 }

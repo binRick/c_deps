@@ -3,15 +3,16 @@
 #define STDOUT_READ_BUFFER_SIZE    1024 * 16
 #include "c_string_buffer/include/stringbuffer.h"
 
+
 int subprocess_test_main(char *CMD){
-  char *READ_STDOUT;
+  char                 *READ_STDOUT;
   int                  exited, result;
   struct subprocess_s  subprocess;
   const char           *command_line[]                        = { "/bin/sh", "-c", CMD, NULL };
   char                 stdout_buffer[STDOUT_READ_BUFFER_SIZE] = { 0 };
   struct  StringBuffer *SB                                    = stringbuffer_new_with_options(STDOUT_READ_BUFFER_SIZE, true);
   size_t               bytes_read                             = 0,
-  index                                  = 0;
+                       index                                  = 0;
 
   result = subprocess_create(command_line, 0, &subprocess);
   assert_eq(result, 0, %d);

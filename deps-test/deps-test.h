@@ -9,4 +9,6 @@
 #include <sys/time.h>
 //////////////////////////////////////
 #include "deps/deps.h"
+#include "submodules/occurrences/occurrences.h"
+#include "submodules/str-replace.c/src/str-replace.h"
 #include "submodules/timestamp/timestamp.h"

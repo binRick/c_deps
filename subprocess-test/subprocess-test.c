@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
-
+#define FIND_PATH    "."
 
 //////////////////////////////////////////////
 
@@ -19,11 +19,15 @@ TEST t_subprocess_0(void *CMD){
 
 GREATEST_MAIN_DEFS();
 
-SUITE(t_subprocess){
+SUITE(t_subprocess_find){
+  RUN_TESTp(t_subprocess_0, "find " FIND_PATH " -type d");
+  RUN_TESTp(t_subprocess_0, "find " FIND_PATH " -type f");
+  PASS();
+}
+
+SUITE(t_subprocess_basic){
   RUN_TESTp(t_subprocess_0, "ls");
   RUN_TESTp(t_subprocess_0, "pwd");
-  RUN_TESTp(t_subprocess_0, "find submodules/c_string_buffer -type d");
-  RUN_TESTp(t_subprocess_0, "find submodules/c_string_buffer -type f");
   PASS();
 }
 
@@ -31,7 +35,8 @@ SUITE(t_subprocess){
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
-  RUN_SUITE(t_subprocess);
+  RUN_SUITE(t_subprocess_basic);
+  RUN_SUITE(t_subprocess_find);
 
   GREATEST_MAIN_END();
   return(0);

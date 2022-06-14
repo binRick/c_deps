@@ -370,3 +370,12 @@
 [submodule "submodules/libtmt"]
 	path = submodules/libtmt
 	url = https://github.com/deadpixi/libtmt
+[submodule "submodules/occurrences"]
+	path = submodules/occurrences
+	url = https://github.com/stephenmathieson/occurrences.c
+[submodule "submodules/libfort"]
+	path = submodules/libfort
+	url = https://github.com/seleznevae/libfort
+[submodule "submodules/tty-copy"]
+	path = submodules/tty-copy
+	url = https://github.com/jirutka/tty-copy

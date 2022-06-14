@@ -11,3 +11,4 @@ subprojects/*/
 .err
 screenshot.bmp
 tmp
+.vscode/

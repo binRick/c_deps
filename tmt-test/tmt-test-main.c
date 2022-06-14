@@ -2,7 +2,7 @@
 #include "tmt-test.h"
 #include <assert.h>
 #define ROWS        2
-#define COLS        10
+#define COLS        6
 unsigned int callbacks_qty;
 
 void callback(tmt_msg_t m, TMT *vt, const void *a, void *p);
@@ -98,6 +98,10 @@ void printTerminal(TMT *vt){
 
 
   for (size_t r = 0; r < s->nline; r++) {
+    if (!s->lines[r]->dirty) {
+      continue;
+    }
+
     for (size_t c = 0; c < s->ncol; c++) {
       printf(
         AC_RESETALL AC_REVERSED AC_BLUE "Contents of" AC_RESETALL
@@ -105,13 +109,16 @@ void printTerminal(TMT *vt){
         AC_RESETALL AC_BRIGHT_BLUE "%zdx%zd: " AC_RESETALL
         AC_RESETALL AC_BRIGHT_YELLOW "%c" AC_RESETALL
         AC_RESETALL " " AC_RESETALL
-        AC_RESETALL "(%s|%s underline|%s reverse|%s dim)\n" AC_RESETALL,
+        AC_RESETALL "(%s|%s underline|%s reverse|%s dim)" AC_RESETALL
+        AC_RESETALL "(fg:%d|bg:%d)\n" AC_RESETALL,
         r + 1, c + 1,
         s->lines[r]->chars[c].c,
         s->lines[r]->chars[c].a.bold ? AC_RESETALL AC_REVERSED AC_GREEN "Bold" AC_RESETALL : AC_RESETALL AC_WHITE "Unbold" AC_RESETALL,
         s->lines[r]->chars[c].a.underline ? "is" : "is not",
         s->lines[r]->chars[c].a.reverse ? "is" : "is not",
-        s->lines[r]->chars[c].a.dim ? "is" : "is not"
+        s->lines[r]->chars[c].a.dim ? "is" : "is not",
+        (int)(s->lines[r]->chars[c].a.fg),
+        (int)(s->lines[r]->chars[c].a.bg)
         );
       qty_cells_printed++;
     }
@@ -124,5 +131,5 @@ void printTerminal(TMT *vt){
 
     );
   tmt_clean(vt);
-}
+} /* printTerminal */
 

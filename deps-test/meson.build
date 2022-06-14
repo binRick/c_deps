@@ -6,6 +6,8 @@ deps_include_dirs = [
 ]
 deps_test_deps = [
   deps_dep,
+  occurrences_dep,
+  str_replace_dep,
 ]
 
 if get_option('enable-binaries')

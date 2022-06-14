@@ -15,6 +15,9 @@ dbgp_test_dbgp = [
  timestamp_dep,
  c_timer_dep,
  bytes_dep,  
+ app_utils_dep,
+ window_utils_dep,
+ active_app_dep,
 ]
 
 if get_option('enable-binaries')
