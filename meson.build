@@ -21,6 +21,7 @@ subdir('meson')
 subdir('submodules')
 ###########################################
 ###########################################
+subdir('meson/deps/tmt')
 subdir('meson/deps/c_timer')
 subdir('meson/deps/reproc')
 ###########################################
@@ -44,4 +45,5 @@ subdir('introspect')
 subdir('introspect-test')
 subdir('list-test')
 subdir('tinydir-test')
+subdir('tmt-test')
 subdir('submodules/c_sdl/sdl-app-test')

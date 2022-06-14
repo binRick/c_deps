@@ -169,25 +169,12 @@ TEST t_chan_jobs_worker(void *buffer_qty,
   char *send_dur;
 
   for (size_t i = 1; i <= JOBS_QTY; i++) {
-    ct_set_unit(ct_MILLISECONDS);
-    ct_start(NULL);
     usleep(SEND_JOBS_DELAY_MS * 1000);
     chan_send(JOBS_CHANNEL, (void *)i);
-    send_dur = ct_stop("");
-    I(
-      "          "
-      AC_RESETALL AC_YELLOW AC_ITALIC "sent job "
-      AC_RESETALL AC_BLUE "%3lu/%d" AC_RESETALL
-      AC_RESETALL " in " AC_RESETALL
-      AC_RESETALL AC_GREEN_BLACK AC_REVERSED AC_ITALIC "%s" AC_RESETALL,
-      i,
-      DISPATCHED_JOBS_QTY,
-      send_dur
-      );
   }
 
   free(send_dur);
-  ct_set_unit(ct_MILLISECONDS);
+  //ct_set_unit(ct_MILLISECONDS);
   char *sent_dur = ct_stop("");
 
   chan_close(JOBS_CHANNEL);
@@ -217,7 +204,7 @@ GREATEST_MAIN_DEFS();
 
 
 int main(int argc, char **argv) {
-  ct_set_unit(ct_MILLISECONDS);
+  //ct_set_unit(ct_MILLISECONDS);
   GREATEST_MAIN_BEGIN();
   RUN_TEST_SUITES();
   GREATEST_MAIN_END();

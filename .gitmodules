@@ -367,3 +367,6 @@
 [submodule "submodules/c_darwin"]
 	path = submodules/c_darwin
 	url = ssh://git@github.com/binRick/c_darwin
+[submodule "submodules/libtmt"]
+	path = submodules/libtmt
+	url = https://github.com/deadpixi/libtmt
