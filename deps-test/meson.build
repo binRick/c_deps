@@ -8,6 +8,11 @@ deps_test_deps = [
   deps_dep,
   occurrences_dep,
   str_replace_dep,
+  c_vector_dep,
+  c_forever_dep,
+  dbg_dep,
+  c_eventemitter_dep,
+  c_workqueue_dep,
 ]
 
 if get_option('enable-binaries')

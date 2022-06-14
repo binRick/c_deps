@@ -1,4 +1,8 @@
 ####################################
+subdir('deps/c_forever')
+subdir('deps/c_vector')
+subdir('deps/c_eventemitter')
+subdir('deps/c_workqueue')
 subdir('deps/subprocess')
 subdir('deps/ansicodes')
 subdir('deps/log.h')

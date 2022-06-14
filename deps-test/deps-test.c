@@ -1,5 +1,38 @@
 #include "deps-test.h"
 #include <assert.h>
+enum ExampleEvents {
+  EVENT_START  = 100,
+  EVENT_MIDDLE = 200,
+  EVENT_END    = 300
+};
+struct FnArgs {
+  int counter;
+};
+
+
+void work_fn(void *args){
+  struct FnArgs *fn_args = (struct FnArgs *)args;
+
+  sleep(1);
+  printf("Counter: %d\n", fn_args->counter);
+
+  free(fn_args);
+}
+
+
+static void on_start(void *event_data, void *context){
+  printf("OnStart, data: %s context: %s\n", (char *)event_data, (char *)context);
+}
+
+
+static void on_end(void *event_data, void *context){
+  printf("OnEnd, data: %s context: %s\n", (char *)event_data, (char *)context);
+}
+
+
+static void on_unhandled(int event_id, void *event_data, void *context){
+  printf("OnUnhandled, did not set listener for event: %d data: %s context: %s\n", event_id, (char *)event_data, (char *)context);
+}
 #define TBL1        "\
 \
 ┌───────────────────────────────┐\
@@ -383,6 +416,186 @@ TEST process_json_lines(void){
 } /* process_json_lines */
 
 
+void t_forever_my_program(void *context){
+  dbg("t_forever_my_program", %s);
+  if (context != NULL) {
+    // do something with the context
+  }
+
+  usleep(1000 * 100);
+  exit(0);
+}
+
+
+int t_forever_callback(void *context, const unsigned char started, int stat_loc){
+  if (context != NULL) {
+    // do something with the context
+  }
+  dbg(stat_loc, %d);
+  dbg(started, %c);
+
+  if (stat_loc == 0 || !started) {
+    return(-1); // no more retries
+  }
+  dbg("t_forever_callback", %s);
+  return(500); // wait 500 millies before next invocation, 0 for no wait.
+}
+
+
+TEST t_forever(void){
+  void *context = NULL;
+
+  // call 'my_program' and when it ends/crashes invoke it again, up
+  // to 10 times and wait 250 millies between invocations.
+  // counter will hold the amount of times 'my_program' was invoked.
+  unsigned int counter = forever_with_options(
+    t_forever_my_program, // function to invoke
+    context,              // context that is passed to the function on every invocation
+    5,                    // max amount of retries. 0 for unlimited retries.
+    500                   // amount of millies to wait between invocations. 0 for no wait.
+    );
+
+  printf("Invoked %u time/s.\n", counter);
+
+  // call 'my_program' and when it ends/crashes call the provided callback
+  counter = forever_with_callback(t_forever_my_program, context, t_forever_callback);
+  printf("Invoked %u time/s.\n", counter);
+
+  PASS();
+}
+
+
+TEST t_eventemitter(void){
+  // first create a new event emitter which will host the listeners and emit the events
+  struct EventEmitter *event_emitter = eventemitter_new();
+
+  // lets add few listeners.
+  // we can add as many as we want
+  // this listener will be triggered for the 'start' event
+  // we are adding the same callback multiple times so for each event triggered
+  // the callback will be called several times
+  // The last param is a context that the specific listener will get each time its triggered
+  // Each add function returns a unique ID which can be used to remove the listener
+  unsigned int listener_id = eventemitter_add_listener(event_emitter, EVENT_START, on_start, "some context for start 1");
+
+  eventemitter_add_listener(event_emitter, EVENT_START, on_start, "some context for start 2");
+  eventemitter_on(event_emitter, EVENT_START, on_start, "some context for shorthand start"); // shorthand version
+
+  // we can add listeners that are triggered once and are removed afterwards
+  eventemitter_add_once_listener(event_emitter, EVENT_END, on_end, "end context 1");
+  eventemitter_once(event_emitter, EVENT_END, on_end, "end context 2"); // shorthand
+
+  // we can add listeners to any event triggered but no listeners were registered to it
+  eventemitter_add_unhandled_listener(event_emitter, on_unhandled, "unhandled context 1");
+  eventemitter_else(event_emitter, on_unhandled, "unhandled context 2"); // shorthand
+
+  // trigger the 'start' event and pass some optional event data (any type) which
+  // listeners will get in the callback
+  eventemitter_emit(event_emitter, EVENT_START, "my start event data");
+
+  // lets remove one of the 'start' listeners and emit it again
+  eventemitter_remove_listener(event_emitter, EVENT_START, listener_id);
+  eventemitter_emit(event_emitter, EVENT_START, "my second start event data");
+
+  // lets trigger an event that no one listens to and see how the unhandled listeners are triggered
+  eventemitter_emit(event_emitter, EVENT_MIDDLE, "middle event data");
+
+  // lets trigger the 'end' event
+  eventemitter_emit(event_emitter, EVENT_END, "end event data");
+  // since all 'end' event listeners were added as 'once' they are no longer registered
+  // so we will trigger it again and see how the unhandled listeners are invoked
+  eventemitter_emit(event_emitter, EVENT_END, "end event data again");
+  eventemitter_emit(event_emitter, EVENT_END, "end event data again 2");
+
+  // once done with the emitter, we should release it
+  // no need to release the listeners manually
+  printf("Releasing Event Emitter\n");
+  eventemitter_release(event_emitter);
+
+  PASS();
+} /* t_eventemitter */
+
+
+TEST t_workqueue(void){
+  printf("Library Examples:\n");
+
+  // create new threaded work queue with default queue size
+  // workqueue_new_with_options can be used to define custom queue size
+  // each queue owns its own background thread and its possible to create many queues in parallel.
+  struct WorkQueue *queue = workqueue_new();
+
+  printf("Queue Size: %zu Backlog Size: %zu\n", workqueue_get_queue_size(queue), workqueue_get_backlog_size(queue));
+
+  for (size_t index = 0; index < 20; index++) {
+    struct FnArgs *args = malloc(sizeof(struct FnArgs));
+    args->counter = index;
+
+    if (!workqueue_push(queue, work_fn, args)) {
+      printf("Failed to push work function to queue\n");
+      free(args);
+    }
+  }
+
+  printf("Backlog Size: %zu\n", workqueue_get_backlog_size(queue));
+
+  // wait for queue to finish, queue can still be used afterwards
+  workqueue_drain(queue);
+  printf("Backlog Size: %zu\n", workqueue_get_backlog_size(queue));
+
+  // release when done
+  workqueue_release(queue);
+
+  PASS();
+}
+
+
+TEST t_vector(void){
+  struct Vector *vector = vector_new();
+
+  // populate vector using multiple available functions
+  vector_push(vector, "test push");
+  vector_insert(vector, 1, "test insert");                          // shifts all items from index 1 forward
+  vector_prepend(vector, "test prepend");
+  char *previous_value = (char *)vector_set(vector, 1, "test set"); // replaces the item at index 1
+
+  printf("Replaced value at index 1, old value: %s\n", previous_value);
+
+  // can fetch any item
+  char *value = (char *)vector_get(vector, 1);
+
+  printf("Value at index 1: %s\n", value);
+  value = (char *)vector_pop(vector);
+  printf("Last Value: %s\n", value);
+
+  // or fetch all items
+  void **all_items = vector_to_array(vector);
+
+  printf("First item: %s\n", (char *)all_items[0]);
+
+  // can remove any item
+  value = (char *)vector_remove(vector, 0); // shifts all items after index backward
+  printf("Removed first item: %s\n", value);
+
+  // modify the vector size
+  size_t size     = vector_size(vector);
+  size_t capacity = vector_capacity(vector);
+
+  printf("Current size: %zu capacity: %zu\n", size, capacity);
+  vector_shrink(vector);
+  size     = vector_size(vector);
+  capacity = vector_capacity(vector);
+  printf("Current size: %zu capacity: %zu\n", size, capacity);
+  vector_shrink(vector);
+  size     = vector_ensure_capacity(vector, 100);
+  capacity = vector_capacity(vector);
+  printf("Current size: %zu capacity: %zu\n", size, capacity);
+
+  // when we are done with the vector, we release it
+  vector_release(vector);
+  PASS();
+} /* test_vector */
+
+
 TEST test_occurrences(void){
   int qty;
 
@@ -403,6 +616,22 @@ TEST test_str_replace(){
 
   printf("%s\n", replaced);
   free(replaced);
+  PASS();
+}
+SUITE(s_eventemitter){
+  RUN_TEST(t_eventemitter);
+  PASS();
+}
+SUITE(s_forever){
+  RUN_TEST(t_forever);
+  PASS();
+}
+SUITE(s_workqueue){
+  RUN_TEST(t_workqueue);
+  PASS();
+}
+SUITE(s_vector){
+  RUN_TEST(t_vector);
   PASS();
 }
 
@@ -442,5 +671,9 @@ int main(int argc, char **argv) {
   RUN_SUITE(suite_totp);
   RUN_SUITE(test_spinner);
   RUN_SUITE(s_deps);
+  RUN_SUITE(s_vector);
+  RUN_SUITE(s_workqueue);
+  RUN_SUITE(s_forever);
+  RUN_SUITE(s_eventemitter);
   GREATEST_MAIN_END();
 }

@@ -379,3 +379,9 @@
 [submodule "submodules/tty-copy"]
 	path = submodules/tty-copy
 	url = https://github.com/jirutka/tty-copy
+[submodule "submodules/c_vector"]
+	path = submodules/c_vector
+	url = https://github.com/sagiegurari/c_vector
+[submodule "submodules/c_workqueue"]
+	path = submodules/c_workqueue
+	url = https://github.com/sagiegurari/c_workqueue
