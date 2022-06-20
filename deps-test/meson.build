@@ -18,6 +18,7 @@ deps_test_deps = [
   dmt_dep,
   microui_dep,
   catpath_dep,
+  str_truncate_dep,
 ]
 deps_link_args = [
   #'-L/usr/local/lib',

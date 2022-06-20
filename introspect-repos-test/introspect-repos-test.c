@@ -1,6 +1,6 @@
 #include <stdbool.h>
-#define DEBUG_MEMORY_ENABLED    true
-#include "introspect-test.h"
+#define DEBUG_MEMORY_ENABLED    false
+#include "introspect-repos-test.h"
 #include "parson.h"
 #include "submodules/log.h/log.h"
 #include <assert.h>
@@ -19,6 +19,7 @@
 //////////////////////////////////////////////
 extern char *execute_processes();
 
+const size_t PATH_LIMIT = 20;
 
 //////////////////////////////////////////////
 
@@ -77,80 +78,27 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
 }
 
 
-TEST t_introspect_parse_execution(void *MESON_FILE_PATH){
-  char *OUTPUT = execute_processes((char *)MESON_FILE_PATH);
+TEST t_paths(){
+  char          *BASE_PATH   = "../";
+  char          *PATH_FILTER = "c_*";
 
-  ASSERT_GTE(strlen(OUTPUT), 1);
-  JSON_Array *A = parse_execution_result(OUTPUT);
+  struct Vector *MESON_PATHS = get_meson_paths(BASE_PATH, PATH_FILTER, PATH_LIMIT);
 
-  ASSERT_NEQ(A, NULL);
-  free(OUTPUT);
+  iterate_print(MESON_PATHS);
+
+  struct Vector *introspected_paths = execute_meson_introspects(MESON_PATHS);
+
+//  iterate_parse_results(introspected_paths);
+//iterate_free(MESON_PATHS);
+
   PASS();
 }
 
-
-TEST t_introspect_ansi(void){
-  char meson_build_file[] = "../c_ansi/meson.build";
-
-  char *OUTPUT = execute_processes(meson_build_file);
-
-  free(OUTPUT);
+SUITE(s_paths){
+  RUN_TESTp(t_paths);
   PASS();
 }
 
-
-TEST t_introspect_db(void){
-  char meson_build_file[] = "../c_db/meson.build";
-
-  char *OUTPUT = execute_processes(meson_build_file);
-
-  free(OUTPUT);
-  PASS();
-}
-
-
-TEST t_introspect_palettes(void){
-  char meson_build_file[] = "./../c_palettes/meson.build";
-
-  char *OUTPUT = execute_processes(meson_build_file);
-
-  free(OUTPUT);
-  PASS();
-}
-
-
-TEST t_introspect_meson_deps(void){
-  char meson_build_file[] = "./meson.build";
-
-  char *OUTPUT = execute_processes(meson_build_file);
-
-  free(OUTPUT);
-  PASS();
-}
-
-SUITE(s_introspect_base){
-  RUN_TEST(t_introspect_meson_deps);
-  RUN_TEST(t_introspect_ansi);
-  RUN_TEST(t_introspect_db);
-  RUN_TEST(t_introspect_palettes);
-  RUN_TESTp(t_introspect_parse_execution, "../c_colors/meson.build");
-}
-
-SUITE(s_iterate){
-  RUN_TESTp(t_introspect_iterate, "../c_colors/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_ansi/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_db/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_colors/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_ansi/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_palettes/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_kat/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_embed/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_mui/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_sdl/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_hl/meson.build");
-  RUN_TESTp(t_introspect_iterate, "../c_mui/meson.build");
-//  RUN_TESTp(t_introspect_iterate, "../meson_deps/meson.build");
-}
 
 GREATEST_MAIN_DEFS();
 
@@ -158,10 +106,9 @@ GREATEST_MAIN_DEFS();
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
-  RUN_SUITE(s_introspect_base);
-  RUN_SUITE(s_iterate);
+  RUN_SUITE(s_paths);
 #ifdef DEBUG_MEMORY_ENABLED
-  print_allocated_memory();
+//  print_allocated_memory();
 #endif
   GREATEST_MAIN_END();
   return(0);

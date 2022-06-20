@@ -22,6 +22,7 @@ TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *
 			   reproc-test/*.c reproc-test/*.h \
 			   list-test/*.c list-test/*.h \
 			   *-test/*.c *-test/*.h \
+			   intro*/*.c intro*/*.h \
 ########################################################
 TRIGGER_FILE=.trigger.c
 ##############################################################
@@ -39,10 +40,8 @@ uncrustify:
 	@$(UNCRUSTIFY) -c etc/uncrustify.cfg --replace $(TIDIED_FILES)||true
 uncrustify-clean:
 	@find  . -type f -maxdepth 2 -name "*unc-back*"|xargs -I % unlink %
-
 clean:
 	@rm -rf build .cache
-
 fix-dbg:
 	@$(SED) 's|, % c);|, %c);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % u);|, %u);|g' -i $(TIDIED_FILES)
@@ -53,9 +52,9 @@ fix-dbg:
 do-meson:
 	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; echo MESON OK; }
 do-ninja:
-	@eval cd . && { ninja -C build; echo NINJA OK; }
+	@ninja -C build
 do-ninja-test:
-	@eval cd . && { passh ninja test -C build -v; echo NINJA TEST OK; }
+	@passh ninja test -C build -v
 do-deps-test:
 	@passh ./build/deps-test/deps-test -v
 do-sync:
@@ -77,16 +76,15 @@ do-nodemon:
 		-w "chan-test/*.c" -w "chan-test/*.h" \
 		-w "reproc-test/*.c" -w "reproc-test/*.h" \
 		-w "*-test/*.c" -w "*-test/*.h" \
+		-w "*/*.c" -w "*/*.h" \
 	    -w "introspect-test/*.c" -w "introspect-test/*.h" \
 	    -w "introspect/*.c" -w "introspect/*.h" \
 		-w "term-tests-test" \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
-			-x env -- bash -xc 'make'
-
+			-x env -- bash -c 'make||true'
 tests-log:
 	@rm .test*.log 2>/dev/null||true
 	@./build/deps-test/deps-test -l | tee $(TESTS_LIST_LOG_FILE) >/dev/null
-
 tests-tests: tests-log
 	@grep -v "^* Suite .*:" $(TESTS_LIST_LOG_FILE)\
 		|cut -d: -f1|cut -d ' ' -f3|sort -u | tee $(TESTS_TESTS_LOG_FILE) >/dev/null
@@ -106,20 +104,16 @@ do-encode-tests: do-build do-tests tests-clean
 do-tests: tests-log tests-suite-tests tests-suites 
 	@rm .tests.json 2>/dev/null||true
 	@./scripts/tests-encoder.sh > .tests.json && clear && jq -c < .tests.json
-
 git-submodules-pull:
 	@git submodule foreach git pull origin master --jobs=10
-
 git-submodules-update:
 	@git submodule update --init
-#	--recursive
-
 git-pull:
 	@git pull --recurse-submodules
-
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
 do-build: do-meson do-ninja
-do-test: do-ninja-test do-deps-test
+do-test: do-ninja-test
+deps-test: do-deps-test
 test: do-test
 build: do-meson do-build
 ansi: all do-sync do-ansi-make
@@ -135,6 +129,5 @@ trigger:
 	@touch $(TRIGGER_FILE)
 meson-introspect-targets:
 	@meson introspect --targets -i meson.build
-
 meson-binaries:
 	@meson introspect --targets  meson.build -i | jq 'map(select(.type == "executable").filename)|flatten|join("\n")' -Mrc

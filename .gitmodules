@@ -397,3 +397,12 @@
 [submodule "submodules/catpath"]
 	path = submodules/catpath
 	url = https://github.com/WestleyR/catpath
+[submodule "submodules/str-truncate.c"]
+	path = submodules/str-truncate.c
+	url = https://github.com/stephenmathieson/str-truncate.c
+[submodule "submodules/path-normalize.c"]
+	path = submodules/path-normalize.c
+	url = https://github.com/stephenmathieson/path-normalize.c
+[submodule "submodules/rhash_md5.c"]
+	path = submodules/rhash_md5.c
+	url = https://github.com/pepaslabs/rhash_md5.c

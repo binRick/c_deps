@@ -10,10 +10,11 @@ deps_args = [
 ]
 
 deps_deps = [
+  rhash_md5_dep,
   ansicodes_dep,
   asprintf_dep,
   assertf_dep,
-  #b64_dep,
+  b64_dep,
   bytes_dep,
   c_fsio_dep,
   c_string_buffer_dep,

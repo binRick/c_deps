@@ -25,6 +25,6 @@ if get_option('enable-binaries')
      include_directories: tmt_test_inc,
   )
   if get_option('enable-binary-tests')
-    test('tmt-test', tmt_test_exec, args: [])
+    #    test('tmt-test', tmt_test_exec, args: [])
   endif
 endif

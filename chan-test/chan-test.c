@@ -23,7 +23,7 @@ typedef struct WORKER_T {
 #define E                      log_error
 #define DISPATCHED_JOBS_QTY    10
 #define JOBS_BUFFER_QTY        5
-#define WORKER_SLEEP_MS        50
+#define WORKER_SLEEP_MS        5
 //////////////////////////////////////////////////////////////////////////
 #define CREATE_JOBS_SUITE(                          \
     SUITE_NAME,                                     \
@@ -49,8 +49,8 @@ typedef struct WORKER_T {
     PASS();                                         \
   }                                                 \
 //////////////////////////////////////////////////////////////////////////
-#define CREATE_JOBS_SUITES()                       \
-  CREATE_JOBS_SUITE(s_chan_jobs, 100, 3, 100, 500) \
+#define CREATE_JOBS_SUITES()                  \
+  CREATE_JOBS_SUITE(s_chan_jobs, 1, 3, 5, 10) \
 //////////////////////////////////////////////////////////////////////////
 #define RUN_TEST_SUITES()    { do {                      \
                                  RUN_SUITE(s_chan_jobs); \

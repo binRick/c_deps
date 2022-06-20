@@ -54,8 +54,8 @@ JSON_Array *parse_execution_result(char *OUTPUT){
   size_t qty = json_array_get_count(A);
 
   assert(qty > 0);
-  log_debug("output is %lub and %lu properties", strlen(OUTPUT), json_array_get_count(A));
-  D("parse........%lu", json_array_get_count(A));
+  //log_debug("output is %lub and %lu properties", strlen(OUTPUT), json_array_get_count(A));
+  //D("parse........%lu", json_array_get_count(A));
   return(A);
 }
 
@@ -121,11 +121,9 @@ finish:
     log_error("%s", reproc_strerror(r));
   }
 
-//log_debug("%s",output);
   char *o = malloc(strlen(output));
 
   sprintf(o, "%s", stringfn_trim(output));
-//assert(strlen(o)>0);
-//log_debug("%s",o);
+  //free(o);
   return(o);
 } /* execute_processes */

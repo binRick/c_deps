@@ -21,12 +21,12 @@ dbgp_test_dbgp = [
 ]
 
 if get_option('enable-binaries')
-  dbgp_test_exec = executable('dbgp-test',
-     dbgp_test_srcs,
-     dependencies: dbgp_test_dbgp,
-     include_directories: dbgp_include_dirs,
-  )
+  #  dbgp_test_exec = executable('dbgp-test',
+  #   dbgp_test_srcs,
+  #   dependencies: dbgp_test_dbgp,
+  #   include_directories: dbgp_include_dirs,
+  #)
   if get_option('enable-binary-tests')
-    test('dbgp-test', dbgp_test_exec, args: [])
+    #    test('dbgp-test', dbgp_test_exec, args: [])
   endif
 endif

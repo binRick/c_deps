@@ -12,3 +12,5 @@ subprojects/*/
 screenshot.bmp
 tmp
 .vscode/
+test.tar
+deps-test/microui
