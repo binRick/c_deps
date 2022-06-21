@@ -418,3 +418,6 @@
 [submodule "submodules/meson_deps"]
 	path = submodules/meson_deps
 	url = ssh://git@github.com/binRick/meson_deps
+[submodule "submodules/c_db"]
+	path = submodules/c_db
+	url = ssh://git@github.com/binRick/c_db

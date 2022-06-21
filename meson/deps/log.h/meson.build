@@ -1,7 +1,7 @@
 logh_lib = library('logh',
   install: false, 
   dependencies: [
-    ansicodes_dep
+    ansi_codes_dep
   ], 
   include_directories: [
     inc,

@@ -13,6 +13,7 @@ inc = [
   include_directories('submodules/c_sdl/sdl-app-fonts'),
   include_directories('submodules/c_darwin/app-utils'),
   include_directories('submodules/c_darwin/active-app'),
+  include_directories('submodules/c_ansi'),
   include_directories('submodules'),
   include_directories('.'),
 ]  
