@@ -4,7 +4,7 @@ c_timer_lib = library('c_timer',
   dependencies: [
     ms_dep,
     timestamp_dep,
-    ansicodes_dep,
+    ansi_codes_dep,
     asprintf_dep,
   ], 
   include_directories: [
