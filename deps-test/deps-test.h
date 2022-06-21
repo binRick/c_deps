@@ -10,6 +10,8 @@
 //////////////////////////////////////
 #include "deps/deps.h"
 #include "submodules/b64.c/b64.h"
+#include "submodules/c_ansi/ansi-codes/ansi-codes.h"
+#include "submodules/c_ansi/ansi-utils/ansi-utils.h"
 #include "submodules/c_eventemitter/include/eventemitter.h"
 #include "submodules/c_forever/include/forever.h"
 #include "submodules/c_vector/include/vector.h"
@@ -17,6 +19,7 @@
 #include "submodules/catpath/catpath.h"
 #include "submodules/dbg.h/dbg.h"
 #include "submodules/dmt/src/dmt.h"
+#include "submodules/http-get.c/src/http-get.h"
 #include "submodules/microtar/src/microtar.h"
 #include "submodules/microui/src/microui.h"
 #include "submodules/occurrences/occurrences.h"

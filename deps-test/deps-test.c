@@ -1,5 +1,8 @@
 #include "deps-test.h"
 #include <assert.h>
+static int do_get_google();
+static inline int file_exists(const char *path);
+
 enum ExampleEvents {
   EVENT_START  = 100,
   EVENT_MIDDLE = 200,
@@ -10,6 +13,32 @@ struct FnArgs {
 };
 char JSON_TESTS_FILE[] = ".tests.json",
      *JSON_TESTS_CONTENT;
+
+
+static inline int file_exists(const char *path) {
+  struct stat b;
+
+  return(stat(path, &b));
+}
+
+
+static int do_get_google(){
+  http_get_response_t *res = http_get("https://api.github.com/repos/clibs/clib/releases/latest");
+
+  printf("\nok=%d\n", res->ok);
+  printf("status=%lu\n", res->status);
+  printf("content=%s\n\n", res->data);
+  http_get_free(res);
+
+  char *f = "./google.html";
+  int  ok = http_get_file("http://google.com", f);
+
+  printf("\nok=%d\n", ok);
+  printf("file exists:%d\n\n", file_exists(f));
+
+
+  return(0);
+}
 
 
 void do_work_fn(void *args){
@@ -631,6 +660,16 @@ TEST t_read_json_file(void){
 }
 
 
+TEST t_ansi_utils(void){
+  const unsigned char buf[]        = "\e[1m\e[38;2;255;128;255mPINK\e[0m";
+  const size_t        buf_len      = sizeof(buf) - 1U;
+  char                *escaped_buf = strdup_escaped(buf);
+
+  printf("escaped: '%s'\n", escaped_buf);
+  PASS();
+}
+
+
 TEST t_vtparse_csi(void){
   const unsigned char buf[]   = "\e[1m\e[38;2;255;128;255mPINK\e[0m";
   const size_t        buf_len = sizeof(buf) - 1U;
@@ -738,6 +777,10 @@ SUITE(s_dmt_summary){
 }
 SUITE(s_cansid){
   RUN_TEST(t_cansid);
+  PASS();
+}
+SUITE(s_ansi_utils){
+  RUN_TEST(t_ansi_utils);
   PASS();
 }
 SUITE(s_vtparse){
@@ -905,6 +948,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_md5);
   RUN_SUITE(s_vtparse);
   RUN_SUITE(s_cansid);
+  RUN_SUITE(s_ansi_utils);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
   assert(used == 0);

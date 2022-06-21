@@ -1,4 +1,4 @@
-project('meson_deps',['c'],default_options:['warning_level=0','c_std=gnu99'])
+project('meson_deps',['c'],default_options:['warning_level=3','c_std=gnu99'])
 cc = meson.get_compiler('c')
 pwd = meson.current_source_dir()
 meson_deps_dir = meson.current_source_dir()

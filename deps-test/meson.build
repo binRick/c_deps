@@ -21,6 +21,8 @@ deps_test_deps = [
   str_truncate_dep,
   vtparse_dep,
   cansid_dep,
+  ansi_utils_dep,
+  http_get_dep,
 ]
 deps_link_args = [
   #'-L/usr/local/lib',
