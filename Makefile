@@ -60,7 +60,9 @@ do-deps-test:
 do-sync:
 	rsync -arv ~/repos/meson_deps \
 		~/repos/c_ansi/submodules/. \
-		--exclude="*/submodules/*" --exclude="*/.git/*" --exclude '.git/' --exclude 'submodules/'
+		--exclude="*/.git/*" \
+		--exclude=".git/*" \
+		--exclude '.git'
 do-ansi-make:
 	@cd ~/repos/c_ansi && make
 unlink-term-tests-test:

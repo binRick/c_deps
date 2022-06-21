@@ -1,13 +1,17 @@
+embedded_palettes_srcs = [
+  meson_deps_dir+'/submodules/c_palettes/embeds/tbl1.c',
+]
+
 embedded_palettes_lib = library('embedded_palettes', 
-  pwd+'/submodules/c_palettes/embeds/tbl1.c',
+  embedded_palettes_srcs,
   install: false, 
   dependencies: [], 
   include_directories: [
     inc
   ]
 )
-embedded_palettes_dep = declare_dependency(include_directories: 
-  [
+embedded_palettes_dep = declare_dependency(
+  include_directories: [
     inc
-    ], 
+  ], 
   link_with: embedded_palettes_lib)

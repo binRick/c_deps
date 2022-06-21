@@ -1,10 +1,9 @@
 c_timer_lib = library('c_timer', 
-  '../../../submodules/c_timer/src/c_timer.c',
+  meson_deps_dir + '/submodules/c_timer/src/c_timer.c',
   install: false, 
   dependencies: [
     ms_dep,
     timestamp_dep,
-    ansi_codes_dep,
     asprintf_dep,
   ], 
   include_directories: [

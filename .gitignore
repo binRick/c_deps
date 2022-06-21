@@ -14,3 +14,6 @@ tmp
 .vscode/
 test.tar
 deps-test/microui
+.make-log-*
+.DU
+.make-*log*
