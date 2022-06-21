@@ -20,6 +20,7 @@ inc = [
 subdir('meson/osx')
 subdir('meson/args')
 subdir('meson/inc')
+subdir('submodules/c_ansi/ansi-codes')
 subdir('meson')
 subdir('submodules')
 ###########################################
