@@ -24,10 +24,10 @@ subdir('meson')
 subdir('submodules')
 ###########################################
 subdir('meson/deps/tmt')
-subdir('meson/deps/c_timer')
-subdir('meson/deps/reproc')
+subdir('meson/deps/cgif')
 ###########################################
 subdir('deps')
+#subdir('deps/cgif')
 subdir('term-tests')
 ###########################################
 subdir('deps-test')

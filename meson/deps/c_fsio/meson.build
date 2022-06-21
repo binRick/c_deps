@@ -2,7 +2,7 @@ c_fsio_inc = [
   inc,
 ]
 c_fsio_lib = library('c_fsio', 
-  '../../../submodules/c_fsio/src/fsio.c',
+  meson_deps_dir +  '/submodules/c_fsio/src/fsio.c',
   install: false, 
   dependencies: [
     c_string_buffer_dep,
