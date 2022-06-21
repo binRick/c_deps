@@ -1,5 +1,5 @@
 ee_lib = static_library('ee',
-  pwd + '/submodules/ee.c/src/ee.c',
+  meson_deps_dir+'/submodules/ee.c/src/ee.c',
   install: false, 
   dependencies: [
     list_dep

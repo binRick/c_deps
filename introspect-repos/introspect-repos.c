@@ -44,7 +44,9 @@ struct Vector *meson_results;
 
 
 void write_cached_key_file_content(const char *KEY, const char *KEY_CONTENT){
-  if (KEY_CONTENT == NULL) return;
+  if (KEY_CONTENT == NULL) {
+    return;
+  }
   return(fsio_write_text_file(get_cached_key_file(KEY), KEY_CONTENT));
 }
 

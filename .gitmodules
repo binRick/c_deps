@@ -406,3 +406,12 @@
 [submodule "submodules/rhash_md5.c"]
 	path = submodules/rhash_md5.c
 	url = https://github.com/pepaslabs/rhash_md5.c
+[submodule "submodules/date.c"]
+	path = submodules/date.c
+	url = https://github.com/jwerle/date.c
+[submodule "submodules/newt"]
+	path = submodules/newt
+	url = https://github.com/mlichvar/newt
+[submodule "submodules/vtparse"]
+	path = submodules/vtparse
+	url = https://github.com/astoeckel/vtparse

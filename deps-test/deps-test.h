@@ -25,3 +25,4 @@
 #include "submodules/str-truncate.c/src/str-truncate.h"
 #include "submodules/timestamp/timestamp.h"
 #include "submodules/tiny-regex-c/re.h"
+#include "submodules/vtparse/vtparse/vtparse.h"

@@ -319,6 +319,7 @@ TEST t_spin(void){
 
 TEST t_cansid(void){
   do_test_cansid();
+  PASS();
 }
 
 
@@ -630,6 +631,87 @@ TEST t_read_json_file(void){
 }
 
 
+TEST t_vtparse_csi(void){
+  const unsigned char buf[]   = "\e[1m\e[38;2;255;128;255mPINK\e[0m";
+  const size_t        buf_len = sizeof(buf) - 1U;
+
+  vtparse_t           parser;
+
+  vtparse_init(&parser);
+
+  ASSERT_EQ(vtparse_has_event(&parser), false);
+  ASSERT_EQ(4, vtparse_parse(&parser, buf, buf_len));
+  ASSERT_EQ(vtparse_has_event(&parser), true);
+  ASSERT_EQ(VTPARSE_ACTION_CSI_DISPATCH, parser.action);
+  ASSERT_EQ('m', parser.ch);
+  ASSERT_EQ(1U, parser.num_params);
+  ASSERT_EQ(1, parser.params[0]);
+  dbg(parser.params[0], %d);
+  ASSERT_EQ(0, parser.num_intermediate_chars);
+  ASSERT_EQ(0, parser.error);
+
+  ASSERT_EQ(19, vtparse_parse(&parser, buf + 4, buf_len - 4));
+  ASSERT_EQ(vtparse_has_event(&parser), true);
+  ASSERT_EQ(VTPARSE_ACTION_CSI_DISPATCH, parser.action);
+  ASSERT_EQ('m', parser.ch);
+  ASSERT_EQ(5U, parser.num_params);
+  ASSERT_EQ(38, parser.params[0]);
+  ASSERT_EQ(2, parser.params[1]);
+  ASSERT_EQ(255, parser.params[2]);
+  ASSERT_EQ(128, parser.params[3]);
+  ASSERT_EQ(255, parser.params[4]);
+  ASSERT_EQ(0, parser.num_intermediate_chars);
+  ASSERT_EQ(0, parser.error);
+
+  ASSERT_EQ(8, vtparse_parse(&parser, buf + 23, buf_len - 23));
+  ASSERT_EQ(vtparse_has_event(&parser), true);
+  ASSERT_EQ(VTPARSE_ACTION_PRINT, parser.action);
+  ASSERT_EQ(0, parser.error);
+  ASSERT_EQ(buf + 23, parser.data_begin);
+  ASSERT_EQ(buf + 27, parser.data_end);
+
+  ASSERT_EQ(0U, vtparse_parse(&parser, NULL, 0U));
+  ASSERT_EQ(vtparse_has_event(&parser), true);
+  ASSERT_EQ(VTPARSE_ACTION_CSI_DISPATCH, parser.action);
+  ASSERT_EQ('m', parser.ch);
+  ASSERT_EQ(1U, parser.num_params);
+  ASSERT_EQ(0, parser.params[0]);
+  ASSERT_EQ(0, parser.num_intermediate_chars);
+  ASSERT_EQ(0, parser.error);
+
+  ASSERT_EQ(0U, vtparse_parse(&parser, NULL, 0U));
+  ASSERT_EQ(vtparse_has_event(&parser), false);
+
+  PASS();
+} /* t_vtparse_csi */
+
+
+TEST t_vtparse_simple(void){
+  const unsigned char buf[]   = "Hello World";
+  const size_t        buf_len = sizeof(buf) - 1U;
+
+  vtparse_t           parser;
+
+  vtparse_init(&parser);
+
+  size_t parsed_len = vtparse_parse(&parser, buf, buf_len);
+
+  dbg(buf_len, %lu);
+  dbg(parsed_len, %lu);
+  ASSERT_EQ(buf_len, parsed_len);
+  ASSERT_EQ(VTPARSE_ACTION_PRINT, parser.action);
+  ASSERT_EQ(0, parser.error);
+  ASSERT_EQ(buf, parser.data_begin);
+  ASSERT_EQ(buf + buf_len, parser.data_end);
+
+  ASSERT_EQ(0U, vtparse_parse(&parser, NULL, 0U));
+  ASSERT_EQ(vtparse_has_event(&parser), false);
+
+
+  PASS();
+}
+
+
 TEST t_str_replace(){
   char *replaced = str_replace("hello world", "hello", "goodbye");
 
@@ -652,6 +734,15 @@ SUITE(s_dmt){
 }
 SUITE(s_dmt_summary){
   RUN_TEST(t_dmt_summary);
+  PASS();
+}
+SUITE(s_cansid){
+  RUN_TEST(t_cansid);
+  PASS();
+}
+SUITE(s_vtparse){
+  RUN_TEST(t_vtparse_simple);
+  RUN_TEST(t_vtparse_csi);
   PASS();
 }
 SUITE(s_microtar){
@@ -706,10 +797,6 @@ SUITE(s_path) {
 }
 SUITE(s_debug) {
   RUN_TEST(t_debug_print);
-  PASS();
-}
-SUITE(s_cansid) {
-  RUN_TEST(t_cansid);
   PASS();
 }
 SUITE(s_string) {
@@ -795,7 +882,6 @@ GREATEST_MAIN_DEFS();
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   RUN_SUITE(s_json);
-  RUN_SUITE(s_cansid);
   RUN_SUITE(s_string);
   RUN_SUITE(s_debug);
   RUN_SUITE(s_time);
@@ -817,6 +903,8 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_truncate);
   RUN_SUITE(s_dmt_summary);
   RUN_SUITE(s_md5);
+  RUN_SUITE(s_vtparse);
+  RUN_SUITE(s_cansid);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
   assert(used == 0);

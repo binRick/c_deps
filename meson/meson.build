@@ -72,4 +72,5 @@ subdir('deps/ee')
 subdir('deps/wildcardcmp')
 subdir('deps/c_timer')
 subdir('deps/reproc')
+subdir('deps/vtparse')
 ####################################
