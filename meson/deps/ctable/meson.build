@@ -1,10 +1,13 @@
+ctable_srcs = [
+  meson_deps_dir + '/submodules/ctable/src/table.c',
+  meson_deps_dir + '/submodules/ctable/src/constraint.c',
+  meson_deps_dir + '/submodules/ctable/src/alloc_wrappers.c',
+  meson_deps_dir + '/submodules/ctable/src/string_util.c',
+  meson_deps_dir + '/submodules/ctable/src/printing.c',
+  meson_deps_dir + '/submodules/ctable/src/vector.c',
+  ]  
 ctable_lib = library('ctable',
-  pwd + '/submodules/ctable/src/table.c',
-  pwd + '/submodules/ctable/src/constraint.c',
-  pwd + '/submodules/ctable/src/alloc_wrappers.c',
-  pwd + '/submodules/ctable/src/string_util.c',
-  pwd + '/submodules/ctable/src/printing.c',
-  pwd + '/submodules/ctable/src/vector.c',
+  ctable_srcs,
   install: false, 
   dependencies: [
   ], 

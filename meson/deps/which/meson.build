@@ -1,5 +1,8 @@
+which_srcs = [
+  meson_deps_dir + '/submodules/which/src/which.c',
+]  
 which_lib = static_library('which',
-  pwd + '/submodules/which/src/which.c',
+  which_srcs,
   install: false, 
   dependencies: [
   ], 

@@ -1,6 +1,9 @@
+progressbar_srcs = [
+  meson_deps_dir + '/submodules/progressbar/lib/progressbar.c',
+  meson_deps_dir + '/submodules/progressbar/lib/statusbar.c',
+]
 progressbar_lib = static_library('progressbar',
-  pwd + '/submodules/progressbar/lib/progressbar.c',
-  pwd + '/submodules/progressbar/lib/statusbar.c',
+  progressbar_srcs,
   install: false, 
   dependencies: [
     curses_dep,

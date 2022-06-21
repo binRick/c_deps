@@ -1,5 +1,5 @@
 tempdir_lib = static_library('tempdir', 
-  pwd + '/submodules/tempdir.c/tempdir.c',
+  meson_deps_dir + '/submodules/tempdir.c/tempdir.c',
   install: false, dependencies: [strdup_dep],
   include_directories: inc,
 )
