@@ -1,5 +1,5 @@
 sqlite = [
-  '../../../vendor/sqlite/sqlite3.c',
+  meson_deps_dir+'/vendor/sqlite/sqlite3.c',
 ]
 
 sqlite_cflags = [
