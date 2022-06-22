@@ -2,7 +2,7 @@ sqxc_test_srcs = [
   'sqxc-test.c',
 ]
 sqxc_test_inc = [
-  '/usr/local/include/sqxc',
+ '/usr/local/include/sqxc',
  '../submodules/sqxclib',
  '../submodules/sqxclib/sqxc',
  '../submodules/sqxclib/sqxcapp',

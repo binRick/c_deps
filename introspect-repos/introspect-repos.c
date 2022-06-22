@@ -173,8 +173,8 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
     A = json_value_get_array(V);
     assert(A != NULL);
     size_t qty = json_array_get_count(A);
-    log_debug("qty:%lu", qty);
-    log_debug("output:%s\n%lub output\n\n", OUTPUT, strlen(OUTPUT));
+    //log_debug("qty:%lu", qty);
+    //log_debug("output:%s\n%lub output\n\n", OUTPUT, strlen(OUTPUT));
   }
 }
 

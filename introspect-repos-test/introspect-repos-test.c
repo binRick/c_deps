@@ -68,7 +68,7 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
   ee_on(ee, "executable", on_executable_target_json_value);
   ee_on(ee, "shared library", on_shared_library_target_json_value);
   ee_on(ee, "static library", on_static_library_target_json_value);
-  fprintf(stderr, "\n" AC_RESETALL AC_BOLD AC_RED_BLACK "%s" AC_RESETALL ">\t", (char *)MESON_FILE_PATH);
+  fprintf(stderr, "\n" AC_RESETALL AC_ITALIC AC_GREEN "%s" AC_RESETALL ">\t", (char *)MESON_FILE_PATH);
 
   iterate_targets(ee, A);
 
@@ -87,8 +87,6 @@ TEST t_paths(){
   struct Vector *introspected_paths = execute_meson_introspects(MESON_PATHS);
 
   iterate_parse_results(introspected_paths);
-//iterate_free(MESON_PATHS);
-
   PASS();
 }
 

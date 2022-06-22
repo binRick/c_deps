@@ -1,18 +1,20 @@
 project('meson_deps',['c'],default_options:['warning_level=0','c_std=gnu99'])
+passh_program = find_program('passh', required : true)
+summary({'xxxxxx': true,
+        'yyyyy': 'string.......',
+        }, section: 'Options1')
 cc = meson.get_compiler('c')
 pwd = meson.current_source_dir()
 meson_deps_dir = meson.current_source_dir()
 #############################################################
 inc = [
   include_directories('submodules/list/src'),
-  include_directories('submodules/debug_print_h/src'),
-  include_directories('submodules/debug_print_h/include'),
+  include_directories('submodules/debug_print_h/src', 'submodules/debug_print_h/include'),
   include_directories('submodules/progressbar/include/progressbar'),
   include_directories('submodules/cgif/inc'),
   include_directories('submodules/SDL_DBGP'),
   include_directories('submodules/c_sdl/sdl-app-fonts'),
-  include_directories('submodules/c_darwin/app-utils'),
-  include_directories('submodules/c_darwin/active-app'),
+  include_directories('submodules/c_darwin/app-utils', 'submodules/c_darwin/active-app'),
   include_directories('submodules/c_ansi'),
   include_directories('submodules'),
   include_directories('.'),

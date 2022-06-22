@@ -814,8 +814,8 @@ SUITE(s_time) {
   PASS();
 }
 SUITE(s_spinner) {
-  RUN_TEST(t_libspinner);
-  RUN_TEST(t_spin);
+  //RUN_TEST(t_libspinner);
+  //RUN_TEST(t_spin);
   PASS();
 }
 SUITE(s_totp) {

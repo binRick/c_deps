@@ -35,11 +35,10 @@ introspect_repos_deps = [
 
 introspect_repos_lib = library('introspect-repos',
   introspect_repos_srcs,
-  install: false,
+  install: true,
+  #pic: true,
   dependencies: introspect_repos_deps,
-  include_directories: [
-    introspect_repos_inc,
-  ],
+  include_directories: introspect_repos_inc,
 )
 
 introspect_repos_dep = declare_dependency(

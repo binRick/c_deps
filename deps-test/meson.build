@@ -25,10 +25,6 @@ deps_test_deps = [
   http_get_dep,
 ]
 deps_link_args = [
-  #'-L/usr/local/lib',
-  #'-LSDL2',
-  #osx_ldflags,
-  #,-lSDL2,-lm',
 ]
 if get_option('enable-binaries')
   deps_test_exec = executable('deps-test',
@@ -36,8 +32,15 @@ if get_option('enable-binaries')
      dependencies: deps_test_deps,
      include_directories: deps_include_dirs,
      link_args: deps_link_args,
+     install: true,
+     pie: true,
   )
   if get_option('enable-binary-tests')
-    test('deps-test', deps_test_exec, args: [])
+    test('deps-test', 
+      passh_program, args: [deps_test_exec],
+      timeout: 60,
+      workdir: meson.current_source_dir(),
+      verbose: true,
+      )
   endif
 endif

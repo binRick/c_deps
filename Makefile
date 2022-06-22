@@ -49,24 +49,17 @@ fix-dbg:
 	@$(SED) 's|, % lu);|, %lu);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % d);|, %d);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % zu);|, %zu);|g' -i $(TIDIED_FILES)
+install: do-install
+do-install: all
+	@meson install -C build
 do-meson:
 	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; echo MESON OK; }
-do-ninja:
-	@ninja -C build
-do-ninja-test:
-	@passh ninja test -C build -v
-do-deps-test:
-	@passh ./build/deps-test/deps-test -v
 do-sync:
 	rsync -arv ~/repos/meson_deps \
 		~/repos/c_ansi/submodules/. \
 		--exclude="*/.git/*" \
 		--exclude=".git/*" \
 		--exclude '.git'
-do-ansi-make:
-	@cd ~/repos/c_ansi && make
-unlink-term-tests-test:
-	@unlink build/term-tests-test/term-tests-test||true
 do-nodemon:
 	@$(PASSH) -L .nodemon.log $(NODEMON) \
 		--delay .3 \
@@ -84,28 +77,6 @@ do-nodemon:
 		-w "term-tests-test" \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
 			-x env -- bash -c 'make||true'
-tests-log:
-	@rm .test*.log 2>/dev/null||true
-	@./build/deps-test/deps-test -l | tee $(TESTS_LIST_LOG_FILE) >/dev/null
-tests-tests: tests-log
-	@grep -v "^* Suite .*:" $(TESTS_LIST_LOG_FILE)\
-		|cut -d: -f1|cut -d ' ' -f3|sort -u | tee $(TESTS_TESTS_LOG_FILE) >/dev/null
-
-tests-suite-tests: tests-tests tests-suites
-tests-clean:
-	@rm .test*.log
-
-tests-suites:
-	@grep "^* Suite .*:" $(TESTS_LIST_LOG_FILE)\
-		|cut -d: -f1|cut -d ' ' -f3\
-		|sort -u \
-		|tee $(TESTS_SUITES_LOG_FILE) >/dev/null
-
-tests: do-encode-tests
-do-encode-tests: do-build do-tests tests-clean
-do-tests: tests-log tests-suite-tests tests-suites 
-	@rm .tests.json 2>/dev/null||true
-	@./scripts/tests-encoder.sh > .tests.json && clear && jq -c < .tests.json
 git-submodules-pull:
 	@git submodule foreach git pull origin master --jobs=10
 git-submodules-update:
@@ -113,9 +84,10 @@ git-submodules-update:
 git-pull:
 	@git pull --recurse-submodules
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
-do-build: do-meson do-ninja
-do-test: do-ninja-test
-deps-test: do-deps-test
+do-build: do-meson
+	@meson compile -C build
+do-test:
+	@passh meson test -C build -v
 test: do-test
 build: do-meson do-build
 ansi: all do-sync do-ansi-make
@@ -125,7 +97,7 @@ tidy: \
 	do-build \
 	git-add
 dev: do-nodemon
-all: do-setup do-build trigger
+all: do-setup do-build do-test
 trigger:
 	@[[ -f $(TRIGGER_FILE) ]] && unlink $(TRIGGER_FILE)
 	@touch $(TRIGGER_FILE)
