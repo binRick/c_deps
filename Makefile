@@ -40,7 +40,7 @@ uncrustify:
 	@$(UNCRUSTIFY) -c etc/uncrustify.cfg --replace $(TIDIED_FILES)||true
 uncrustify-clean:
 	@find  . -type f -maxdepth 2 -name "*unc-back*"|xargs -I % unlink %
-clean:
+clean: rm-make-logs
 	@rm -rf build .cache
 fix-dbg:
 	@$(SED) 's|, % c);|, %c);|g' -i $(TIDIED_FILES)
@@ -52,6 +52,8 @@ fix-dbg:
 install: do-install
 do-install: all
 	@meson install -C build
+rm-make-logs:
+	@rm .make-log* 2>/dev/null||tru	
 do-meson:
 	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; echo MESON OK; }
 do-sync:
@@ -92,6 +94,7 @@ test: do-test
 build: do-meson do-build
 ansi: all do-sync do-ansi-make
 tidy: \
+	rm-make-logs \
 	do-setup \
 	fmt-scripts do-uncrustify \
 	do-build \
@@ -105,3 +108,5 @@ meson-introspect-targets:
 	@meson introspect --targets -i meson.build
 meson-binaries:
 	@meson introspect --targets  meson.build -i | jq 'map(select(.type == "executable").filename)|flatten|join("\n")' -Mrc
+do-pull-submodules-cmds:
+	command find submodules -type d -maxdepth 1|xargs -I % echo -e "sh -c 'cd % && git pull'"

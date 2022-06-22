@@ -30,7 +30,7 @@
 	url = https://github.com/binRick/c_ansi
 [submodule "submodules/c_embed"]
 	path = submodules/c_embed
-	url = https://github.com/binRick/c_embed
+	url = ssh://git@github.com/binRick/c_embed
 [submodule "submodules/c_eventemitter"]
 	path = submodules/c_eventemitter
 	url = https://github.com/sagiegurari/c_eventemitter
@@ -424,3 +424,6 @@
 [submodule "submodules/sqxclib"]
 	path = submodules/sqxclib
 	url = https://github.com/chhuang-one/sqxclib
+[submodule "submodules/c_mui"]
+	path = submodules/c_mui
+	url = ssh://git@github.com/binRick/c_mui
