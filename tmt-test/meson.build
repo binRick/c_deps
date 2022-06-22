@@ -8,12 +8,11 @@ tmt_test_inc = [
 tmt_test_deps = [
  tmt_dep,
  tmt_dep,
- ansicodes_dep,
+ ansi_codes_dep,
  c_fsio_dep,
  c_stringfn_dep,
  c_string_buffer_dep,
  greatest_dep,
- ansicodes_dep,
  logh_dep,
  tmt_dep,
 ]

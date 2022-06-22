@@ -8,12 +8,11 @@ reproc_test_inc = [
 reproc_test_deps = [
  reproc_dep,
  list_dep,
- ansicodes_dep,
+ ansi_codes_dep,
  c_fsio_dep,
  c_stringfn_dep,
  c_string_buffer_dep,
  greatest_dep,
- ansicodes_dep,
  logh_dep,
 ]
 

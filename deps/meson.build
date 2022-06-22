@@ -11,7 +11,7 @@ deps_args = [
 
 deps_deps = [
   rhash_md5_dep,
-  ansicodes_dep,
+  ansi_codes_dep,
   asprintf_dep,
   assertf_dep,
   b64_dep,

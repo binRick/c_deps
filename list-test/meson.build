@@ -8,12 +8,11 @@ list_test_inc = [
 list_test_deps = [
  list_dep,
  list_dep,
- ansicodes_dep,
+ ansi_codes_dep,
  c_fsio_dep,
  c_stringfn_dep,
  c_string_buffer_dep,
  greatest_dep,
- ansicodes_dep,
  logh_dep,
  list_dep,
 ]

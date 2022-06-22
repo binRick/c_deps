@@ -7,7 +7,7 @@ chan_test_inc = [
 chan_test_deps = [
  chan_dep,
  greatest_dep,
- ansicodes_dep,
+ ansi_codes_dep,
  logh_dep,
  ms_dep,
  timestamp_dep,

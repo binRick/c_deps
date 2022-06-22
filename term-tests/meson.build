@@ -10,7 +10,7 @@ term_tests_deps = [
   termpaint_dep,  
   c_stringfn_dep,  
   c_string_buffer_dep,  
-  ansicodes_dep,  
+  ansi_codes_dep,  
   timestamp_dep,  
 ]
 

@@ -7,7 +7,7 @@ ansicodes_lib = static_library('ansicodes',
     inc,
   ]
 )
-ansicodes_dep = declare_dependency(
+ansi_codes_dep = declare_dependency(
   include_directories: [
     inc,
   ], 

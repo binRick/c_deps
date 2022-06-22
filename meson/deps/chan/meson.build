@@ -7,7 +7,7 @@ chan_lib = static_library('chan',
     install: false, 
     dependencies: [
       timestamp_dep,
-      ansicodes_dep,
+      ansi_codes_dep,
       threads_dep,
       logh_dep,
       ms_dep,

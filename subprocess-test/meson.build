@@ -10,12 +10,11 @@ subprocess_test_deps = [
  subprocess_dep,
  dbg_dep,
  assertf_dep,
- ansicodes_dep,
  c_fsio_dep,
  c_stringfn_dep,
  c_string_buffer_dep,
  greatest_dep,
- ansicodes_dep,
+ ansi_codes_dep,
  logh_dep,
  subprocess_dep,
 ]

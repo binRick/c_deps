@@ -9,12 +9,11 @@ introspect_inc = [
 introspect_deps = [
  reproc_dep,
  list_dep,
- ansicodes_dep,
  c_fsio_dep,
  c_stringfn_dep,
  c_string_buffer_dep,
  greatest_dep,
- ansicodes_dep,
+ ansi_codes_dep,
  logh_dep,
  parson_dep,
  ee_dep,

@@ -9,7 +9,7 @@ dbgp_test_dbgp = [
  dbgp_dep,
  chan_dep,
  greatest_dep,
- ansicodes_dep,
+ ansi_codes_dep,
  logh_dep,
  ms_dep,
  timestamp_dep,
