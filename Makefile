@@ -53,9 +53,9 @@ install: do-install
 do-install: all
 	@meson install -C build
 rm-make-logs:
-	@rm .make-log* 2>/dev/null||tru	
+	@rm .make-log* 2>/dev/null||true
 do-meson:
-	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; echo MESON OK; }
+	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; }
 do-sync:
 	rsync -arv ~/repos/meson_deps \
 		~/repos/c_ansi/submodules/. \

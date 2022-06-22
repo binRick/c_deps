@@ -1,54 +1,5 @@
-#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-#include "sqxclib.h"
-#include <stdio.h>
+#include "sqxc-test.h"
 
-#ifdef _MSC_VER
-#define strdup                    _strdup
-#endif
-
-#define USE_SQLITE_IF_POSSIBLE    1
-
-typedef struct Post   Post;
-typedef struct City   City;
-typedef struct User   User;
-
-struct Post {
-  char *title;
-  char *desc;
-};
-
-struct City {
-  int  id;
-  char *name;
-  bool visited;
-};
-
-struct User {
-  int           id;        // primary key
-  char          *name;
-  char          *email;
-  int           city_id;   // foreign key
-
-  // make sure that SQ_CONFIG_HAVE_JSONC is enabled if you want to store array/object in SQL column
-  SqIntptrArray ints;           // intptr_t array (JSON array  in SQL column)
-  Post          *post;          // object pointer (JSON object in SQL column)
-
-  time_t        created_at;
-  time_t        updated_at;
-
-  // add, drop, and rename
-  unsigned int  test_add;
-  unsigned int  test_drop;
-  unsigned int  test_rename;
-};
-
-// ----------------------------------------------------------------------------
-// use C99 designated initializer to define object (JSON object in SQL column)
-// SqType for structure Post. It also work if SqEntry is replaced by SqColumn.
-
-// If you define constant SqType for structure, it must use with SqEntry pointer array.
 static const SqEntry *postEntryPointers[] = {
   &(SqEntry) { SQ_TYPE_STRING, "title", offsetof(Post, title), 0 },
   &(SqEntry) { SQ_TYPE_STRING, "desc",  offsetof(Post, desc),  0 },
@@ -57,12 +8,6 @@ static const SqEntry *postEntryPointers[] = {
 static const SqType  typePost = SQ_TYPE_INITIALIZER(Post, postEntryPointers, 0);
 #define SQ_TYPE_POST    &typePost
 
-// ----------------------------------------------------------------------------
-// use C99 designated initializer to define table/column
-
-// Define SqEntry array (NOT pointer array) because it use with dynamic SqType (in SqTable).
-
-// CREATE TABLE "cities"
 static const SqColumn cityColumnsVer1[] = {
   { SQ_TYPE_INT,    "id",   offsetof(City, id),   SQB_PRIMARY | SQB_AUTOINCREMENT | SQB_HIDDEN },
   { SQ_TYPE_STRING, "name", offsetof(City, name), SQB_NULLABLE                                 },
@@ -78,10 +23,8 @@ static const SqColumn userColumnsVer1[] = {
   { SQ_TYPE_INT,          "city_id",               offsetof(User, city_id),     0,
     .foreign = &(SqForeign){ "cities",             "id",                    "CASCADE",     "CASCADE" } },
 
-#if SQ_CONFIG_HAVE_JSONC
   { SQ_TYPE_INTPTR_ARRAY, "ints",                  offsetof(User, ints),        0                                            },
   { SQ_TYPE_POST,         "post",                  offsetof(User, post),        SQB_POINTER | SQB_NULLABLE                   }, // User.post is pointer
-#endif
 
   // CONSTRAINT FOREIGN KEY
   { SQ_TYPE_CONSTRAINT,   "users_city_id_foreign",
@@ -147,22 +90,15 @@ static const SqColumn userColumnsVer3[] = {
 static const SqColumn userColumnsVer4[] = {
   // RENAME COLUMN "test_rename" TO "test_rename2"
   { .old_name = "test_rename", .name = "test_rename2" },
-
 //	{.old_name = "ints",   .name = "test_ints" },
 };
-
-
-// ----------------------------------------------------------------------------
-
-
-// C Functions for City & User
 
 
 User *user_new(void) {
   User *user;
 
-  user = calloc(1, sizeof(User));
-//	user->post = calloc(1, sizeof(Post));
+  user       = calloc(1, sizeof(User));
+  user->post = calloc(1, sizeof(Post));
   sq_intptr_array_init(&user->ints, 8);
   return(user);
 }
@@ -234,9 +170,6 @@ void city_print(City *city) {
          "city.name = %s\n",
          city->id, city->name);
 }
-
-
-// ----------------------------------------------------------------------------
 
 
 void storage_make_migrated_schema(SqStorage *storage, int end_version){
@@ -318,8 +251,6 @@ void storage_make_migrated_schema(SqStorage *storage, int end_version){
     sq_schema_free(schema);
   }
 
-  // synchronize schema to database. create/alter SQL tables based on storage->schema
-  // This is mainly used by SQLite
   sq_storage_migrate(storage, NULL);
 } /* storage_make_migrated_schema */
 
@@ -363,42 +294,24 @@ void  storage_query_join(SqStorage *storage){
 
 
 int  main(void){
-  Sqdb       *db;
-  SqStorage  *storage;
-  SqPtrArray *array;
-  City       *city;
-  User       *user;
+  Sqdb             *db;
+  SqStorage        *storage;
+  SqPtrArray       *array;
+  City             *city;
+  User             *user;
 
-#if   SQ_CONFIG_HAVE_SQLITE && USE_SQLITE_IF_POSSIBLE
   SqdbConfigSqlite config_sqlite = {
-//		.folder = "/tmp",
     .folder    = ".",
-    .extension = "db",
+    .extension = "sqlite",
   };
 
-  db = sqdb_new(SQDB_INFO_SQLITE, (SqdbConfig *)&config_sqlite);
-#elif SQ_CONFIG_HAVE_MYSQL
-  SqdbConfigMysql config_mysql = {
-    .host     = "localhost",
-    .port     = 3306,
-    .user     = "root",
-    .password = "",
-  };
-
-  db = sqdb_new(SQDB_INFO_MYSQL, (SqdbConfig *)&config_mysql);
-#else
-  printf("No supported database");
-  return(EXIT_SUCCESS);
-#endif
-
+  db      = sqdb_new(SQDB_INFO_SQLITE, (SqdbConfig *)&config_sqlite);
   storage = sq_storage_new(db);
-
-  if (sq_storage_open(storage, "sample-c99") != SQCODE_OK) {
-    printf("Can't open database - %s\n", "sample-c99");
+  if (sq_storage_open(storage, ".sqxc-test") != SQCODE_OK) {
+    printf("Can't open database - %s\n", ".sqxc-test");
     return(EXIT_FAILURE);
   }
 
-  // This program migrate to next version every run. (from Ver1 to Ver6)
   storage_make_migrated_schema(storage, db->version + 1);
 
   if (storage->schema->version == 1) {
@@ -424,11 +337,9 @@ int  main(void){
     user->email   = strdup("guest@");
     sq_intptr_array_append(&user->ints, 3);
     sq_intptr_array_append(&user->ints, 6);
-#if 1
     user->post        = calloc(1, sizeof(Post));
     user->post->title = strdup("PostTitle");
     user->post->desc  = strdup("PostDesc");
-#endif
     user->test_add    = 1;
     user->test_drop   = 2;
     user->test_rename = 3;

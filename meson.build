@@ -1,5 +1,7 @@
 project('meson_deps',['c'],default_options:['warning_level=0','c_std=gnu99'])
 passh_program = find_program('passh', required : true)
+sqlite3_program = find_program('sqlite3', required : true)
+sh_program = find_program('sh', required : true)
 summary({'xxxxxx': true,
         'yyyyy': 'string.......',
         }, section: 'Options1')

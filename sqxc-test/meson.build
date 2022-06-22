@@ -24,5 +24,6 @@ if get_option('enable-binaries')
   )
   if get_option('enable-binary-tests')
     test('sqxc-test', sqxc_test_exec, args: [])
+    test('view-schema', sh_program, args: ['-c', 'sqlite3 .sqxc-test.sqlite <<< ".schema"'])
   endif
 endif

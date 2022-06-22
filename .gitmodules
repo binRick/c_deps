@@ -427,3 +427,6 @@
 [submodule "submodules/c_mui"]
 	path = submodules/c_mui
 	url = ssh://git@github.com/binRick/c_mui
+[submodule "submodules/json-c"]
+	path = submodules/json-c
+	url = https://github.com/json-c/json-c
