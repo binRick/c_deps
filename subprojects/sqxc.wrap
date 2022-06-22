@@ -1,0 +1,4 @@
+[wrap-git]
+directory=sqxc
+url=https://github.com/chhuang-one/sqxclib
+revision=head

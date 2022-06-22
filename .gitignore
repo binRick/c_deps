@@ -17,3 +17,4 @@ deps-test/microui
 .make-log-*
 .DU
 .make-*log*
+sample-c99.db

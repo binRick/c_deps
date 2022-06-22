@@ -81,14 +81,12 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
 TEST t_paths(){
   char          *BASE_PATH   = "../";
   char          *PATH_FILTER = "c_*";
-
   struct Vector *MESON_PATHS = get_meson_paths(BASE_PATH, PATH_FILTER, PATH_LIMIT);
 
   iterate_print(MESON_PATHS);
-
   struct Vector *introspected_paths = execute_meson_introspects(MESON_PATHS);
 
-//  iterate_parse_results(introspected_paths);
+  iterate_parse_results(introspected_paths);
 //iterate_free(MESON_PATHS);
 
   PASS();

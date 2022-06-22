@@ -7,20 +7,20 @@
 #define PREVIEW_LIMIT                  25
 #define WORKERS_QTY                    20
 #define DEBUG_MEMORY_ENABLED           false
+#define NUM_CHILDREN                   1
+#define MAX_OUTPUT_BYTES               1024 * 1024
+#define CACHE_DIRECTORY                "./.cache"
+//////////////////////////////////////////////
 #include "introspect-repos.h"
 #include "submodules/log.h/log.h"
+#define D    log_debug
+#define E    log_error
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
-//////////////////////////////////////////////
-#define NUM_CHILDREN        1
-#define MAX_OUTPUT_BYTES    1024 * 1024
-#define D                   log_debug
-#define E                   log_error
-#define CACHE_DIRECTORY     "./.cache"
 //////////////////////////////////////////////
 #ifdef DEBUG_MEMORY_ENABLED
 #include "submodules/debug-memory/debug_memory.h"
@@ -173,10 +173,8 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
     A = json_value_get_array(V);
     assert(A != NULL);
     size_t qty = json_array_get_count(A);
-    dbg(qty, %lu);
-    if (qty > 0) {
-      dbg(OUTPUT, %s);
-    }
+    log_debug("qty:%lu", qty);
+    log_debug("output:%s\n%lub output\n\n", OUTPUT, strlen(OUTPUT));
   }
 }
 
@@ -195,13 +193,14 @@ void iterate_print(struct Vector *MESON_PATHS){
 void iterate_targets(ee_t *ee, JSON_Array *A){
   JSON_Value  *V = json_value_init_object();
   JSON_Object *O = json_value_init_object();
-  char        *name, *type;
+  char        *type;
 
   for (size_t i = 0; i < json_array_get_count(A); i++) {
     V = json_array_get_value(A, i);
     O = json_array_get_object(A, i);
     size_t props_qty = json_object_get_count(O);
     assert(json_value_get_type(V) == JSONObject);
+    assert(props_qty > 0);
     type = json_object_get_string(O, "type");
     if (ee_listener_count(ee, type) > 0) {
       ee_emit(ee, type, V);
@@ -354,15 +353,11 @@ void *execute_meson_job(void *_WORKER_ID){
 
 
 struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
-  pthread_t     worker_threads[WORKERS_QTY];
-  pthread_t     waiter_thread;
-  worker_t      *workers;
-  struct Vector *vector     = vector_new();
-  size_t        workers_qty = 0;
+  pthread_t worker_threads[WORKERS_QTY];
+  pthread_t waiter_thread;
+  size_t    workers_qty = 0;
 
-  meson_results = vector_new();
-  int r = -1;
-
+  meson_results   = vector_new();
   DONE_CHANNEL    = chan_init(0);
   JOBS_CHANNEL    = chan_init(WORKERS_QTY);
   RESULTS_CHANNEL = chan_init(WORKERS_QTY);

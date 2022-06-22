@@ -421,3 +421,6 @@
 [submodule "submodules/c_db"]
 	path = submodules/c_db
 	url = ssh://git@github.com/binRick/c_db
+[submodule "submodules/sqxclib"]
+	path = submodules/sqxclib
+	url = https://github.com/chhuang-one/sqxclib
