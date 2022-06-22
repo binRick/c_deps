@@ -23,6 +23,7 @@
 #include "submodules/ee.c/src/ee.h"
 #include "submodules/greatest/greatest.h"
 #include "submodules/log.h/log.h"
+#include "submodules/ms/ms.h"
 #include "submodules/path-normalize.c/src/path-normalize.h"
 #include "submodules/subprocess.h/subprocess.h"
 #include "submodules/timestamp/timestamp.h"

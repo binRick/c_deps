@@ -33,77 +33,36 @@ char * get_cached_key_file_name(const char *KEY);
 char * get_cached_key_file(const char *KEY);
 bool cached_key_file_exists(const char *KEY);
 
-////////////////////////////////////////////////
-#define PARSE_MESON_JOB_RESULT(JSON, JR)         { do{                                                                                   \
-                                                                                                                                         \
-/*         Parse JSON */                                                                                                                 \
-                                                     JR->Root_v = json_parse_string(JSON);                                               \
-                                                     JR->Root_o = json_value_get_object(JR->Root_v);                                     \
-                                                                                                                                         \
-/*         JSON Values           */                                                                                                      \
-                                                     JR->ProjectInfo_v      = json_object_dotget_value(JR->Root_o, "projectinfo");       \
-                                                     JR->Targets_v          = json_object_dotget_value(JR->Root_o, "targets");           \
-                                                     JR->Dependencies_v     = json_object_dotget_value(JR->Root_o, "dependencies");      \
-                                                     JR->BuildOptions_v     = json_object_dotget_value(JR->Root_o, "buildoptions");      \
-                                                     JR->ScanDependencies_v = json_object_dotget_value(JR->Root_o, "scan_dependencies"); \
-                                                     JR->Ast_v              = json_object_dotget_value(JR->Root_o, "ast");               \
-                                                                                                                                         \
-/*         JSON Value -> Object           */                                                                                             \
-                                                     JR->ProjectInfo_o = json_value_get_object(JR->ProjectInfo_v);                       \
-                                                     JR->Ast_o         = json_value_get_object(JR->Ast_v);                               \
-                                                                                                                                         \
-/*         JSON Value -> Array           */                                                                                              \
-                                                     JR->ScanDependencies_a = json_value_get_array(JR->ScanDependencies_v);              \
-                                                     JR->Dependencies_a     = json_value_get_array(JR->Dependencies_v);                  \
-                                                     JR->BuildOptions_a     = json_value_get_array(JR->BuildOptions_v);                  \
-                                                     JR->Targets_a          = json_value_get_array(JR->Targets_v);                       \
-                                                                                                                                         \
-                                                   }while (0); }
-#define VALIDATE_MESON_JOB_RESULT(JOB_RESULT)    { do{                                                                 \
-/*         JSON Values           */                                                                                    \
-                                                     assert(JR->Root_v != NULL);                                       \
-                                                     assert(JR->ProjectInfo_v != NULL);                                \
-                                                     assert(JR->Ast_v != NULL);                                        \
-                                                     assert(JR->BuildOptions_v != NULL);                               \
-                                                     assert(JR->ScanDependencies_v != NULL);                           \
-                                                     assert(JR->Targets_v != NULL);                                    \
-                                                                                                                       \
-/*         JSON Value -> Object           */                                                                           \
-                                                     assert(json_value_get_type(JR->Root_v) == JSONObject);            \
-                                                     assert(json_value_get_type(JR->ProjectInfo_v) == JSONObject);     \
-                                                     assert(json_value_get_type(JR->Ast_v) == JSONObject);             \
-                                                                                                                       \
-/*         JSON Value -> Array           */                                                                            \
-                                                     assert(json_value_get_type(JR->ScanDependencies_v) == JSONArray); \
-                                                     assert(json_value_get_type(JR->Dependencies_v) == JSONArray);     \
-                                                     assert(json_value_get_type(JR->BuildOptions_v) == JSONArray);     \
-                                                     assert(json_value_get_type(JR->Targets_v) == JSONArray);          \
-/*         JSON Objects           */                                                                                   \
-                                                     assert(JR->Root_o != NULL);                                       \
-                                                     assert(JR->ProjectInfo_o != NULL);                                \
-                                                     assert(JR->Ast_o != NULL);                                        \
-                                                                                                                       \
-/*         JSON Arrays           */                                                                                    \
-                                                     assert(JR->Targets_a != NULL);                                    \
-                                                     assert(JR->BuildOptions_a != NULL);                               \
-                                                     assert(JR->Dependencies_a != NULL);                               \
-                                                     assert(JR->ScanDependencies_a != NULL);                           \
-                                                                                                                       \
-                                                   }while (0); }
 typedef struct  MESON_JOB_RESULT_T {
   unsigned long dur;
-  char          *name;
+  char          *name, *version, *dir, *subprojects_dir;
   char          *json;
   size_t        bytes;
   JSON_Value
                 *Root_v,
   *ProjectInfo_v,
-  *Ast_v,
+  *Ast_v
+  ;
+  JSON_Value
   *Targets_v,
   *BuildOptions_v,
   *Dependencies_v,
   *ScanDependencies_v,
   *ProjectDependences_v
+  ;
+  JSON_Value
+  *AstLines_v,
+  *TargetExecutables_v,
+  *TargetExecutableFiles_v,
+  *TargetSharedLibraries_v,
+  *TargetStaticLibraries_v,
+  *TargetSources_v,
+  *TargetSourceFilenames_v,
+  *TargetFilenames_v,
+  *SubprojectBuildSystemFiles_v,
+  *BuildSystemFiles_v,
+  *Subprojects_v,
+  *SubprojectNames_v
   ;
   JSON_Object
   *Root_o,
@@ -115,7 +74,8 @@ typedef struct  MESON_JOB_RESULT_T {
   *BuildOptions_a,
   *Dependencies_a,
   *ScanDependencies_a,
-  *ProjectDependences_a
+  *ProjectDependences_a,
+  *AstLines_a
   ;
 } meson_job_result_t;
 
@@ -124,8 +84,96 @@ typedef struct WORKER_T {
   int thread_index;
 } worker_t;
 ////////////////////////////////////////////////
+#define PARSE_MESON_JOB_RESULTS(RESULTS)                                      \
+  { do{                                                                       \
+      for (size_t i = 0; i < vector_size(RESULTS); i++) {                     \
+        meson_job_result_t *r = (meson_job_result_t *)vector_get(RESULTS, i); \
+        if (r == NULL) continue;                                              \
+        if (r->json == NULL) continue;                                        \
+        if (strlen(r->json) < 2) continue;                                    \
+        PARSE_MESON_JOB_RESULT(r);                                            \
+        VALIDATE_MESON_JOB_RESULT(r);                                         \
+      }                                                                       \
+      generate_results_table(RESULTS);                                        \
+    }while (0); }
+#define PARSE_MESON_JOB_RESULT(JR)                                                        \
+  { do{                                                                                   \
+                                                                                          \
+/*         Parse JSON */                                                                  \
+      JR->Root_v = json_parse_string(JR->json);                                           \
+      JR->Root_o = json_value_get_object(JR->Root_v);                                     \
+                                                                                          \
+/*         JSON Values           */                                                       \
+      JR->ProjectInfo_v      = json_object_dotget_value(JR->Root_o, "projectinfo");       \
+      JR->Targets_v          = json_object_dotget_value(JR->Root_o, "targets");           \
+      JR->Dependencies_v     = json_object_dotget_value(JR->Root_o, "dependencies");      \
+      JR->BuildOptions_v     = json_object_dotget_value(JR->Root_o, "buildoptions");      \
+      JR->ScanDependencies_v = json_object_dotget_value(JR->Root_o, "scan_dependencies"); \
+      JR->Ast_v              = json_object_dotget_value(JR->Root_o, "ast");               \
+                                                                                          \
+/*         JSON Value -> Object           */                                              \
+      JR->ProjectInfo_o = json_value_get_object(JR->ProjectInfo_v);                       \
+      JR->Ast_o         = json_value_get_object(JR->Ast_v);                               \
+                                                                                          \
+/*         JSON Value -> Array           */                                               \
+      JR->ScanDependencies_a = json_value_get_array(JR->ScanDependencies_v);              \
+      JR->Dependencies_a     = json_value_get_array(JR->Dependencies_v);                  \
+      JR->BuildOptions_a     = json_value_get_array(JR->BuildOptions_v);                  \
+      JR->Targets_a          = json_value_get_array(JR->Targets_v);                       \
+                                                                                          \
+    }while (0); }
+#define VALIDATE_MESON_JOB_RESULT(JR)                                   \
+  { do{                                                                 \
+/*         JSON Values           */                                     \
+      assert(JR->Root_v != NULL);                                       \
+      assert(JR->ProjectInfo_v != NULL);                                \
+      assert(JR->Ast_v != NULL);                                        \
+      assert(JR->BuildOptions_v != NULL);                               \
+      assert(JR->ScanDependencies_v != NULL);                           \
+      assert(JR->Targets_v != NULL);                                    \
+                                                                        \
+/*         JSON Value -> Object           */                            \
+      assert(json_value_get_type(JR->Root_v) == JSONObject);            \
+      assert(json_value_get_type(JR->ProjectInfo_v) == JSONObject);     \
+      assert(json_value_get_type(JR->Ast_v) == JSONObject);             \
+                                                                        \
+/*         JSON Value -> Array           */                             \
+      assert(json_value_get_type(JR->ScanDependencies_v) == JSONArray); \
+      assert(json_value_get_type(JR->Dependencies_v) == JSONArray);     \
+      assert(json_value_get_type(JR->BuildOptions_v) == JSONArray);     \
+      assert(json_value_get_type(JR->Targets_v) == JSONArray);          \
+/*         JSON Objects           */                                    \
+      assert(JR->Root_o != NULL);                                       \
+      assert(JR->ProjectInfo_o != NULL);                                \
+      assert(JR->Ast_o != NULL);                                        \
+                                                                        \
+/*         JSON Arrays           */                                     \
+      assert(JR->Targets_a != NULL);                                    \
+      assert(JR->BuildOptions_a != NULL);                               \
+      assert(JR->Dependencies_a != NULL);                               \
+      assert(JR->ScanDependencies_a != NULL);                           \
+                                                                        \
+    }while (0); }
+
+////////////////////////////////////////////////
 chan_t        *JOBS_CHANNEL, *RESULTS_CHANNEL, *DONE_CHANNEL;
 struct Vector *meson_results;
+
+
+char *style_name(const char *name){
+  char *s = malloc(strlen(name) + 128);
+
+  sprintf(s, " %s%s%s", F_GREEN, name, COL_RESET);
+  return(s);
+}
+
+
+char *number_to_string(size_t number){
+  char *s = malloc(number / 10 + 1);
+
+  sprintf(s, "%lu", number);
+  return(s);
+}
 
 
 ////////////////////////////////////////////////
@@ -142,33 +190,31 @@ void generate_results_table(struct Vector *MESON_RESULTS){
   set_default_alignments(&table, (sizeof(ALIGNS) / sizeof(ALIGNS[0])), ALIGNS);
   add_cell(&table, " Project ");
   add_cell(&table, " Size ");
-  add_cell(&table, " Duration ");
-  add_cell(&table, " xxxxxxx ");
+  add_cell(&table, " Dur ");
+  add_cell(&table, " Targets ");
+  add_cell(&table, " Deps ");
+  add_cell(&table, " Scan Deps ");
+  add_cell(&table, " Build Opts ");
   override_alignment_of_row(&table, ALIGN_CENTER);
   set_hline(&table, BORDER_DOUBLE);
   next_row(&table);
 
-
-  error = false;
-  set_hline(&table, BORDER_SINGLE);
-  override_alignment_of_row(&table, ALIGN_CENTER);
-  add_cell(&table, "xxxxxxx");
-  add_cell(&table, "45ms");
-  add_cell(&table, error ? F_RED " failed " COL_RESET : F_GREEN " passed " COL_RESET);
-  add_cell(&table, "xxxxxxx");
-  set_all_vlines(&table, BORDER_SINGLE);
-  next_row(&table);
-
-  error = false;
-  set_hline(&table, BORDER_SINGLE);
-  override_alignment_of_row(&table, ALIGN_CENTER);
-  add_cell(&table, "xxxxxxx");
-  add_cell(&table, "45ms");
-  add_cell(&table, error ? F_RED " failed " COL_RESET : F_GREEN " passed " COL_RESET);
-  add_cell(&table, "xxxxxxx");
-  set_all_vlines(&table, BORDER_SINGLE);
-  next_row(&table);
-
+  for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
+    meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
+    error = false;
+    set_hline(&table, BORDER_SINGLE);
+    override_alignment_of_row(&table, ALIGN_CENTER);
+    override_alignment(&table, ALIGN_LEFT);
+    add_cell(&table, style_name(r->name));
+    add_cell(&table, bytes_to_string(r->bytes));
+    add_cell(&table, milliseconds_to_string(r->dur));
+    add_cell(&table, number_to_string(json_array_get_count(r->Targets_a)));
+    add_cell(&table, number_to_string(json_array_get_count(r->Dependencies_a)));
+    add_cell(&table, number_to_string(json_array_get_count(r->ScanDependencies_a)));
+    add_cell(&table, number_to_string(json_array_get_count(r->BuildOptions_a)));
+    set_all_vlines(&table, BORDER_SINGLE);
+    next_row(&table);
+  }
 
   make_boxed(&table, BORDER_DOUBLE);
   print_table(&table);
@@ -344,6 +390,11 @@ size_t iterate_get_total_size(struct Vector *VECTOR){
 
 
 void iterate_parse_results(struct Vector *MESON_RESULTS){
+  PARSE_MESON_JOB_RESULTS(MESON_RESULTS);
+}
+
+
+void _iterate_parse_results(struct Vector *MESON_RESULTS){
   for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
     JSON_Array
     *TARGETS_A             = NULL,
@@ -424,17 +475,6 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
   }
   //iterate_free(MESON_RESULTS);
 } /* iterate_parse_results */
-
-
-void iterate_print(struct Vector *MESON_PATHS){
-  printf(">Current size: %zu capacity: %zu\n", vector_size(MESON_PATHS), vector_capacity(MESON_PATHS));
-  for (size_t i = 0; i < vector_size(MESON_PATHS); i++) {
-    printf("Value at index #%lu: %s\n",
-           i,
-           (char *)vector_get(MESON_PATHS, i)
-           );
-  }
-}
 
 
 void iterate_targets(ee_t *ee, JSON_Array *A){

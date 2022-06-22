@@ -79,10 +79,10 @@ TEST t_paths(){
   char          *BASE_PATH   = "../";
   char          *PATH_FILTER = "^c_\\w+$|^meson_deps$";
 
-  struct Vector *MESON_PATHS = get_meson_paths(BASE_PATH, PATH_FILTER, MESON_PROJECTS_LIMIT);
-
-  iterate_print(MESON_PATHS);
+  struct Vector *MESON_PATHS        = get_meson_paths(BASE_PATH, PATH_FILTER, MESON_PROJECTS_LIMIT);
   struct Vector *introspected_paths = execute_meson_introspects(MESON_PATHS);
+
+  vector_release(MESON_PATHS);
 
   iterate_parse_results(introspected_paths);
   iterate_free(introspected_paths);
