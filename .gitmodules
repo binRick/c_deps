@@ -328,9 +328,6 @@
 [submodule "submodules/gumbo-parser"]
 	path = submodules/gumbo-parser
 	url = https://github.com/google/gumbo-parser
-[submodule "submodules/wrapdb"]
-	path = submodules/wrapdb
-	url = https://github.com/mesonbuild/wrapdb
 [submodule "submodules/parse-repo"]
 	path = submodules/parse-repo
 	url = https://github.com/stephenmathieson/parse-repo.c

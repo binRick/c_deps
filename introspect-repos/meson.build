@@ -30,6 +30,11 @@ introspect_repos_deps = [
  c_vector_dep,
  subprocess_dep,
  path_normalize_dep,
+ generic_print_dep,
+ timestamp_dep,
+ bytes_dep,
+ tiny_regex_c_dep,
+ ctable_dep,
 ]
 
 

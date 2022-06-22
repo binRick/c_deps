@@ -1,3 +1,4 @@
+#include "../submodules/generic-print/print.h"
 #include "deps-test.h"
 #include <assert.h>
 static int do_get_google();
@@ -72,34 +73,8 @@ static void on_end(void *event_data, void *context){
 static void on_unhandled(int event_id, void *event_data, void *context){
   printf("OnUnhandled, did not set listener for event: %d data: %s context: %s\n", event_id, (char *)event_data, (char *)context);
 }
-#define TBL1        "\
-\
-┌───────────────────────────────┐\
-│    Test suite  #Cases  Result │\
-├───────────────────────────────┤\
-│ 1  Table                       \
-├───────────────────────────────┤\
-│      End result              \
-└───────────────────────────────┘\
-\
-"
+
 #define SLEEP_US    100000
-
-
-#define feed(x)          { do{                                                                                                   \
-                             struct color_char ch = cansid_process(&state, x);                                                   \
-                             if (false) DEBUG_PRINT((int)ch.ascii, .colorscheme = FORE_CYAN BACK_BLACK, .filestream = stdout);   \
-                             if (true) DEBUG_PRINT((int)ch.style, .colorscheme  = FORE_YELLOW BACK_BLACK, .filestream = stdout); \
-                             DEBUG_PRINT((char)ch.ascii, .colorscheme           = FORE_CYAN BACK_BLACK, .filestream = stdout);   \
-                           }while (0); }
-
-#define DEBUG_STATE()    { do {                                                                                                  \
-                             if (false) {                                                                                        \
-                               DEBUG_PRINT((int)state.style, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
-                               DEBUG_PRINT((int)state.state, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
-                               DEBUG_PRINT((int)state.next_style, .colorscheme = FORE_MAGENTA BACK_BLACK, .filestream = stdout); \
-                             }                                                                                                   \
-                           }while (0); }
 
 
 void do_test_libspinner(){
@@ -140,26 +115,79 @@ void do_test_slug(){
   fprintf(stdout, "\nSLUG: '%s'->'%s'\n", s0, s01);
 }
 
+#define DEBUG_STATE()    { do {                                                                                                  \
+                             if (false) {                                                                                        \
+                               DEBUG_PRINT((int)state.style, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
+                               DEBUG_PRINT((int)state.state, .colorscheme      = FORE_BLUE BACK_BLACK, .filestream = stdout);    \
+                               DEBUG_PRINT((int)state.next_style, .colorscheme = FORE_MAGENTA BACK_BLACK, .filestream = stdout); \
+                             }                                                                                                   \
+                           }while (0); }
+
+#define feed(x)          { do{                                                 \
+                             struct color_char ch = cansid_process(&state, x); \
+                             sprintf(S, "%c", (char)ch.ascii);                 \
+                             if ((int)state.state == CANSID_FGCOLOR) {         \
+                               PRINT("FG Update:", (int)state.style);          \
+                               FG = (int)state.next_style;                     \
+                             }                                                 \
+                             if ((int)state.state == CANSID_BGCOLOR) {         \
+                               PRINT("BG Update:", (int)state.style);          \
+                               BG = (int)state.next_style;                     \
+                             }                                                 \
+                             if ((char)ch.ascii != 0) {                        \
+                               PRINT(                                          \
+                                 "\tString:", (char *)S,                       \
+                                 "  Char:", (char)ch.ascii,                    \
+                                 "  Code:", (int)ch.ascii,                     \
+                                 "  State Style:", (int)state.style,           \
+                                 "  State Next Style:", (int)state.next_style, \
+                                 "  State State:", (int)state.state,           \
+                                 "  FG:", FG,                                  \
+                                 "  BG:", BG,                                  \
+                                 "\t"                                          \
+                                 );                                            \
+                             }                                                 \
+                           }while (0); }
+
+#define _FEED(STR)       { do{                                     \
+                             for (int i = 0; i < strlen(STR); i++) \
+                             feed(STR[i]);                         \
+                             printf("\n");                         \
+                           }while (0); }
+
+#define FEED(STR)        { do{                                                                 \
+                             PRINT(AC_RESETALL "FEED>" AC_RESETALL "\t", strdup_escaped(STR)); \
+                             int FG = -1, BG = -1; char S[2];                                  \
+                             _FEED(STR);                                                       \
+                           }while (0); }
+
 
 void do_test_cansid(void){
   struct cansid_state state;
 
   state = cansid_init();
-  feed('\x1B');
-  char *as = malloc(1024);
+  printf("\n" AC_YELLOW AC_ITALIC "===========================================================================" AC_RESETALL "\n");
+  PRINT(
+    "CANSID_FGCOLOR:", CANSID_FGCOLOR,
+    "\t",
+    "CANSID_BGCOLOR:", CANSID_BGCOLOR,
+    "\t",
+    "CANSID_ENDVAL:", CANSID_ENDVAL,
+    "\t"
+    );
+  printf(AC_YELLOW AC_ITALIC "===========================================================================" AC_RESETALL "\n");
 
   DEBUG_STATE();
-  as = "OK1";
-  for (int i = 0; i < strlen(as); i++) {
-    feed(as[i]);
-  }
-  as = "\x1b[31m\x1b[40mRED_BLACK\x1b[0m";
-  for (int i = 0; i < strlen(as); i++) {
-    feed(as[i]);
-  }
-  as = "\x1b[32mRED\x1b[0mRR";
-  for (int i = 0; i < strlen(as); i++) {
-    feed(as[i]);
+  FEED(AC_BLUE "B");
+  FEED(AC_RED "R");
+  FEED(AC_RED_BLUE "RB");
+  if (false) { \
+    FEED(AC_YELLOW "Y");
+    FEED(AC_YELLOW_BLACK "YY" AC_RED_RED "RR");
+    FEED(AC_RED "G");
+    FEED("none");
+    FEED(AC_WHITE "W");
+    FEED("none");
   }
 }
 
@@ -436,11 +464,8 @@ TEST t_process_json_lines(void){
 
 
 TEST t_forever(void){
-  void *context = NULL;
-  // call 'my_program' and when it ends/crashes invoke it again, up
-  // to 10 times and wait 250 millies between invocations.
-  // counter will hold the amount of times 'my_program' was invoked.
-  unsigned int counter = forever_with_options(
+  void         *context = NULL;
+  unsigned int counter  = forever_with_options(
     do_forever_my_program, // function to invoke
     context,               // context that is passed to the function on every invocation
     5,                     // max amount of retries. 0 for unlimited retries.
@@ -685,7 +710,13 @@ TEST t_vtparse_csi(void){
   ASSERT_EQ('m', parser.ch);
   ASSERT_EQ(1U, parser.num_params);
   ASSERT_EQ(1, parser.params[0]);
-  dbg(parser.params[0], %d);
+  printf("\n");
+  PRINT(
+    "\t",
+    "PARAMS:  ", parser.params[0],
+    "# Intermediate:  ", parser.num_intermediate_chars,
+    "\t"
+    )
   ASSERT_EQ(0, parser.num_intermediate_chars);
   ASSERT_EQ(0, parser.error);
 
@@ -708,6 +739,13 @@ TEST t_vtparse_csi(void){
   ASSERT_EQ(0, parser.error);
   ASSERT_EQ(buf + 23, parser.data_begin);
   ASSERT_EQ(buf + 27, parser.data_end);
+  printf("\n");
+  PRINT(
+    "\t",
+    "# Intermediate:  ", parser.num_intermediate_chars,
+    "# Params:  ", parser.num_params,
+    "\t"
+    );
 
   ASSERT_EQ(0U, vtparse_parse(&parser, NULL, 0U));
   ASSERT_EQ(vtparse_has_event(&parser), true);
@@ -735,8 +773,7 @@ TEST t_vtparse_simple(void){
 
   size_t parsed_len = vtparse_parse(&parser, buf, buf_len);
 
-  dbg(buf_len, %lu);
-  dbg(parsed_len, %lu);
+  PRINT("parsed len: ", parsed_len, "buf len:", buf_len)
   ASSERT_EQ(buf_len, parsed_len);
   ASSERT_EQ(VTPARSE_ACTION_PRINT, parser.action);
   ASSERT_EQ(0, parser.error);
@@ -747,6 +784,15 @@ TEST t_vtparse_simple(void){
   ASSERT_EQ(vtparse_has_event(&parser), false);
 
 
+  PASS();
+}
+
+
+TEST t_generic_print(){
+  int  x[]     = { 1, 2, 3 };
+  char *args[] = { "gcc", "hello.c", "-o", "hello" };
+
+  PRINT(x, args);
   PASS();
 }
 
@@ -913,6 +959,11 @@ SUITE(s_md5) {
   RUN_TEST(t_md5);
   PASS();
 }
+SUITE(s_generic_print) {
+  RUN_TEST(t_generic_print);
+  PASS();
+}
+
 SUITE(s_json) {
   RUN_TEST(t_read_json_file);
   RUN_TEST(t_process_json_lines);
@@ -949,7 +1000,8 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_vtparse);
   RUN_SUITE(s_cansid);
   RUN_SUITE(s_ansi_utils);
+  RUN_SUITE(s_generic_print);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
-  assert(used == 0);
+  ASSERT_EQ(used, 0);
 }

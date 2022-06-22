@@ -1,5 +1,5 @@
 #include <stdbool.h>
-#define DEBUG_MEMORY_ENABLED    false
+//#define DEBUG_MEMORY_ENABLED
 #include "introspect-repos-test.h"
 #include "parson.h"
 #include "submodules/log.h/log.h"
@@ -13,14 +13,11 @@
 #include "submodules/debug-memory/debug_memory.h"
 #endif
 //////////////////////////////////////////////
-#define NUM_CHILDREN        1
-#define MAX_OUTPUT_BYTES    1024 * 1024
-#define D                   log_debug
+#define D    log_debug
 //////////////////////////////////////////////
 extern char *execute_processes();
 
-const size_t PATH_LIMIT = 20;
-
+const size_t MESON_PROJECTS_LIMIT = 100;
 //////////////////////////////////////////////
 
 
@@ -80,13 +77,15 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
 
 TEST t_paths(){
   char          *BASE_PATH   = "../";
-  char          *PATH_FILTER = "c_*";
-  struct Vector *MESON_PATHS = get_meson_paths(BASE_PATH, PATH_FILTER, PATH_LIMIT);
+  char          *PATH_FILTER = "^c_\\w+$|^meson_deps$";
+
+  struct Vector *MESON_PATHS = get_meson_paths(BASE_PATH, PATH_FILTER, MESON_PROJECTS_LIMIT);
 
   iterate_print(MESON_PATHS);
   struct Vector *introspected_paths = execute_meson_introspects(MESON_PATHS);
 
   iterate_parse_results(introspected_paths);
+  iterate_free(introspected_paths);
   PASS();
 }
 
@@ -104,7 +103,7 @@ int main(int argc, char **argv) {
   (void)argc; (void)argv;
   RUN_SUITE(s_paths);
 #ifdef DEBUG_MEMORY_ENABLED
-//  print_allocated_memory();
+  print_allocated_memory();
 #endif
   GREATEST_MAIN_END();
   return(0);

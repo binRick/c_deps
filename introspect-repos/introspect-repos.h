@@ -2,10 +2,13 @@
 #include "../submodules/b64.c/b64.h"
 #include "../submodules/c_timer/include/c_timer.h"
 #include "../submodules/chan/src/chan.h"
+#include "../submodules/ctable/src/string_util.h"
+#include "../submodules/ctable/src/table.h"
 #include "../submodules/list/src/list.h"
 #include "../submodules/reproc/reproc/include/reproc/export.h"
 #include "../submodules/reproc/reproc/include/reproc/reproc.h"
 #include "../submodules/rhash_md5.c/md5.h"
+#include "../submodules/tiny-regex-c/re.h"
 #include "ansicodes.h"
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
@@ -14,6 +17,7 @@
 #include "parson.h"
 #include "pthread.h"
 #include "submodules/assertf/assertf.h"
+#include "submodules/bytes/bytes.h"
 #include "submodules/c_vector/include/vector.h"
 #include "submodules/dbg/dbg.h"
 #include "submodules/ee.c/src/ee.h"
@@ -21,6 +25,7 @@
 #include "submodules/log.h/log.h"
 #include "submodules/path-normalize.c/src/path-normalize.h"
 #include "submodules/subprocess.h/subprocess.h"
+#include "submodules/timestamp/timestamp.h"
 #include "submodules/tinydir/tinydir.h"
 #include "submodules/wildcardcmp/wildcardcmp.h"
 #include <ctype.h>
@@ -31,6 +36,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+#define F_RED        "\x1B[1;31m"
+#define F_GREEN      "\x1B[1;32m"
+#define COL_RESET    "\x1B[0m"
 
 typedef void (*ee_target_handler)(JSON_Object *Target);
 

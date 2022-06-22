@@ -10,6 +10,7 @@ deps_test_deps = [
   str_replace_dep,
   tiny_regex_c_dep,
   c_vector_dep,
+  generic_print_dep,
   c_forever_dep,
   dbg_dep,
   c_eventemitter_dep,

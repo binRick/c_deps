@@ -11,8 +11,10 @@ meson_deps_dir = meson.current_source_dir()
 #############################################################
 inc = [
   include_directories('submodules/list/src'),
+  include_directories('submodules/c_ansi/ansi-codes'),
   include_directories('submodules/debug_print_h/src', 'submodules/debug_print_h/include'),
   include_directories('submodules/progressbar/include/progressbar'),
+  include_directories('submodules/generic-print'),
   include_directories('submodules/cgif/inc'),
   include_directories('submodules/SDL_DBGP'),
   include_directories('submodules/c_sdl/sdl-app-fonts'),
