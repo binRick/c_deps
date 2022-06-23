@@ -25,6 +25,7 @@ deps_test_deps = [
   throw_h_dep,
   c_timestamp_dep,
   siphash_dep,
+  sqldbal_dep,
   c_forever_dep,
   dbg_dep,
   c_eventemitter_dep,
@@ -38,6 +39,9 @@ deps_test_deps = [
   cansid_dep,
   ansi_utils_dep,
   http_get_dep,
+  mkcreflect_dep,
+]
+deps_c_args = [
 ]
 deps_link_args = [
 ]
@@ -47,6 +51,7 @@ if get_option('enable-binaries')
      dependencies: deps_test_deps,
      include_directories: deps_include_dirs,
      link_args: deps_link_args,
+     c_args: deps_c_args,
      install: true,
      pie: true,
   )

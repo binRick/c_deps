@@ -493,3 +493,9 @@
 [submodule "subprojects/parson"]
 	path = subprojects/parson
 	url = https://github.com/kgabis/parson
+[submodule "submodules/sqldbal"]
+	path = submodules/sqldbal
+	url = https://github.com/somnisoft/sqldbal
+[submodule "submodules/mkcreflect"]
+	path = submodules/mkcreflect
+	url = https://github.com/loganek/mkcreflect

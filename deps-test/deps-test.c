@@ -1,8 +1,10 @@
+#define MKCREFLECT_IMPL
 #include "../submodules/generic-print/print.h"
 #include "deps-test.h"
 #include <assert.h>
 static int do_get_google();
 static inline int file_exists(const char *path);
+
 
 enum ExampleEvents {
   EVENT_START  = 100,
@@ -12,6 +14,80 @@ enum ExampleEvents {
 struct FnArgs {
   int counter;
 };
+typedef struct {
+  int p1;
+  int p2;
+} BaseStruct;
+
+MKCREFLECT_DEFINE_STRUCT(T,
+                         (STRING, char, s, 20),
+                         (INTEGER, unsigned int, i))
+
+MKCREFLECT_DEFINE_STRUCT(Address,
+                         (STRING, char, street, 20),
+                         (STRUCT, T, t),
+                         (INTEGER, unsigned int, house_number))
+
+
+MKCREFLECT_DEFINE_STRUCT(TestStruct,
+                         (INTEGER, int, int_field),
+                         (STRING, char, array_field, 20),
+                         (INTEGER, size_t, size_field),
+                         (INTEGER, unsigned int, field1),
+                         (INTEGER, int64_t, field2, 20),
+                         (STRING, char, field3, 10),
+                         (STRUCT, BaseStruct, field4),
+                         (FLOAT, float, field5),
+                         (DOUBLE, double, field6),
+                         (POINTER, void *, field7, 3))
+
+
+Address address;
+TestStruct          test;
+T                   t;
+MKCREFLECT_TypeInfo *test_info, *address_info, *t_info;
+
+
+void do_mkcreflect(){
+  test_info = mkcreflect_get_TestStruct_type_info();
+
+  for (size_t i = 0; i < test_info->fields_count; i++) {
+    MKCREFLECT_FieldInfo *field = &test_info->fields[i];
+    printf(" * %s\n", field->field_name);
+    printf("    Type: %s\n", field->field_type);
+    printf("    Total size: %lu\n", field->size);
+    printf("    Offset: %lu\n", field->offset);
+    if (field->array_size != -1) {
+      printf("    It is an array! Number of elements: %d, size of single element: %lu\n",
+             field->array_size, field->size / field->array_size);
+    }
+  }
+  address_info = mkcreflect_get_Address_type_info();
+  for (size_t i = 0; i < address_info->fields_count; i++) {
+    MKCREFLECT_FieldInfo *field = &address_info->fields[i];
+    printf(" * %s\n", field->field_name);
+    printf("    Type: %s\n", field->field_type);
+    printf("    Total size: %lu\n", field->size);
+    printf("    Offset: %lu\n", field->offset);
+    if (field->array_size != -1) {
+      printf("    It is an array! Number of elements: %d, size of single element: %lu\n",
+             field->array_size, field->size / field->array_size);
+    }
+  }
+  t_info = mkcreflect_get_T_type_info();
+  for (size_t i = 0; i < t_info->fields_count; i++) {
+    MKCREFLECT_FieldInfo *field = &t_info->fields[i];
+    printf(" * %s\n", field->field_name);
+    printf("    Type: %s\n", field->field_type);
+    printf("    Total size: %lu\n", field->size);
+    printf("    Offset: %lu\n", field->offset);
+    if (field->array_size != -1) {
+      printf("    It is an array! Number of elements: %d, size of single element: %lu\n",
+             field->array_size, field->size / field->array_size);
+    }
+  }
+}
+
 char JSON_TESTS_FILE[] = ".tests.json",
      *JSON_TESTS_CONTENT;
 
@@ -836,6 +912,13 @@ TEST t_vtparse_simple(void){
 }
 
 
+TEST t_mkcreflect(){
+  do_mkcreflect();
+
+  PASS();
+}
+
+
 TEST t_generic_print(){
   int  x[]     = { 1, 2, 3 };
   char *args[] = { "gcc", "hello.c", "-o", "hello" };
@@ -1020,6 +1103,10 @@ SUITE(s_generic_print) {
   PASS();
 }
 
+SUITE(s_mkcreflect) {
+  RUN_TEST(t_mkcreflect);
+  PASS();
+}
 SUITE(s_json) {
   RUN_TEST(t_read_json_file);
   RUN_TEST(t_process_json_lines);
@@ -1059,6 +1146,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_generic_print);
   RUN_SUITE(s_murmurhash);
   RUN_SUITE(s_libbeaufort);
+  RUN_SUITE(s_mkcreflect);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
   ASSERT_EQ(used, 0);

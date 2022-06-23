@@ -1,6 +1,7 @@
 #pragma once
 //////////////////////////////////////
 #include <ctype.h>
+#include <inttypes.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -23,12 +24,15 @@
 #include "submodules/libbeaufort/include/beaufort.h"
 #include "submodules/microtar/src/microtar.h"
 #include "submodules/microui/src/microui.h"
+#include "submodules/mkcreflect/lib/include/mkcreflect.h"
 #include "submodules/murmurhash.c/murmurhash.h"
 #include "submodules/occurrences/occurrences.h"
 #include "submodules/rhash_md5.c/md5.h"
 #include "submodules/siphash/siphash.h"
+#include "submodules/sqldbal/src/sqldbal.h"
 #include "submodules/str-replace.c/src/str-replace.h"
 #include "submodules/str-truncate.c/src/str-truncate.h"
 #include "submodules/timestamp/timestamp.h"
 #include "submodules/tiny-regex-c/re.h"
 #include "submodules/vtparse/vtparse/vtparse.h"
+

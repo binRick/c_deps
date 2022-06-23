@@ -14,6 +14,7 @@ else
 endif
 
 
+subdir('meson/sqlite3')
 
 version_info = configuration_data()
 version_info.set('version', meson.project_version())
