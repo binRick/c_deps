@@ -24,6 +24,7 @@ deps_test_deps = [
   env_h_dep,
   throw_h_dep,
   c_timestamp_dep,
+  siphash_dep,
   c_forever_dep,
   dbg_dep,
   c_eventemitter_dep,

@@ -19,3 +19,4 @@ deps-test/microui
 .make-*log*
 sample-c99.db
 .*.sqlite
+.submodules

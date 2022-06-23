@@ -1,0 +1,10 @@
+subdir('c_sdl/sdl-app-fonts')
+subdir('c_sdl/sdl-app')
+subdir('c_darwin/active-app')
+subdir('c_darwin/window-utils')
+subdir('c_darwin/system-utils')
+subdir('c_darwin/app-utils')
+
+subdir('c_darwin/app-utils-test')
+subdir('c_darwin/window-utils-test')
+subdir('c_ansi/ansi-utils')

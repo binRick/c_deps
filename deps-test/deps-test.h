@@ -26,6 +26,7 @@
 #include "submodules/murmurhash.c/murmurhash.h"
 #include "submodules/occurrences/occurrences.h"
 #include "submodules/rhash_md5.c/md5.h"
+#include "submodules/siphash/siphash.h"
 #include "submodules/str-replace.c/src/str-replace.h"
 #include "submodules/str-truncate.c/src/str-truncate.h"
 #include "submodules/timestamp/timestamp.h"

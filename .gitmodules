@@ -6,10 +6,10 @@
 	url = https://github.com/mlabbe/ansicodes
 [submodule "submodules/asprintf"]
 	path = submodules/asprintf
-	url = https://github.com/jwerle/asprintf.c
+	url = https://github.com/littlstar/asprintf.c
 [submodule "submodules/asprintf.c"]
 	path = submodules/asprintf.c
-	url = https://github.com/jwerle/asprintf.c
+	url = https://github.com/littlstar/asprintf.c
 [submodule "submodules/assertf"]
 	path = submodules/assertf
 	url = https://github.com/leiless/assertf.h
@@ -27,10 +27,10 @@
 	url = https://github.com/clibs/bytes
 [submodule "submodules/c_ansi"]
 	path = submodules/c_ansi
-	url = https://github.com/binRick/c_ansi
+	url = ssh://git@github.com/binRick/c_ansi
 [submodule "submodules/c_embed"]
 	path = submodules/c_embed
-	url = ssh://git@github.com/binRick/c_embed
+	url = https://github.com/binRick/c_embed
 [submodule "submodules/c_eventemitter"]
 	path = submodules/c_eventemitter
 	url = https://github.com/sagiegurari/c_eventemitter
@@ -45,7 +45,7 @@
 	url = https://github.com/sagiegurari/c_hs
 [submodule "submodules/c_kat"]
 	path = submodules/c_kat
-	url = https://github.com/binRick/c_kat
+	url = git@github.com:binRick/c_kat
 [submodule "submodules/c_printf"]
 	path = submodules/c_printf
 	url = git@github.com:binRick/c_printf.git
@@ -96,7 +96,7 @@
 	url = https://github.com/funasoul/debug-memory
 [submodule "submodules/debug_print_h"]
 	path = submodules/debug_print_h
-	url = git@github.com:binRick/debug_print_h.git
+	url = https://github.com/rtaycher/debug_print_h
 [submodule "submodules/dirname"]
 	path = submodules/dirname
 	url = https://github.com/prodisDown/dirname
@@ -144,7 +144,7 @@
 	url = https://github.com/dexpota/kitty-themes
 [submodule "submodules/libansilove"]
 	path = submodules/libansilove
-	url = https://github.com/ansilove/libansilove
+	url = ssh://git@github.com/ansilove/libansilove
 [submodule "submodules/libconfuse"]
 	path = submodules/libconfuse
 	url = https://github.com/libconfuse/libconfuse
@@ -195,7 +195,7 @@
 	url = https://github.com/doches/progressbar
 [submodule "submodules/rgba"]
 	path = submodules/rgba
-	url = https://github.com/clibs/rgba
+	url = https://github.com/clib/rgba
 [submodule "submodules/scriptexec"]
 	path = submodules/scriptexec
 	url = https://github.com/sagiegurari/c_scriptexec
@@ -300,7 +300,7 @@
 	url = https://github.com/64/cansid
 [submodule "submodules/which"]
 	path = submodules/which
-	url = https://github.com/clibs/which
+	url = https://github.com/clib/which
 [submodule "submodules/libspinner"]
 	path = submodules/libspinner
 	url = https://github.com/briandowns/libspinner
@@ -312,7 +312,7 @@
 	url = https://github.com/RunnerScrab/libmutotp
 [submodule "submodules/c_palettes"]
 	path = submodules/c_palettes
-	url = https://github.com/binRick/c_palettes
+	url = ssh://git@github.com/binRick/c_palettes
 [submodule "submodules/occurences"]
 	path = submodules/occurences
 	url = https://github.com/stephenmathieson/occurrences.c
@@ -385,9 +385,6 @@
 [submodule "submodules/microtar"]
 	path = submodules/microtar
 	url = https://github.com/rxi/microtar
-[submodule "submodules/dmt"]
-	path = submodules/dmt
-	url = https://github.com/rxi/dmt
 [submodule "submodules/microui"]
 	path = submodules/microui
 	url = https://github.com/rxi/microui
@@ -463,3 +460,36 @@
 [submodule "submodules/layout"]
 	path = submodules/layout
 	url = https://github.com/randrew/layout
+[submodule "submodules/siphash"]
+	path = submodules/siphash
+	url = https://github.com/veorq/SipHash
+[submodule "submodules/dmt"]
+	path = submodules/dmt
+	url = https://github.com/rxi/dmt
+[submodule "submodules/slub.c"]
+	path = submodules/slub.c
+	url = https://github.com/hkjels/slug.c
+[submodule "submodules/SDL_image"]
+	path = submodules/SDL_image
+	url = https://github.com/libsdl-org/SDL_image
+[submodule "submodules/c-color-names"]
+	path = submodules/c-color-names
+	url = https://github.com/abhishekmishra/c-color-names
+[submodule "submodules/c_colors"]
+	path = submodules/c_colors
+	url = ssh://git@github.com/binRick/c_colors
+[submodule "submodules/color-name-lists"]
+	path = submodules/color-name-lists
+	url = https://github.com/meodai/color-name-lists
+[submodule "submodules/color-names"]
+	path = submodules/color-names
+	url = https://github.com/codebrainz/color-names
+[submodule "submodules/colornames"]
+	path = submodules/colornames
+	url = https://github.com/timoxley/colornames
+[submodule "submodules/cstructs-json"]
+	path = submodules/cstructs-json
+	url = https://github.com/tylerneylon/cstructs-json
+[submodule "subprojects/parson"]
+	path = subprojects/parson
+	url = https://github.com/kgabis/parson
