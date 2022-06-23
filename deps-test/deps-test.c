@@ -463,6 +463,54 @@ TEST t_process_json_lines(void){
 } /* process_json_lines */
 
 
+TEST t_libbeaufort(void){
+  static char *monkey   = NULL;
+  static char *monkey_s = NULL;
+
+  static char *goodman   = NULL;
+  static char *goodman_s = NULL;
+
+  static char *groove   = NULL;
+  static char *groove_s = NULL;
+
+  monkey_s = "kinkajous are awesome";
+  monkey   = beaufort_encrypt(monkey_s, "monkey", NULL);
+  assert(monkey);
+  assert(0 == strcmp(monkey, "26004Fyuv AnK Cs9sqC8"));
+
+  goodman_s = "the \nbig \nlebowski";
+  goodman   = beaufort_encrypt(goodman_s, "goodman", NULL);
+  assert(goodman);
+  assert(0 == strcmp(goodman, "n7A \n24u \n22D0huq5"));
+
+  groove_s = "d4nc3 t0 th3 mus!c :D";
+  groove   = beaufort_encrypt(groove_s, "groove", NULL);
+  assert(groove);
+  assert(0 == strcmp(groove, "3n1Cs lg y7l 9ko!F :b"));
+  dbg(monkey, %s);
+  dbg(monkey_s, %s);
+  dbg(goodman, %s);
+  dbg(goodman_s, %s);
+  dbg(groove, %s);
+  dbg(groove_s, %s);
+  PASS();
+}
+
+
+TEST t_murmurhash(void){
+  uint32_t   seed = 0;
+  const char *key = "kinkajou";
+  uint32_t   hash = murmurhash(key, (uint32_t)strlen(key), seed);
+
+  dbg(key, %s);
+  dbg(seed, %d);
+  printf("%" PRIu32 "\n", hash);
+  printf("%d" PRIu32 "\n", hash);
+
+  PASS();
+}
+
+
 TEST t_forever(void){
   void         *context = NULL;
   unsigned int counter  = forever_with_options(
@@ -812,6 +860,14 @@ SUITE(s_forever){
   RUN_TEST(t_forever);
   PASS();
 }
+SUITE(s_libbeaufort){
+  RUN_TEST(t_libbeaufort);
+  PASS();
+}
+SUITE(s_murmurhash){
+  RUN_TEST(t_murmurhash);
+  PASS();
+}
 SUITE(s_dmt){
   RUN_TEST(t_dmt);
   RUN_TEST(t_dmt_summary);
@@ -1001,6 +1057,8 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_cansid);
   RUN_SUITE(s_ansi_utils);
   RUN_SUITE(s_generic_print);
+  RUN_SUITE(s_murmurhash);
+  RUN_SUITE(s_libbeaufort);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
   ASSERT_EQ(used, 0);

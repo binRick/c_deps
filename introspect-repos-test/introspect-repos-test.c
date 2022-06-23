@@ -13,8 +13,6 @@
 #include "submodules/debug-memory/debug_memory.h"
 #endif
 //////////////////////////////////////////////
-#define D    log_debug
-//////////////////////////////////////////////
 extern char *execute_processes();
 
 const size_t MESON_PROJECTS_LIMIT = 100;

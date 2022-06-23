@@ -1,0 +1,24 @@
+__NAME___srcs = [files(
+__SRCS__
+)]
+
+__NAME___dirs = [
+__DIRS__
+  inc,
+]
+
+__NAME___deps = [
+__DEPS__
+]
+
+__NAME___lib = __TYPE___library('__NAME__',
+  __NAME___srcs,
+  install: __INSTALL__,
+  dependencies: __NAME___deps,
+  include_directories: __NAME___dirs,
+)
+
+__NAME___dep = declare_dependency(
+  include_directories: __NAME___dirs,
+  link_with: __NAME___lib,
+)

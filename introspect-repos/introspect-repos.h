@@ -9,6 +9,7 @@
 #include "../submodules/reproc/reproc/include/reproc/reproc.h"
 #include "../submodules/rhash_md5.c/md5.h"
 #include "../submodules/tiny-regex-c/re.h"
+#include "../submodules/which/src/which.h"
 #include "ansicodes.h"
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
@@ -39,6 +40,8 @@
 #include <sys/time.h>
 #define F_RED        "\x1B[1;31m"
 #define F_GREEN      "\x1B[1;32m"
+#define F_YELLOW     "\x1B[1;33m"
+#define F_INVERSE    "\x1B[7m"
 #define COL_RESET    "\x1B[0m"
 
 typedef void (*ee_target_handler)(JSON_Object *Target);

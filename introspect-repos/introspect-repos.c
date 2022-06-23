@@ -10,7 +10,7 @@
 #define STDOUT_READ_BUFFER_SIZE        1024 * 2
 #define PREVIEW_LIMIT                  25
 #define WORKERS_QTY                    4
-//#define DEBUG_MEMORY_ENABLED
+#define DEBUG_MEMORY_ENABLED
 #define NUM_CHILDREN                   1
 #define MAX_OUTPUT_BYTES               1024 * 256
 #define CACHE_DIRECTORY                "./.cache"
@@ -29,17 +29,26 @@
 #endif
 #include "../submodules/generic-print/print.h"
 ////////////////////////////////////////////////
+Table table = { 0 };
+chan_t        *JOBS_CHANNEL, *RESULTS_CHANNEL, *DONE_CHANNEL;
+struct Vector *meson_results;
 char * get_cached_key_file_name(const char *KEY);
 char * get_cached_key_file(const char *KEY);
 bool cached_key_file_exists(const char *KEY);
 
 typedef struct  MESON_JOB_RESULT_T {
-  unsigned long dur;
-  char          *name, *version, *dir, *subprojects_dir;
-  char          *json;
-  size_t        bytes;
+  char
+  *name, *version, *dir, *subprojects_dir, *styled_name,
+  *json, *git_config, *dur_s, *json_bytes_s
+  ;
+  unsigned long
+    dur
+  ;
+  size_t
+    json_bytes
+  ;
   JSON_Value
-                *Root_v,
+    *Root_v,
   *ProjectInfo_v,
   *Ast_v
   ;
@@ -78,11 +87,8 @@ typedef struct  MESON_JOB_RESULT_T {
   *AstLines_a
   ;
 } meson_job_result_t;
-
-typedef struct WORKER_T {
-  int delay_ms;
-  int thread_index;
-} worker_t;
+////////////////////////////////////////////////
+////             PARSE MESON JOB RESULT     ////
 ////////////////////////////////////////////////
 #define PARSE_MESON_JOB_RESULTS(RESULTS)                                      \
   { do{                                                                       \
@@ -98,6 +104,11 @@ typedef struct WORKER_T {
     }while (0); }
 #define PARSE_MESON_JOB_RESULT(JR)                                                        \
   { do{                                                                                   \
+/*         Basic Properties */                                                            \
+      r->json_bytes   = strlen(r->json);                                                  \
+      r->styled_name  = style_name(r->name);                                              \
+      r->dur_s        = milliseconds_to_string(r->dur);                                   \
+      r->json_bytes_s = bytes_to_string(r->json_bytes);                                   \
                                                                                           \
 /*         Parse JSON */                                                                  \
       JR->Root_v = json_parse_string(JR->json);                                           \
@@ -156,19 +167,17 @@ typedef struct WORKER_T {
     }while (0); }
 
 ////////////////////////////////////////////////
-chan_t        *JOBS_CHANNEL, *RESULTS_CHANNEL, *DONE_CHANNEL;
-struct Vector *meson_results;
 
 
-char *style_name(const char *name){
+static char *style_name(const char *name){
   char *s = malloc(strlen(name) + 128);
 
-  sprintf(s, " %s%s%s", F_GREEN, name, COL_RESET);
+  sprintf(s, " %s%s%s ", F_GREEN, name, COL_RESET);
   return(s);
 }
 
 
-char *number_to_string(size_t number){
+static char *number_to_string(size_t number){
   char *s = malloc(number / 10 + 1);
 
   sprintf(s, "%lu", number);
@@ -177,52 +186,48 @@ char *number_to_string(size_t number){
 
 
 ////////////////////////////////////////////////
-void generate_results_table(struct Vector *MESON_RESULTS){
-  bool          error;
-  TextAlignment ALIGNS[] = {
-    ALIGN_RIGHT,
-    ALIGN_LEFT,
-    ALIGN_RIGHT,
-    ALIGN_LEFT,
-  };
-  Table         table = get_empty_table();
+static void generate_results_table(struct Vector *MESON_RESULTS){
+  table = get_empty_table();
 
-  set_default_alignments(&table, (sizeof(ALIGNS) / sizeof(ALIGNS[0])), ALIGNS);
-  add_cell(&table, " Project ");
+  override_alignment_of_row(&table, ALIGN_CENTER);
+  override_alignment(&table, ALIGN_LEFT);
+  add_cell(&table, " " F_YELLOW "Project" COL_RESET " ");
   add_cell(&table, " Size ");
   add_cell(&table, " Dur ");
   add_cell(&table, " Targets ");
   add_cell(&table, " Deps ");
   add_cell(&table, " Scan Deps ");
   add_cell(&table, " Build Opts ");
-  override_alignment_of_row(&table, ALIGN_CENTER);
   set_hline(&table, BORDER_DOUBLE);
   next_row(&table);
 
   for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
     meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
-    error = false;
-    set_hline(&table, BORDER_SINGLE);
+    if (i == 0) {
+      set_hline(&table, BORDER_DOUBLE);
+    }else{
+      set_hline(&table, BORDER_SINGLE);
+    }
     override_alignment_of_row(&table, ALIGN_CENTER);
     override_alignment(&table, ALIGN_LEFT);
-    add_cell(&table, style_name(r->name));
-    add_cell(&table, bytes_to_string(r->bytes));
-    add_cell(&table, milliseconds_to_string(r->dur));
+    add_cell(&table, r->styled_name);
+    add_cell(&table, r->json_bytes_s);
+    add_cell(&table, r->dur_s);
     add_cell(&table, number_to_string(json_array_get_count(r->Targets_a)));
     add_cell(&table, number_to_string(json_array_get_count(r->Dependencies_a)));
     add_cell(&table, number_to_string(json_array_get_count(r->ScanDependencies_a)));
     add_cell(&table, number_to_string(json_array_get_count(r->BuildOptions_a)));
-    set_all_vlines(&table, BORDER_SINGLE);
     next_row(&table);
   }
 
+  set_all_vlines(&table, BORDER_SINGLE);
   make_boxed(&table, BORDER_DOUBLE);
   print_table(&table);
   free_table(&table);
 } /* gen_table */
 
 
-void write_cached_key_file_content(const char *KEY, const char *KEY_CONTENT){
+static void write_cached_key_file_content(const char *KEY, const char *KEY_CONTENT){
   if (KEY_CONTENT == NULL) {
     return;
   }
@@ -235,7 +240,7 @@ void write_cached_key_file_content(const char *KEY, const char *KEY_CONTENT){
 }
 
 
-char * cached_key_file_content(const char *KEY){
+static char * cached_key_file_content(const char *KEY){
   char *K   = get_cached_key_file(KEY);
   char *res = fsio_read_text_file(K);
 
@@ -370,12 +375,12 @@ void iterate_free(struct Vector *VECTOR){
     meson_job_result_t *j = (meson_job_result_t *)vector_get(VECTOR, i);
     if (j != NULL) {
       if (j->name != NULL) {
-        // free(j->name);
+        free(j->name);
       }
-      //free(j);
+      free(j);
     }
   }
-//  vector_release(VECTOR);
+  vector_release(VECTOR);
 }
 
 
@@ -392,89 +397,6 @@ size_t iterate_get_total_size(struct Vector *VECTOR){
 void iterate_parse_results(struct Vector *MESON_RESULTS){
   PARSE_MESON_JOB_RESULTS(MESON_RESULTS);
 }
-
-
-void _iterate_parse_results(struct Vector *MESON_RESULTS){
-  for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
-    JSON_Array
-    *TARGETS_A             = NULL,
-    *BUILDOPTIONS_A        = NULL,
-    *DEPENDENCIES_A        = NULL,
-    *SCANDEPENDENCIES_A    = NULL,
-    *PROJECTDEPENDENCIES_A = NULL
-    ;
-    JSON_Object
-    *ALL           = NULL,
-    *PROJECTINFO_O = NULL,
-    *AST_O         = NULL
-    ;
-    JSON_Value
-    *TARGETS_V          = NULL,
-    *BUILDOPTIONS_V     = NULL,
-    *AST_V              = NULL,
-    *DEPENDENCIES_V     = NULL,
-    *SCANDEPENDENCIES_V = NULL,
-    *PROJECTINFO_V      = NULL
-    ;
-    meson_job_result_t *job_result = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
-    assert(job_result->bytes > 0);
-
-    JSON_Value *V = json_parse_string(job_result->json);
-    if (V == NULL) {
-      log_error("%s> %lub", job_result->name, job_result->bytes);
-    }
-    assert(V != NULL);
-
-    assert(json_value_get_type(V) == JSONObject);
-    ALL = json_value_get_object(V);
-    assert(ALL != NULL);
-
-    PROJECTINFO_V = json_object_dotget_value(ALL, "projectinfo");
-    assert(json_value_get_type(PROJECTINFO_V) == JSONObject);
-    PROJECTINFO_O = json_value_get_object(PROJECTINFO_V);
-    assert(PROJECTINFO_O != NULL);
-
-    SCANDEPENDENCIES_V = json_object_dotget_value(ALL, "scan_dependencies");
-    assert(json_value_get_type(SCANDEPENDENCIES_V) == JSONArray);
-    SCANDEPENDENCIES_A = json_value_get_array(SCANDEPENDENCIES_V);
-    assert(SCANDEPENDENCIES_A != NULL);
-
-    DEPENDENCIES_V = json_object_dotget_value(ALL, "dependencies");
-    assert(json_value_get_type(DEPENDENCIES_V) == JSONArray);
-    DEPENDENCIES_A = json_value_get_array(DEPENDENCIES_V);
-    assert(DEPENDENCIES_A != NULL);
-
-    BUILDOPTIONS_V = json_object_dotget_value(ALL, "buildoptions");
-    assert(json_value_get_type(BUILDOPTIONS_V) == JSONArray);
-    BUILDOPTIONS_A = json_value_get_array(BUILDOPTIONS_V);
-    assert(BUILDOPTIONS_A != NULL);
-
-    TARGETS_V = json_object_dotget_value(ALL, "targets");
-    assert(json_value_get_type(TARGETS_V) == JSONArray);
-    TARGETS_A = json_value_get_array(TARGETS_V);
-    assert(TARGETS_A != NULL);
-
-    AST_V = json_object_dotget_value(ALL, "ast");
-    assert(json_value_get_type(AST_V) == JSONObject);
-    AST_O = json_value_get_object(AST_V);
-    assert(AST_O != NULL);
-    generate_results_table(MESON_RESULTS);
-    PRINT(
-      "<", job_result->name, ">",
-      "\n\tsize:\t\t", bytes_to_string(job_result->bytes),
-      "\n\tms:\t\t", job_result->dur,
-      "\n\ttargets:\t", json_array_get_count(TARGETS_A),
-      "\n\tdeps:\t\t", json_array_get_count(DEPENDENCIES_A),
-      "\n\tscandeps:\t", json_array_get_count(SCANDEPENDENCIES_A),
-      "\n\tbuildopts:\t", json_array_get_count(BUILDOPTIONS_A),
-      "\n\tastopts:\t", json_object_get_count(AST_O),
-      "\n\tinfos:\t\t", json_object_get_count(PROJECTINFO_O),
-      "\n"
-      );
-    //free(job_result);
-  }
-  //iterate_free(MESON_RESULTS);
-} /* iterate_parse_results */
 
 
 void iterate_targets(ee_t *ee, JSON_Array *A){
@@ -636,9 +558,9 @@ void *execute_meson_job(void *_WORKER_ID){
               WORKER_ID, qty, strlen(job), job);
     }
     unsigned long started = timestamp();
-    job_result->json  = execute_meson_introspect(job);
-    job_result->bytes = strlen(job_result->json);
-    job_result->dur   = timestamp() - started;
+    job_result->json = execute_meson_introspect(job);
+    job_result->dur  = timestamp() - started;
+    job_result->dur  = timestamp() - started;
     chan_send(RESULTS_CHANNEL, (void *)job_result);
     qty++;
   }
@@ -709,7 +631,13 @@ char *execute_processes(char *MESON_BUILD_FILE){
     reproc_t   *process = reproc_new();
 
     const char *date_args[] = {
-      "meson", "introspect", "--all", MESON_BUILD_FILE,
+      which("meson"),
+      "introspect",
+      "--all",
+      "--backend",
+      "ninja",
+      "--force-object-output",
+      MESON_BUILD_FILE,
       NULL
     };
 

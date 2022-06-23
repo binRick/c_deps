@@ -427,3 +427,39 @@
 [submodule "submodules/json-c"]
 	path = submodules/json-c
 	url = https://github.com/json-c/json-c
+[submodule "submodules/filecopy"]
+	path = submodules/filecopy
+	url = https://github.com/a-p-jo/filecopy
+[submodule "submodules/c_ini"]
+	path = submodules/c_ini
+	url = https://github.com/sagiegurari/c_ini
+[submodule "submodules/murmurhash.c"]
+	path = submodules/murmurhash.c
+	url = https://github.com/jwerle/murmurhash.c
+[submodule "submodules/libbeaufort"]
+	path = submodules/libbeaufort
+	url = https://github.com/jwerle/libbeaufort
+[submodule "submodules/bitset"]
+	path = submodules/bitset
+	url = https://github.com/abenhlal/bitset
+[submodule "submodules/strconv-lib"]
+	path = submodules/strconv-lib
+	url = https://github.com/thanasis-tzimas/strconv-lib
+[submodule "submodules/chfreq.c"]
+	path = submodules/chfreq.c
+	url = https://github.com/jwerle/chfreq.c
+[submodule "submodules/c-timestamp"]
+	path = submodules/c-timestamp
+	url = https://github.com/chansen/c-timestamp
+[submodule "submodules/c-dt"]
+	path = submodules/c-dt
+	url = https://github.com/chansen/c-dt
+[submodule "submodules/c-utf8-valid"]
+	path = submodules/c-utf8-valid
+	url = https://github.com/chansen/c-utf8-valid
+[submodule "submodules/iinterfaces99"]
+	path = submodules/iinterfaces99
+	url = https://github.com/Hirrolot/interface99
+[submodule "submodules/layout"]
+	path = submodules/layout
+	url = https://github.com/randrew/layout

@@ -2,8 +2,25 @@ project('meson_deps',['c'],default_options:['warning_level=0','c_std=gnu99'])
 passh_program = find_program('passh', required : true)
 sqlite3_program = find_program('sqlite3', required : true)
 sh_program = find_program('sh', required : true)
-summary({'xxxxxx': true,
-        'yyyyy': 'string.......',
+git = find_program('git', required: true)
+
+fs = import('fs')
+
+if git.found() and fs.is_dir('.git')
+    git_rev_parse = run_command(git, 'rev-parse', '--short', '@', check: true)
+    git_sha = git_rev_parse.stdout().strip()
+else
+    git_sha = ''
+endif
+
+
+
+version_info = configuration_data()
+version_info.set('version', meson.project_version())
+version_info.set('vcs_tag', git_sha)
+
+summary({'version': meson.project_version(),
+        'vcs_tag': git_sha,
         }, section: 'Options1')
 cc = meson.get_compiler('c')
 pwd = meson.current_source_dir()
