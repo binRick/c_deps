@@ -73,7 +73,7 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
 }
 
 
-TEST t_paths(){
+TEST t_introspect_repos(){
   char          *BASE_PATH   = "../";
   char          *PATH_FILTER = "^c_\\w+$|^meson_deps$";
 
@@ -87,8 +87,8 @@ TEST t_paths(){
   PASS();
 }
 
-SUITE(s_paths){
-  RUN_TESTp(t_paths);
+SUITE(s_introspect_repos){
+  RUN_TESTp(t_introspect_repos);
   PASS();
 }
 
@@ -99,7 +99,7 @@ GREATEST_MAIN_DEFS();
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
-  RUN_SUITE(s_paths);
+  RUN_SUITE(s_introspect_repos);
 #ifdef DEBUG_MEMORY_ENABLED
   print_allocated_memory();
 #endif

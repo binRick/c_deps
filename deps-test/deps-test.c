@@ -2,91 +2,270 @@
 #include "../submodules/generic-print/print.h"
 #include "deps-test.h"
 #include <assert.h>
+////////////////////////////////////////////////////////
 static int do_get_google();
+static inline int do_sqldbal(void);
 static inline int file_exists(const char *path);
 
 
-enum ExampleEvents {
-  EVENT_START  = 100,
-  EVENT_MIDDLE = 200,
-  EVENT_END    = 300
+////////////////////////////////////////////////////////
+static inline int do_sqldbal(void){
+  int64_t                  ts = -1, qty = -1, rowid = -1, ins_id = -1, ins_item_id = -1, created_ts = -1;
+  enum sqldbal_status_code rc;
+  struct sqldbal_db        *db;
+  struct sqldbal_stmt      *stmt;
+  const char               *text, *created, *_created;
+  char                     ts_s[1024];
+
+  rc = sqldbal_open(SQLDBAL_DRIVER_SQLITE, LOCATION, NULL, NULL, NULL, NULL, FLAGS, NULL, 0, &db);
+  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+  rc = sqldbal_exec(db, "PRAGMA foreign_keys = ON", NULL, NULL);
+  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+  rc = sqldbal_exec(db,
+                    "\
+CREATE TABLE IF NOT EXISTS test(\
+ _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT\
+, _created  DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))\
+, ts INTEGER NOT NULL\
+, str VARCHAR(20) NOT NULL\
+)",
+                    NULL,
+                    NULL);
+  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+  rc = sqldbal_exec(db,
+                    "\
+CREATE TABLE IF NOT EXISTS test_items(\
+ _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT\
+, _created  DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))\
+, test_id INTEGER NOT NULL\
+, str VARCHAR(20) NOT NULL\
+, CONSTRAINT fk_test_ids FOREIGN KEY (test_id) REFERENCES test(_id)\
+  ON DELETE CASCADE ON UPDATE CASCADE\
+)",
+                    NULL,
+                    NULL);
+  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+
+  rc = sqldbal_stmt_prepare(db,
+                            "DELETE FROM test",
+                            -1,
+                            &stmt);
+  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+  rc = sqldbal_stmt_execute(stmt);
+  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+  rc = sqldbal_stmt_prepare(db,
+                            "DELETE FROM test_items",
+                            -1,
+                            &stmt);
+  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+  rc = sqldbal_stmt_execute(stmt);
+  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+  printf(
+    AC_RESETALL AC_BRIGHT_RED ">DELETED all rows\n" AC_RESETALL
+    );
+  rc = sqldbal_stmt_close(stmt);
+  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+
+  for (size_t i = 0; i < INSERT_QTY; i++) {
+    ts = timestamp();
+    sprintf(ts_s, "%llu", ts);
+    rc = sqldbal_stmt_prepare(db,
+                              "INSERT INTO test(ts, str) VALUES(?, ?)",
+                              -1,
+                              &stmt);
+    assert(rc == SQLDBAL_STATUS_OK);
+    rc = sqldbal_stmt_bind_int64(stmt, 0, ts);
+    assert(rc == SQLDBAL_STATUS_OK);
+    rc = sqldbal_stmt_bind_text(stmt, 1, ts_s, -1);
+    assert(rc == SQLDBAL_STATUS_OK);
+    rc = sqldbal_stmt_execute(stmt);
+    assert(rc == SQLDBAL_STATUS_OK);
+
+    ins_id = -1;
+    rc     = sqldbal_last_insert_id(db, "test_id_seq", &ins_id);
+    ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+    ASSERT_GTE(ins_id, 1);
+    rc = sqldbal_stmt_close(stmt);
+    assert(rc == SQLDBAL_STATUS_OK);
+
+    for (size_t ii = 0; ii < INSERT_QTY; ii++) {
+      rc = sqldbal_stmt_prepare(db, "INSERT INTO test_items(test_id, str) VALUES(?, ?)", -1, &stmt);
+      assert(rc == SQLDBAL_STATUS_OK);
+      rc = sqldbal_stmt_bind_int64(stmt, 0, ins_id);
+      assert(rc == SQLDBAL_STATUS_OK);
+      rc = sqldbal_stmt_bind_text(stmt, 1, ts_s, -1);
+      assert(rc == SQLDBAL_STATUS_OK);
+      rc = sqldbal_stmt_execute(stmt);
+      assert(rc == SQLDBAL_STATUS_OK);
+      ins_item_id = -1;
+      rc          = sqldbal_last_insert_id(db, "test_items_id_seq", &ins_item_id);
+      ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
+      ASSERT_GTE(ins_item_id, 1);
+      rc = sqldbal_stmt_close(stmt);
+      assert(rc == SQLDBAL_STATUS_OK);
+    }
+  }
+
+  rc = sqldbal_stmt_prepare(db,
+                            "SELECT COUNT(*) FROM test",
+                            -1,
+                            &stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+  rc = sqldbal_stmt_execute(stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+  while (sqldbal_stmt_fetch(stmt) == SQLDBAL_FETCH_ROW) {
+    rc = sqldbal_stmt_column_int64(stmt, 0, &qty);
+    assert(rc == SQLDBAL_STATUS_OK);
+    printf(
+      AC_RESETALL AC_YELLOW ">%llu test rows\n" AC_RESETALL,
+      qty
+      );
+  }
+  rc = sqldbal_stmt_close(stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+
+  rc = sqldbal_stmt_prepare(db,
+                            "SELECT COUNT(*) FROM test_items",
+                            -1,
+                            &stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+  rc = sqldbal_stmt_execute(stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+  while (sqldbal_stmt_fetch(stmt) == SQLDBAL_FETCH_ROW) {
+    rc = sqldbal_stmt_column_int64(stmt, 0, &qty);
+    assert(rc == SQLDBAL_STATUS_OK);
+    printf(
+      AC_RESETALL AC_YELLOW ">%llu test_item rows\n" AC_RESETALL,
+      qty
+      );
+  }
+  rc = sqldbal_stmt_close(stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+
+
+  rc = sqldbal_stmt_prepare(db,
+                            "DELETE from test where _id = ?",
+                            -1,
+                            &stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+  rc = sqldbal_stmt_bind_int64(stmt, 0, INSERT_QTY);
+  assert(rc == SQLDBAL_STATUS_OK);
+  rc = sqldbal_stmt_execute(stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+
+  rc = sqldbal_stmt_prepare(db,
+                            "SELECT COUNT(*) FROM test_items",
+                            -1,
+                            &stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+  rc = sqldbal_stmt_execute(stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+  while (sqldbal_stmt_fetch(stmt) == SQLDBAL_FETCH_ROW) {
+    rc = sqldbal_stmt_column_int64(stmt, 0, &qty);
+    assert(rc == SQLDBAL_STATUS_OK);
+    printf(
+      AC_RESETALL AC_YELLOW ">%llu test_item rows\n" AC_RESETALL,
+      qty
+      );
+  }
+  rc = sqldbal_stmt_close(stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+
+
+  rc = sqldbal_stmt_prepare(db,
+                            "SELECT\
+  _id\
+, _created\
+, ts\
+, str\
+, CAST(((julianday(_created)-2440587.5)*86400) as created_ts)\
+  FROM test",
+                            -1,
+                            &stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+  rc = sqldbal_stmt_execute(stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+  while (sqldbal_stmt_fetch(stmt) == SQLDBAL_FETCH_ROW) {
+    rc = sqldbal_stmt_column_int64(stmt, 0, &rowid);
+    assert(rc == SQLDBAL_STATUS_OK);
+    rc = sqldbal_stmt_column_text(stmt, 1, &_created, NULL);
+    assert(rc == SQLDBAL_STATUS_OK);
+    rc = sqldbal_stmt_column_int64(stmt, 2, &ts);
+    assert(rc == SQLDBAL_STATUS_OK);
+    rc = sqldbal_stmt_column_text(stmt, 3, &text, NULL);
+    assert(rc == SQLDBAL_STATUS_OK);
+    rc = sqldbal_stmt_column_int64(stmt, 4, &created_ts);
+    assert(rc == SQLDBAL_STATUS_OK);
+    fprintf(stderr,
+            AC_RESETALL AC_CYAN "#%llu> %llu / %s|_created:%s|created_ts:%llu|\n" AC_RESETALL,
+            rowid, ts, text, _created, created_ts
+            );
+  }
+  rc = sqldbal_stmt_close(stmt);
+  assert(rc == SQLDBAL_STATUS_OK);
+
+
+  rc = sqldbal_close(db);
+  assert(rc == SQLDBAL_STATUS_OK);
+  return(0);
+} /* do_sqldbal */
+
+
+TestStruct test_struct = {
+  .name = "xxxxxxxx",
 };
-struct FnArgs {
-  int counter;
-};
-typedef struct {
-  int p1;
-  int p2;
-} BaseStruct;
-
-MKCREFLECT_DEFINE_STRUCT(T,
-                         (STRING, char, s, 20),
-                         (INTEGER, unsigned int, i))
-
-MKCREFLECT_DEFINE_STRUCT(Address,
-                         (STRING, char, street, 20),
-                         (STRUCT, T, t),
-                         (INTEGER, unsigned int, house_number))
-
-
-MKCREFLECT_DEFINE_STRUCT(TestStruct,
-                         (INTEGER, int, int_field),
-                         (STRING, char, array_field, 20),
-                         (INTEGER, size_t, size_field),
-                         (INTEGER, unsigned int, field1),
-                         (INTEGER, int64_t, field2, 20),
-                         (STRING, char, field3, 10),
-                         (STRUCT, BaseStruct, field4),
-                         (FLOAT, float, field5),
-                         (DOUBLE, double, field6),
-                         (POINTER, void *, field7, 3))
-
-
-Address address;
-TestStruct          test;
-T                   t;
-MKCREFLECT_TypeInfo *test_info, *address_info, *t_info;
 
 
 void do_mkcreflect(){
-  test_info = mkcreflect_get_TestStruct_type_info();
-
-  for (size_t i = 0; i < test_info->fields_count; i++) {
-    MKCREFLECT_FieldInfo *field = &test_info->fields[i];
-    printf(" * %s\n", field->field_name);
-    printf("    Type: %s\n", field->field_type);
-    printf("    Total size: %lu\n", field->size);
-    printf("    Offset: %lu\n", field->offset);
-    if (field->array_size != -1) {
-      printf("    It is an array! Number of elements: %d, size of single element: %lu\n",
-             field->array_size, field->size / field->array_size);
+  printf(
+    AC_RESETALL AC_GREEN AC_BOLD "<%s>" AC_RESETALL " "
+    AC_YELLOW "%lub (%lub packed)" AC_RESETALL " "
+    AC_BLUE "[%lu fields]" AC_RESETALL  " "
+    AC_RESETALL "\n",
+    TestStructInfo->name, TestStructInfo->size,
+    TestStructInfo->packed_size,
+    TestStructInfo->fields_count
+    );
+  for (size_t i = 0; i < TestStructInfo->fields_count; i++) {
+    MKCREFLECT_FieldInfo *field = &TestStructInfo->fields[i];
+    printf(
+      AC_RESETALL AC_GREEN AC_BOLD "\t#%lu/%lu" " "
+      AC_RESETALL AC_GREEN AC_BOLD "<"
+      AC_RESETALL AC_BRIGHT_BLUE AC_BOLD AC_UNDERLINE AC_REVERSED "%s"
+      AC_RESETALL AC_GREEN AC_BOLD ">"
+      AC_RESETALL "\n"
+      AC_MAGENTA "\t\tType: #"
+      AC_RESETALL AC_CYAN AC_BOLD "%d" AC_RESETALL " "
+      AC_MAGENTA "'"
+      AC_RESETALL AC_YELLOW_BLACK AC_ITALIC "%s" AC_RESETALL
+      AC_MAGENTA "'" AC_RESETALL  "\n"
+      AC_CYAN "\t\tPointer? %s" AC_RESETALL  "\n"
+      AC_CYAN "\t\t[%lub]" AC_RESETALL  "\n"
+      AC_BLUE "\t\t[%d|%s]" AC_RESETALL  "\n",
+      i + 1, TestStructInfo->fields_count, field->field_name,
+      field->data_type, field->field_type,
+      BOOL_TO_STR(FIELD_IS_POINTER(field->data_type)),
+      field->size,
+      field->array_size,
+      (field->array_size != -1) ?
+      AC_RESETALL AC_BOLD AC_UNDERLINE AC_YELLOW "Array" AC_RESETALL
+                :
+      AC_RESETALL AC_BOLD AC_UNDERLINE AC_RED "Not Array" AC_RESETALL
+      );
+    if (false) {
+      printf("    Type: %s\t", field->field_type);
+      printf("    Total size: %lu\t", field->size);
+      printf("    data_type: %d\t", field->data_type);
+      printf("    is_signed: %s\t", field->is_signed?"Yes":"No");
+      printf("    Offset: %lu\t", field->offset);
+      if (field->array_size != -1) {
+        printf("    It is an array! Number of elements: %d, size of single element: %lu\t",
+               field->array_size, field->size / field->array_size);
+      }
     }
+    //printf("\n");
   }
-  address_info = mkcreflect_get_Address_type_info();
-  for (size_t i = 0; i < address_info->fields_count; i++) {
-    MKCREFLECT_FieldInfo *field = &address_info->fields[i];
-    printf(" * %s\n", field->field_name);
-    printf("    Type: %s\n", field->field_type);
-    printf("    Total size: %lu\n", field->size);
-    printf("    Offset: %lu\n", field->offset);
-    if (field->array_size != -1) {
-      printf("    It is an array! Number of elements: %d, size of single element: %lu\n",
-             field->array_size, field->size / field->array_size);
-    }
-  }
-  t_info = mkcreflect_get_T_type_info();
-  for (size_t i = 0; i < t_info->fields_count; i++) {
-    MKCREFLECT_FieldInfo *field = &t_info->fields[i];
-    printf(" * %s\n", field->field_name);
-    printf("    Type: %s\n", field->field_type);
-    printf("    Total size: %lu\n", field->size);
-    printf("    Offset: %lu\n", field->offset);
-    if (field->array_size != -1) {
-      printf("    It is an array! Number of elements: %d, size of single element: %lu\n",
-             field->array_size, field->size / field->array_size);
-    }
-  }
-}
+} /* do_mkcreflect */
 
 char JSON_TESTS_FILE[] = ".tests.json",
      *JSON_TESTS_CONTENT;
@@ -1069,6 +1248,15 @@ TEST t_catpath(void){
 }
 
 
+TEST t_sqldbal(void){
+  int res = -1;
+
+  res = do_sqldbal();
+  ASSERT_EQ(res, 0);
+  PASS();
+}
+
+
 TEST t_regex(void){
   int        match_length;
   const char *string_to_search = "ahem.. 'hello world !' ..";
@@ -1103,6 +1291,10 @@ SUITE(s_generic_print) {
   PASS();
 }
 
+SUITE(s_sqldbal) {
+  RUN_TEST(t_sqldbal);
+  PASS();
+}
 SUITE(s_mkcreflect) {
   RUN_TEST(t_mkcreflect);
   PASS();
@@ -1147,6 +1339,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_murmurhash);
   RUN_SUITE(s_libbeaufort);
   RUN_SUITE(s_mkcreflect);
+  RUN_SUITE(s_sqldbal);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
   ASSERT_EQ(used, 0);

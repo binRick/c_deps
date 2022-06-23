@@ -20,3 +20,5 @@ deps-test/microui
 sample-c99.db
 .*.sqlite
 .submodules
+deps-test.sqlite
+*/deps-test.sqlite

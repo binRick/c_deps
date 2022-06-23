@@ -35,4 +35,52 @@
 #include "submodules/timestamp/timestamp.h"
 #include "submodules/tiny-regex-c/re.h"
 #include "submodules/vtparse/vtparse/vtparse.h"
+#define LOCATION       "deps-test.sqlite"
+#define DEBUG_FLAGS    (SQLDBAL_FLAG_DEBUG | SQLDBAL_FLAG_SQLITE_OPEN_CREATE | SQLDBAL_FLAG_SQLITE_OPEN_READWRIT E)
+#define FLAGS          (SQLDBAL_FLAG_SQLITE_OPEN_CREATE | SQLDBAL_FLAG_SQLITE_OPEN_READWRITE)
+#define INSERT_QTY     10 * 1
+#define MKCREFLECT_IMPL
+
+
+typedef struct {
+  int p1;
+  int p2;
+} BaseStruct;
+
+MKCREFLECT_DEFINE_STRUCT(Location,
+                         (STRING, char, latitude, 20),
+                         (STRING, char, longitude, 20)
+                         )
+
+MKCREFLECT_DEFINE_STRUCT(Address,
+                         (STRING, char, street, 20),
+                         (STRUCT, Location, location),
+                         (INTEGER, unsigned int, house_number)
+                         )
+
+
+MKCREFLECT_DEFINE_STRUCT(TestStruct,
+                         (INTEGER, unsigned long, id),
+                         (INTEGER, size_t, size),
+                         (STRING, char, name, 64),
+                         (POINTER, char *, nameptrs, 20),
+                         (STRUCT, BaseStruct, base),
+                         (STRUCT, Address, addresses, 5),
+                         (POINTER, Address *, addressptrs, 5)
+                         )
+
+
+#define BOOL_TO_STR(BOOL)            (BOOL) ? "Yes" : "No"
+#define FIELD_IS_POINTER(TYPE_ID)    (TYPE_ID == 6)
+#define TestStructInfo    mkcreflect_get_TestStruct_type_info()
+
+
+enum ExampleEvents {
+  EVENT_START  = 100,
+  EVENT_MIDDLE = 200,
+  EVENT_END    = 300
+};
+struct FnArgs {
+  int counter;
+};
 
