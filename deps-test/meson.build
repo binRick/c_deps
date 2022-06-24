@@ -59,6 +59,7 @@ if get_option('enable-binaries')
     test('deps-test', 
       passh_program, args: [deps_test_exec],
       timeout: 60,
+      is_parallel: true,
       workdir: meson.current_source_dir(),
       verbose: true,
       )

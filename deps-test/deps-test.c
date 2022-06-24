@@ -4,12 +4,15 @@
 #include <assert.h>
 ////////////////////////////////////////////////////////
 static int do_get_google();
-static inline int do_sqldbal(void);
 static inline int file_exists(const char *path);
+
+#define ASSERT_SQLDB_RESULT()    { do {                                \
+                                     ASSERT_EQ(rc, SQLDBAL_STATUS_OK); \
+                                   } while (0); }
 
 
 ////////////////////////////////////////////////////////
-static inline int do_sqldbal(void){
+TEST t_sqldbal(void){
   int64_t                  ts = -1, qty = -1, rowid = -1, ins_id = -1, ins_item_id = -1, created_ts = -1;
   enum sqldbal_status_code rc;
   struct sqldbal_db        *db;
@@ -45,12 +48,10 @@ CREATE TABLE IF NOT EXISTS test_items(\
                     NULL,
                     NULL);
   ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
-
   rc = sqldbal_stmt_prepare(db,
                             "DELETE FROM test",
                             -1,
                             &stmt);
-  ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
   rc = sqldbal_stmt_execute(stmt);
   ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
   rc = sqldbal_stmt_prepare(db,
@@ -73,36 +74,36 @@ CREATE TABLE IF NOT EXISTS test_items(\
                               "INSERT INTO test(ts, str) VALUES(?, ?)",
                               -1,
                               &stmt);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
     rc = sqldbal_stmt_bind_int64(stmt, 0, ts);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
     rc = sqldbal_stmt_bind_text(stmt, 1, ts_s, -1);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
     rc = sqldbal_stmt_execute(stmt);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
 
     ins_id = -1;
     rc     = sqldbal_last_insert_id(db, "test_id_seq", &ins_id);
     ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
     ASSERT_GTE(ins_id, 1);
     rc = sqldbal_stmt_close(stmt);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
 
     for (size_t ii = 0; ii < INSERT_QTY; ii++) {
       rc = sqldbal_stmt_prepare(db, "INSERT INTO test_items(test_id, str) VALUES(?, ?)", -1, &stmt);
-      assert(rc == SQLDBAL_STATUS_OK);
+      ASSERT_SQLDB_RESULT();
       rc = sqldbal_stmt_bind_int64(stmt, 0, ins_id);
-      assert(rc == SQLDBAL_STATUS_OK);
+      ASSERT_SQLDB_RESULT();
       rc = sqldbal_stmt_bind_text(stmt, 1, ts_s, -1);
-      assert(rc == SQLDBAL_STATUS_OK);
+      ASSERT_SQLDB_RESULT();
       rc = sqldbal_stmt_execute(stmt);
-      assert(rc == SQLDBAL_STATUS_OK);
+      ASSERT_SQLDB_RESULT();
       ins_item_id = -1;
       rc          = sqldbal_last_insert_id(db, "test_items_id_seq", &ins_item_id);
       ASSERT_EQ(rc, SQLDBAL_STATUS_OK);
       ASSERT_GTE(ins_item_id, 1);
       rc = sqldbal_stmt_close(stmt);
-      assert(rc == SQLDBAL_STATUS_OK);
+      ASSERT_SQLDB_RESULT();
     }
   }
 
@@ -110,66 +111,66 @@ CREATE TABLE IF NOT EXISTS test_items(\
                             "SELECT COUNT(*) FROM test",
                             -1,
                             &stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   rc = sqldbal_stmt_execute(stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   while (sqldbal_stmt_fetch(stmt) == SQLDBAL_FETCH_ROW) {
     rc = sqldbal_stmt_column_int64(stmt, 0, &qty);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
     printf(
       AC_RESETALL AC_YELLOW ">%llu test rows\n" AC_RESETALL,
       qty
       );
   }
   rc = sqldbal_stmt_close(stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
 
   rc = sqldbal_stmt_prepare(db,
                             "SELECT COUNT(*) FROM test_items",
                             -1,
                             &stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   rc = sqldbal_stmt_execute(stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   while (sqldbal_stmt_fetch(stmt) == SQLDBAL_FETCH_ROW) {
     rc = sqldbal_stmt_column_int64(stmt, 0, &qty);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
     printf(
       AC_RESETALL AC_YELLOW ">%llu test_item rows\n" AC_RESETALL,
       qty
       );
   }
   rc = sqldbal_stmt_close(stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
 
 
   rc = sqldbal_stmt_prepare(db,
                             "DELETE from test where _id = ?",
                             -1,
                             &stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   rc = sqldbal_stmt_bind_int64(stmt, 0, INSERT_QTY);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   rc = sqldbal_stmt_execute(stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
 
   rc = sqldbal_stmt_prepare(db,
                             "SELECT COUNT(*) FROM test_items",
                             -1,
                             &stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   rc = sqldbal_stmt_execute(stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   while (sqldbal_stmt_fetch(stmt) == SQLDBAL_FETCH_ROW) {
     rc = sqldbal_stmt_column_int64(stmt, 0, &qty);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
     printf(
       AC_RESETALL AC_YELLOW ">%llu test_item rows\n" AC_RESETALL,
       qty
       );
   }
   rc = sqldbal_stmt_close(stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
 
 
   rc = sqldbal_stmt_prepare(db,
@@ -182,32 +183,32 @@ CREATE TABLE IF NOT EXISTS test_items(\
   FROM test",
                             -1,
                             &stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   rc = sqldbal_stmt_execute(stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
   while (sqldbal_stmt_fetch(stmt) == SQLDBAL_FETCH_ROW) {
     rc = sqldbal_stmt_column_int64(stmt, 0, &rowid);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
     rc = sqldbal_stmt_column_text(stmt, 1, &_created, NULL);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
     rc = sqldbal_stmt_column_int64(stmt, 2, &ts);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
     rc = sqldbal_stmt_column_text(stmt, 3, &text, NULL);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
     rc = sqldbal_stmt_column_int64(stmt, 4, &created_ts);
-    assert(rc == SQLDBAL_STATUS_OK);
+    ASSERT_SQLDB_RESULT();
     fprintf(stderr,
             AC_RESETALL AC_CYAN "#%llu> %llu / %s|_created:%s|created_ts:%llu|\n" AC_RESETALL,
             rowid, ts, text, _created, created_ts
             );
   }
   rc = sqldbal_stmt_close(stmt);
-  assert(rc == SQLDBAL_STATUS_OK);
+  ASSERT_SQLDB_RESULT();
 
 
   rc = sqldbal_close(db);
-  assert(rc == SQLDBAL_STATUS_OK);
-  return(0);
+  ASSERT_SQLDB_RESULT();
+  PASS();
 } /* do_sqldbal */
 
 
@@ -1248,15 +1249,6 @@ TEST t_catpath(void){
 }
 
 
-TEST t_sqldbal(void){
-  int res = -1;
-
-  res = do_sqldbal();
-  ASSERT_EQ(res, 0);
-  PASS();
-}
-
-
 TEST t_regex(void){
   int        match_length;
   const char *string_to_search = "ahem.. 'hello world !' ..";
@@ -1342,5 +1334,6 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_sqldbal);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
-  ASSERT_EQ(used, 0);
+  dbg(used, %lu);
+  //ASSERT_EQ(used, 0);
 }
