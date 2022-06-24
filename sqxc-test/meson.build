@@ -13,7 +13,7 @@ sqxc_test_inc = [
 sqxc_test_deps = [
  sqxclib_dep,
  jsonc_dep,
- sqlite_dep,
+ sqlite3_dep,
 ]
 
 if get_option('enable-binaries')

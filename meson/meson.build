@@ -1,4 +1,8 @@
-m_dep = cc.find_library('m', required : true)
+####################################
+subdir('osx')
+subdir('sqlite3')
+subdir('args')
+subdir('inc')
 ####################################
 subdir('deps/c_forever')
 subdir('deps/c_vector')
@@ -91,4 +95,6 @@ subdir('deps/wildcardcmp')
 subdir('deps/c_timer')
 subdir('deps/reproc')
 subdir('deps/vtparse')
+subdir('deps/tmt')
+subdir('deps/cgif')
 ####################################

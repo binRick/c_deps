@@ -6,11 +6,6 @@ chan_lib = static_library('chan',
     '../../../submodules/chan/src/queue.c',
     install: false, 
     dependencies: [
-      timestamp_dep,
-      ansi_codes_dep,
-      threads_dep,
-      logh_dep,
-      ms_dep,
     ], 
     include_directories: [
         inc,

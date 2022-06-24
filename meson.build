@@ -13,9 +13,6 @@ else
     git_sha = ''
 endif
 
-
-subdir('meson/sqlite3')
-
 version_info = configuration_data()
 version_info.set('version', meson.project_version())
 version_info.set('vcs_tag', git_sha)
@@ -24,8 +21,8 @@ summary({'version': meson.project_version(),
         'vcs_tag': git_sha,
         }, section: 'Options1')
 cc = meson.get_compiler('c')
-pwd = meson.current_source_dir()
 meson_deps_dir = meson.current_source_dir()
+pwd = meson_deps_dir
 #############################################################
 inc = [
   include_directories('submodules/list/src'),
@@ -43,20 +40,11 @@ inc = [
   include_directories('submodules/sqxclib/sqxc'),
 ]  
 ###########################################
-subdir('meson/osx')
-subdir('meson/args')
-subdir('meson/inc')
-subdir('submodules/c_ansi/ansi-codes')
 subdir('meson')
 subdir('submodules')
 ###########################################
-subdir('meson/deps/tmt')
-subdir('meson/deps/cgif')
-###########################################
 subdir('deps')
-#subdir('deps/cgif')
 subdir('term-tests')
-###########################################
 subdir('deps-test')
 subdir('term-tests-test')
 subdir('ctable')

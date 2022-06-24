@@ -40,7 +40,7 @@ deps_deps = [
   progress_dep,
   rgba_dep,
   smaz_dep,
-  sqlite_dep,
+  sqlite3_dep,
   strdup_dep,
   tempdir_dep,
   termpaint_dep,

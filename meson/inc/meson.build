@@ -1,3 +1,4 @@
+m_dep = cc.find_library('m', required : true)
 
 inc_dirs = include_directories(
   '../../',
