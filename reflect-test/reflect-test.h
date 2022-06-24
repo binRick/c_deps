@@ -9,7 +9,6 @@
 #include <string.h>
 #include <sys/time.h>
 //////////////////////////////////////
-#include "deps/deps.h"
 #include "int/int.h"
 #include "submodules/b64.c/b64.h"
 #include "submodules/c_ansi/ansi-codes/ansi-codes.h"
@@ -35,27 +34,42 @@
 #include "submodules/str-truncate.c/src/str-truncate.h"
 #include "submodules/timestamp/timestamp.h"
 #include "submodules/tiny-regex-c/re.h"
-#include "submodules/vtparse/vtparse/vtparse.h"
-#define LOCATION       "deps-test.sqlite"
-#define DEBUG_FLAGS    (SQLDBAL_FLAG_DEBUG | SQLDBAL_FLAG_SQLITE_OPEN_CREATE | SQLDBAL_FLAG_SQLITE_OPEN_READWRIT E)
-#define FLAGS          (SQLDBAL_FLAG_SQLITE_OPEN_CREATE | SQLDBAL_FLAG_SQLITE_OPEN_READWRITE)
-#define INSERT_QTY     10
 #define MKCREFLECT_IMPL
-
 
 typedef struct {
   int p1;
   int p2;
 } BaseStruct;
 
+MKCREFLECT_DEFINE_STRUCT(Location,
+                         (STRING, char, latitude, 20),
+                         (STRING, char, longitude, 20)
+                         )
 
-enum ExampleEvents {
-  EVENT_START  = 100,
-  EVENT_MIDDLE = 200,
-  EVENT_END    = 300
-};
+MKCREFLECT_DEFINE_STRUCT(Address,
+                         (STRING, char, street, 20),
+                         (STRUCT, Location, location),
+                         (INTEGER, unsigned int, house_number)
+                         )
 
-struct FnArgs {
-  int counter;
-};
+
+MKCREFLECT_DEFINE_STRUCT(TestStruct,
+                         (INTEGER, int, i),
+                         (INTEGER, long, l),
+                         (INTEGER, int, i0),
+                         (INTEGER, short, sh),
+                         (INTEGER, unsigned long, ul),
+                         (INTEGER, unsigned long long, ull),
+                         (INTEGER, unsigned int, ui),
+                         (INTEGER, size_t, s),
+                         (INTEGER, long long, ll),
+                         (STRING, char, name, 32),
+                         (STRING, char, n, 2),
+                         (STRING, char, n0, 2)
+                         )
+
+
+#define BOOL_TO_STR(BOOL)            (BOOL) ? "Yes" : "No"
+#define FIELD_IS_POINTER(TYPE_ID)    (TYPE_ID == 6)
+#define TestStructInfo    mkcreflect_get_TestStruct_type_info()
 

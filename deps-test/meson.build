@@ -25,6 +25,7 @@ deps_test_deps = [
   throw_h_dep,
   c_timestamp_dep,
   siphash_dep,
+  logh_dep,
   sqldbal_dep,
   c_forever_dep,
   dbg_dep,

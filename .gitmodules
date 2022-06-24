@@ -499,3 +499,9 @@
 [submodule "submodules/mkcreflect"]
 	path = submodules/mkcreflect
 	url = https://github.com/loganek/mkcreflect
+[submodule "submodules/hsluv-c"]
+	path = submodules/hsluv-c
+	url = https://github.com/hsluv/hsluv-c
+[submodule "submodules/int"]
+	path = submodules/int
+	url = https://github.com/clibs/int

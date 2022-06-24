@@ -67,5 +67,6 @@ subdir('introspect-repos-test')
 subdir('meson/deps/json-c')
 subdir('meson/deps/sqxclib')
 subdir('sqxc-test')
+subdir('reflect-test')
 #subdir('submodules/c_sdl/sdl-app-test')
 ###########################################

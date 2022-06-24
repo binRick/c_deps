@@ -1,7 +1,10 @@
 #define MKCREFLECT_IMPL
 #include "../submodules/generic-print/print.h"
+#include "../submodules/log.h/log.h"
 #include "deps-test.h"
 #include <assert.h>
+#include <inttypes.h>
+#include <math.h>
 ////////////////////////////////////////////////////////
 static int do_get_google();
 static inline int file_exists(const char *path);
@@ -211,62 +214,6 @@ CREATE TABLE IF NOT EXISTS test_items(\
   PASS();
 } /* do_sqldbal */
 
-
-TestStruct test_struct = {
-  .name = "xxxxxxxx",
-};
-
-
-void do_mkcreflect(){
-  printf(
-    AC_RESETALL AC_GREEN AC_BOLD "<%s>" AC_RESETALL " "
-    AC_YELLOW "%lub (%lub packed)" AC_RESETALL " "
-    AC_BLUE "[%lu fields]" AC_RESETALL  " "
-    AC_RESETALL "\n",
-    TestStructInfo->name, TestStructInfo->size,
-    TestStructInfo->packed_size,
-    TestStructInfo->fields_count
-    );
-  for (size_t i = 0; i < TestStructInfo->fields_count; i++) {
-    MKCREFLECT_FieldInfo *field = &TestStructInfo->fields[i];
-    printf(
-      AC_RESETALL AC_GREEN AC_BOLD "\t#%lu/%lu" " "
-      AC_RESETALL AC_GREEN AC_BOLD "<"
-      AC_RESETALL AC_BRIGHT_BLUE AC_BOLD AC_UNDERLINE AC_REVERSED "%s"
-      AC_RESETALL AC_GREEN AC_BOLD ">"
-      AC_RESETALL "\n"
-      AC_MAGENTA "\t\tType: #"
-      AC_RESETALL AC_CYAN AC_BOLD "%d" AC_RESETALL " "
-      AC_MAGENTA "'"
-      AC_RESETALL AC_YELLOW_BLACK AC_ITALIC "%s" AC_RESETALL
-      AC_MAGENTA "'" AC_RESETALL  "\n"
-      AC_CYAN "\t\tPointer? %s" AC_RESETALL  "\n"
-      AC_CYAN "\t\t[%lub]" AC_RESETALL  "\n"
-      AC_BLUE "\t\t[%d|%s]" AC_RESETALL  "\n",
-      i + 1, TestStructInfo->fields_count, field->field_name,
-      field->data_type, field->field_type,
-      BOOL_TO_STR(FIELD_IS_POINTER(field->data_type)),
-      field->size,
-      field->array_size,
-      (field->array_size != -1) ?
-      AC_RESETALL AC_BOLD AC_UNDERLINE AC_YELLOW "Array" AC_RESETALL
-                :
-      AC_RESETALL AC_BOLD AC_UNDERLINE AC_RED "Not Array" AC_RESETALL
-      );
-    if (false) {
-      printf("    Type: %s\t", field->field_type);
-      printf("    Total size: %lu\t", field->size);
-      printf("    data_type: %d\t", field->data_type);
-      printf("    is_signed: %s\t", field->is_signed?"Yes":"No");
-      printf("    Offset: %lu\t", field->offset);
-      if (field->array_size != -1) {
-        printf("    It is an array! Number of elements: %d, size of single element: %lu\t",
-               field->array_size, field->size / field->array_size);
-      }
-    }
-    //printf("\n");
-  }
-} /* do_mkcreflect */
 
 char JSON_TESTS_FILE[] = ".tests.json",
      *JSON_TESTS_CONTENT;
@@ -1092,13 +1039,6 @@ TEST t_vtparse_simple(void){
 }
 
 
-TEST t_mkcreflect(){
-  do_mkcreflect();
-
-  PASS();
-}
-
-
 TEST t_generic_print(){
   int  x[]     = { 1, 2, 3 };
   char *args[] = { "gcc", "hello.c", "-o", "hello" };
@@ -1287,10 +1227,6 @@ SUITE(s_sqldbal) {
   RUN_TEST(t_sqldbal);
   PASS();
 }
-SUITE(s_mkcreflect) {
-  RUN_TEST(t_mkcreflect);
-  PASS();
-}
 SUITE(s_json) {
   RUN_TEST(t_read_json_file);
   RUN_TEST(t_process_json_lines);
@@ -1330,7 +1266,6 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_generic_print);
   RUN_SUITE(s_murmurhash);
   RUN_SUITE(s_libbeaufort);
-  RUN_SUITE(s_mkcreflect);
   RUN_SUITE(s_sqldbal);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
