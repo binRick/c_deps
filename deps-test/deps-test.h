@@ -11,6 +11,7 @@
 //////////////////////////////////////
 #include "deps/deps.h"
 #include "int/int.h"
+#include "socket99/socket99.h"
 #include "submodules/b64.c/b64.h"
 #include "submodules/c_ansi/ansi-codes/ansi-codes.h"
 #include "submodules/c_ansi/ansi-utils/ansi-utils.h"

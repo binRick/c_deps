@@ -5,7 +5,6 @@ rgba_dirs = [
 ]
 rgba_lib = static_library('rgba', 
   '../../../submodules/rgba/src/rgba.c',
-  '../../../submodules/rgba/src/rgba.h',
   install: false, dependencies: [], 
   include_directories: rgba_dirs,
 )

@@ -10,7 +10,7 @@
 #include "../submodules/rhash_md5.c/md5.h"
 #include "../submodules/tiny-regex-c/re.h"
 #include "../submodules/which/src/which.h"
-#include "ansicodes.h"
+#include "ansi-codes/ansi-codes.h"
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"

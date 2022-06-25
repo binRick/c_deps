@@ -77,6 +77,7 @@ do-nodemon:
 	    -w "introspect-test/*.c" -w "introspect-test/*.h" \
 	    -w "introspect/*.c" -w "introspect/*.h" \
 		-w "term-tests-test" \
+		-i build \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
 			-x env -- bash -c 'make||true'
 git-submodules-pull:

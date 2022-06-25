@@ -8,7 +8,7 @@
 #define SDL_WINDOW_OPTIONS                        \
   SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI \
   | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALWAYS_ON_TOP
-#include "ansicodes.h"
+#include "ansi-codes/ansi-codes.h"
 #include "dbgp-test.h"
 #include "SDL_DBGP.h"
 #include "SDL_DBGP_unscii16.h"

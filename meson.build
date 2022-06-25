@@ -2,6 +2,7 @@ project('meson_deps',['c'],default_options:['warning_level=0','c_std=gnu99'])
 passh_program = find_program('passh', required : true)
 sqlite3_program = find_program('sqlite3', required : true)
 sh_program = find_program('sh', required : true)
+timeout_bin = find_program('timeout', required : true)
 git = find_program('git', required: true)
 
 fs = import('fs')
@@ -35,6 +36,7 @@ inc = [
   include_directories('submodules/SDL_DBGP'),
   include_directories('submodules/c_sdl/sdl-app-fonts'),
   include_directories('submodules/c_darwin/app-utils', 'submodules/c_darwin/active-app'),
+  include_directories('submodules/c_darwin/window-utils'),
   include_directories('submodules/c_ansi'),
   include_directories('submodules'),
   include_directories('.'),
@@ -43,6 +45,7 @@ inc = [
 ###########################################
 subdir('meson')
 subdir('submodules')
+#subdir('meson/deps/libtermkey')
 ###########################################
 subdir('deps')
 subdir('term-tests')
@@ -70,5 +73,5 @@ subdir('meson/deps/sqxclib')
 subdir('sqxc-test')
 subdir('reflect-test')
 subdir('sqldb-test')
-#subdir('submodules/c_sdl/sdl-app-test')
+subdir('submodules/c_sdl/sdl-app-test')
 ###########################################

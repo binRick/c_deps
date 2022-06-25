@@ -1,6 +1,6 @@
-layout_srcs = [files(
+layout_srcs = [
   '../../../submodules/layout/layout.h',
-)]
+]
 
 layout_dirs = [
   '../../../submodules/layout',

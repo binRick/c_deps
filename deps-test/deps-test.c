@@ -1,14 +1,36 @@
 #define MKCREFLECT_IMPL
+#define LAY_IMPLEMENTATION
 #include "deps-test.h"
+#include "layout.h"
 #include "submodules/generic-print/print.h"
 #include "submodules/log.h/log.h"
 #include <assert.h>
+#include <assert.h>
+#include <err.h>
+#include <errno.h>
 #include <inttypes.h>
 #include <math.h>
+#include <poll.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
 ////////////////////////////////////////////////////////
 static int do_get_google();
 static inline int file_exists(const char *path);
 
+#define DEF_PORT    8080
+#define MAX_NAME    40
+static int port = DEF_PORT;
+typedef struct {
+  char name[MAX_NAME];
+  char *descr;
+} test_case_info;
+
+typedef struct {
+  int port;
+} test_case_config;
 
 char JSON_TESTS_FILE[] = ".tests.json",
      *JSON_TESTS_CONTENT;
@@ -19,6 +41,98 @@ static inline int file_exists(const char *path) {
 
   return(stat(path, &b));
 }
+
+
+void do_socket99_tcp_server(void *PARAM){
+  int             v_true = 1;
+  socket99_config cfg    = {
+    .host        = "127.0.0.1",
+    .port        = port,
+    .server      = true,
+    .nonblocking = true,
+    .sockopts    = {
+      { SO_REUSEADDR, &v_true, sizeof(v_true) },
+    },
+  };
+
+  socket99_result res;
+  bool            ok = socket99_open(&cfg, &res);
+
+  if (!ok) {
+    char buf[128];
+    if (128 < socket99_snprintf(buf, 128, &res)) {
+      socket99_fprintf(stderr, &res);
+    } else {
+      fprintf(stderr, "%s\n", buf);
+    }
+    FAIL();
+  }
+
+  struct pollfd fds[2];
+
+  fds[0].fd     = res.fd;
+  fds[0].events = POLLIN;
+
+  ssize_t received  = 0;
+  nfds_t  poll_fds  = 1;
+  int     client_fd = -1;
+
+  for ( ;;) {
+    int poll_res = poll(fds, poll_fds, 1000 /* msec */);
+    if (poll_res > 0) {
+      if (fds[0].revents & POLLIN) {
+        struct sockaddr address;
+        socklen_t       addr_len;
+        client_fd = accept(res.fd, &address, &addr_len);
+        if (client_fd == -1) {
+          if (errno == EAGAIN) {
+            errno = 0;
+            continue;
+          } else {
+            break;
+          }
+        } else {
+          fds[1].fd     = client_fd;
+          fds[1].events = POLLIN;
+          poll_fds++;
+        }
+      } else if (fds[0].revents & POLLERR || fds[0].revents & POLLHUP) {
+        printf("POLLERR / POLLHUP\n");
+        break;
+      }
+
+      if (poll_fds > 1) {
+        if (fds[1].revents & POLLIN) {
+          char buf[1024];
+          received = recv(fds[1].fd, buf, 1024, 0);
+
+          if (received > 0) {
+            buf[received] = '\0';
+            printf("Got: '%s'\n", buf);
+            close(client_fd);
+          } else {
+            if (errno == EAGAIN) {
+              errno = 0;
+            } else {
+              fprintf(stderr, "recv: %s\n", strerror(errno));
+              close(client_fd);
+            }
+          }
+
+          if (received > 0) {
+            break;
+          }
+        } else if (fds[1].revents & POLLERR || fds[1].revents & POLLHUP) {
+          printf("POLLERR / POLLHUP\n");
+          close(client_fd);
+          break;
+        }
+      }
+    }
+  }
+
+  close(res.fd);
+} /* do_socket99_tcp_server */
 
 
 static int do_get_google(){
@@ -461,6 +575,74 @@ TEST t_process_json_lines(void){
 } /* process_json_lines */
 
 
+TEST t_socket99_tcp_client(void){
+  socket99_config cfg = {
+    .host = "127.0.0.1",
+    .port = port,
+  };
+
+  socket99_result res;
+  bool            ok = socket99_open(&cfg, &res);
+
+  if (!ok) {
+    socket99_fprintf(stderr, &res);
+    return(false);
+  }
+
+  const char *msg     = "hello\n";
+  size_t     msg_size = strlen(msg);
+
+  ssize_t    sent = send(res.fd, msg, msg_size, 0);
+  bool       pass = ((size_t)sent == msg_size);
+
+  close(res.fd);
+  PASS();
+}
+
+
+TEST t_layout(void){
+  lay_context ctx;
+
+  lay_init_context(&ctx);
+  lay_reserve_items_capacity(&ctx, 1024);
+  lay_id root = lay_item(&ctx);
+
+  lay_set_size_xy(&ctx, root, 2000, 1500);
+  lay_set_contain(&ctx, root, LAY_ROW);
+  lay_id master_list = lay_item(&ctx);
+
+  lay_insert(&ctx, root, master_list);
+  lay_set_size_xy(&ctx, master_list, 600, 0);
+  lay_set_behave(&ctx, master_list, LAY_VFILL);
+  lay_set_contain(&ctx, master_list, LAY_COLUMN);
+  lay_id content_view  = lay_item(&ctx);
+  lay_id content_view0 = lay_item(&ctx);
+
+  lay_insert(&ctx, root, content_view);
+  lay_insert(&ctx, root, content_view0);
+  lay_set_behave(&ctx, content_view, LAY_HFILL | LAY_VFILL);
+  lay_set_behave(&ctx, content_view0, LAY_HFILL | LAY_VFILL);
+  lay_run_context(&ctx);
+  lay_vec4 master_list_rect   = lay_get_rect(&ctx, master_list);
+  lay_vec4 content_view_rect  = lay_get_rect(&ctx, content_view);
+  lay_vec4 content_view_rect0 = lay_get_rect(&ctx, content_view0);
+
+  for (int i = 0; i < 4; i++) {
+    log_debug("content_view_rect    #%d:   %d", i, content_view_rect[i]);
+    log_debug("content_view_rect0   #%d:   %d", i, content_view_rect0[i]);
+    log_debug("master_list_rect     #%d:   %d", i, master_list_rect[i]);
+  }
+  /*my_ui_library_draw_box_x_y_width_height(
+   *  master_list_rect[0],
+   *  master_list_rect[1],
+   *  master_list_rect[2],
+   *  master_list_rect[3]);*/
+  lay_reset_context(&ctx);
+  lay_destroy_context(&ctx);
+  PASS();
+}
+
+
 TEST t_libbeaufort(void){
   static char *monkey   = NULL;
   static char *monkey_s = NULL;
@@ -858,6 +1040,17 @@ SUITE(s_forever){
   RUN_TEST(t_forever);
   PASS();
 }
+SUITE(s_socket99_tcp){
+  pthread_t th;
+
+  pthread_create(&th, NULL, do_socket99_tcp_server, (void *)12311);
+  RUN_TEST(t_socket99_tcp_client);
+  PASS();
+}
+SUITE(s_layout){
+  RUN_TEST(t_layout);
+  PASS();
+}
 SUITE(s_libbeaufort){
   RUN_TEST(t_libbeaufort);
   PASS();
@@ -1057,8 +1250,10 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_generic_print);
   RUN_SUITE(s_murmurhash);
   RUN_SUITE(s_libbeaufort);
+  RUN_SUITE(s_layout);
+  RUN_SUITE(s_socket99_tcp);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
   dbg(used, %lu);
-  //ASSERT_EQ(used, 0);
+  assert(used == 0);
 }

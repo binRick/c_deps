@@ -11,6 +11,7 @@ progressbar_lib = static_library('progressbar',
   ], 
   include_directories: [
   '../../../submodules/progressbar/lib',
+  '../../../submodules/progressbar/include',
     inc,
   ]
 )

@@ -1,4 +1,3 @@
-#include "ansicodes.h"
 #include "chan-test.h"
 #include <assert.h>
 #include <ctype.h>

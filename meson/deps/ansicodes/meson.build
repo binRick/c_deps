@@ -5,10 +5,12 @@ ansicodes_lib = static_library('ansicodes',
   ], 
   include_directories: [
     inc,
+    '../../../submodules/c_ansi/ansi-utils',
   ]
 )
 ansi_codes_dep = declare_dependency(
   include_directories: [
+    '../../../submodules/c_ansi/ansi-utils',
     inc,
   ], 
   link_with: ansicodes_lib,

@@ -4,6 +4,7 @@ subdir('sqlite3')
 subdir('args')
 subdir('inc')
 ####################################
+subdir('deps/ansicodes')
 subdir('deps/c_forever')
 subdir('deps/c_vector')
 subdir('deps/c_eventemitter')
