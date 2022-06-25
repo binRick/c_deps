@@ -48,8 +48,7 @@ MKCREFLECT_DEFINE_STRUCT(Location,
 
 MKCREFLECT_DEFINE_STRUCT(Address,
                          (STRING, char, street, 20),
-                         (STRUCT, Location, location),
-                         (INTEGER, unsigned int, house_number)
+                         (INTEGER, unsigned int, number)
                          )
 
 
@@ -65,11 +64,29 @@ MKCREFLECT_DEFINE_STRUCT(TestStruct,
                          (INTEGER, long long, ll),
                          (STRING, char, name, 32),
                          (STRING, char, n, 2),
-                         (STRING, char, n0, 2)
+                         (STRING, char, n0, 2),
+                         (STRUCT, Address, address)
                          )
 
-
+#define EXPAND(x)                    x
 #define BOOL_TO_STR(BOOL)            (BOOL) ? "Yes" : "No"
 #define FIELD_IS_POINTER(TYPE_ID)    (TYPE_ID == 6)
 #define TestStructInfo    mkcreflect_get_TestStruct_type_info()
+#define ___STR(S)                    S
+#define __STR(S)                     #S
+#define _STR(S)                      __STR(S)
+#define _str(S)                      ___STR(S)
+#define concat0(s1, s2, s3)          (s1 s2 s3)
+#define concat1(str1, str2)          (_STR(str1) _STR(str2))
+//////////////////////////////////////
+#define S_INFO(N)                    mkcreflect_get_ ## N ## _type_info
+#define _S_INFO(N)                   ("mkcreflect_get_" N "_type_info")
+//////////////////////////////////////
+#define S_NAME(N)                    (char *)S_INFO(N)()->name
+#define S_FIELDS_COUNT(N)            (size_t)S_INFO(N)()->fields_count
+#define S_SIZE(N)                    (size_t)S_INFO(N)()->size
+#define S_PACKED_SIZE(N)             (size_t)S_INFO(N)()->packed_size
+#define S_FIELDS(N)                  (MKCREFLECT_FieldInfo *)S_INFO(N)()->fields
+#define S_FIELD(N, F)                S_INFO(N)()->fields[F]
+//////////////////////////////////////
 

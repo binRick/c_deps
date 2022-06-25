@@ -25,6 +25,7 @@ meson_deps_dir = meson.current_source_dir()
 pwd = meson_deps_dir
 #############################################################
 inc = [
+  include_directories('submodules'),
   include_directories('submodules/list/src'),
   include_directories('submodules/c_ansi/ansi-codes'),
   include_directories('submodules/debug_print_h/src', 'submodules/debug_print_h/include'),
@@ -68,5 +69,6 @@ subdir('meson/deps/json-c')
 subdir('meson/deps/sqxclib')
 subdir('sqxc-test')
 subdir('reflect-test')
+subdir('sqldb-test')
 #subdir('submodules/c_sdl/sdl-app-test')
 ###########################################

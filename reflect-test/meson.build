@@ -28,7 +28,7 @@ if get_option('enable-binaries')
   )
   if get_option('enable-binary-tests')
     test('reflect-test', 
-      passh_program, args: [reflect_test_exec],
+      passh_program, args: [reflect_test_exec,'-v','-a'],
       timeout: 5,
       is_parallel: true,
       workdir: meson.current_source_dir(),

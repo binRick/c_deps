@@ -2,9 +2,9 @@ introspect_repos_test_srcs = [
   'introspect-repos-test.c',
 ]
 introspect_repos_test_inc = [
- inc,
  '.',
  '../introspect-repos',
+ inc,
 ]
 introspect_repos_test_deps = [
  reproc_dep,
@@ -30,9 +30,9 @@ if get_option('enable-binaries')
      include_directories: introspect_repos_test_inc,
      #pie: true,
      install: true,
-     #     install_dir: '/usr/local/bin',
+     #install_dir: '/usr/local/bin',
   )
   if get_option('enable-binary-tests')
-    test('introspect-repos-test', introspect_repos_test_exec, args: [])
+    test('introspect-repos-test', passh_program, args: [introspect_repos_test_exec,'-v'])
   endif
 endif

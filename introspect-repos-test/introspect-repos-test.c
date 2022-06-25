@@ -15,7 +15,11 @@
 //////////////////////////////////////////////
 extern char *execute_processes();
 
-const size_t MESON_PROJECTS_LIMIT = 100;
+const size_t  MESON_PROJECTS_LIMIT = 100;
+struct Vector *MESON_PATHS;
+struct Vector *INTROSPECTED_PATHS;
+const char    *BASE_PATH   = "../",
+              *PATH_FILTER = "^c_\\w+$|^meson_deps$";
 //////////////////////////////////////////////
 
 
@@ -73,22 +77,39 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
 }
 
 
-TEST t_introspect_repos(){
-  char          *BASE_PATH   = "../";
-  char          *PATH_FILTER = "^c_\\w+$|^meson_deps$";
-
-  struct Vector *MESON_PATHS        = get_meson_paths(BASE_PATH, PATH_FILTER, MESON_PROJECTS_LIMIT);
-  struct Vector *introspected_paths = execute_meson_introspects(MESON_PATHS);
-
-  vector_release(MESON_PATHS);
-
-  iterate_parse_results(introspected_paths);
-  iterate_free(introspected_paths);
+TEST t_parse_results(){
+  iterate_parse_results(INTROSPECTED_PATHS);
+  ASSERT_GTE(vector_size(INTROSPECTED_PATHS), 0);
   PASS();
 }
 
-SUITE(s_introspect_repos){
-  RUN_TESTp(t_introspect_repos);
+
+TEST t_introspect_paths(){
+  INTROSPECTED_PATHS = execute_meson_introspects(MESON_PATHS);
+  dbg(vector_size(INTROSPECTED_PATHS), %lu);
+  PASS();
+}
+
+
+TEST t_get_paths(){
+  MESON_PATHS = get_meson_paths(BASE_PATH, PATH_FILTER, MESON_PROJECTS_LIMIT);
+  ASSERT_GTE(vector_size(MESON_PATHS), 0);
+  dbg(vector_size(MESON_PATHS), %lu);
+  PASS();
+}
+
+SUITE(s_free_vectors){
+  if (MESON_PATHS) {
+    vector_release(MESON_PATHS);
+  }
+  if (INTROSPECTED_PATHS) {
+    iterate_free(INTROSPECTED_PATHS);
+  }
+  PASS();
+}
+
+SUITE(s_parse_results){
+  RUN_TESTp(t_parse_results);
   PASS();
 }
 
@@ -99,7 +120,11 @@ GREATEST_MAIN_DEFS();
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
-  RUN_SUITE(s_introspect_repos);
+  RUN_TESTp(t_get_paths);
+  RUN_TESTp(t_introspect_paths);
+  RUN_SUITE(s_parse_results);
+
+
 #ifdef DEBUG_MEMORY_ENABLED
   print_allocated_memory();
 #endif

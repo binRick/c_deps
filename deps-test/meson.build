@@ -26,7 +26,6 @@ deps_test_deps = [
   c_timestamp_dep,
   siphash_dep,
   logh_dep,
-  sqldbal_dep,
   c_forever_dep,
   dbg_dep,
   c_eventemitter_dep,
@@ -58,7 +57,7 @@ if get_option('enable-binaries')
   )
   if get_option('enable-binary-tests')
     test('deps-test', 
-      passh_program, args: [deps_test_exec],
+      passh_program, args: [deps_test_exec,'-v','-a'],
       timeout: 60,
       is_parallel: true,
       workdir: meson.current_source_dir(),

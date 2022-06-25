@@ -22,3 +22,4 @@ sample-c99.db
 .submodules
 deps-test.sqlite
 */deps-test.sqlite
+*.sqlite

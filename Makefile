@@ -89,7 +89,7 @@ do-uncrustify: uncrustify uncrustify-clean fix-dbg
 do-build: do-meson
 	@meson compile -C build
 do-test:
-	@passh meson test -C build -v
+	@passh meson test -C build -v --print-errorlogs	
 test: do-test
 build: do-meson do-build
 ansi: all do-sync do-ansi-make
@@ -104,6 +104,8 @@ all: do-setup do-build do-test
 trigger:
 	@[[ -f $(TRIGGER_FILE) ]] && unlink $(TRIGGER_FILE)
 	@touch $(TRIGGER_FILE)
+meson-introspect-all:
+	@meson introspect --all -i meson.build
 meson-introspect-targets:
 	@meson introspect --targets -i meson.build
 meson-binaries:

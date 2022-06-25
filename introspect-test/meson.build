@@ -27,6 +27,6 @@ if get_option('enable-binaries')
      include_directories: introspect_test_inc,
   )
   if get_option('enable-binary-tests')
-    test('introspect-test', introspect_test_exec, args: [])
+    test('introspect-test', passh_program, args: [introspect_test_exec,'-v','-a'])
   endif
 endif

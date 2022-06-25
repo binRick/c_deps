@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #define CACHE_ENABLED                  true
+#define DEBUG_CHANNELS                 false
 #define DEBUG_STDOUT                   false
 #define DEBUG_REGEX                    false
 #define DEBUG_RECEIVE_MESON_RESULTS    false
@@ -87,9 +88,29 @@ typedef struct  MESON_JOB_RESULT_T {
   *AstLines_a
   ;
 } meson_job_result_t;
-////////////////////////////////////////////////
-////             PARSE MESON JOB RESULT     ////
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////             HANDLE REPOSITORY EXECUTABLES                                                  ////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#define PRINT_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v)                     \
+  { do{                                                                            \
+      for (int i = 0; i < vector_size(REPOSITORY_EXECUTABLES_v); i++) {            \
+        if (true) printf("%s\n", (char *)vector_get(REPOSITORY_EXECUTABLES_v, i)); \
+      }                                                                            \
+    }while (0); }
+#define HANDLE_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v) \
+  { do{                                                         \
+      PRINT_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v);   \
+    }while (0); }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////             HANDLE PARSED MESON JOB RESULTS                                                ////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#define HANDLE_PARSED_MESON_JOB_RESULTS(RESULTS) \
+  { do{                                          \
+      generate_results_table(RESULTS);           \
+    }while (0); }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////             PARSE MESON JOB RESULTS                                                        ////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #define PARSE_MESON_JOB_RESULTS(RESULTS)                                      \
   { do{                                                                       \
       for (size_t i = 0; i < vector_size(RESULTS); i++) {                     \
@@ -100,8 +121,10 @@ typedef struct  MESON_JOB_RESULT_T {
         PARSE_MESON_JOB_RESULT(r);                                            \
         VALIDATE_MESON_JOB_RESULT(r);                                         \
       }                                                                       \
-      generate_results_table(RESULTS);                                        \
     }while (0); }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////             PARSE MESON JOB RESULT                                                         ////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #define PARSE_MESON_JOB_RESULT(JR)                                                        \
   { do{                                                                                   \
 /*         Basic Properties */                                                            \
@@ -133,6 +156,9 @@ typedef struct  MESON_JOB_RESULT_T {
       JR->Targets_a          = json_value_get_array(JR->Targets_v);                       \
                                                                                           \
     }while (0); }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////             VALIDATE MESON JOB RESULT                                                      ////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #define VALIDATE_MESON_JOB_RESULT(JR)                                   \
   { do{                                                                 \
 /*         JSON Values           */                                     \
@@ -165,8 +191,7 @@ typedef struct  MESON_JOB_RESULT_T {
       assert(JR->ScanDependencies_a != NULL);                           \
                                                                         \
     }while (0); }
-
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 static char *style_name(const char *name){
@@ -186,6 +211,43 @@ static char *number_to_string(size_t number){
 
 
 ////////////////////////////////////////////////
+struct Vector *extract_repository_executables(char *REPOSITORY_NAME, struct Vector *MESON_RESULTS){
+  struct Vector *REPOSITORY_EXECUTABLES_v = vector_new();
+
+  for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
+    meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
+    if (strcmp(REPOSITORY_NAME, r->name) != 0) {
+      continue;
+    }
+    for (size_t ii = 0; ii < json_array_get_count(r->Targets_a); ii++) {
+      if (strcmp(json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "type"), "executable") == 0) {
+        char *target_name = json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "name");
+        char *defined_id  = json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "defined_in");
+        if (false) {
+          PRINT("\t", "[", r->name, "]", "defined_in: ", defined_id, "=> target_name: ", target_name);
+        }
+        for (size_t iii = 0; iii < json_array_get_count(json_object_dotget_array(json_array_get_object(r->Targets_a, ii), "filename")); iii++) {
+          char *fn = json_array_get_string(json_object_dotget_array(json_array_get_object(r->Targets_a, ii), "filename"), iii);
+          if (false) {
+            PRINT("\t\t", fn);
+          }
+          if ((fn != NULL) && (strlen(fn) > 0)) {
+            vector_push(REPOSITORY_EXECUTABLES_v, fn);
+          }
+        }
+      }
+    }
+  }
+  /*
+   * dbg(vector_size(MESON_RESULTS),%lu);
+   * dbg(vector_size(REPOSITORY_EXECUTABLES_v),%lu);
+   * for(int i=0;i<=vector_size(REPOSITORY_EXECUTABLES_v);i++){
+   * dbg((char*)vector_get(REPOSITORY_EXECUTABLES_v,i),%s);
+   * }*/
+  return(REPOSITORY_EXECUTABLES_v);
+}
+
+
 static void generate_results_table(struct Vector *MESON_RESULTS){
   table = get_empty_table();
 
@@ -395,7 +457,13 @@ size_t iterate_get_total_size(struct Vector *VECTOR){
 
 
 void iterate_parse_results(struct Vector *MESON_RESULTS){
+  char   REPOSITORY_NAME[]         = "meson_deps";
+  Vector *REPOSITORY_EXECUTABLES_v = vector_new();
+
   PARSE_MESON_JOB_RESULTS(MESON_RESULTS);
+  HANDLE_PARSED_MESON_JOB_RESULTS(MESON_RESULTS);
+  REPOSITORY_EXECUTABLES_v = extract_repository_executables(REPOSITORY_NAME, MESON_RESULTS);
+  HANDLE_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v);
 }
 
 
@@ -610,13 +678,15 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
   pthread_join(&waiter_thread, NULL);
   char *dur = ct_stop("");
 
-  fprintf(stdout,
-          AC_RESETALL AC_GREEN AC_REVERSED "done channel recvd %lu results of %lub using %lu workers in %s\n" AC_RESETALL,
-          (size_t)vector_size(meson_results),
-          iterate_get_total_size(meson_results),
-          workers_qty,
-          dur
-          );
+  if (DEBUG_CHANNELS) {
+    fprintf(stdout,
+            AC_RESETALL AC_GREEN AC_REVERSED "done channel recvd %lu results of %lub using %lu workers in %s\n" AC_RESETALL,
+            (size_t)vector_size(meson_results),
+            iterate_get_total_size(meson_results),
+            workers_qty,
+            dur
+            );
+  }
 
   return(meson_results);
 } /* execute_meson_introspects */
