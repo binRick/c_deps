@@ -27,6 +27,7 @@ pwd = meson_deps_dir
 #############################################################
 inc = [
   include_directories('submodules'),
+  include_directories('submodules/progress.c'),
   include_directories('submodules/list/src'),
   include_directories('submodules/c_ansi/ansi-codes'),
   include_directories('submodules/debug_print_h/src', 'submodules/debug_print_h/include'),

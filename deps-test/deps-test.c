@@ -2,8 +2,10 @@
 #define LAY_IMPLEMENTATION
 #include "deps-test.h"
 #include "layout.h"
+#include "libforks.h"
 #include "submodules/generic-print/print.h"
 #include "submodules/log.h/log.h"
+#include <assert.h>
 #include <assert.h>
 #include <assert.h>
 #include <err.h>
@@ -12,11 +14,12 @@
 #include <math.h>
 #include <poll.h>
 #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
-////////////////////////////////////////////////////////
+#include <unistd.h>
 static int do_get_google();
 static inline int file_exists(const char *path);
 
@@ -279,14 +282,16 @@ void do_test_cansid(void){
 
   state = cansid_init();
   printf("\n" AC_YELLOW AC_ITALIC "===========================================================================" AC_RESETALL "\n");
-  PRINT(
-    "CANSID_FGCOLOR:", CANSID_FGCOLOR,
-    "\t",
-    "CANSID_BGCOLOR:", CANSID_BGCOLOR,
-    "\t",
-    "CANSID_ENDVAL:", CANSID_ENDVAL,
-    "\t"
-    );
+  fprintf(stdout,
+          "CANSID_FGCOLOR:%d"
+          "\t"
+          "CANSID_BGCOLOR:%d"
+          "\t"
+          "CANSID_ENDVAL:%d",
+          CANSID_FGCOLOR,
+          CANSID_BGCOLOR,
+          CANSID_ENDVAL
+          );
   printf(AC_YELLOW AC_ITALIC "===========================================================================" AC_RESETALL "\n");
 
   DEBUG_STATE();
@@ -459,7 +464,7 @@ TEST t_qrcode(void){
 
 
 TEST t_spin(void){
-  const int big_number = 10000000 / 1;
+  const int big_number = 1000000000 / 1;
   spinner   *s         = spin_new(utf8_pat1, "Working", UTF8_CHAR_WIDTH);
   int       x          = 0;
   int       working    = 1;
@@ -1107,8 +1112,8 @@ SUITE(s_time) {
   PASS();
 }
 SUITE(s_spinner) {
-  //RUN_TEST(t_libspinner);
-  //RUN_TEST(t_spin);
+//  RUN_TEST(t_libspinner);
+  RUN_TEST(t_spin);
   PASS();
 }
 SUITE(s_totp) {
@@ -1177,6 +1182,99 @@ TEST t_catpath(void){
 }
 
 
+static void child_main2(libforks_ServerConn conn, int socket_fd) {
+  (void)conn;
+  while (true) {
+    char c;
+    assert(read(socket_fd, &c, 1) == 1);
+    c = toupper(c);
+    assert(write(socket_fd, &c, 1) == 1);
+  }
+}
+
+
+int do_libforks_test2() {
+  libforks_ServerConn conn;
+
+  assert(libforks_start(&conn) == libforks_OK);
+
+  int socket_fd;
+
+  assert(libforks_fork(
+           conn,
+           NULL,
+           &socket_fd,
+           NULL,
+           child_main2
+           ) == libforks_OK);
+
+  puts("Type text and press enter");
+  puts("Exit with Ctrl+D");
+
+  while (true) {
+    char c;
+    int  read_res = read(STDIN_FILENO, &c, 1);
+    if (read_res == 0) {
+      break;
+    }
+    assert(read_res == 1);
+
+    assert(write(socket_fd, &c, 1) == 1);
+    assert(read(socket_fd, &c, 1) == 1);
+    assert(write(STDOUT_FILENO, &c, 1) == 1);
+  }
+
+  assert(libforks_stop(conn) == libforks_OK);
+  return(0);
+}
+
+
+static void child_main1(libforks_ServerConn conn, int socket_fd) {
+  assert(libforks_free_conn(conn) == libforks_OK);
+  assert(socket_fd == -1);
+  puts("child process started");
+  sleep(1);
+  puts("child process exited");
+}
+
+
+int do_libforks_test1() {
+  libforks_ServerConn conn;
+
+  assert(libforks_start(&conn) == libforks_OK);
+
+  assert(libforks_fork(
+           conn,
+           NULL,
+           NULL,
+           NULL,
+           child_main1
+           ) == libforks_OK);
+  assert(libforks_stop(conn) == libforks_OK);
+  puts("main process exited");
+  return(0);
+}
+
+
+TEST t_libforks1(void){
+  int res = do_libforks_test1();
+
+  ASSERT_EQ(res, 0);
+  PASS();
+}
+
+
+TEST t_libforks2(void){
+  if (isatty(STDOUT_FILENO)) {
+    int res = do_libforks_test2();
+    ASSERT_EQ(res, 0);
+    PASS();
+  }else{
+    PASS();
+  }
+}
+
+
 TEST t_regex(void){
   int        match_length;
   const char *string_to_search = "ahem.. 'hello world !' ..";
@@ -1188,6 +1286,11 @@ TEST t_regex(void){
     printf("match at idx %i, %i chars long.\n", match_idx, match_length);
   }
 
+  PASS();
+}
+SUITE(s_libforks) {
+  RUN_TEST(t_libforks1);
+  RUN_TEST(t_libforks2);
   PASS();
 }
 SUITE(s_truncate) {
@@ -1252,6 +1355,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_libbeaufort);
   RUN_SUITE(s_layout);
   RUN_SUITE(s_socket99_tcp);
+  RUN_SUITE(s_libforks);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
   dbg(used, %lu);

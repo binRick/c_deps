@@ -5,6 +5,7 @@ introspect_repos_inc = [
  inc,
  '.',
  '../introspect-repos',
+ '../submodules',
 ]
 introspect_repos_deps = [
  reproc_dep,
@@ -37,6 +38,7 @@ introspect_repos_deps = [
  ms_dep,
  which_dep,
  ctable_dep,
+ progress_dep,
 ]
 
 

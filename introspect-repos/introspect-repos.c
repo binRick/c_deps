@@ -1,6 +1,9 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <string.h>
+#define PROGRESS_BAR_WIDTH             40
+#define BG_PROGRESS_BAR_CHAR           "."
+#define PROGRESS_BAR_CHAR              "="
 #define CACHE_ENABLED                  true
 #define DEBUG_CHANNELS                 false
 #define DEBUG_STDOUT                   false
@@ -36,6 +39,8 @@ struct Vector *meson_results;
 char * get_cached_key_file_name(const char *KEY);
 char * get_cached_key_file(const char *KEY);
 bool cached_key_file_exists(const char *KEY);
+
+static progress_t *progress;
 
 typedef struct  MESON_JOB_RESULT_T {
   char
@@ -207,6 +212,37 @@ static char *number_to_string(size_t number){
 
   sprintf(s, "%lu", number);
   return(s);
+}
+
+
+static void db_progress_start(progress_data_t *data) {
+  assert(data);
+  fprintf(stdout,
+          AC_HIDE_CURSOR
+          AC_RESETALL AC_GREEN AC_ITALIC "Processing" AC_RESETALL
+          AC_RESETALL " "
+          AC_RESETALL AC_BLUE AC_REVERSED AC_BOLD "%d"
+          AC_RESETALL " "
+          AC_RESETALL AC_GREEN AC_ITALIC "JSON Lines" AC_RESETALL
+          "\n",
+          data->holder->total
+          );
+  progress_write(data->holder);
+}
+
+
+static void db_progress(progress_data_t *data) {
+  progress_write(data->holder);
+}
+
+
+static void db_progress_end(progress_data_t *data) {
+  fprintf(stdout,
+          AC_SHOW_CURSOR
+          AC_RESETALL "\n"
+          AC_GREEN AC_REVERSED AC_BOLD "Complete" AC_RESETALL
+          "\n"
+          );
 }
 
 
@@ -536,6 +572,7 @@ void *receive_meson_results(void *_RESULTS_QTY){
   void   *_result;
   size_t qty = 0, RESULTS_QTY = (size_t)_RESULTS_QTY;
 
+
   if (DEBUG_RECEIVE_MESON_RESULTS) {
     fprintf(stderr, ">Waiting for %lu results\n", RESULTS_QTY);
   }
@@ -547,6 +584,7 @@ void *receive_meson_results(void *_RESULTS_QTY){
     }
     vector_push(meson_results, (void *)result);
     qty++;
+    progress_value(progress, qty);
   }
   if (DEBUG_RECEIVE_MESON_RESULTS) {
     fprintf(stderr,
@@ -640,6 +678,13 @@ void *execute_meson_job(void *_WORKER_ID){
 
 
 struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
+  unsigned long prog_qty = vector_size(MESON_PATHS);
+
+  progress           = progress_new(prog_qty, PROGRESS_BAR_WIDTH);
+  progress->fmt      = "    Progress (:percent) => {:bar} [:elapsed]";    progress->bg_bar_char = BG_PROGRESS_BAR_CHAR;
+  progress->bar_char = PROGRESS_BAR_CHAR;    progress_on(progress, PROGRESS_EVENT_START, db_progress_start);
+  progress_on(progress, PROGRESS_EVENT_PROGRESS, db_progress);    progress_on(progress, PROGRESS_EVENT_END, db_progress_end);
+
   pthread_t worker_threads[WORKERS_QTY];
   pthread_t waiter_thread;
   size_t    workers_qty = 0;
@@ -663,6 +708,7 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
     chan_send(JOBS_CHANNEL, (void *)((char *)vector_get(MESON_PATHS, i)));
   }
   chan_close(JOBS_CHANNEL);
+
   chan_recv(DONE_CHANNEL, NULL);
 
   chan_close(RESULTS_CHANNEL);
@@ -687,6 +733,8 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
             dur
             );
   }
+  progress_value(progress, prog_qty);
+  progress_free(progress);
 
   return(meson_results);
 } /* execute_meson_introspects */

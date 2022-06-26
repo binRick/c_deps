@@ -26,6 +26,7 @@
 #include "submodules/log.h/log.h"
 #include "submodules/ms/ms.h"
 #include "submodules/path-normalize.c/src/path-normalize.h"
+#include "submodules/progress.c/progress.h"
 #include "submodules/subprocess.h/subprocess.h"
 #include "submodules/timestamp/timestamp.h"
 #include "submodules/tinydir/tinydir.h"

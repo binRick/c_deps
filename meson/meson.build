@@ -99,4 +99,6 @@ subdir('deps/reproc')
 subdir('deps/vtparse')
 subdir('deps/tmt')
 subdir('deps/cgif')
+subdir('deps/libforks')
+
 ####################################

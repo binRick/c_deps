@@ -511,3 +511,6 @@
 [submodule "submodules/vt100utils"]
 	path = submodules/vt100utils
 	url = https://github.com/Cubified/vt100utils
+[submodule "submodules/libforks"]
+	path = submodules/libforks
+	url = https://github.com/motet-a/libforks
