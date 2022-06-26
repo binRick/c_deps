@@ -1,7 +1,16 @@
+#include "generic-print/print.h"
+#include "introspect-repos.h"
+#include "log.h/log.h"
+#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#define PROGRESS_BAR_WIDTH             40
+#include <sys/stat.h>
+#include <time.h>
+#include <unistd.h>
+#define PROGRESS_BAR_WIDTH             60
 #define BG_PROGRESS_BAR_CHAR           "."
 #define PROGRESS_BAR_CHAR              "="
 #define CACHE_ENABLED                  true
@@ -13,25 +22,15 @@
 #define DEBUG_PATHS                    false
 #define STDOUT_READ_BUFFER_SIZE        1024 * 2
 #define PREVIEW_LIMIT                  25
-#define WORKERS_QTY                    4
-#define DEBUG_MEMORY_ENABLED
-#define NUM_CHILDREN                   1
-#define MAX_OUTPUT_BYTES               1024 * 256
+#define WORKERS_QTY                    3
+//#define DEBUG_MEMORY_ENABLED
+#define MAX_OUTPUT_BYTES               1024 * 150
 #define CACHE_DIRECTORY                "./.cache"
 //////////////////////////////////////////////
-#include "introspect-repos.h"
-#include "submodules/log.h/log.h"
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <time.h>
-#include <unistd.h>
 //////////////////////////////////////////////
 #ifdef DEBUG_MEMORY_ENABLED
-#include "submodules/debug-memory/debug_memory.h"
+#include "debug-memory/debug_memory.h"
 #endif
-#include "../submodules/generic-print/print.h"
 ////////////////////////////////////////////////
 Table table = { 0 };
 chan_t        *JOBS_CHANNEL, *RESULTS_CHANNEL, *DONE_CHANNEL;
@@ -114,20 +113,6 @@ typedef struct  MESON_JOB_RESULT_T {
       generate_results_table(RESULTS);           \
     }while (0); }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-////             PARSE MESON JOB RESULTS                                                        ////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#define PARSE_MESON_JOB_RESULTS(RESULTS)                                      \
-  { do{                                                                       \
-      for (size_t i = 0; i < vector_size(RESULTS); i++) {                     \
-        meson_job_result_t *r = (meson_job_result_t *)vector_get(RESULTS, i); \
-        if (r == NULL) continue;                                              \
-        if (r->json == NULL) continue;                                        \
-        if (strlen(r->json) < 2) continue;                                    \
-        PARSE_MESON_JOB_RESULT(r);                                            \
-        VALIDATE_MESON_JOB_RESULT(r);                                         \
-      }                                                                       \
-    }while (0); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
 ////             PARSE MESON JOB RESULT                                                         ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #define PARSE_MESON_JOB_RESULT(JR)                                                        \
@@ -200,7 +185,7 @@ typedef struct  MESON_JOB_RESULT_T {
 
 
 static char *style_name(const char *name){
-  char *s = malloc(strlen(name) + 128);
+  char *s = calloc(1, strlen(name) + 128);
 
   sprintf(s, " %s%s%s ", F_GREEN, name, COL_RESET);
   return(s);
@@ -208,22 +193,22 @@ static char *style_name(const char *name){
 
 
 static char *number_to_string(size_t number){
-  char *s = malloc(number / 10 + 1);
+  char *s = calloc(1, number / 10 + 1);
 
   sprintf(s, "%lu", number);
   return(s);
 }
 
 
-static void db_progress_start(progress_data_t *data) {
+static void introspection_progress_start(progress_data_t *data) {
   assert(data);
   fprintf(stdout,
           AC_HIDE_CURSOR
-          AC_RESETALL AC_GREEN AC_ITALIC "Processing" AC_RESETALL
+          AC_RESETALL AC_GREEN AC_ITALIC "Introspecting" AC_RESETALL
           AC_RESETALL " "
           AC_RESETALL AC_BLUE AC_REVERSED AC_BOLD "%d"
           AC_RESETALL " "
-          AC_RESETALL AC_GREEN AC_ITALIC "JSON Lines" AC_RESETALL
+          AC_RESETALL AC_GREEN AC_ITALIC "Meson Repositories" AC_RESETALL
           "\n",
           data->holder->total
           );
@@ -231,12 +216,12 @@ static void db_progress_start(progress_data_t *data) {
 }
 
 
-static void db_progress(progress_data_t *data) {
+static void introspection_progress(progress_data_t *data) {
   progress_write(data->holder);
 }
 
 
-static void db_progress_end(progress_data_t *data) {
+static void introspection_progress_end(progress_data_t *data) {
   fprintf(stdout,
           AC_SHOW_CURSOR
           AC_RESETALL "\n"
@@ -259,14 +244,8 @@ struct Vector *extract_repository_executables(char *REPOSITORY_NAME, struct Vect
       if (strcmp(json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "type"), "executable") == 0) {
         char *target_name = json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "name");
         char *defined_id  = json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "defined_in");
-        if (false) {
-          PRINT("\t", "[", r->name, "]", "defined_in: ", defined_id, "=> target_name: ", target_name);
-        }
         for (size_t iii = 0; iii < json_array_get_count(json_object_dotget_array(json_array_get_object(r->Targets_a, ii), "filename")); iii++) {
           char *fn = json_array_get_string(json_object_dotget_array(json_array_get_object(r->Targets_a, ii), "filename"), iii);
-          if (false) {
-            PRINT("\t\t", fn);
-          }
           if ((fn != NULL) && (strlen(fn) > 0)) {
             vector_push(REPOSITORY_EXECUTABLES_v, fn);
           }
@@ -274,12 +253,6 @@ struct Vector *extract_repository_executables(char *REPOSITORY_NAME, struct Vect
       }
     }
   }
-  /*
-   * dbg(vector_size(MESON_RESULTS),%lu);
-   * dbg(vector_size(REPOSITORY_EXECUTABLES_v),%lu);
-   * for(int i=0;i<=vector_size(REPOSITORY_EXECUTABLES_v);i++){
-   * dbg((char*)vector_get(REPOSITORY_EXECUTABLES_v,i),%s);
-   * }*/
   return(REPOSITORY_EXECUTABLES_v);
 }
 
@@ -356,13 +329,13 @@ bool cached_key_file_exists(const char *KEY){
   if (K) {
     free(K);
   }
-  return(res);
+  return((res) && (fsio_file_size(K) > 1024));
 }
 
 
 char * get_cached_key_file(const char *KEY){
   char *FN = get_cached_key_file_name(KEY);
-  char *p  = malloc(strlen(FN) + strlen(CACHE_DIRECTORY) + 32);
+  char *p  = calloc(1, strlen(FN) + strlen(CACHE_DIRECTORY) + 32);
 
   sprintf(p, "%s/%s", CACHE_DIRECTORY, FN);
   if (FN) {
@@ -376,7 +349,7 @@ char * get_cached_key_file(const char *KEY){
 
 
 char * get_cached_key_file_name(const char *KEY){
-  char          *p         = malloc(1024);
+  char          *p         = calloc(1, 1024);
   time_t        now        = time(NULL);
   struct tm     *tm_struct = localtime(&now);
   unsigned char hash[16];
@@ -496,8 +469,24 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
   char   REPOSITORY_NAME[]         = "meson_deps";
   Vector *REPOSITORY_EXECUTABLES_v = vector_new();
 
-  PARSE_MESON_JOB_RESULTS(MESON_RESULTS);
+  usleep(1000 * 10);
+  for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
+    meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
+    if (r == NULL) {
+      continue;
+    }
+    if (r->json == NULL) {
+      continue;
+    }
+    if (strlen(r->json) < 2) {
+      continue;
+    }
+    usleep(1000 * 10);
+    PARSE_MESON_JOB_RESULT(r);
+    VALIDATE_MESON_JOB_RESULT(r);
+  }
   HANDLE_PARSED_MESON_JOB_RESULTS(MESON_RESULTS);
+  usleep(1000 * 10);
   REPOSITORY_EXECUTABLES_v = extract_repository_executables(REPOSITORY_NAME, MESON_RESULTS);
   HANDLE_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v);
 }
@@ -584,6 +573,7 @@ void *receive_meson_results(void *_RESULTS_QTY){
     }
     vector_push(meson_results, (void *)result);
     qty++;
+    usleep(1000 * 10);
     progress_value(progress, qty);
   }
   if (DEBUG_RECEIVE_MESON_RESULTS) {
@@ -598,10 +588,13 @@ void *receive_meson_results(void *_RESULTS_QTY){
 
 
 char *execute_meson_introspect(void *_MESON_PATH){
-  char *MESON_PATH = (char *)_MESON_PATH;
+  char *MESON_PATH = strdup((char *)_MESON_PATH);
 
   if (CACHE_ENABLED && cached_key_file_exists(MESON_PATH)) {
-    return(cached_key_file_content(MESON_PATH));
+    usleep(1000 * 10);
+    char *c = cached_key_file_content(MESON_PATH);
+    free(MESON_PATH);
+    return(c);
   }
   const char           *command_line[] = {
     "/usr/local/bin/meson",
@@ -654,8 +647,8 @@ void *execute_meson_job(void *_WORKER_ID){
   while (chan_recv(JOBS_CHANNEL, &_job) == 0) {
     char               *job = (char *)_job;
     items = stringfn_split(job, '/');
-    meson_job_result_t *job_result = malloc(sizeof(meson_job_result_t));
-    job_result->name = malloc(strlen(items.strings[items.count - 2]) + 1);
+    meson_job_result_t *job_result = calloc(1, sizeof(meson_job_result_t));
+    job_result->name = calloc(1, strlen(items.strings[items.count - 2]) + 1);
     sprintf(job_result->name, "%s", items.strings[items.count - 2]);
 
     if (DEBUG_EXECUTE_MESON_JOB) {
@@ -682,8 +675,9 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
 
   progress           = progress_new(prog_qty, PROGRESS_BAR_WIDTH);
   progress->fmt      = "    Progress (:percent) => {:bar} [:elapsed]";    progress->bg_bar_char = BG_PROGRESS_BAR_CHAR;
-  progress->bar_char = PROGRESS_BAR_CHAR;    progress_on(progress, PROGRESS_EVENT_START, db_progress_start);
-  progress_on(progress, PROGRESS_EVENT_PROGRESS, db_progress);    progress_on(progress, PROGRESS_EVENT_END, db_progress_end);
+  progress->bar_char = PROGRESS_BAR_CHAR;    progress_on(progress, PROGRESS_EVENT_START, introspection_progress_start);
+  progress_on(progress, PROGRESS_EVENT_PROGRESS, introspection_progress);    progress_on(progress, PROGRESS_EVENT_END, introspection_progress_end);
+  usleep(1000 * 10);
 
   pthread_t worker_threads[WORKERS_QTY];
   pthread_t waiter_thread;
@@ -733,7 +727,9 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
             dur
             );
   }
-  progress_value(progress, prog_qty);
+  //usleep(1000*10);
+  //progress_value(progress, prog_qty);
+  usleep(1000 * 10);
   progress_free(progress);
 
   return(meson_results);
@@ -742,10 +738,10 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
 
 char *execute_processes(char *MESON_BUILD_FILE){
   uint8_t             output[MAX_OUTPUT_BYTES];
-  reproc_event_source children[NUM_CHILDREN] = { { 0 } };
-  int                 r                      = -1;
+  reproc_event_source children[1] = { { 0 } };
+  int                 r           = -1;
 
-  for (int i = 0; i < NUM_CHILDREN; i++) {
+  for (int i = 0; i < 1; i++) {
     reproc_t   *process = reproc_new();
 
     const char *date_args[] = {
@@ -769,13 +765,13 @@ char *execute_processes(char *MESON_BUILD_FILE){
   }
 
   for ( ;;) {
-    r = reproc_poll(children, NUM_CHILDREN, REPROC_INFINITE);
+    r = reproc_poll(children, 1, REPROC_INFINITE);
     if (r < 0) {
       r = r == REPROC_EPIPE ? 0 : r;
       goto finish;
     }
 
-    for (int i = 0; i < NUM_CHILDREN; i++) {
+    for (int i = 0; i < 1; i++) {
       if (children[i].process == NULL || !children[i].events) {
         continue;
       }
@@ -799,7 +795,7 @@ char *execute_processes(char *MESON_BUILD_FILE){
   }
 
 finish:
-  for (int i = 0; i < NUM_CHILDREN; i++) {
+  for (int i = 0; i < 1; i++) {
     reproc_destroy(children[i].process);
   }
 
@@ -807,7 +803,7 @@ finish:
     log_error("%s", reproc_strerror(r));
   }
 
-  char *o = malloc(strlen(output));
+  char *o = calloc(1, strlen(output) + 1);
 
   sprintf(o, "%s", stringfn_trim(output));
   return(o);

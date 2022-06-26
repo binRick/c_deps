@@ -2,7 +2,6 @@
 #define DEBUG_MEMORY_ENABLED    true
 #include "introspect.h"
 #include "submodules/log.h/log.h"
-#include "submodules/progress.c/progress.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,37 +17,6 @@
 #ifdef DEBUG_MEMORY_ENABLED
 #include "submodules/debug-memory/debug_memory.h"
 #endif
-
-
-static void db_progress_start(progress_data_t *data) {
-  assert(data);
-  fprintf(stdout,
-          AC_HIDE_CURSOR
-          AC_RESETALL AC_GREEN AC_ITALIC "Processing" AC_RESETALL
-          AC_RESETALL " "
-          AC_RESETALL AC_BLUE AC_REVERSED AC_BOLD "%d"
-          AC_RESETALL " "
-          AC_RESETALL AC_GREEN AC_ITALIC "JSON Lines" AC_RESETALL
-          "\n",
-          data->holder->total
-          );
-  progress_write(data->holder);
-}
-
-
-static void db_progress(progress_data_t *data) {
-  progress_write(data->holder);
-}
-
-
-static void db_progress_end(progress_data_t *data) {
-  fprintf(stdout,
-          AC_SHOW_CURSOR
-          AC_RESETALL "\n"
-          AC_GREEN AC_REVERSED AC_BOLD "Complete" AC_RESETALL
-          "\n"
-          );
-}
 
 
 void iterate_targets(ee_t *ee, JSON_Array *A){
