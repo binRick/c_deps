@@ -469,7 +469,7 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
   char   REPOSITORY_NAME[]         = "meson_deps";
   Vector *REPOSITORY_EXECUTABLES_v = vector_new();
 
-  usleep(1000 * 10);
+  //usleep(1000 * 10);
   for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
     meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
     if (r == NULL) {
@@ -481,12 +481,12 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
     if (strlen(r->json) < 2) {
       continue;
     }
-    usleep(1000 * 10);
+    //usleep(1000 * 10);
     PARSE_MESON_JOB_RESULT(r);
     VALIDATE_MESON_JOB_RESULT(r);
   }
   HANDLE_PARSED_MESON_JOB_RESULTS(MESON_RESULTS);
-  usleep(1000 * 10);
+  //usleep(1000 * 10);
   REPOSITORY_EXECUTABLES_v = extract_repository_executables(REPOSITORY_NAME, MESON_RESULTS);
   HANDLE_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v);
 }
@@ -573,8 +573,7 @@ void *receive_meson_results(void *_RESULTS_QTY){
     }
     vector_push(meson_results, (void *)result);
     qty++;
-    usleep(1000 * 10);
-    progress_value(progress, qty);
+    // usleep(1000 * 10);
   }
   if (DEBUG_RECEIVE_MESON_RESULTS) {
     fprintf(stderr,
@@ -591,7 +590,7 @@ char *execute_meson_introspect(void *_MESON_PATH){
   char *MESON_PATH = strdup((char *)_MESON_PATH);
 
   if (CACHE_ENABLED && cached_key_file_exists(MESON_PATH)) {
-    usleep(1000 * 10);
+    //usleep(1000 * 10);
     char *c = cached_key_file_content(MESON_PATH);
     free(MESON_PATH);
     return(c);
@@ -660,6 +659,7 @@ void *execute_meson_job(void *_WORKER_ID){
     job_result->json = execute_meson_introspect(job);
     job_result->dur  = timestamp() - started;
     job_result->dur  = timestamp() - started;
+    progress_tick(progress, 1);
     chan_send(RESULTS_CHANNEL, (void *)job_result);
     qty++;
   }
@@ -677,7 +677,6 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
   progress->fmt      = "    Progress (:percent) => {:bar} [:elapsed]";    progress->bg_bar_char = BG_PROGRESS_BAR_CHAR;
   progress->bar_char = PROGRESS_BAR_CHAR;    progress_on(progress, PROGRESS_EVENT_START, introspection_progress_start);
   progress_on(progress, PROGRESS_EVENT_PROGRESS, introspection_progress);    progress_on(progress, PROGRESS_EVENT_END, introspection_progress_end);
-  usleep(1000 * 10);
 
   pthread_t worker_threads[WORKERS_QTY];
   pthread_t waiter_thread;
@@ -728,7 +727,7 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
             );
   }
   //usleep(1000*10);
-  //progress_value(progress, prog_qty);
+  progress_value(progress, prog_qty);
   usleep(1000 * 10);
   progress_free(progress);
 
