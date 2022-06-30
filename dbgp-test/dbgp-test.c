@@ -63,7 +63,7 @@ void *worker(void *WID){
   char      c[1024] = "t1";
 
   focused_t *fp     = get_focused_process();
-  int       win_qty = GetWindowsQty();
+  int       win_qty = get_windows_qty();
 
   L("%lu> Worker waing for jobs....", WORKER_ID);
   while (chan_recv(JOBS_CHANNEL, &job) == 0) {
@@ -73,7 +73,7 @@ void *worker(void *WID){
     }
     if ((processed_qtys[WORKER_ID] % 10) == 1) {
       //   fp = get_focused_process();
-      win_qty = GetWindowsQty();
+      win_qty = get_windows_qty();
 //      SDL_SetCaption(c,NULL);
     }
     SDL_GetWindowSize(window, &width, &height);

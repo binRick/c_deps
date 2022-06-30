@@ -23,3 +23,4 @@ sample-c99.db
 deps-test.sqlite
 */deps-test.sqlite
 *.sqlite
+sqldb-test/sqldb-test.sqlite

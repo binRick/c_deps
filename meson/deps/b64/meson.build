@@ -1,13 +1,15 @@
 b64_srcs = [
-  meson_deps_dir+'/submodules/b64.c/decode.c',
-  meson_deps_dir+'/submodules/b64.c/encode.c',
-  meson_deps_dir+'/submodules/b64.c/buffer.c',
-
+  '../../../submodules/b64.c/decode.c',
+  '../../../submodules/b64.c/encode.c',
+  '../../../submodules/b64.c/buffer.c',
 ]
-b64_lib = static_library('b64', b64_srcs,
+b64_dirs = [
+    '../../../submodules/b64.c',
+    inc,
+  ]
+b64_lib = shared_library('b64', b64_srcs,
   install: false, dependencies: [
   ], 
-  include_directories: [ inc,
-  ]
+  include_directories: b64_dirs,
 )
-b64_dep = declare_dependency(include_directories: [inc], link_with: b64_lib)
+b64_dep = declare_dependency(include_directories: b64_dirs, link_with: b64_lib)

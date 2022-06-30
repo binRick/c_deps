@@ -514,3 +514,15 @@
 [submodule "submodules/libforks"]
 	path = submodules/libforks
 	url = https://github.com/motet-a/libforks
+[submodule "submodules/colorwheel"]
+	path = submodules/colorwheel
+	url = https://github.com/Totoditoto/colorwheel
+[submodule "submodules/chars"]
+	path = submodules/chars
+	url = https://github.com/donmccaughey/chars
+[submodule "submodules/terminalSplitter"]
+	path = submodules/terminalSplitter
+	url = https://github.com/kylemarino22/terminalSplitter
+[submodule "submodules/cbars"]
+	path = submodules/cbars
+	url = https://github.com/NongusStudios/cbars

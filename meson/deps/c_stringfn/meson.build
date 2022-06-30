@@ -4,9 +4,10 @@ c_stringfn_srcs = [
   
 ]
 c_stringfn_inc = [
+  '../../../submodules/c_stringfn',
+  '../../../submodules/c_stringfn/src',
+  '../../../submodules/c_stringfn/include',
   inc,
-  #'../../../' + c_stringfn_dir,
-  #'../../../' + c_stringfn_dir + '/include',
 ]
 
 c_stringfn_lib = static_library('c_stringfn', c_stringfn_srcs,

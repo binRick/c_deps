@@ -18,6 +18,7 @@
 #include "parson.h"
 #include "pthread.h"
 #include "submodules/assertf/assertf.h"
+#include "submodules/b64.c/b64.h"
 #include "submodules/bytes/bytes.h"
 #include "submodules/c_vector/include/vector.h"
 #include "submodules/dbg/dbg.h"
@@ -44,6 +45,7 @@
 #define F_YELLOW     "\x1B[1;33m"
 #define F_INVERSE    "\x1B[7m"
 #define COL_RESET    "\x1B[0m"
+static char *introspect_meson_build_file_in_subprocess(char *MESON_BUILD_FILE);
 
 typedef void (*ee_target_handler)(JSON_Object *Target);
 

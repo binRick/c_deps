@@ -11,7 +11,7 @@ TYPE="${TYPE:-shared}"
 DEPS="${DEPS:-}"
 MB=$DEPS_BASE/$NAME/meson.build
 
-[[ -f "$MB" ]] && exit 1
+#[[ -f "$MB" ]] && exit 1
 [[ -d ../submodules/$NAME ]] || exit 1
 
 submodule_files() {

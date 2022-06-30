@@ -3,6 +3,9 @@ c_string_buffer_srcs = [
   meson_deps_dir + '/' + c_string_buffer_dir + '/src/stringbuffer.c',
 ]
 c_string_buffer_inc = [
+  '../../../submodules/c_string_buffer',
+  '../../../submodules/c_string_buffer/include',
+  '../../../submodules/c_string_buffer/src',
   inc,
 ]
 _c_string_buffer_inc = [

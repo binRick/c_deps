@@ -100,5 +100,7 @@ subdir('deps/vtparse')
 subdir('deps/tmt')
 subdir('deps/cgif')
 subdir('deps/libforks')
+subdir('deps/colorwheel')
+subdir('deps/vt100utils')
 
 ####################################

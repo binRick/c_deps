@@ -1,4 +1,7 @@
 c_fsio_inc = [
+  '../../../submodules/c_fsio',
+  '../../../submodules/c_fsio/include',
+  '../../../submodules/c_fsio/src',
   inc,
 ]
 c_fsio_lib = library('c_fsio', 

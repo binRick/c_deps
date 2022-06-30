@@ -25,6 +25,7 @@ deps_test_deps = [
   throw_h_dep,
   c_timestamp_dep,
   libforks_dep,
+  colorwheel_dep,
   siphash_dep,
   logh_dep,
   c_forever_dep,
