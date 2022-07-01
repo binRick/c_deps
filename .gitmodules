@@ -526,3 +526,6 @@
 [submodule "submodules/cbars"]
 	path = submodules/cbars
 	url = https://github.com/NongusStudios/cbars
+[submodule "submodules/tuibox"]
+	path = submodules/tuibox
+	url = https://github.com/Cubified/tuibox

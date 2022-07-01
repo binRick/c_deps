@@ -116,3 +116,18 @@ meson-binaries-loc:
 
 do-pull-submodules-cmds:
 	command find submodules -type d -maxdepth 1|xargs -I % echo -e "sh -c 'cd % && git pull'"
+
+run-binary:
+	@make meson-binaries | fzf --reverse | xargs -I % sh -xc "./%" 
+meson-tests-list:
+	@meson test -C build --list
+meson-tests:
+	@make meson-tests-list|fzf --reverse -m | xargs -I % env cmd="\
+		meson test --num-processes 1 -C build -v --no-stdsplit --print-errorlogs \"%\"" \
+			env bash -c '\
+	passh "$$cmd" && \
+	ansi -n --green --bold "OK" && \
+	echo -n "> " && \
+	ansi -n --yellow --italic "$$cmd" && \
+	echo \
+'	

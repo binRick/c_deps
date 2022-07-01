@@ -102,5 +102,6 @@ subdir('deps/cgif')
 subdir('deps/libforks')
 subdir('deps/colorwheel')
 subdir('deps/vt100utils')
+subdir('deps/tuibox')
 
 ####################################
