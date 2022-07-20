@@ -529,3 +529,9 @@
 [submodule "submodules/tuibox"]
 	path = submodules/tuibox
 	url = https://github.com/Cubified/tuibox
+[submodule "submodules/wireguard-tools"]
+	path = submodules/wireguard-tools
+	url = https://git.zx2c4.com/wireguard-tools
+[submodule "submodules/wg-dynamic"]
+	path = submodules/wg-dynamic
+	url = https://github.com/WireGuard/wg-dynamic

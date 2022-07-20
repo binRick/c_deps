@@ -4,6 +4,8 @@ subdir('sqlite3')
 subdir('args')
 subdir('inc')
 ####################################
+#//subdir('deps/wireguard-tools')
+subdir('deps/wg-dynamic')
 subdir('deps/ansicodes')
 subdir('deps/c_forever')
 subdir('deps/c_vector')

@@ -24,3 +24,5 @@ deps-test.sqlite
 */deps-test.sqlite
 *.sqlite
 sqldb-test/sqldb-test.sqlite
+loc.sh
+.Kitty-logo*

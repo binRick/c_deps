@@ -2,6 +2,7 @@ project('meson_deps',['c'],default_options:['warning_level=0','c_std=gnu99'])
 passh_program = find_program('passh', required : true)
 sqlite3_program = find_program('sqlite3', required : true)
 sh_program = find_program('sh', required : true)
+wg_program = find_program('wg', required : true)
 timeout_bin = find_program('timeout', required : true)
 git = find_program('git', required: true)
 
@@ -35,6 +36,8 @@ inc = [
   include_directories('submodules/generic-print'),
   include_directories('submodules/cgif/inc'),
   include_directories('submodules/SDL_DBGP'),
+  include_directories('submodules/c_darwin'),
+  include_directories('submodules/c_darwin/kitty'),
   include_directories('submodules/c_sdl/sdl-app-fonts'),
   include_directories('submodules/c_darwin/app-utils', 'submodules/c_darwin/active-app'),
   include_directories('submodules/c_darwin/window-utils'),
@@ -49,30 +52,34 @@ subdir('submodules')
 #subdir('meson/deps/libtermkey')
 ###########################################
 subdir('deps')
+subdir('ctable')
+subdir('tests-table')
+subdir('introspect')
+subdir('introspect-repos')
+subdir('meson/deps/json-c')
+subdir('meson/deps/sqxclib')
+subdir('meson/deps/wireguard-tools')
+subdir('wg')
+###########################################
+subdir('tmt-test')
+subdir('list-test')
+subdir('fort-test')
+subdir('gumbo-test')
 subdir('term-tests')
 subdir('deps-test')
 subdir('term-tests-test')
-subdir('ctable')
-subdir('tests-table')
-subdir('gumbo-test')
+subdir('tinydir-test')
 subdir('cgif-test')
 subdir('dbgp-test')
 subdir('ee-test')
 subdir('chan-test')
 subdir('reproc-test')
-subdir('introspect')
 subdir('introspect-test')
-subdir('list-test')
-subdir('fort-test')
-subdir('tinydir-test')
-subdir('tmt-test')
 subdir('subprocess-test')
-subdir('introspect-repos')
 subdir('introspect-repos-test')
-subdir('meson/deps/json-c')
-subdir('meson/deps/sqxclib')
 subdir('sqxc-test')
 subdir('reflect-test')
 subdir('sqldb-test')
 subdir('submodules/c_sdl/sdl-app-test')
+subdir('wg-test')
 ###########################################

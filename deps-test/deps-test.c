@@ -1,12 +1,10 @@
 #define MKCREFLECT_IMPL
 #define LAY_IMPLEMENTATION
-#include "deps-test.h"
-#include "layout.h"
-#include "libforks.h"
-#include "submodules/generic-print/print.h"
-#include "submodules/log.h/log.h"
-#include <assert.h>
-#include <assert.h>
+#include "deps-test/deps-test.h"
+#include "generic-print/print.h"
+#include "layout/layout.h"
+#include "libforks/libforks.h"
+#include "log.h/log.h"
 #include <assert.h>
 #include <err.h>
 #include <errno.h>
@@ -18,7 +16,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-#include <unistd.h>
 #include <unistd.h>
 static int do_get_google();
 static inline int file_exists(const char *path);
@@ -295,10 +292,11 @@ void do_test_cansid(void){
   printf(AC_YELLOW AC_ITALIC "===========================================================================" AC_RESETALL "\n");
 
   DEBUG_STATE();
-  FEED(AC_BLUE "B");
-  FEED(AC_RED "R");
-  FEED(AC_RED_BLUE "RB");
-  if (false) { \
+  FEED("\x1b[30mBLACK");
+  FEED("\x1b[34mBLUE");
+  FEED("\x1b[30m\x1b[44mBLACK-BLUE");
+  //FEED(AC_BLACK_BLUE "BLACK-BLUE");
+  if (true) {
     FEED(AC_YELLOW "Y");
     FEED(AC_YELLOW_BLACK "YY" AC_RED_RED "RR");
     FEED(AC_RED "G");
@@ -612,7 +610,7 @@ TEST t_layout(void){
   lay_reserve_items_capacity(&ctx, 1024);
   lay_id root = lay_item(&ctx);
 
-  lay_set_size_xy(&ctx, root, 2000, 1500);
+  lay_set_size_xy(&ctx, root, 2500, 1500);
   lay_set_contain(&ctx, root, LAY_ROW);
   lay_id master_list = lay_item(&ctx);
 
@@ -1073,10 +1071,12 @@ SUITE(s_dmt_summary){
   RUN_TEST(t_dmt_summary);
   PASS();
 }
+
 SUITE(s_cansid){
   RUN_TEST(t_cansid);
   PASS();
 }
+
 SUITE(s_ansi_utils){
   RUN_TEST(t_ansi_utils);
   PASS();
