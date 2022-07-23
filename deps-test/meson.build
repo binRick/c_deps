@@ -5,6 +5,9 @@ deps_include_dirs = [
   inc,
 ]
 deps_test_deps = [
+  hidapi_dep,
+  libusb_dep,
+  tempdir_dep,
   deps_dep,
   occurrences_dep,
   str_replace_dep,

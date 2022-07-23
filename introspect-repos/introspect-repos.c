@@ -1,6 +1,4 @@
-#include "generic-print/print.h"
-#include "introspect-repos.h"
-#include "log.h/log.h"
+//#define DEBUG_MEMORY_ENABLED
 #include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -10,6 +8,13 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+//////////////////////////////////////////////
+#include "dbg/dbg.h"
+#include "generic-print/print.h"
+#include "introspect-repos.h"
+#include "log.h/log.h"
+#include "submodules/occurences.c/occurrences.h"
+//////////////////////////////////////////////
 #define PROGRESS_BAR_WIDTH             60
 #define BG_PROGRESS_BAR_CHAR           "."
 #define PROGRESS_BAR_CHAR              "="
@@ -23,10 +28,8 @@
 #define STDOUT_READ_BUFFER_SIZE        1024 * 2
 #define PREVIEW_LIMIT                  25
 #define WORKERS_QTY                    3
-//#define DEBUG_MEMORY_ENABLED
 #define MAX_OUTPUT_BYTES               1024 * 150
 #define CACHE_DIRECTORY                "./.cache"
-//////////////////////////////////////////////
 //////////////////////////////////////////////
 #ifdef DEBUG_MEMORY_ENABLED
 #include "debug-memory/debug_memory.h"
@@ -39,7 +42,14 @@ char * get_cached_key_file_name(const char *KEY);
 char * get_cached_key_file(const char *KEY);
 bool cached_key_file_exists(const char *KEY);
 
+struct Vector     *TEST_EXECUTABLES_v;
+
 static progress_t *progress;
+
+typedef struct TEST_EXECUTABLE_LIST_RESULT {
+  char *executable;
+  char *list_output;
+} test_executable_list_result;
 
 typedef struct  MESON_JOB_RESULT_T {
   char
@@ -95,23 +105,17 @@ typedef struct  MESON_JOB_RESULT_T {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////             HANDLE REPOSITORY EXECUTABLES                                                  ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#define PRINT_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v)                     \
-  { do{                                                                            \
-      for (int i = 0; i < vector_size(REPOSITORY_EXECUTABLES_v); i++) {            \
-        if (true) printf("%s\n", (char *)vector_get(REPOSITORY_EXECUTABLES_v, i)); \
-      }                                                                            \
+#define HANDLE_TEST_EXECUTABLES(TEST_EXECUTABLES_v)                  \
+  { do{                                                              \
+      char *TEST_EXECUTABLE;                                         \
+      dbg(vector_size(TEST_EXECUTABLES_v), %lu);                    \
+      for (size_t i = 0; i < vector_size(TEST_EXECUTABLES_v); i++) { \
+        TEST_EXECUTABLE = (char *)vector_get(TEST_EXECUTABLES_v, i); \
+        dbg(TEST_EXECUTABLE, %s);                                   \
+      }                                                              \
+      free(TEST_EXECUTABLE);                                         \
     }while (0); }
-#define HANDLE_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v) \
-  { do{                                                         \
-      PRINT_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v);   \
-    }while (0); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////             HANDLE PARSED MESON JOB RESULTS                                                ////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#define HANDLE_PARSED_MESON_JOB_RESULTS(RESULTS) \
-  { do{                                          \
-      generate_results_table(RESULTS);           \
-    }while (0); }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////             PARSE MESON JOB RESULT                                                         ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -469,8 +473,7 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
   char   REPOSITORY_NAME[]         = "meson_deps";
   Vector *REPOSITORY_EXECUTABLES_v = vector_new();
 
-  //usleep(1000 * 10);
-  for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
+  for (int i = 0; i < vector_size(MESON_RESULTS); i++) {
     meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
     if (r == NULL) {
       continue;
@@ -481,15 +484,58 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
     if (strlen(r->json) < 2) {
       continue;
     }
-    //usleep(1000 * 10);
     PARSE_MESON_JOB_RESULT(r);
     VALIDATE_MESON_JOB_RESULT(r);
   }
-  HANDLE_PARSED_MESON_JOB_RESULTS(MESON_RESULTS);
-  //usleep(1000 * 10);
   REPOSITORY_EXECUTABLES_v = extract_repository_executables(REPOSITORY_NAME, MESON_RESULTS);
-  HANDLE_REPOSITORY_EXECUTABLES(REPOSITORY_EXECUTABLES_v);
-}
+  re_t TEST_EXECUTABLE_REGEX = re_compile("-test$");
+
+  TEST_EXECUTABLES_v = vector_new();
+  char *TEST_EXECUTABLE;
+
+  for (int i = 0; i < vector_size(REPOSITORY_EXECUTABLES_v); i++) {
+    TEST_EXECUTABLE = (char *)vector_get(REPOSITORY_EXECUTABLES_v, i);
+    //dbg(i, %d);
+    //dbg(TEST_EXECUTABLE, %s);
+    int match_length          = 0;
+    int TEST_EXECUTABLE_MATCH = re_matchp(TEST_EXECUTABLE_REGEX, TEST_EXECUTABLE, &match_length);
+    int IS_TEST_EXECUTABLE    = (match_length > 0);
+    if (IS_TEST_EXECUTABLE) {
+      vector_push(TEST_EXECUTABLES_v, (char *)strdup(TEST_EXECUTABLE));
+    }
+  }
+  char *REPOSITORY_EXECUTABLE;
+
+  for (int i = 0; i < vector_size(REPOSITORY_EXECUTABLES_v); i++) {
+    REPOSITORY_EXECUTABLE = (char *)vector_get(REPOSITORY_EXECUTABLES_v, i);
+    dbg(REPOSITORY_EXECUTABLE, %s);
+  }
+  dbg(vector_size(TEST_EXECUTABLES_v), %d);
+  for (int i = 0; i < vector_size(TEST_EXECUTABLES_v); i++) {
+    TEST_EXECUTABLE = (char *)vector_get(TEST_EXECUTABLES_v, i);
+    char   *src_file = malloc(strlen(TEST_EXECUTABLE) + 1024);
+    sprintf(src_file, "%s.c", TEST_EXECUTABLE);
+    char   *src_file_contents = fsio_read_text_file(src_file);
+    size_t qty                = occurrences("GREATEST_MAIN_DEFS", src_file_contents);
+    if (qty < 1) {
+      continue;
+    }
+    struct StringFNStrings src_file_lines = stringfn_split_lines_and_trim(src_file_contents);
+    for (int ii = 0; ii < src_file_lines.count; ii++) {
+      qty = occurrences("RUN_SUITE(", src_file_lines.strings[ii]);
+      if (qty == 1) {
+        struct StringFNStrings s01 = stringfn_split(src_file_lines.strings[ii], ')');
+        if (s01.count == 2) {
+          struct StringFNStrings s02         = stringfn_split(s01.strings[0], '(');
+          char                   *SUITE_NAME = s02.strings[1];
+          dbg(SUITE_NAME, %s);
+        }
+      }
+    }
+    free(src_file);
+    free(src_file_contents);
+  }
+} /* iterate_parse_results */
 
 
 void iterate_targets(ee_t *ee, JSON_Array *A){

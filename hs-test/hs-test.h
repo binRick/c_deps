@@ -1,6 +1,4 @@
 #pragma once
-#include "cargs/include/cargs.h"
-#include "submodules/gumbo-parser/src/gumbo.h"
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>

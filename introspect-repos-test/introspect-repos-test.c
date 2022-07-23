@@ -1,5 +1,5 @@
 #include <stdbool.h>
-//#define DEBUG_MEMORY_ENABLED
+#define DEBUG_MEMORY_ENABLED
 #include "introspect-repos-test.h"
 #include "parson.h"
 #include "submodules/log.h/log.h"
@@ -29,7 +29,8 @@ void on_shared_library_target_json_value(void *arg) {
   char        *name = json_object_get_string(O, "name");
   char        *type = json_object_get_string(O, "type");
 
-  fprintf(stderr, "%s%s" AC_RESETALL ", ", AC_YELLOW, name);
+  dbg(name, %s);
+  dbg(type, %s);
 }
 
 
@@ -39,7 +40,8 @@ void on_static_library_target_json_value(void *arg) {
   char        *name = json_object_get_string(O, "name");
   char        *type = json_object_get_string(O, "type");
 
-  fprintf(stderr, "%s%s" AC_RESETALL ", ", AC_BLUE, name);
+  dbg(name, %s);
+  dbg(type, %s);
 }
 
 
@@ -49,7 +51,8 @@ void on_executable_target_json_value(void *arg) {
   char        *name = json_object_get_string(O, "name");
   char        *type = json_object_get_string(O, "type");
 
-  fprintf(stderr, "%s%s" AC_RESETALL ", ", AC_GREEN AC_UNDERLINE, name);
+  dbg(name, %s);
+  dbg(type, %s);
 }
 
 
@@ -57,11 +60,9 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
   char *OUTPUT = execute_processes((char *)MESON_FILE_PATH);
 
   ASSERT_GTE(strlen(OUTPUT), 1);
-
   JSON_Array *A = parse_execution_result(OUTPUT);
 
   ASSERT_NEQ(A, NULL);
-
   ee_t *ee = ee_new();
 
   ee_on(ee, "executable", on_executable_target_json_value);
@@ -87,6 +88,9 @@ TEST t_parse_results(){
 TEST t_introspect_paths(){
   INTROSPECTED_PATHS = execute_meson_introspects(MESON_PATHS);
   dbg(vector_size(INTROSPECTED_PATHS), %lu);
+  for (size_t i = 0; i < vector_size(INTROSPECTED_PATHS); i++) {
+    //dbg((char*)vector_get(INTROSPECTED_PATHS,i),%s);
+  }
   PASS();
 }
 
@@ -95,6 +99,9 @@ TEST t_get_paths(){
   MESON_PATHS = get_meson_paths(BASE_PATH, PATH_FILTER, MESON_PROJECTS_LIMIT);
   ASSERT_GTE(vector_size(MESON_PATHS), 0);
   dbg(vector_size(MESON_PATHS), %lu);
+  for (size_t i = 0; i < vector_size(MESON_PATHS); i++) {
+    dbg((char *)vector_get(MESON_PATHS, i), %s);
+  }
   PASS();
 }
 
@@ -105,12 +112,12 @@ SUITE(s_free_vectors){
   if (INTROSPECTED_PATHS) {
     iterate_free(INTROSPECTED_PATHS);
   }
-  PASS();
 }
 
-SUITE(s_parse_results){
-  RUN_TESTp(t_parse_results);
-  PASS();
+SUITE(s_paths){
+  RUN_TEST(t_get_paths);
+  RUN_TEST(t_introspect_paths);
+  RUN_TEST(t_parse_results);
 }
 
 
@@ -119,16 +126,10 @@ GREATEST_MAIN_DEFS();
 
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
-  (void)argc; (void)argv;
-  RUN_TESTp(t_get_paths);
-  RUN_TESTp(t_introspect_paths);
-  RUN_SUITE(s_parse_results);
-
-
+  RUN_SUITE(s_paths);
 #ifdef DEBUG_MEMORY_ENABLED
   print_allocated_memory();
 #endif
   GREATEST_MAIN_END();
-  return(0);
 }
 

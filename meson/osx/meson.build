@@ -8,6 +8,8 @@ osx_ldflags +=  ['-Wl,-framework,Carbon']
 osx_ldflags +=  ['-Wl,-framework,ApplicationServices']
 osx_ldflags +=  ['-Wl,-framework,Foundation']
 osx_ldflags +=  ['-Wl,-framework,AppKit']
+osx_ldflags +=  ['-Wl,-framework,IOKit']
+osx_ldflags +=  ['-Wl,-framework,Security']
 
 osx_audit_flags +=  ['-lbsm']
 

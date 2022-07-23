@@ -535,3 +535,18 @@
 [submodule "submodules/wg-dynamic"]
 	path = submodules/wg-dynamic
 	url = https://github.com/WireGuard/wg-dynamic
+[submodule "submodules/submodules/occurences.c"]
+	path = submodules/submodules/occurences.c
+	url = https://github.com/stephenmathieson/occurrences.c
+[submodule "meson/submodules/httpd"]
+	path = meson/submodules/httpd
+	url = https://github.com/mariokonrad/httpd
+[submodule "submodules/httpd"]
+	path = submodules/httpd
+	url = https://github.com/mariokonrad/httpd
+[submodule "submodules/libusb"]
+	path = submodules/libusb
+	url = https://github.com/libusb/libusb
+[submodule "submodules/hidapi"]
+	path = submodules/hidapi
+	url = https://github.com/libusb/hidapi

@@ -105,5 +105,10 @@ subdir('deps/libforks')
 subdir('deps/colorwheel')
 subdir('deps/vt100utils')
 subdir('deps/tuibox')
+subdir('deps/c_ini')
+subdir('deps/c_hs')
+subdir('deps/httpd')
+subdir('deps/hidapi')
+subdir('deps/libusb')
 
 ####################################

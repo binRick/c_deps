@@ -18,6 +18,6 @@ if get_option('enable-binaries')
      include_directories: wg_test_inc,
   )
   if get_option('enable-binary-tests')
-    #//  test('wg-test', passh_program, args: [wg_test_exec,'-v','-a'])
+    test('wg-test', sudo_bin, args: [wg_test_exec,'-v','-a'])
   endif
 endif

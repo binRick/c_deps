@@ -35,6 +35,7 @@ introspect_repos_deps = [
  timestamp_dep,
  bytes_dep,
  tiny_regex_c_dep,
+ occurrences_dep,
  ms_dep,
  which_dep,
  ctable_dep,
