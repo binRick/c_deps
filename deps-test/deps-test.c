@@ -1,34 +1,41 @@
 #define MKCREFLECT_IMPL
 #define LAY_IMPLEMENTATION
+#define MINIAUDIO_IMPLEMENTATION
 ////////////////////////////////////////////
-#include <wchar.h>
 #include <assert.h>
 #include <err.h>
 #include <errno.h>
 #include <inttypes.h>
+#include <libgen.h>
+#include <limits.h>
 #include <math.h>
 #include <poll.h>
 #include <stdio.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <unistd.h>
+#include <unistd.h>
+#include <wchar.h>
 ////////////////////////////////////////////
+#include "c89atomic/c89atomic.h"
 #include "deps-test/deps-test.h"
 #include "generic-print/print.h"
-#include "layout/layout.h"
-#include "libforks/libforks.h"
-#include "log.h/log.h"
-#include "tempdir.c/tempdir.h"
 #include "hidapi/hidapi/hidapi.h"
 #include "hidapi/mac/hidapi_darwin.h"
+#include "layout/layout.h"
+#include "libforks/libforks.h"
 #include "libusb/libusb/libusb.h"
 #include "libusb/libusb/os/darwin_usb.h"
+#include "log.h/log.h"
+#include "miniaudio/miniaudio.h"
+#include "tempdir.c/tempdir.h"
 ////////////////////////////////////////////
 static int do_get_google();
 static inline int file_exists(const char *path);
+
+static char *EXECUTABLE_PATH_DIRNAME;
 
 #define DEF_PORT    8080
 #define MAX_NAME    40
@@ -1638,6 +1645,138 @@ TEST t_libusb2(void){
 }
 
 
+void record_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount){
+  ma_encoder *pEncoder = (ma_encoder *)pDevice->pUserData;
+
+  MA_ASSERT(pEncoder != NULL);
+  ma_encoder_write_pcm_frames(pEncoder, pInput, frameCount, NULL);
+  (void)pOutput;
+}
+
+
+void play_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount){
+  ma_decoder *pDecoder = (ma_decoder *)pDevice->pUserData;
+
+  if (pDecoder == NULL) {
+    return;
+  }
+
+  ma_decoder_read_pcm_frames(pDecoder, pOutput, frameCount, NULL);
+
+  (void)pInput;
+}
+
+
+static char *get_self_path(void){
+  char     dir[PATH_MAX];
+  uint32_t size = sizeof dir;
+
+  _NSGetExecutablePath(dir, &size);
+  return(dir);
+}
+
+
+int do_miniaudio_record_file(char *record_file){
+  ma_result         result;
+  ma_encoder_config encoderConfig;
+  ma_encoder        encoder;
+  ma_device_config  deviceConfig;
+  ma_device         device;
+
+  encoderConfig = ma_encoder_config_init(ma_encoding_format_wav, ma_format_f32, 2, 44100);
+
+  if (ma_encoder_init_file(record_file, &encoderConfig, &encoder) != MA_SUCCESS) {
+    printf("Failed to initialize output file.\n");
+    return(-1);
+  }
+
+  deviceConfig                  = ma_device_config_init(ma_device_type_capture);
+  deviceConfig.capture.format   = encoder.config.format;
+  deviceConfig.capture.channels = encoder.config.channels;
+  deviceConfig.sampleRate       = encoder.config.sampleRate;
+  deviceConfig.dataCallback     = record_callback;
+  deviceConfig.pUserData        = &encoder;
+
+  result = ma_device_init(NULL, &deviceConfig, &device);
+  if (result != MA_SUCCESS) {
+    printf("Failed to initialize capture device.\n");
+    return(-2);
+  }
+
+  result = ma_device_start(&device);
+  if (result != MA_SUCCESS) {
+    ma_device_uninit(&device);
+    printf("Failed to start device.\n");
+    return(-3);
+  }
+
+  usleep(1000 * 1000);
+
+  ma_device_uninit(&device);
+  ma_encoder_uninit(&encoder);
+
+  return(0);
+} /* do_miniaudio_record_file */
+
+
+int do_miniaudio_play_file(char *wav_file){
+  ma_result result;
+  ma_engine engine;
+
+  result = ma_engine_init(NULL, &engine);
+  if (result != MA_SUCCESS) {
+    printf("Failed to initialize audio engine.");
+    return(-1);
+  }
+
+
+  float len = 0;
+
+  // ma_sound_get_cursor_in_seconds(&engine,&len);
+  printf("ma_sound_get_cursor_in_seconds:%f\n", len);
+
+  ma_sound sound;
+
+  result = ma_sound_init_from_file(&engine, wav_file, 0, NULL, NULL, &sound);
+  if (result != MA_SUCCESS) {
+    return(result);
+  }
+
+//ma_sound_set_stop_time_in_pcm_frames(&sound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 2));
+
+
+  ma_sound_start(&sound);
+
+  //ma_engine_play_sound(&engine, wav_file, NULL);
+
+  usleep(1000 * 1000);
+
+
+  ma_engine_uninit(&engine);
+  return(0);
+}
+
+
+TEST t_miniaudio_play_file(void *PLAY_FILE){
+  int res;
+
+  res = do_miniaudio_play_file((char *)PLAY_FILE);
+  ASSERT_EQ(res, 0);
+  printf("play ok- %s\n", (char *)PLAY_FILE);
+  PASS();
+}
+
+
+TEST t_miniaudio_record_file(void *RECORD_FILE){
+  int res;
+
+  res = do_miniaudio_record_file((char *)RECORD_FILE);
+  ASSERT_EQ(res, 0);
+  printf("recorded ok- %s\n", (char *)RECORD_FILE);
+  PASS();
+}
+
+
 TEST t_tempdir(void){
   char *temp_dir = gettempdir();
 
@@ -1667,9 +1806,43 @@ TEST t_regex(void){
   if (match_idx >= 0) {
     printf("match at idx %i, %i chars long.\n", match_idx, match_length);
   }
+  PASS();
+}
+
+
+TEST t_c89atomic(void){
+  c89atomic_flag a0 = 0;
+  c89atomic_flag b0 = 1;
+  c89atomic_bool r0 = c89atomic_flag_test_and_set(&b0);
+
+  PRINT("r0:", r0);
+
+  c89atomic_uint8 a = 42;
+  c89atomic_uint8 b = 123;
+
+  c89atomic_store_8(&a, b);
+
+  PRINT("a:", a);
+  PRINT("b:", b);
 
   PASS();
 }
+
+SUITE(s_c89atomic) {
+  RUN_TEST(t_c89atomic);
+}
+
+SUITE(s_miniaudio) {
+  char play_file[1024];
+
+  sprintf(&play_file, "%s/../sounds/key_space_down.wav", EXECUTABLE_PATH_DIRNAME);
+  char record_file[1024] = "/tmp/record.wav";
+
+  RUN_TESTp(t_miniaudio_play_file, (void *)play_file);
+  RUN_TESTp(t_miniaudio_record_file, (void *)record_file);
+  RUN_TESTp(t_miniaudio_play_file, (void *)record_file);
+}
+
 SUITE(s_hidapi) {
   RUN_TEST(t_hidapi);
 }
@@ -1716,6 +1889,10 @@ GREATEST_MAIN_DEFS();
 
 
 int main(int argc, char **argv) {
+  char EXECUTABLE_PATH[PATH_MAX + 1] = { 0 };
+
+  realpath(argv[0], EXECUTABLE_PATH);
+  EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
   GREATEST_MAIN_BEGIN();
   RUN_SUITE(s_json);
   RUN_SUITE(s_string);
@@ -1751,8 +1928,11 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_tempdir);
   RUN_SUITE(s_hidapi);
   RUN_SUITE(s_libusb);
+  RUN_SUITE(s_miniaudio);
+  RUN_SUITE(s_c89atomic);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
+
   dbg(used, %lu);
   assert(used == 0);
 } /* main */

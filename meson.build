@@ -1,4 +1,9 @@
 project('meson_deps',['c'],default_options:['warning_level=0','c_std=gnu99'])
+#############################################################
+go_program = find_program('go', required : true)
+gofmt_program = find_program('gofmt', required : true)
+goimports_program = find_program('goimports', required : true)
+unlink_program = find_program('unlink', required : true)
 passh_program = find_program('passh', required : true)
 sqlite3_program = find_program('sqlite3', required : true)
 sh_program = find_program('sh', required : true)
@@ -7,25 +12,28 @@ passh_program = find_program('passh', required : true)
 timeout_bin = find_program('timeout', required : true)
 sudo_bin = find_program('sudo', required : true)
 git = find_program('git', required: true)
-
+#############################################################
 fs = import('fs')
-
-if git.found() and fs.is_dir('.git')
+cc = meson.get_compiler('c')
+meson_deps_dir = meson.current_source_dir()
+#############################################################
+if fs.is_dir('.git')
     git_rev_parse = run_command(git, 'rev-parse', '--short', '@', check: true)
     git_sha = git_rev_parse.stdout().strip()
 else
     git_sha = ''
 endif
-
+go_version = run_command(go_program,'version', check:true).stdout().strip().split(' ')[2].replace('go','')
+#############################################################
 version_info = configuration_data()
 version_info.set('version', meson.project_version())
+version_info.set('go_version', go_version)
 version_info.set('vcs_tag', git_sha)
-
+#############################################################
 summary({'version': meson.project_version(),
         'vcs_tag': git_sha,
+        'go_version': go_version,
         }, section: 'Options1')
-cc = meson.get_compiler('c')
-meson_deps_dir = meson.current_source_dir()
 pwd = meson_deps_dir
 #############################################################
 inc = [
@@ -51,11 +59,17 @@ inc = [
   include_directories('submodules/sqxclib/sqxc'),
 ]  
 ###########################################
+install_subdir('etc/sounds', install_dir: meson.current_build_dir(), install_tag:'build')
+###########################################
 subdir('meson')
 subdir('submodules')
 #subdir('meson/deps/libtermkey')
 ###########################################
 subdir('deps')
+subdir('select_description1')
+subdir('multi_select')
+subdir('multi_select0')
+subdir('multi_select1')
 subdir('ctable')
 subdir('tests-table')
 subdir('introspect')

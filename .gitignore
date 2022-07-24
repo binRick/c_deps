@@ -26,3 +26,6 @@ deps-test.sqlite
 sqldb-test/sqldb-test.sqlite
 loc.sh
 .Kitty-logo*
+*/*.a
+*/*.mod
+*/*.sum

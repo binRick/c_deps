@@ -7,6 +7,8 @@ deps_include_dirs = [
 deps_test_deps = [
   hidapi_dep,
   libusb_dep,
+  miniaudio_dep,
+  c89atomic_dep,
   tempdir_dep,
   deps_dep,
   occurrences_dep,
@@ -51,6 +53,7 @@ deps_c_args = [
 ]
 deps_link_args = [
 ]
+
 if get_option('enable-binaries')
   deps_test_exec = executable('deps-test',
      deps_test_srcs,

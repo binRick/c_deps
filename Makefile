@@ -89,6 +89,7 @@ git-pull:
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
 do-build: do-meson
 	@meson compile -C build
+	@meson install -C build --tags build
 do-test:
 	@passh meson test -C build -v --print-errorlogs	
 test: do-test
