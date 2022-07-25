@@ -28,6 +28,14 @@ TRIGGER_FILE=.trigger.c
 ##############################################################
 do-setup:
 	@[[ -d submodules ]] || mkdir submodules
+setup-binaries:
+	@mkdir -p ~/.bin
+	@command -v passh || { cd submodules/passh/. && make && cp passh ~/.bin/.; }
+setup-golang:
+	@command -v goimports || go install golang.org/x/tools/cmd/goimports@latest
+setup-wg:
+	@command -v wg || brew install wireguard-tools
+
 git-add:
 	@git add meson/deps/*/meson.build
 	@git add subprojects/*.wrap
