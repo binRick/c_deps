@@ -577,3 +577,6 @@
 [submodule "submodules/passh"]
 	path = submodules/passh
 	url = https://github.com/clarkwang/passh
+[submodule "submodules/libtinyfiledialogs"]
+	path = submodules/libtinyfiledialogs
+	url = https://github.com/native-toolkit/libtinyfiledialogs

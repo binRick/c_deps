@@ -49,6 +49,7 @@ deps_test_deps = [
   ansi_utils_dep,
   http_get_dep,
   mkcreflect_dep,
+  libtinyfiledialogs_dep,
 ]
 deps_c_args = [
 ]

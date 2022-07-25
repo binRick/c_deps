@@ -1,8 +1,4 @@
 #include "ee-test.h"
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
 int ee_main(void);
 int ee_main_once(void);
 int ee_main_loop(void);
