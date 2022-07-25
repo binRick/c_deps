@@ -556,3 +556,21 @@
 [submodule "submodules/c89atomic"]
 	path = submodules/c89atomic
 	url = https://github.com/mackron/c89atomic
+[submodule "submodules/cute_headers"]
+	path = submodules/cute_headers
+	url = https://github.com/RandyGaul/cute_headers
+[submodule "submodules/png2gif"]
+	path = submodules/png2gif
+	url = https://github.com/crupp2/png2gif
+[submodule "submodules/rwimg"]
+	path = submodules/rwimg
+	url = https://github.com/schani/rwimg
+[submodule "submodules/gifsicle"]
+	path = submodules/gifsicle
+	url = https://github.com/kohler/gifsicle
+[submodule "submodules/msf_gif"]
+	path = submodules/msf_gif
+	url = https://github.com/notnullnotvoid/msf_gif
+[submodule "submodules/ok-file-formats"]
+	path = submodules/ok-file-formats
+	url = https://github.com/brackeen/ok-file-formats

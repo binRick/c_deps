@@ -95,12 +95,7 @@ do-test:
 test: do-test
 build: do-meson do-build
 ansi: all do-sync do-ansi-make
-tidy: \
-	rm-make-logs \
-	do-setup \
-	fmt-scripts do-uncrustify \
-	do-build \
-	git-add
+tidy: fmt-scripts do-uncrustify 
 dev: do-nodemon
 all: do-setup do-build do-test
 trigger:
@@ -132,3 +127,55 @@ meson-tests:
 	ansi -n --yellow --italic "$$cmd" && \
 	echo \
 '	
+
+bashful-pre:
+	@ansi --save-palette
+	@kfc -s vscode
+	@ansi --hide-cursor
+	@clear
+
+bashful-post:
+	@ansi --load-palette
+	@ansi --show-cursor
+
+bashful: bashful-pre do-bashful bashful-post
+bashful-clean: bashful-pre do-bashful-clean bashful-post
+bashful-tidy: bashful-pre do-bashful-tidy bashful-post
+bashful-build: bashful-pre do-bashful-build bashful-post
+bashful-git-status: bashful-pre do-bashful-git-status bashful-post
+bashful-git-diff: bashful-pre do-bashful-git-diff bashful-post
+bashful-build-commands: bashful-pre do-bashful-build-commands bashful-post
+bashful-test-commands: bashful-pre do-bashful-test-commands bashful-post
+bashful-test: bashful-pre do-bashful-test bashful-post
+bashful-view-git-diff: bashful-pre do-bashful-view-git-diff bashful-post
+bashful-view-git-status: bashful-pre do-bashful-view-git-status bashful-post
+
+do-bashful:
+	@passh -L /tmp/meson-repos-do-bashful.log bashful run etc/meson-repos.yaml
+do-bashful-clean:
+	@passh -L /tmp/meson-repos-do-clean.log bashful run --tags clean etc/meson-repos.yaml
+do-bashful-tidy:
+	@passh -L /tmp/meson-repos-do-tidy.log bashful run --tags tidy etc/meson-repos.yaml
+do-bashful-build:
+	@passh -L /tmp/meson-repos-do-build.log bashful run --tags build etc/meson-repos.yaml
+do-bashful-build-commands:
+	@passh -L /tmp/meson-repos-do-build-commands.log bashful run --tags build-commands etc/meson-repos.yaml
+do-bashful-test-commands:
+	@passh -L /tmp/meson-repos-do-test-commands.log bashful run --tags test-commands etc/meson-repos.yaml
+do-bashful-test:
+	@passh -L /tmp/meson-repos-do-test.log bashful run --tags test etc/meson-repos.yaml
+do-bashful-git-status:
+	@passh -L /tmp/meson-repos-do-git-status.log bashful run --tags git-status etc/meson-repos.yaml
+do-bashful-git-diff:
+	@passh -L /tmp/meson-repos-do-git-diff.log bashful run --tags git-diff etc/meson-repos.yaml
+
+
+do-bashful-view-git-diff:
+	@passh bat --style=full /tmp/meson-repos-git-diff-*.log
+do-bashful-view-git-status:
+	@passh bat --style=full /tmp/meson-repos-git-status-*.log
+
+
+
+
+

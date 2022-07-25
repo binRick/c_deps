@@ -1,4 +1,4 @@
-project('meson_deps',['c'],default_options:['warning_level=0','c_std=gnu99'])
+project('meson_deps',['c','cpp'],default_options:['warning_level=0','c_std=gnu99'])
 #############################################################
 go_program = find_program('go', required : true)
 gofmt_program = find_program('gofmt', required : true)
@@ -14,7 +14,8 @@ sudo_bin = find_program('sudo', required : true)
 git = find_program('git', required: true)
 #############################################################
 fs = import('fs')
-cc = meson.get_compiler('c')
+cc = meson.get_compiler('c', native: true)
+cpp = meson.get_compiler('cpp', native: true)
 meson_deps_dir = meson.current_source_dir()
 #############################################################
 if fs.is_dir('.git')
@@ -60,6 +61,7 @@ inc = [
 ]  
 ###########################################
 install_subdir('etc/sounds', install_dir: meson.current_build_dir(), install_tag:'build')
+install_subdir('etc/images', install_dir: meson.current_build_dir(), install_tag:'build')
 ###########################################
 subdir('meson')
 subdir('submodules')

@@ -43,6 +43,7 @@ deps_test_deps = [
   microui_dep,
   catpath_dep,
   str_truncate_dep,
+  ok_file_formats_dep,
   vtparse_dep,
   cansid_dep,
   ansi_utils_dep,

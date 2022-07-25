@@ -30,6 +30,9 @@
 #include "libusb/libusb/os/darwin_usb.h"
 #include "log.h/log.h"
 #include "miniaudio/miniaudio.h"
+#include "ok-file-formats/ok_jpg.h"
+#include "ok-file-formats/ok_png.h"
+#include "ok-file-formats/ok_wav.h"
 #include "tempdir.c/tempdir.h"
 ////////////////////////////////////////////
 static int do_get_google();
@@ -1828,6 +1831,61 @@ TEST t_c89atomic(void){
   PASS();
 }
 
+
+TEST t_ok_file_format_wav(void){
+  char *wav_file = malloc(1024);
+
+  sprintf(wav_file, "%s/../sounds/key_space_down.wav", EXECUTABLE_PATH_DIRNAME);
+  dbg(wav_file, %s);
+  FILE   *file = fopen(wav_file, "rb");
+  ok_wav audio = ok_wav_read(file, OK_WAV_DEFAULT_DECODE_FLAGS);
+
+  fclose(file);
+  if (audio.data) {
+    printf("Got audio! Length: %f seconds\n", (audio.num_frames / audio.sample_rate));
+    free(audio.data);
+  }
+  PASS();
+}
+
+
+TEST t_ok_file_format_jpg(void){
+  char *jpg_file = malloc(1024);
+
+  sprintf(jpg_file, "%s/../images/accomplishments.jpg", EXECUTABLE_PATH_DIRNAME);
+  FILE   *file = fopen(jpg_file, "rb");
+  ok_jpg image = ok_jpg_read(file, OK_JPG_COLOR_FORMAT_RGBA);
+
+  fclose(file);
+  if (image.data) {
+    printf("Got JPG image! Size: %li x %li\n", (long)image.width, (long)image.height);
+    free(image.data);
+  }
+  PASS();
+}
+
+
+TEST t_ok_file_format_png(void){
+  char *png_file = malloc(1024);
+
+  sprintf(png_file, "%s/../images/vttest1.png", EXECUTABLE_PATH_DIRNAME);
+  FILE   *file = fopen(png_file, "rb");
+  ok_png image = ok_png_read(file, OK_PNG_COLOR_FORMAT_RGBA);
+
+  fclose(file);
+  if (image.data) {
+    printf("Got PNG image! Size: %li x %li\n", (long)image.width, (long)image.height);
+    free(image.data);
+  }
+  PASS();
+}
+
+SUITE(s_ok_file_formats) {
+  RUN_TEST(t_ok_file_format_wav);
+  RUN_TEST(t_ok_file_format_png);
+  RUN_TEST(t_ok_file_format_jpg);
+}
+
 SUITE(s_c89atomic) {
   RUN_TEST(t_c89atomic);
 }
@@ -1930,6 +1988,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_libusb);
   RUN_SUITE(s_miniaudio);
   RUN_SUITE(s_c89atomic);
+  RUN_SUITE(s_ok_file_formats);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
 
