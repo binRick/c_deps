@@ -574,3 +574,6 @@
 [submodule "submodules/ok-file-formats"]
 	path = submodules/ok-file-formats
 	url = https://github.com/brackeen/ok-file-formats
+[submodule "submodules/passh"]
+	path = submodules/passh
+	url = https://github.com/clarkwang/passh

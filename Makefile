@@ -31,11 +31,16 @@ do-setup:
 setup-binaries:
 	@mkdir -p ~/.bin
 	@command -v passh || { cd submodules/passh/. && make && cp passh ~/.bin/.; }
+	@command -v gtimeout || brew install coreutils
 setup-golang:
 	@command -v goimports || go install golang.org/x/tools/cmd/goimports@latest
 setup-wg:
 	@command -v wg || brew install wireguard-tools
-
+clone-repos:
+	@ls $(shell echo ~/repos/debug_print_h)/.git || git clone ssh://git@github.com/binRick/debug_print_h $(shell echo ~/repos/debug_print_h)
+link-repos:
+	@ls submodules/c_ansi || ln -s $(shell echo ~/repos/c_ansi) submodules/c_ansi
+	@ls submodules/debug_print_h/src || ln -s $(shell echo ~/repos/debug_print_h) submodules/debug_print_h
 git-add:
 	@git add meson/deps/*/meson.build
 	@git add subprojects/*.wrap
