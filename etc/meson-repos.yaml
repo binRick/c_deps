@@ -17,7 +17,7 @@ tasks:
       - name: Tidy Meson Repo %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-tidy-%.log make tidy"
+        cmd: env bash -c "cd ~/repos/%/. && make tidy"
 
   - name: Build Meson Repos
     tags: [build]
@@ -25,7 +25,7 @@ tasks:
       - name: Print Meson Repo Build Command %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-build-%.log make build"
+        cmd: env bash -c "cd ~/repos/%/. && make build"
 
   - name: Test Meson Repos
     tags: [test]

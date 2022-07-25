@@ -32,7 +32,7 @@ tasks:
       - name: Print Meson Repo Git diff %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-git-diff-%.log git diff"
+        cmd: env bash -c "cd ~/repos/%/. && git diff"
 
   - name: Print Meson Repos Build Commands
     tags: [build-commands]
