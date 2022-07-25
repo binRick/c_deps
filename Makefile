@@ -150,8 +150,7 @@ bashful-test: bashful-pre do-bashful-test bashful-post
 bashful-view-git-diff: bashful-pre do-bashful-view-git-diff bashful-post
 bashful-view-git-status: bashful-pre do-bashful-view-git-status bashful-post
 
-do-bashful:
-	@passh -L /tmp/meson-repos-do-bashful.log bashful run etc/meson-repos.yaml
+
 do-bashful-clean:
 	@passh -L /tmp/meson-repos-do-clean.log bashful run --tags clean etc/meson-repos.yaml
 do-bashful-tidy:
@@ -159,13 +158,13 @@ do-bashful-tidy:
 do-bashful-build:
 	@passh -L /tmp/meson-repos-do-build.log bashful run --tags build etc/meson-repos.yaml
 do-bashful-build-commands:
-	@passh -L /tmp/meson-repos-do-build-commands.log bashful run --tags build-commands etc/meson-repos.yaml
+	@passh -L /tmp/meson-repos-do-build-commands.log bashful run --tags build-commands etc/meson-repos-info.yaml
 do-bashful-test-commands:
-	@passh -L /tmp/meson-repos-do-test-commands.log bashful run --tags test-commands etc/meson-repos.yaml
+	@passh -L /tmp/meson-repos-do-test-commands.log bashful run --tags test-commands etc/meson-repos-info.yaml
 do-bashful-test:
 	@passh -L /tmp/meson-repos-do-test.log bashful run --tags test etc/meson-repos.yaml
 do-bashful-git-status:
-	@passh -L /tmp/meson-repos-do-git-status.log bashful run --tags git-status etc/meson-repos.yaml
+	@passh -L /tmp/meson-repos-do-git-status.log bashful run --tags git-status etc/meson-repos-info.yaml
 do-bashful-git-diff:
 	@passh -L /tmp/meson-repos-do-git-diff.log bashful run --tags git-diff etc/meson-repos.yaml
 
@@ -175,7 +174,9 @@ do-bashful-view-git-diff:
 do-bashful-view-git-status:
 	@passh bat --style=full /tmp/meson-repos-git-status-*.log
 
-
+do-bashful:
+	@passh -L /tmp/meson-repos-do-bashful-info.log bashful run etc/meson-repos-info.yaml
+	@passh -L /tmp/meson-repos-do-bashful.log bashful run etc/meson-repos.yaml
 
 
 
