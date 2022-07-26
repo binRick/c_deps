@@ -81,6 +81,16 @@ char
 *cell_at(board_t *, int, int)
 ;
 
+volatile unsigned int
+  title_updates_qty     = 0,
+  BORDER_STYLE          = 0,
+  BORDER_FG_COLOR_RED   = 255,
+  BORDER_FG_COLOR_GREEN = 255,
+  BORDER_FG_COLOR_BLUE  = 255,
+  BORDER_BG_COLOR_RED   = 17,
+  BORDER_BG_COLOR_GREEN = 0,
+  BORDER_BG_COLOR_BLUE  = 255
+;
 ///////////////////////////////////////////////
 ///        BOTTOM MSG COMPONENTS            ///
 ///////////////////////////////////////////////
@@ -102,16 +112,6 @@ char
 #define INCREASE_BOTTOM_MSG_BG_RED()      { do { BORDER_BG_COLOR_RED = BORDER_BG_COLOR_RED >= MAX_RGB ? 0 : BORDER_BG_COLOR_RED + 1; redraw_bottom_msg(); } while (0); }
 #define INCREASE_BOTTOM_MSG_BG_GREEN()    { do { BORDER_BG_COLOR_GREEN = BORDER_BG_COLOR_GREEN >= MAX_RGB ? 0 : BORDER_BG_COLOR_GREEN + 1; redraw_bottom_msg(); } while (0); }
 #define INCREASE_BOTTOM_MSG_BG_BLUE()     { do { BORDER_BG_COLOR_BLUE = BORDER_BG_COLOR_BLUE >= MAX_RGB ? 0 : BORDER_BG_COLOR_BLUE + 1; redraw_bottom_msg(); } while (0); }
-volatile unsigned int
-  title_updates_qty     = 0,
-  BORDER_STYLE          = 0,
-  BORDER_FG_COLOR_RED   = 255,
-  BORDER_FG_COLOR_GREEN = 255,
-  BORDER_FG_COLOR_BLUE  = 255,
-  BORDER_BG_COLOR_RED   = 0,
-  BORDER_BG_COLOR_GREEN = 0,
-  BORDER_BG_COLOR_BLUE  = 0
-;
 const char
 *BORDER_STYLES[]               = { "single", "double" },
 BOTTOM_MSG_BOX_TOP_SINGLE[]    = "┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐",
@@ -171,6 +171,11 @@ cursor_profile_t
 
 
 ///////////////////////////////////////////////
+
+
+static void logging_func(termpaint_integration *integration, const char *data, int length){
+  fprintf(stderr, AC_RESETALL AC_GREEN "[logging_func] len:%d|data:'%s'\n" AC_RESETALL "\n", length, data);
+}
 
 
 int term_tests_main(const int argc, const char **argv) {
@@ -280,12 +285,26 @@ static void event_callback(void *userdata, termpaint_event *tp_event) {
     my_event->modifier = tp_event->c.modifier;
     my_event->string   = strndup(tp_event->c.string, tp_event->c.length);
     my_event->next     = NULL;
+    fprintf(stderr, AC_RESETALL AC_YELLOW AC_REVERSED "[TERMPAINT_EV_CHAR]   |%d|%s|" AC_RESETALL "\n", my_event->modifier, my_event->string);
+  } else if (tp_event->type == TERMPAINT_EV_MISC) {
+    if (strcmp(tp_event->misc.atom, "FocusIn") == 0) {
+      fprintf(stderr, AC_RESETALL AC_GREEN "Focus In" AC_RESETALL "\n");
+    }else if (strcmp(tp_event->misc.atom, "FocusOut") == 0) {
+      fprintf(stderr, AC_RESETALL AC_RED "Focus Out" AC_RESETALL "\n");
+    }else{
+      fprintf(stderr, "TERMPAINT_EV_MISC:%s\n", tp_event->misc.atom);
+    }
   } else if (tp_event->type == TERMPAINT_EV_KEY) {
+    fprintf(stderr, AC_RESETALL AC_YELLOW AC_REVERSED "tp_event->type:%d|%s" AC_RESETALL "\n", tp_event->type, (char *)tp_event->key.atom);
     my_event           = malloc(sizeof(event));
     my_event->type     = tp_event->type;
     my_event->modifier = tp_event->key.modifier;
     my_event->string   = strdup(tp_event->key.atom);
     my_event->next     = NULL;
+    fprintf(stderr, "TERMPAINT_EV_KEY:  |%d|%s|\n", my_event->modifier, my_event->string);
+    if (strcmp(my_event->string, "ArrowUp") == 0) {
+//        termpaint_image_load(terminal,"/tmp/me");
+    }
   } else if (tp_event->type == TERMPAINT_EV_MOUSE) {
     if ((tp_event->mouse.action == TERMPAINT_MOUSE_PRESS && tp_event->mouse.button == 0)
         || tp_event->mouse.action == TERMPAINT_MOUSE_MOVE) {
@@ -313,6 +332,7 @@ static void event_callback(void *userdata, termpaint_event *tp_event) {
             surface_updates_qty
             );
     write_bottom_msg(MSG);
+    //termpaint_image_save(surface,"/tmp/me");
   }
 
   if (my_event) {
@@ -337,10 +357,23 @@ static int term_init(void) {
 
   integration = termpaintx_full_integration_setup_terminal_fullscreen("+kbdsigint +kbdsigtstp", event_callback, NULL, &terminal);
   surface     = termpaint_terminal_get_surface(terminal);
-  termpaint_integration_set_logging_func(integration, NULL);
+
+//  bool ok = termpaint_surface_resize_mustcheck(surface, 50, 10);
+  termpaint_integration_set_logging_func(integration, logging_func);
+
+  if (termpaint_terminal_self_reported_name_and_version(terminal)) {
+    char *self_reported_name_and_version = termpaint_terminal_self_reported_name_and_version(terminal);
+    fprintf(stderr, AC_RESETALL AC_GREEN "[self_reported_name_and_version] %s\n" AC_RESETALL "\n", self_reported_name_and_version);
+  }
+
+
+  //termpaint_terminal_set_log_mask(terminal, TERMPAINT_LOG_AUTO_DETECT_TRACE | TERMPAINT_LOG_TRACE_RAW_INPUT);
+
 
   termpaint_terminal_set_mouse_mode(terminal, TERMPAINT_MOUSE_MODE_CLICKS);
+  termpaint_terminal_set_mouse_mode(terminal, TERMPAINT_MOUSE_MODE_DRAG);
   termpaint_terminal_set_mouse_mode(terminal, TERMPAINT_MOUSE_MODE_MOVEMENT);
+  termpaint_terminal_request_focus_change_reports(terminal, true);
 
   cursor_profile->visible = true;
   update_cursor_profile();

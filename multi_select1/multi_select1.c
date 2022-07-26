@@ -21,9 +21,9 @@ int main() {
       responses_qty++;
       *n++;
   }    
-  fprintf(stdout,"You chose %d Countries:\n",responses_qty);
   n = responses;
   while (*n != NULL) {
-    printf ("%s\n",  *n++);
+    printf (" - %s\n",  *n++);
   }    
+  fprintf(stdout,"You chose %d Countries:\n",responses_qty);
 }

@@ -8,6 +8,7 @@ term_tests_include_dirs = [
 
 term_tests_deps = [
   termpaint_dep,  
+  termpaint_image_dep,  
   c_stringfn_dep,  
   c_string_buffer_dep,  
   ansi_codes_dep,  

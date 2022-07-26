@@ -580,3 +580,27 @@
 [submodule "submodules/libtinyfiledialogs"]
 	path = submodules/libtinyfiledialogs
 	url = https://github.com/native-toolkit/libtinyfiledialogs
+[submodule "submodules/dotenv-c"]
+	path = submodules/dotenv-c
+	url = https://github.com/Isty001/dotenv-c
+[submodule "submodules/termbox2"]
+	path = submodules/termbox2
+	url = https://github.com/termbox/termbox2
+[submodule "submodules/bitfield"]
+	path = submodules/bitfield
+	url = https://github.com/willemt/bitfield
+[submodule "submodules/bench"]
+	path = submodules/bench
+	url = https://github.com/brendanashworth/bench
+[submodule "submodules/levenshtein"]
+	path = submodules/levenshtein
+	url = https://github.com/wooorm/levenshtein
+[submodule "submodules/minmax"]
+	path = submodules/minmax
+	url = https://github.com/willemt/minmax
+[submodule "submodules/clamp"]
+	path = submodules/clamp
+	url = https://github.com/littlstar/clamp
+[submodule "submodules/ease"]
+	path = submodules/ease
+	url = https://github.com/glisy/ease

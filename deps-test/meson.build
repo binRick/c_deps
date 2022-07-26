@@ -50,6 +50,10 @@ deps_test_deps = [
   http_get_dep,
   mkcreflect_dep,
   libtinyfiledialogs_dep,
+  termbox2_dep,
+  minmax_dep,
+  bench_dep,
+  bitfield_dep,
 ]
 deps_c_args = [
 ]

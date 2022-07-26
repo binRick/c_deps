@@ -1,6 +1,10 @@
 #define MKCREFLECT_IMPL
 #define LAY_IMPLEMENTATION
 #define MINIAUDIO_IMPLEMENTATION
+#define TB_IMPL
+////////////////////////////////////////////
+#include "termbox2/termbox.h"
+#include <stdio.h>
 ////////////////////////////////////////////
 #include <assert.h>
 #include <err.h>
@@ -9,16 +13,16 @@
 #include <libgen.h>
 #include <limits.h>
 #include <math.h>
+#include <math.h>
 #include <poll.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <unistd.h>
 #include <wchar.h>
 ////////////////////////////////////////////
+#include "bench/bench.h"
+#include "bitfield/bitfield.h"
 #include "c89atomic/c89atomic.h"
 #include "deps-test/deps-test.h"
 #include "generic-print/print.h"
@@ -31,6 +35,7 @@
 #include "libusb/libusb/os/darwin_usb.h"
 #include "log.h/log.h"
 #include "miniaudio/miniaudio.h"
+#include "minmax/include/minmax.h"
 #include "ok-file-formats/ok_jpg.h"
 #include "ok-file-formats/ok_png.h"
 #include "ok-file-formats/ok_wav.h"
@@ -40,6 +45,19 @@ static int do_get_google();
 static inline int file_exists(const char *path);
 
 static char *EXECUTABLE_PATH_DIRNAME;
+/*
+ * ////////////////////////////////////////
+ *  BENCHMARK(benchmark_name, 3)
+ *  //DO_WORK
+ *  END_BENCHMARK(benchmark_name)
+ *  BENCHMARK_SUMMARY(benchmark_name);
+ * ////////////////////////////////////////
+ *  MEASURE(measurement_name)
+ *  //DO_WORK
+ *  END_MEASURE(measurement_name)
+ *  MEASURE_SUMMARY(measurement_name);
+ * ////////////////////////////////////////
+ */
 
 #define DEF_PORT    8080
 #define MAX_NAME    40
@@ -310,13 +328,22 @@ void do_test_cansid(void){
           CANSID_BGCOLOR,
           CANSID_ENDVAL
           );
-  printf(AC_YELLOW AC_ITALIC "===========================================================================" AC_RESETALL "\n");
+  printf(AC_YELLOW AC_ITALIC "\n===========================================================================" AC_RESETALL "\n");
 
   DEBUG_STATE();
+  state = cansid_init();
+  FEED("\x1b[30m\x1b[44mBLACK-BLUEBG");
+  DEBUG_STATE();
+  state = cansid_init();
   FEED("\x1b[30mBLACK");
+  DEBUG_STATE();
+  state = cansid_init();
   FEED("\x1b[34mBLUE");
-  FEED("\x1b[30m\x1b[44mBLACK-BLUE");
-  //FEED(AC_BLACK_BLUE "BLACK-BLUE");
+  DEBUG_STATE();
+  state = cansid_init();
+  FEED("\x1b[44mBLUEBG");
+  DEBUG_STATE();
+  state = cansid_init();
   if (true) {
     FEED(AC_YELLOW "Y");
     FEED(AC_YELLOW_BLACK "YY" AC_RED_RED "RR");
@@ -668,7 +695,8 @@ TEST t_layout(void){
 
 
 TEST t_libbeaufort(void){
-  static char *monkey   = NULL;
+  MEASURE(example_measure1)
+  static char *monkey = NULL;
   static char *monkey_s = NULL;
 
   static char *goodman   = NULL;
@@ -697,6 +725,8 @@ TEST t_libbeaufort(void){
   dbg(goodman_s, %s);
   dbg(groove, %s);
   dbg(groove_s, %s);
+  END_MEASURE(example_measure1)
+  MEASURE_SUMMARY(example_measure1);
   PASS();
 }
 
@@ -868,6 +898,7 @@ TEST t_workqueue(void){
 
 
 TEST t_vector(void){
+  MEASURE(example_measure1)
   struct Vector *vector = vector_new();
 
   // populate vector using multiple available functions
@@ -910,6 +941,8 @@ TEST t_vector(void){
 
   // when we are done with the vector, we release it
   vector_release(vector);
+  END_MEASURE(example_measure1)
+  MEASURE_SUMMARY(example_measure1);
   PASS();
 } /* test_vector */
 
@@ -1782,7 +1815,10 @@ TEST t_miniaudio_record_file(void *RECORD_FILE){
 
 
 TEST t_tempdir(void){
+  MEASURE(example_measure1)
   char *temp_dir = gettempdir();
+  END_MEASURE(example_measure1)
+  MEASURE_SUMMARY(example_measure1);
 
   fprintf(stdout, "temp_dir:%s\n", temp_dir);
   PASS();
@@ -1999,6 +2035,79 @@ TEST t_ok_file_format_wav(void){
 }
 
 
+TEST t_bitfield(void){
+  BENCHMARK(bitfield_benchmark, 1)
+  bitfield_t *bf = bitfield_new(100);
+  bitfield_mark(bf, 77);
+  bitfield_unmark(bf, 50);
+  bool im = bitfield_is_marked(bf, 77);
+  ASSERT_EQ(im, true);
+  im = bitfield_is_marked(bf, 78);
+  ASSERT_EQ(im, false);
+  END_BENCHMARK(bitfield_benchmark)
+  BENCHMARK_SUMMARY(bitfield_benchmark);
+  printf("77th bit is marked\n");
+  printf("78th bit is not marked\n");
+  PASS();
+}
+
+
+TEST t_bench(void){
+  BENCHMARK(example_bench, 3)
+
+  FILE *file;
+  file = fopen("/etc/passwd", "r");
+  fclose(file);
+
+  END_BENCHMARK(example_bench)
+  BENCHMARK_SUMMARY(example_bench);
+
+  MEASURE(example_measure1)
+
+  FILE *file1;
+  file1 = fopen("/etc/passwd", "r");
+  fclose(file1);
+
+  END_MEASURE(example_measure1)
+  MEASURE_SUMMARY(example_measure1);
+  PASS();
+}
+
+
+TEST t_minmax(void){
+  int val;
+
+  val = max(2, 5);
+  ASSERT_EQ(val, 5);
+  PASS();
+}
+
+
+TEST t_termbox2(void){
+  struct tb_event ev;
+  int             y = 0;
+
+  tb_init();
+
+  tb_printf(0, y++, TB_GREEN, 0, "hello from termbox");
+  tb_printf(0, y++, 0, 0, "width=%d height=%d", tb_width(), tb_height());
+  tb_printf(0, y++, 0, 0, "press any key...");
+  tb_present();
+
+  tb_poll_event(&ev);
+
+  y++;
+  tb_printf(0, y++, 0, 0, "event type=%d key=%d ch=%c", ev.type, ev.key, ev.ch);
+  tb_printf(0, y++, 0, 0, "press any key to quit...");
+  tb_present();
+
+  tb_poll_event(&ev);
+  tb_shutdown();
+
+  PASS();
+}
+
+
 TEST t_ok_file_format_jpg(void){
   char *jpg_file = malloc(1024);
 
@@ -2054,6 +2163,18 @@ SUITE(s_miniaudio) {
   RUN_TESTp(t_miniaudio_play_file, (void *)record_file);
 }
 
+SUITE(s_bitfield) {
+  RUN_TEST(t_bitfield);
+}
+SUITE(s_bench) {
+  RUN_TEST(t_bench);
+}
+SUITE(s_minmax) {
+  RUN_TEST(t_minmax);
+}
+SUITE(s_termbox2) {
+  RUN_TEST(t_termbox2);
+}
 SUITE(s_hidapi) {
   RUN_TEST(t_hidapi);
 }
@@ -2143,8 +2264,12 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_c89atomic);
   RUN_SUITE(s_ok_file_formats);
   if (isatty(STDOUT_FILENO)) {
+    RUN_SUITE(s_termbox2);
     RUN_SUITE(s_libtinyfiledialogs);
   }
+  RUN_SUITE(s_minmax);
+  RUN_SUITE(s_bench);
+  RUN_SUITE(s_bitfield);
   GREATEST_MAIN_END();
   size_t used = do_dmt_summary();
 
