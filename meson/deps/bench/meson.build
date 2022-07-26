@@ -1,11 +1,11 @@
 bench_srcs = [files(
-  '../../../submodules/bench/bench.c',
-  '../../../submodules/bench/bench.h',
+  '../../../submodules/c_bench/bench.c',
+  '../../../submodules/c_bench/bench.h',
 
 )]
 
 bench_dirs = [
-  '../../../submodules/bench',
+  '../../../submodules/c_bench',
   inc,
 ]
 

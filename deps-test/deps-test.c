@@ -47,7 +47,7 @@ static inline int file_exists(const char *path);
 static char *EXECUTABLE_PATH_DIRNAME;
 /*
  * ////////////////////////////////////////
- *  BENCHMARK(benchmark_name, 3)
+ *  BENCHMARK_QTY(benchmark_name, 20)
  *  //DO_WORK
  *  END_BENCHMARK(benchmark_name)
  *  BENCHMARK_SUMMARY(benchmark_name);
@@ -695,7 +695,7 @@ TEST t_layout(void){
 
 
 TEST t_libbeaufort(void){
-  MEASURE(example_measure1)
+  BENCHMARK_QTY(benchmark_name, 25)
   static char *monkey = NULL;
   static char *monkey_s = NULL;
 
@@ -725,8 +725,9 @@ TEST t_libbeaufort(void){
   dbg(goodman_s, %s);
   dbg(groove, %s);
   dbg(groove_s, %s);
-  END_MEASURE(example_measure1)
-  MEASURE_SUMMARY(example_measure1);
+
+  END_BENCHMARK(benchmark_name)
+  BENCHMARK_SUMMARY(benchmark_name);
   PASS();
 }
 
