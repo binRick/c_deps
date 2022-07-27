@@ -25,7 +25,9 @@
 #include "bench/bench.h"
 #include "bitfield/bitfield.h"
 #include "c89atomic/c89atomic.h"
+#include "c_unja/src/unja_template.h"
 #include "deps-test/deps-test.h"
+#include "emojis/emojis.h"
 #include "generic-print/print.h"
 #include "hidapi/hidapi/hidapi.h"
 #include "hidapi/mac/hidapi_darwin.h"
@@ -46,11 +48,6 @@
 #include "ok-file-formats/ok_wav.h"
 #include "tempdir.c/tempdir.h"
 #include "uthash/include/uthash.h"
-//#include "unja/src/template.h"
-//#include "unja/src/vector.h"
-//#include "unja/src/hashmap.h"
-#include "emojis/emojis.h"
-#include "unja/vendor/mpc.h"
 #ifdef DEBUG_MEMORY
 #include "debug-memory/debug_memory.h"
 #endif
@@ -2171,7 +2168,77 @@ TEST t_emojis(void){
 }
 
 
+void unja_test_for_loop(){
+  char *input = "\n"
+                "{%- for n in names -%}"
+                "\n{{ n }}\n"
+                "{%- endfor -%}\n"
+                "\n";
+  struct unja_hashmap *ctx = unja_hashmap_new();
+
+  struct unja_vector  *names = unja_vector_new(3);
+
+  unja_vector_push(names, "John");
+  unja_vector_push(names, "Sally");
+  unja_vector_push(names, "Bob");
+  unja_hashmap_insert(ctx, "names", names);
+
+  char *output = unja_template_string(input, ctx);
+
+  unja_vector_free(names);
+  unja_hashmap_free(ctx);
+  printf("\n=======================\n");
+  printf("%s", output);
+  printf("\n=======================\n");
+  assert(strcmp(output, "John\nSally\nBob") == 0);
+  free(output);
+}
+
+
+void unja_test_dot_notation(){
+  char *input  = "Hello {{user.name}}!";
+  char *output = NULL;
+
+  BENCHMARK_QTY(benchmark_unja_test_dot_notation, 500)
+  struct unja_hashmap *ctx  = unja_hashmap_new();
+  struct unja_hashmap *user = unja_hashmap_new();
+
+  unja_hashmap_insert(user, "name", "Danny");
+  unja_hashmap_insert(ctx, "user", user);
+  output = unja_template_string(input, ctx);
+
+  assert(strcmp(output, "Hello Danny!") == 0);
+  unja_hashmap_free(user);
+  unja_hashmap_free(ctx);
+  END_BENCHMARK(benchmark_unja_test_dot_notation)
+  printf("\n=======================\n");
+  printf("%s", output);
+  printf("\n=======================\n");
+  free(output);
+  BENCHMARK_SUMMARY(benchmark_unja_test_dot_notation);
+}
+
+
+void unja_test_basic(){
+  char                *input = "Hello {{name}}.";
+  struct unja_hashmap *ctx   = unja_hashmap_new();
+
+  unja_hashmap_insert(ctx, "name", "world");
+  char *output = unja_template_string(input, ctx);
+
+  assert(strcmp(output, "Hello world.") == 0);
+  unja_hashmap_free(ctx);
+  printf("\n=======================\n");
+  printf("%s", output);
+  printf("\n=======================\n");
+  free(output);
+}
+
+
 TEST t_unja(void){
+  unja_test_basic();
+  unja_test_dot_notation();
+  unja_test_for_loop();
   PASS();
 }
 

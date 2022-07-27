@@ -57,7 +57,7 @@ deps_test_deps = [
   uthash_dep,
   debug_memory_dep,
   incbin_dep,
-  #unja_dep,
+  c_unja_dep,
   emojis_dep,
   libut_dep,
 ]

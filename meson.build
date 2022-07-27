@@ -82,6 +82,8 @@ subdir('meson/deps/sqxclib')
 subdir('meson/deps/wireguard-tools')
 subdir('wg')
 subdir('hs')
+subdir('c-meson-utils')
+subdir('c-meson-utils-cli')
 ###########################################
 subdir('tmt-test')
 subdir('list-test')
@@ -107,3 +109,4 @@ subdir('wg-test')
 subdir('hs-test')
 subdir('kgflags-test')
 ###########################################
+subdir('c-meson-utils-test')
