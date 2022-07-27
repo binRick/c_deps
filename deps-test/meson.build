@@ -54,6 +54,8 @@ deps_test_deps = [
   minmax_dep,
   bench_dep,
   bitfield_dep,
+  uthash_dep,
+  libut_dep,
 ]
 deps_c_args = [
 ]

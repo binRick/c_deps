@@ -604,3 +604,12 @@
 [submodule "submodules/ease"]
 	path = submodules/ease
 	url = https://github.com/glisy/ease
+[submodule "submodules/uthash"]
+	path = submodules/uthash
+	url = https://github.com/troydhanson/uthash
+[submodule "submodules/tpl"]
+	path = submodules/tpl
+	url = https://github.com/troydhanson/tpl
+[submodule "submodules/libut"]
+	path = submodules/libut
+	url = https://github.com/troydhanson/libut
