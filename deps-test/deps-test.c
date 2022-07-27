@@ -46,6 +46,10 @@
 #include "ok-file-formats/ok_wav.h"
 #include "tempdir.c/tempdir.h"
 #include "uthash/include/uthash.h"
+//#include "unja/src/template.h"
+//#include "unja/src/vector.h"
+//#include "unja/src/hashmap.h"
+#include "unja/vendor/mpc.h"
 #ifdef DEBUG_MEMORY
 #include "debug-memory/debug_memory.h"
 #endif
@@ -2148,6 +2152,9 @@ TEST t_termbox2(void){
 }
 
 
+TEST t_unja(void){
+  PASS();
+}
 TEST t_ok_file_format_jpg(void){
   char *jpg_file = malloc(1024);
 
@@ -2370,6 +2377,10 @@ SUITE(s_path) {
   RUN_TEST(t_which);
   PASS();
 }
+SUITE(s_unja) {
+  RUN_TEST(t_unja);
+  PASS();
+}
 SUITE(s_debug) {
   RUN_TEST(t_debug_print);
   PASS();
@@ -2429,6 +2440,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_bench);
   RUN_SUITE(s_bitfield);
   RUN_SUITE(s_incbin);
+  RUN_SUITE(s_unja);
   if (isatty(STDOUT_FILENO)) {
     RUN_SUITE(s_libforks);
     RUN_SUITE(s_termbox2);
