@@ -49,6 +49,7 @@
 //#include "unja/src/template.h"
 //#include "unja/src/vector.h"
 //#include "unja/src/hashmap.h"
+#include "emojis/emojis.h"
 #include "unja/vendor/mpc.h"
 #ifdef DEBUG_MEMORY
 #include "debug-memory/debug_memory.h"
@@ -2152,9 +2153,29 @@ TEST t_termbox2(void){
 }
 
 
+TEST t_emojis(void){
+  size_t        id              = 0;
+  struct Vector *emojis_names_v = get_emojis_names_v();
+
+  printf("%lu emoji names\n", vector_size(emojis_names_v));
+  for (int i = 0; i < 10; i++) {
+    struct emojis_t *e = get_emoji_t(i);
+    printf("%lu: %s -> %s [index_by_name:%d|emoji_t_by_name:%s|%s]\n", i,
+           e->name, e->emoji,
+           get_emoji_t_index_by_name(e->name),
+           get_emoji_t_by_name(e->name)->name, get_emoji_t_by_name(e->name)->emoji
+           );
+  }
+
+  PASS();
+}
+
+
 TEST t_unja(void){
   PASS();
 }
+
+
 TEST t_ok_file_format_jpg(void){
   char *jpg_file = malloc(1024);
 
@@ -2308,6 +2329,11 @@ SUITE(s_dmt){
   RUN_TEST(t_dmt_summary);
   PASS();
 }
+SUITE(s_emojis){
+  RUN_TEST(t_emojis);
+  PASS();
+}
+
 SUITE(s_dmt_summary){
   RUN_TEST(t_dmt_summary);
   PASS();
@@ -2399,6 +2425,11 @@ int main(int argc, char **argv) {
   realpath(argv[0], EXECUTABLE_PATH);
   EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
   GREATEST_MAIN_BEGIN();
+  if (isatty(STDOUT_FILENO)) {
+    RUN_SUITE(s_libforks);
+    RUN_SUITE(s_termbox2);
+    RUN_SUITE(s_libtinyfiledialogs);
+  }
   RUN_SUITE(s_json);
   RUN_SUITE(s_string);
   RUN_SUITE(s_debug);
@@ -2441,11 +2472,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_bitfield);
   RUN_SUITE(s_incbin);
   RUN_SUITE(s_unja);
-  if (isatty(STDOUT_FILENO)) {
-    RUN_SUITE(s_libforks);
-    RUN_SUITE(s_termbox2);
-    RUN_SUITE(s_libtinyfiledialogs);
-  }
+  RUN_SUITE(s_emojis);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

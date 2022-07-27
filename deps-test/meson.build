@@ -58,6 +58,7 @@ deps_test_deps = [
   debug_memory_dep,
   incbin_dep,
   #unja_dep,
+  emojis_dep,
   libut_dep,
 ]
 deps_c_args = [

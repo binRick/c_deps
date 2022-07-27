@@ -15,6 +15,7 @@ DIR=$(shell pwd)
 TESTS_LIST_LOG_FILE = $(shell pwd)/.tests-list.log
 TESTS_SUITES_LOG_FILE=$(shell pwd)/.tests-suites.log
 TESTS_TESTS_LOG_FILE=$(shell pwd)/.tests-tests.log
+IGNORED_GO_H_FILES=$(shell ls */*.go|gsed  's/\.go$/\.h/g' | xargs -I % echo -ne "-i % ")
 ##############################################################
 TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h cgif-test/*.c *-test/*.c *-test/*.h chan-test/*.c chan-test/*.h \
 			   introspect-test/*.c introspect-test/*.h \

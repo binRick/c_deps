@@ -1,4 +1,5 @@
 subdir('c_ansi/ansi-codes')
+subdir('c_ansi/emojis')
 subdir('c_ansi/string-utils')
 subdir('c_ansi/ansi-utils')
 subdir('c_sdl/sdl-app-fonts')

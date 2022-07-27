@@ -619,3 +619,6 @@
 [submodule "submodules/unja"]
 	path = submodules/unja
 	url = https://github.com/dannyvankooten/unja
+[submodule "submodules/wsServer"]
+	path = submodules/wsServer
+	url = https://github.com/Theldus/wsServer

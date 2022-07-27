@@ -11,7 +11,7 @@ kgflags_double_array_t double_arr;
 
 
 int main(int argc, char **argv) {
-  kgflags_string("string", "lorem", "String flag.", true, &string_val);
+  kgflags_string("string", "lorem", "String flag.", false, &string_val);
   kgflags_bool("bool", false, "Boolean flag.", false, &bool_val);
   kgflags_int("int", 0, "Integer flag.", false, &int_val);
   kgflags_double("double", 0.0, "Double flag.", false, &double_val);
