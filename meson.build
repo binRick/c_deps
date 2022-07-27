@@ -105,4 +105,5 @@ subdir('sqldb-test')
 subdir('submodules/c_sdl/sdl-app-test')
 subdir('wg-test')
 subdir('hs-test')
+subdir('kgflags-test')
 ###########################################

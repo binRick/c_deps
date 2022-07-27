@@ -2,6 +2,7 @@
 #define LAY_IMPLEMENTATION
 #define MINIAUDIO_IMPLEMENTATION
 #define TB_IMPL
+//#define DEBUG_MEMORY
 ////////////////////////////////////////////
 #include "termbox2/termbox.h"
 #include <stdio.h>
@@ -28,6 +29,7 @@
 #include "generic-print/print.h"
 #include "hidapi/hidapi/hidapi.h"
 #include "hidapi/mac/hidapi_darwin.h"
+#include "incbin/incbin.h"
 #include "layout/layout.h"
 #include "libforks/libforks.h"
 #include "libtinyfiledialogs/tinyfiledialogs.h"
@@ -44,8 +46,24 @@
 #include "ok-file-formats/ok_wav.h"
 #include "tempdir.c/tempdir.h"
 #include "uthash/include/uthash.h"
-#include "uthash/include/uthash.h"
+#ifdef DEBUG_MEMORY
+#include "debug-memory/debug_memory.h"
+#endif
 ////////////////////////////////////////////
+void __attribute__((constructor)) premain(){
+  char *s = malloc(1024);
+
+  sprintf(s, "%s", "test");
+  char *s0 = strdup(s);
+}
+void __attribute__((destructor)) postmain(){
+#ifdef DEBUG_MEMORY
+  printf("\nChecking for memory leak\n");
+  print_allocated_memory();
+#endif
+}
+
+
 static int do_get_google();
 static inline int file_exists(const char *path);
 
@@ -821,7 +839,9 @@ TEST t_dmt(void){
 
 
 TEST t_microtar_read(void){
-  mtar_t        tar;
+  BENCHMARK_QTY(benchmark_microtar, 2)
+  //DO_WORK
+  mtar_t tar;
   mtar_header_t h;
   char          *p;
 
@@ -843,6 +863,8 @@ TEST t_microtar_read(void){
 
 /* Close archive */
   mtar_close(&tar);
+  END_BENCHMARK(benchmark_microtar)
+  BENCHMARK_SUMMARY(benchmark_microtar);
   PASS();
 }
 
@@ -1093,115 +1115,6 @@ TEST t_str_replace(){
 
   printf("%s\n", replaced);
   free(replaced);
-  PASS();
-}
-SUITE(s_eventemitter){
-  RUN_TEST(t_eventemitter);
-  PASS();
-}
-SUITE(s_forever){
-  RUN_TEST(t_forever);
-  PASS();
-}
-SUITE(s_socket99_tcp){
-  pthread_t th;
-
-  pthread_create(&th, NULL, do_socket99_tcp_server, (void *)12311);
-  RUN_TEST(t_socket99_tcp_client);
-  PASS();
-}
-SUITE(s_layout){
-  RUN_TEST(t_layout);
-  PASS();
-}
-SUITE(s_libbeaufort){
-  RUN_TEST(t_libbeaufort);
-  PASS();
-}
-SUITE(s_murmurhash){
-  RUN_TEST(t_murmurhash);
-  PASS();
-}
-SUITE(s_dmt){
-  RUN_TEST(t_dmt);
-  RUN_TEST(t_dmt_summary);
-  PASS();
-}
-SUITE(s_dmt_summary){
-  RUN_TEST(t_dmt_summary);
-  PASS();
-}
-
-SUITE(s_cansid){
-  RUN_TEST(t_cansid);
-  PASS();
-}
-
-SUITE(s_ansi_utils){
-  RUN_TEST(t_ansi_utils);
-  PASS();
-}
-SUITE(s_vtparse){
-  RUN_TEST(t_vtparse_simple);
-  RUN_TEST(t_vtparse_csi);
-  PASS();
-}
-SUITE(s_microtar){
-  RUN_TEST(t_microtar_write);
-  RUN_TEST(t_microtar_read);
-  PASS();
-}
-SUITE(s_workqueue){
-  RUN_TEST(t_workqueue);
-  PASS();
-}
-SUITE(s_vector){
-  RUN_TEST(t_vector);
-  PASS();
-}
-SUITE(s_occurrences){
-  RUN_TEST(t_occurrences);
-  PASS();
-}
-SUITE(s_str_replace){
-  RUN_TEST(t_str_replace);
-  PASS();
-}
-SUITE(s_time) {
-  RUN_TEST(t_timestamp);
-  PASS();
-}
-SUITE(s_spinner) {
-//  RUN_TEST(t_libspinner);
-  RUN_TEST(t_spin);
-  PASS();
-}
-SUITE(s_totp) {
-  RUN_TEST(t_totp);
-  PASS();
-}
-SUITE(s_qrcode) {
-  RUN_TEST(t_qrcode);
-  PASS();
-}
-SUITE(s_status) {
-  RUN_TEST(t_statusbar);
-  PASS();
-}
-SUITE(s_progress) {
-  RUN_TEST(t_progressbar);
-  PASS();
-}
-SUITE(s_path) {
-  RUN_TEST(t_which);
-  PASS();
-}
-SUITE(s_debug) {
-  RUN_TEST(t_debug_print);
-  PASS();
-}
-SUITE(s_string) {
-  RUN_TEST(t_slug);
   PASS();
 }
 
@@ -1832,13 +1745,10 @@ TEST t_tempdir(void){
 
 
 TEST t_libforks2(void){
-  if (isatty(STDOUT_FILENO)) {
-    int res = do_libforks_test2();
-    ASSERT_EQ(res, 0);
-    PASS();
-  }else{
-    PASS();
-  }
+  int res = do_libforks_test2();
+
+  ASSERT_EQ(res, 0);
+  PASS();
 }
 
 
@@ -2122,7 +2032,8 @@ const char *getl(const char *prompt){
 
 
 TEST t_uthash(void){
-  int              id = 1;
+  BENCHMARK_QTY(benchmark_uthash, 20)
+  int id = 1;
   struct my_struct *s;
   int              temp;
   int              _uid = 12345;
@@ -2144,6 +2055,8 @@ TEST t_uthash(void){
   printf("there are %d users\n", temp);
   print_users();
 
+  END_BENCHMARK(benchmark_uthash)
+  BENCHMARK_SUMMARY(benchmark_uthash);
 
   PASS();
 }
@@ -2193,6 +2106,19 @@ TEST t_minmax(void){
 
   val = max(2, 5);
   ASSERT_EQ(val, 5);
+  PASS();
+}
+
+
+INCBIN(char *, MesonBuildTyped, "meson.build");
+
+
+TEST t_incbin(void){
+  BENCHMARK_QTY(benchmark_incbin, 1)
+  printf("gMesonBuildTypedData:%s\n", gMesonBuildTypedData);
+  printf("gMesonBuildTypedSize:%d\n", gMesonBuildTypedSize);
+  END_BENCHMARK(benchmark_incbin)
+  BENCHMARK_SUMMARY(benchmark_incbin);
   PASS();
 }
 
@@ -2278,10 +2204,10 @@ SUITE(s_miniaudio) {
 }
 
 SUITE(s_uthash) {
-  BENCHMARK_QTY(benchmark_uthash, 20)
   RUN_TEST(t_uthash);
-  END_BENCHMARK(benchmark_uthash)
-  BENCHMARK_SUMMARY(benchmark_uthash);
+}
+SUITE(s_incbin) {
+  RUN_TEST(t_incbin);
 }
 SUITE(s_bitfield) {
   RUN_TEST(t_bitfield);
@@ -2299,8 +2225,15 @@ SUITE(s_hidapi) {
   RUN_TEST(t_hidapi);
 }
 SUITE(s_libusb) {
+  BENCHMARK_QTY(benchmark_libusb1, 1)
   RUN_TEST(t_libusb1);
+  END_BENCHMARK(benchmark_libusb1)
+  BENCHMARK_SUMMARY(benchmark_libusb1);
+
+  BENCHMARK_QTY(benchmark_libusb2, 1)
   RUN_TEST(t_libusb2);
+  END_BENCHMARK(benchmark_libusb2)
+  BENCHMARK_SUMMARY(benchmark_libusb2);
 }
 SUITE(s_tempdir) {
   RUN_TEST(t_tempdir);
@@ -2334,6 +2267,115 @@ SUITE(s_generic_print) {
 SUITE(s_json) {
   RUN_TEST(t_read_json_file);
   RUN_TEST(t_process_json_lines);
+  PASS();
+}
+SUITE(s_eventemitter){
+  RUN_TEST(t_eventemitter);
+  PASS();
+}
+SUITE(s_forever){
+  RUN_TEST(t_forever);
+  PASS();
+}
+SUITE(s_socket99_tcp){
+  pthread_t th;
+
+  pthread_create(&th, NULL, do_socket99_tcp_server, (void *)12311);
+  RUN_TEST(t_socket99_tcp_client);
+  PASS();
+}
+SUITE(s_layout){
+  RUN_TEST(t_layout);
+  PASS();
+}
+SUITE(s_libbeaufort){
+  RUN_TEST(t_libbeaufort);
+  PASS();
+}
+SUITE(s_murmurhash){
+  RUN_TEST(t_murmurhash);
+  PASS();
+}
+SUITE(s_dmt){
+  RUN_TEST(t_dmt);
+  RUN_TEST(t_dmt_summary);
+  PASS();
+}
+SUITE(s_dmt_summary){
+  RUN_TEST(t_dmt_summary);
+  PASS();
+}
+
+SUITE(s_cansid){
+  RUN_TEST(t_cansid);
+  PASS();
+}
+
+SUITE(s_ansi_utils){
+  RUN_TEST(t_ansi_utils);
+  PASS();
+}
+SUITE(s_vtparse){
+  RUN_TEST(t_vtparse_simple);
+  RUN_TEST(t_vtparse_csi);
+  PASS();
+}
+SUITE(s_microtar){
+  RUN_TEST(t_microtar_write);
+  RUN_TEST(t_microtar_read);
+  PASS();
+}
+SUITE(s_workqueue){
+  RUN_TEST(t_workqueue);
+  PASS();
+}
+SUITE(s_vector){
+  RUN_TEST(t_vector);
+  PASS();
+}
+SUITE(s_occurrences){
+  RUN_TEST(t_occurrences);
+  PASS();
+}
+SUITE(s_str_replace){
+  RUN_TEST(t_str_replace);
+  PASS();
+}
+SUITE(s_time) {
+  RUN_TEST(t_timestamp);
+  PASS();
+}
+SUITE(s_spinner) {
+//  RUN_TEST(t_libspinner);
+  RUN_TEST(t_spin);
+  PASS();
+}
+SUITE(s_totp) {
+  RUN_TEST(t_totp);
+  PASS();
+}
+SUITE(s_qrcode) {
+  RUN_TEST(t_qrcode);
+  PASS();
+}
+SUITE(s_status) {
+  RUN_TEST(t_statusbar);
+  PASS();
+}
+SUITE(s_progress) {
+  RUN_TEST(t_progressbar);
+  PASS();
+}
+SUITE(s_path) {
+  RUN_TEST(t_which);
+  PASS();
+}
+SUITE(s_debug) {
+  RUN_TEST(t_debug_print);
+  PASS();
+}
+SUITE(s_string) {
+  RUN_TEST(t_slug);
   PASS();
 }
 
@@ -2376,22 +2418,24 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_libbeaufort);
   RUN_SUITE(s_layout);
   RUN_SUITE(s_socket99_tcp);
-  RUN_SUITE(s_libforks);
   RUN_SUITE(s_tempdir);
   RUN_SUITE(s_hidapi);
   RUN_SUITE(s_libusb);
   RUN_SUITE(s_miniaudio);
   RUN_SUITE(s_c89atomic);
+  RUN_SUITE(s_uthash);
   RUN_SUITE(s_ok_file_formats);
-  if (isatty(STDOUT_FILENO)) {
-    RUN_SUITE(s_termbox2);
-    RUN_SUITE(s_libtinyfiledialogs);
-  }
   RUN_SUITE(s_minmax);
   RUN_SUITE(s_bench);
   RUN_SUITE(s_bitfield);
-  RUN_SUITE(s_uthash);
+  RUN_SUITE(s_incbin);
+  if (isatty(STDOUT_FILENO)) {
+    RUN_SUITE(s_libforks);
+    RUN_SUITE(s_termbox2);
+    RUN_SUITE(s_libtinyfiledialogs);
+  }
   GREATEST_MAIN_END();
+
   size_t used = do_dmt_summary();
 
   dbg(used, %lu);

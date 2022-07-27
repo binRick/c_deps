@@ -8,7 +8,7 @@ int subprocess_test_main(char *CMD){
   char                 *READ_STDOUT;
   int                  exited, result;
   struct subprocess_s  subprocess;
-  const char           *command_line[]                        = { "/bin/sh", "-c", CMD, NULL };
+  const char           *command_line[]                        = { "/bin/sh", "--norc", "--noprofile", "-c", CMD, NULL };
   char                 stdout_buffer[STDOUT_READ_BUFFER_SIZE] = { 0 };
   struct  StringBuffer *SB                                    = stringbuffer_new_with_options(STDOUT_READ_BUFFER_SIZE, true);
   size_t               bytes_read                             = 0,
@@ -30,7 +30,7 @@ int subprocess_test_main(char *CMD){
   READ_STDOUT = stringbuffer_to_string(SB);
 
   stringbuffer_release(SB);
-  dbg(command_line[2], %s);
+  dbg(command_line[4], %s);
   dbg(strlen(READ_STDOUT), %lu);
   if (DEBUG_STDOUT) {
     fprintf(stderr, "%s", READ_STDOUT);

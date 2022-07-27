@@ -55,6 +55,8 @@ deps_test_deps = [
   bench_dep,
   bitfield_dep,
   uthash_dep,
+  debug_memory_dep,
+  incbin_dep,
   libut_dep,
 ]
 deps_c_args = [

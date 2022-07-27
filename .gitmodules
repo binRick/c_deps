@@ -613,3 +613,6 @@
 [submodule "submodules/libut"]
 	path = submodules/libut
 	url = https://github.com/troydhanson/libut
+[submodule "submodules/kgflags"]
+	path = submodules/kgflags
+	url = https://github.com/kgabis/kgflags
