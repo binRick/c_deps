@@ -23,7 +23,7 @@ if get_option('enable-binaries')
      dependencies: c_meson_utils_cli_deps,
      include_directories: c_meson_utils_cli_inc,
   )
-  if get_option('enable-binary-clis')
-    cli('meson-utils-cli', c_meson_utils_cli_exec, args: [])
+  if get_option('enable-binary-tests')
+    test('meson-utils-cli', c_meson_utils_cli_exec, args: [])
   endif
 endif

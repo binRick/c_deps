@@ -8,7 +8,6 @@ assertf_lib = library('assertf',
 assertf_dep = declare_dependency(include_directories: [
         '../../../submodules/assertf',
     ], 
-    link_with: assertf_lib
+    link_with: []
 )
 
-#deps += assertf_dep

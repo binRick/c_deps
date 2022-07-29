@@ -26,8 +26,6 @@ deps_test_deps = [
   subhook_dep,
   socket99_dep,
   flingfd_dep,
-  env_h_dep,
-  throw_h_dep,
   c_timestamp_dep,
   libforks_dep,
   colorwheel_dep,

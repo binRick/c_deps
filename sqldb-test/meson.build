@@ -11,8 +11,6 @@ sqldb_include_dirs = [
 sqldb_test_sqldb = [
   c_vector_dep,
   generic_print_dep,
-  env_h_dep,
-  throw_h_dep,
   c_timestamp_dep,
   timestamp_dep,
   c_stringfn_dep,

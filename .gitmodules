@@ -625,3 +625,18 @@
 [submodule "submodules/c_unja"]
 	path = submodules/c_unja
 	url = git@github.com:binRick/c_unja.git
+[submodule "submodules/httpserver.h"]
+	path = submodules/httpserver.h
+	url = https://github.com/jeremycw/httpserver.h
+[submodule "submodules/libtrycatch"]
+	path = submodules/libtrycatch
+	url = https://github.com/Midar/libtrycatch
+[submodule "submodules/libdotenv"]
+	path = submodules/libdotenv
+	url = https://github.com/briandowns/libdotenv
+[submodule "submodules/img"]
+	path = submodules/img
+	url = https://github.com/tj/img
+[submodule "submodules/dns"]
+	path = submodules/dns
+	url = https://github.com/wahern/dns
