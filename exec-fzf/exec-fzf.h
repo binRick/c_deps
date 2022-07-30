@@ -16,16 +16,12 @@
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/include/vector.h"
+#include "reproc/reproc.h"
 #include "submodules/log.h/log.h"
 #include "tempdir.c/tempdir.h"
 #include "timestamp/timestamp.h"
 #include "which/src/which.h"
-#include "reproc/reproc.h"
 //////////////////////////////////////////////
-int execute_fzf_process();
-static void setup_fzf_exec(void);
-static void __attribute__((destructor)) __exec_fzf_destructor();
-static void __attribute__((constructor)) __exec_fzf_constructor();
 struct fzf_exec_t {
   struct Vector          *input_options;
   struct Vector          *selected_options;
@@ -42,5 +38,13 @@ struct fzf_exec_t {
   int                    proc_exit_code;
   reproc_t               *proc;
   reproc_options         reproc_options;
+  bool                   debug_mode;
 };
 
+struct fzf_exec_t *setup_fzf_exec(void);
+void release_fzf_exec(struct fzf_exec_t *fzf_exec);
+int execute_fzf_process();
+
+static void __attribute__((destructor)) __exec_fzf_destructor();
+
+static void __attribute__((constructor)) __exec_fzf_constructor();

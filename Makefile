@@ -23,7 +23,8 @@ TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *
 			   reproc-test/*.c reproc-test/*.h \
 			   list-test/*.c list-test/*.h \
 			   *-test/*.c *-test/*.h \
-			   intro*/*.c intro*/*.h 
+			   intro*/*.c intro*/*.h \
+			   exec-fzf*/*.c exec-fzf*/*.h 
 ########################################################
 TRIGGER_FILE=.trigger.c
 ##############################################################

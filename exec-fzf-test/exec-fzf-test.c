@@ -8,7 +8,8 @@
 #include <time.h>
 #include <unistd.h>
 //////////////////////////////////////////////
-#include "exec-fzf.h"
+#include "exec-fzf-test/exec-fzf-test.h"
+#include "exec-fzf/exec-fzf.h"
 //////////////////////////////////////////////
 #ifdef DEBUG_MEMORY
 #include "debug-memory/debug_memory.h"
@@ -24,20 +25,34 @@
 #include "timestamp/timestamp.h"
 #include "which/src/which.h"
 //////////////////////////////////////////////
-#define NUM_CHILDREN    10
-//////////////////////////////////////////////
 static void __attribute__((destructor)) __exec_fzf_test_destructor();
 
 static void __attribute__((constructor)) __exec_fzf_test_constructor();
 
+
 //////////////////////////////////////////////
-extern struct fzf_exec_t *fzf_exec;
 
 
 TEST t_reproc_fzf_process(void){
-  int res = execute_fzf_process();
+  int               res = -1;
 
+  struct fzf_exec_t *fzf_exec = setup_fzf_exec();
+
+  ASSERT_NEQm("fzf setup OK", fzf_exec, NULL);
+  fzf_exec->header     = "my header 123444";
+  fzf_exec->debug_mode = false;
+  vector_push(fzf_exec->input_options, "option 1");
+  vector_push(fzf_exec->input_options, "option 2");
+  vector_push(fzf_exec->input_options, "option 3");
+  vector_push(fzf_exec->input_options, "option wow............");
+
+  res = execute_fzf_process(fzf_exec);
   ASSERT_EQm("fzf process OK", res, 0);
+  release_fzf_exec(fzf_exec);
+
+  log_info("Selected %lu/%lu options", vector_size(fzf_exec->selected_options), vector_size(fzf_exec->input_options));
+
+
   PASS();
 }
 
@@ -58,9 +73,6 @@ int main(int argc, char **argv) {
 static void __attribute__((constructor)) __exec_fzf_test_constructor(){
 }
 static void __attribute__((destructor)) __exec_fzf_test_destructor(){
-  if (fzf_exec) {
-    free(fzf_exec);
-  }
 #ifdef DEBUG_MEMORY
   fprintf(stderr, "<%d> [%s] Checking for memory leaks\n", getpid(), __FUNCTION__);
   print_allocated_memory();
