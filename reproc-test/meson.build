@@ -1,5 +1,6 @@
 reproc_test_srcs = [
   'reproc-test.c',
+  'reproc-test-fzf.c',
 ]
 reproc_test_inc = [
  inc,
