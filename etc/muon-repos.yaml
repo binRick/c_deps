@@ -28,7 +28,7 @@ tasks:
         cmd: env bash -c "cd ~/repos/%/. && muon samu -C build-muon -j 20 -k 1"
 
   - name: Test Muon Repos
-    tags: [build,test]
+    tags: [test]
     parallel-tasks:
       - name: Test Muon Repo %
         for-each: *meson-dirs

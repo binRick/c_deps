@@ -77,7 +77,7 @@ if get_option('enable-binaries')
      c_args: deps_c_args,
      install: true,
   )
-  if get_option('enable-binary-tests')
+  if get_option('enable-deps-test')
     test('deps-test', 
       deps_test_exec, args: ['-v','-a'],
       workdir: meson.current_source_dir(),

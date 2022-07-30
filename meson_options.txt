@@ -10,3 +10,9 @@ option('enable-binary-tests',
   description : 'Enables binary tests.'
 )
 
+option('enable-deps-test',
+  type : 'boolean',
+  value : false,
+  description : 'Enables deps-test tests.'
+)
+

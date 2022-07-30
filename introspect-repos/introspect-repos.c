@@ -104,16 +104,16 @@ typedef struct  MESON_JOB_RESULT_T {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////             HANDLE REPOSITORY EXECUTABLES                                                  ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#define HANDLE_TEST_EXECUTABLES(TEST_EXECUTABLES_v)                  \
-  { do{                                                              \
-      char *TEST_EXECUTABLE;                                         \
+#define HANDLE_TEST_EXECUTABLES(TEST_EXECUTABLES_v) \
+  { do{                                             \
+      char *TEST_EXECUTABLE;                        \
       //dbg(vector_size(TEST_EXECUTABLES_v), %lu);                    \
-      for (size_t i = 0; i < vector_size(TEST_EXECUTABLES_v); i++) { \
-        TEST_EXECUTABLE = (char *)vector_get(TEST_EXECUTABLES_v, i); \
-        //dbg(TEST_EXECUTABLE, %s);                                   \
-      }                                                              \
-      free(TEST_EXECUTABLE);                                         \
-    }while (0); }
+      //       for (size_t i = 0; i < vector_size(TEST_EXECUTABLES_v); i++) { \
+      //         TEST_EXECUTABLE = (char *)vector_get(TEST_EXECUTABLES_v, i); \
+      //dbg(TEST_EXECUTABLE, %s);                                   \
+      //       }                                                              \
+      //       free(TEST_EXECUTABLE);                                         \
+      //     }while (0); }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////             PARSE MESON JOB RESULT                                                         ////
@@ -408,11 +408,11 @@ struct Vector *get_meson_paths(char *BASE_PATH, char *PATH_FILTER, size_t PATH_L
       if (DEBUG_REGEX) {
         /*
          * dbg(regexes.strings[i], %s);
-        dbg((char *)file.name, %s);
-        dbg(match_length, %d);
-        dbg(IS_MATCH ? "Yes" : "No", %s);
-        dbg(match_idx, %d);
-        */
+         * dbg((char *)file.name, %s);
+         * dbg(match_length, %d);
+         * dbg(IS_MATCH ? "Yes" : "No", %s);
+         * dbg(match_idx, %d);
+         */
       }
     }
 
@@ -674,11 +674,11 @@ char *execute_meson_introspect(void *_MESON_PATH){
   stringbuffer_release(SB);
 
   if (DEBUG_STDOUT) {
-      /*
-    dbg(exited, %d);
-    dbg(command_line[2], %s);
-    dbg(strlen(READ_STDOUT), %lu);
-    */
+    /*
+     * dbg(exited, %d);
+     * dbg(command_line[2], %s);
+     * dbg(strlen(READ_STDOUT), %lu);
+     */
     fprintf(stderr, "%s", READ_STDOUT);
   }
   write_cached_key_file_content(MESON_PATH, READ_STDOUT);

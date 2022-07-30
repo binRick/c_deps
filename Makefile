@@ -166,7 +166,7 @@ meson-tests:
 
 bashful-pre:
 	@ansi --save-palette
-	@kfc -s vscode
+	@kfc -p vscode
 	@ansi --hide-cursor
 	@clear
 
