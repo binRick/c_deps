@@ -16,7 +16,7 @@ c_meson_utils_deps = [
 ]
 
 
-c_meson_utils_lib = library('c-meson-utils', 
+c_meson_utils_lib = static_library('c-meson-utils', 
   c_meson_utils_srcs,
   install: false, 
   dependencies: c_meson_utils_deps,

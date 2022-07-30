@@ -12,7 +12,7 @@ wg_deps = [
 ]
 
 
-wg_lib = library('wg',
+wg_lib = static_library('wg',
   wg_srcs,
   install: false,
   dependencies: wg_deps,

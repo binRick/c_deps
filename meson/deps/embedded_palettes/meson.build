@@ -2,7 +2,7 @@ embedded_palettes_srcs = [
   meson_deps_dir+'/submodules/c_palettes/embeds/tbl1.c',
 ]
 
-embedded_palettes_lib = library('embedded_palettes', 
+embedded_palettes_lib = static_library('embedded_palettes', 
   embedded_palettes_srcs,
   install: false, 
   dependencies: [], 

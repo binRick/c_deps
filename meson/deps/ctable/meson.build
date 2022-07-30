@@ -6,7 +6,7 @@ ctable_srcs = [
   meson_deps_dir + '/submodules/ctable/src/printing.c',
   meson_deps_dir + '/submodules/ctable/src/vector.c',
   ]  
-ctable_lib = library('ctable',
+ctable_lib = static_library('ctable',
   ctable_srcs,
   install: false, 
   dependencies: [

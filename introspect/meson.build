@@ -15,13 +15,13 @@ introspect_deps = [
  greatest_dep,
  ansi_codes_dep,
  logh_dep,
- parson_dep,
  ee_dep,
+ parson_dep,
  debug_memory_dep,
 ]
 
 
-introspect_lib = library('introspect',
+introspect_lib = static_library('introspect',
   introspect_srcs,
   install: false,
   dependencies: introspect_deps,

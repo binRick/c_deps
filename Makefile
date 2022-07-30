@@ -64,6 +64,27 @@ fix-dbg:
 	@$(SED) 's|, % d);|, %d);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % zu);|, %zu);|g' -i $(TIDIED_FILES)
 install: do-install
+
+
+do-muon-setup:
+	@muon setup build-muon
+
+do-muon-clean:
+	@rm -rf build-muon
+
+do-muon-build:
+	@muon samu -C build-muon
+
+do-muon-install:
+	@cd build-muon && muon install
+
+
+do-muon-test:
+	@cd build-muon && muon test
+
+
+build-muon: do-muon-setup do-muon-build do-muon-test
+
 do-install: all
 	@meson install -C build
 rm-make-logs:
@@ -157,6 +178,7 @@ bashful: bashful-pre do-bashful bashful-post
 bashful-clean: bashful-pre do-bashful-clean bashful-post
 bashful-tidy: bashful-pre do-bashful-tidy bashful-post
 bashful-build: bashful-pre do-bashful-build bashful-post
+bashful-muon-build: bashful-pre do-bashful-muon-build bashful-post
 bashful-git-status: bashful-pre do-bashful-git-status bashful-post
 bashful-git-diff: bashful-pre do-bashful-git-diff bashful-post
 bashful-build-commands: bashful-pre do-bashful-build-commands bashful-post
@@ -170,6 +192,8 @@ do-bashful-clean:
 	@passh -L /tmp/meson-repos-do-clean.log bashful run --tags clean etc/meson-repos.yaml
 do-bashful-tidy:
 	@passh -L /tmp/meson-repos-do-tidy.log bashful run --tags tidy etc/meson-repos.yaml
+do-bashful-muon-build:
+	@passh -L /tmp/meson-repos-do-build.log bashful run --tags build etc/muon-repos.yaml
 do-bashful-build:
 	@passh -L /tmp/meson-repos-do-build.log bashful run --tags build etc/meson-repos.yaml
 do-bashful-build-commands:

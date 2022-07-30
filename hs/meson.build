@@ -12,7 +12,7 @@ hs_deps = [
 ]
 
 
-hs_lib = library('hs',
+hs_lib = static_library('hs',
   hs_srcs,
   install: false,
   dependencies: hs_deps,

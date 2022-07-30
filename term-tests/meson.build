@@ -15,7 +15,7 @@ term_tests_deps = [
   timestamp_dep,  
 ]
 
-term_tests_lib = library('term-tests',
+term_tests_lib = static_library('term-tests',
   term_tests_srcs,
   install: false,
   dependencies: term_tests_deps,

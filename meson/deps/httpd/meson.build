@@ -11,7 +11,7 @@ httpd_deps = [
 
 ]
 
-httpd_lib = shared_library('httpd',
+httpd_lib = static_library('httpd',
   httpd_srcs,
   install: false,
   dependencies: httpd_deps,

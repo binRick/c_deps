@@ -14,7 +14,7 @@ libtermkey_deps = [
 
 ]
 
-libtermkey_lib = shared_library('libtermkey',
+libtermkey_lib = static_library('libtermkey',
   libtermkey_srcs,
   install: false,
   dependencies: libtermkey_deps,

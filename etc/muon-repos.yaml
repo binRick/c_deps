@@ -1,0 +1,37 @@
+$include: etc/reference-data.yaml
+$include: etc/config.yaml
+
+
+tasks:
+  - name: Clean Muon Repos
+    tags: [clean]
+    parallel-tasks:
+      - name: Clean Muon Repo %
+        for-each: *meson-dirs
+        ignore-failure: false
+        cmd: env bash -c "cd ~/repos/%/. && rm -rf build-muon"
+
+  - name: Setup Muon Repos
+    tags: [build,setup]
+    parallel-tasks:
+      - name: Setup Muon Repo %
+        for-each: *meson-dirs
+        ignore-failure: false
+        cmd: env bash -c "cd ~/repos/%/. && muon setup -Db_colorout=always build-muon"
+
+  - name: Build Muon Repos
+    tags: [build]
+    parallel-tasks:
+      - name: Build Muon Repo %
+        for-each: *meson-dirs
+        ignore-failure: false
+        cmd: env bash -c "cd ~/repos/%/. && muon samu -C build-muon -j 20 -k 1"
+
+  - name: Test Muon Repos
+    tags: [build,test]
+    parallel-tasks:
+      - name: Test Muon Repo %
+        for-each: *meson-dirs
+        ignore-failure: false
+        cmd: env bash -c "cd ~/repos/%/. && muon -C build-muon test -w 20 -f"
+

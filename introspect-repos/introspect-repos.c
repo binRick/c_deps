@@ -9,7 +9,6 @@
 #include <time.h>
 #include <unistd.h>
 //////////////////////////////////////////////
-#include "dbg/dbg.h"
 #include "generic-print/print.h"
 #include "introspect-repos.h"
 #include "log.h/log.h"
@@ -108,10 +107,10 @@ typedef struct  MESON_JOB_RESULT_T {
 #define HANDLE_TEST_EXECUTABLES(TEST_EXECUTABLES_v)                  \
   { do{                                                              \
       char *TEST_EXECUTABLE;                                         \
-      dbg(vector_size(TEST_EXECUTABLES_v), %lu);                    \
+      //dbg(vector_size(TEST_EXECUTABLES_v), %lu);                    \
       for (size_t i = 0; i < vector_size(TEST_EXECUTABLES_v); i++) { \
         TEST_EXECUTABLE = (char *)vector_get(TEST_EXECUTABLES_v, i); \
-        dbg(TEST_EXECUTABLE, %s);                                   \
+        //dbg(TEST_EXECUTABLE, %s);                                   \
       }                                                              \
       free(TEST_EXECUTABLE);                                         \
     }while (0); }
@@ -407,11 +406,13 @@ struct Vector *get_meson_paths(char *BASE_PATH, char *PATH_FILTER, size_t PATH_L
         found_match = true;
       }
       if (DEBUG_REGEX) {
-        dbg(regexes.strings[i], %s);
+        /*
+         * dbg(regexes.strings[i], %s);
         dbg((char *)file.name, %s);
         dbg(match_length, %d);
         dbg(IS_MATCH ? "Yes" : "No", %s);
         dbg(match_idx, %d);
+        */
       }
     }
 
@@ -508,9 +509,9 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
 
   for (int i = 0; i < vector_size(REPOSITORY_EXECUTABLES_v); i++) {
     REPOSITORY_EXECUTABLE = (char *)vector_get(REPOSITORY_EXECUTABLES_v, i);
-    dbg(REPOSITORY_EXECUTABLE, %s);
+    //dbg(REPOSITORY_EXECUTABLE, %s);
   }
-  dbg(vector_size(TEST_EXECUTABLES_v), %d);
+  //dbg(vector_size(TEST_EXECUTABLES_v), %d);
   for (int i = 0; i < vector_size(TEST_EXECUTABLES_v); i++) {
     TEST_EXECUTABLE = (char *)vector_get(TEST_EXECUTABLES_v, i);
     char   *src_file = malloc(strlen(TEST_EXECUTABLE) + 1024);
@@ -528,13 +529,14 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
         if (s01.count == 2) {
           struct StringFNStrings s02         = stringfn_split(s01.strings[0], '(');
           char                   *SUITE_NAME = s02.strings[1];
-          dbg(SUITE_NAME, %s);
+          //dbg(SUITE_NAME, %s);
         }
       }
     }
     free(src_file);
     free(src_file_contents);
   }
+  generate_results_table(MESON_RESULTS);
 } /* iterate_parse_results */
 
 
@@ -657,7 +659,7 @@ char *execute_meson_introspect(void *_MESON_PATH){
                        index                                  = 0;
 
   result = subprocess_create(command_line, 0, &subprocess);
-  assert_eq(result, 0, %d);
+  assert(result == 0);
   do {
     bytes_read = subprocess_read_stdout(&subprocess, stdout_buffer, STDOUT_READ_BUFFER_SIZE - 1);
     stringbuffer_append_string(SB, stdout_buffer);
@@ -665,16 +667,18 @@ char *execute_meson_introspect(void *_MESON_PATH){
   } while (bytes_read != 0);
 
   result = subprocess_join(&subprocess, &exited);
-  assert_eq(result, 0, %d);
-  assert_eq(exited, 0, %d);
+  assert(result == 0);
+  assert(exited == 0);
 
   READ_STDOUT = stringbuffer_to_string(SB);
   stringbuffer_release(SB);
 
   if (DEBUG_STDOUT) {
+      /*
     dbg(exited, %d);
     dbg(command_line[2], %s);
     dbg(strlen(READ_STDOUT), %lu);
+    */
     fprintf(stderr, "%s", READ_STDOUT);
   }
   write_cached_key_file_content(MESON_PATH, READ_STDOUT);
@@ -736,11 +740,11 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
 
   int res = pthread_create(&waiter_thread, NULL, receive_meson_results, (void *)vector_size(MESON_PATHS));
 
-  assert_eq(0, res, %d);
+  assert(0 == res);
 
   for (size_t i = 0; (i < WORKERS_QTY) && (i < vector_size(MESON_PATHS)); i++) {
     int res = pthread_create(&worker_threads[i], NULL, execute_meson_job, (void *)i);
-    assert_eq(0, res, %d);
+    assert(0 == res);
     workers_qty++;
   }
   for (size_t i = 0; i < vector_size(MESON_PATHS); i++) {

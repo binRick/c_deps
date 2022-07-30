@@ -29,8 +29,8 @@ void on_shared_library_target_json_value(void *arg) {
   char        *name = json_object_get_string(O, "name");
   char        *type = json_object_get_string(O, "type");
 
-  dbg(name, %s);
-  dbg(type, %s);
+  //dbg(name, %s);
+  //dbg(type, %s);
 }
 
 
@@ -40,8 +40,8 @@ void on_static_library_target_json_value(void *arg) {
   char        *name = json_object_get_string(O, "name");
   char        *type = json_object_get_string(O, "type");
 
-  dbg(name, %s);
-  dbg(type, %s);
+  //dbg(name, %s);
+  //dbg(type, %s);
 }
 
 
@@ -51,8 +51,8 @@ void on_executable_target_json_value(void *arg) {
   char        *name = json_object_get_string(O, "name");
   char        *type = json_object_get_string(O, "type");
 
-  dbg(name, %s);
-  dbg(type, %s);
+  //dbg(name, %s);
+  //dbg(type, %s);
 }
 
 
@@ -87,10 +87,6 @@ TEST t_parse_results(){
 
 TEST t_introspect_paths(){
   INTROSPECTED_PATHS = execute_meson_introspects(MESON_PATHS);
-  dbg(vector_size(INTROSPECTED_PATHS), %lu);
-  for (size_t i = 0; i < vector_size(INTROSPECTED_PATHS); i++) {
-    //dbg((char*)vector_get(INTROSPECTED_PATHS,i),%s);
-  }
   PASS();
 }
 
@@ -98,9 +94,9 @@ TEST t_introspect_paths(){
 TEST t_get_paths(){
   MESON_PATHS = get_meson_paths(BASE_PATH, PATH_FILTER, MESON_PROJECTS_LIMIT);
   ASSERT_GTE(vector_size(MESON_PATHS), 0);
-  dbg(vector_size(MESON_PATHS), %lu);
+  //dbg(vector_size(MESON_PATHS), %lu);
   for (size_t i = 0; i < vector_size(MESON_PATHS); i++) {
-    dbg((char *)vector_get(MESON_PATHS, i), %s);
+    //dbg((char *)vector_get(MESON_PATHS, i), %s);
   }
   PASS();
 }

@@ -17,11 +17,12 @@ libansilove_srcs = [
   '../../../submodules/libansilove/compat/strtonum.c',
   '../../../submodules/libansilove/compat/reallocarray.c',
 ]
+
 libansilove_lib = static_library('libansilove', 
   libansilove_srcs,
-  install: false,
   dependencies: [
     gd_dep,
+    png_dep,
   ], 
   include_directories: [
     inc,

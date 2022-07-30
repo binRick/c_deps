@@ -10,7 +10,7 @@ sqldb_include_dirs = [
 ]
 sqldb_test_sqldb = [
   c_vector_dep,
-  generic_print_dep,
+  
   c_timestamp_dep,
   timestamp_dep,
   c_stringfn_dep,
@@ -37,7 +37,6 @@ if get_option('enable-binaries')
      link_args: sqldb_link_args,
      c_args: sqldb_c_args,
      install: true,
-     pie: true,
   )
   if get_option('enable-binary-tests')
     test('sqldb-test', 
@@ -45,7 +44,6 @@ if get_option('enable-binaries')
       timeout: 60,
       is_parallel: true,
       workdir: meson.current_source_dir(),
-      verbose: true,
       )
   endif
 endif

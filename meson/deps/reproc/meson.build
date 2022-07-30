@@ -1,4 +1,4 @@
-reproc_lib = library('reproc',
+reproc_lib = static_library('reproc',
   '../../../submodules/reproc/reproc/src/clock.posix.c',
   '../../../submodules/reproc/reproc/src/drain.c',
   '../../../submodules/reproc/reproc/src/error.posix.c',

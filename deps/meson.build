@@ -28,7 +28,7 @@ deps_deps = [
   debug_memory_dep,
   djbhash_dep,
   fs_dep,
-  generic_print_dep,
+  
   greatest_dep,
   http_get_dep,
   incbin_dep,
@@ -36,8 +36,8 @@ deps_deps = [
   module_dep,
   ms_dep,
   #  occurrences_dep,
-  parson_dep,
   progress_dep,
+  parson_dep,
   rgba_dep,
   smaz_dep,
   sqlite3_dep,

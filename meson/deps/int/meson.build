@@ -12,7 +12,7 @@ int_deps = [
 
 ]
 
-int_lib = shared_library('int',
+int_lib = static_library('int',
   int_srcs,
   install: false,
   dependencies: int_deps,

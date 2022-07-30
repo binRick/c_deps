@@ -3,11 +3,19 @@ djbhash_dir =  'submodules/djbhash'
 djbhash_srcs = [
   meson_deps_dir + '/' + djbhash_dir + '/src/djbhash.c',
 ]
+djbhash_cargs = [
+  '-Wno-pointer-sign',
+  '-Wno-return-type',
+  '-Wno-varargs',
+  '-Wno-unused-value',
+  '-Wno-pragma-once-outside-header',
+  ]
 djbhash_inc = [
   inc,
 ]
 djbhash_lib = static_library('djbhash', djbhash_srcs,
   install: false, 
+  c_args: djbhash_cargs,
   dependencies: [
   ], 
   include_directories: djbhash_inc,

@@ -5,7 +5,7 @@ reflect_include_dirs = [
   inc,
 ]
 reflect_test_reflect = [
-  generic_print_dep,
+  
   logh_dep,
   dbg_dep,
   dmt_dep,
@@ -24,7 +24,7 @@ if get_option('enable-binaries')
      link_args: reflect_link_args,
      c_args: reflect_c_args,
      install: true,
-     pie: true,
+     ,
   )
   if get_option('enable-binary-tests')
     test('reflect-test', 

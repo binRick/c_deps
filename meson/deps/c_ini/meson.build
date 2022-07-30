@@ -29,7 +29,7 @@ c_ini_deps = [
   c_fsio_dep,
 ]
 
-c_ini_lib = shared_library('c_ini',
+c_ini_lib = static_library('c_ini',
   c_ini_srcs,
   install: false,
   dependencies: c_ini_deps,

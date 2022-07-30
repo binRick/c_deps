@@ -2,7 +2,7 @@ murmurhash_inc = [
   '../../../submodules/murmurhash.c',
   inc,
 ]
-murmurhash_lib = library('murmurhash', 
+murmurhash_lib = static_library('murmurhash', 
   '../../../submodules/murmurhash.c/murmurhash.c',
   install: false, 
   dependencies: [

@@ -18,8 +18,8 @@ introspect_repos_deps = [
  dbg_dep,
  greatest_dep,
  logh_dep,
- parson_dep,
  ee_dep,
+ parson_dep,
  debug_memory_dep,
  tinydir_dep,
  wildcardcmp_dep,
@@ -31,7 +31,7 @@ introspect_repos_deps = [
  c_vector_dep,
  subprocess_dep,
  path_normalize_dep,
- generic_print_dep,
+ 
  timestamp_dep,
  bytes_dep,
  tiny_regex_c_dep,
@@ -41,12 +41,15 @@ introspect_repos_deps = [
  ctable_dep,
  progress_dep,
 ]
+introspect_repos_cargs = [
+  '-Wno-macro-redefined',
+  ]
 
-
-introspect_repos_lib = library('introspect-repos',
+introspect_repos_lib = static_library('introspect-repos',
   introspect_repos_srcs,
   install: true,
   dependencies: introspect_repos_deps,
+  c_args: introspect_repos_cargs,
   include_directories: introspect_repos_inc,
 )
 

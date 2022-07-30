@@ -5,8 +5,21 @@ osx_img_flags =     get_variable('osx_imgflags', [])
 
 
 osx_ldflags +=  ['-Wl,-framework,CoreFoundation']
+osx_ldflags +=  ['-Wl,-framework,CoreAudio']
+osx_ldflags +=  ['-Wl,-framework,ForceFeedback']
+osx_ldflags +=  ['-Wl,-framework,GameController']
+osx_ldflags +=  ['-Wl,-framework,SystemExtensions']
+osx_ldflags +=  ['-Wl,-framework,DeviceCheck']
+osx_ldflags +=  ['-Wl,-framework,AudioUnit']
+osx_ldflags +=  ['-Wl,-framework,AudioToolbox']
+osx_ldflags +=  ['-Wl,-framework,CoreHaptics']
 osx_ldflags +=  ['-Wl,-framework,Carbon']
+osx_ldflags +=  ['-Wl,-framework,Metal']
+osx_ldflags +=  ['-Wl,-framework,MetalKit']
 osx_ldflags +=  ['-Wl,-framework,ApplicationServices']
+osx_ldflags +=  ['-Wl,-framework,QuartzCore']
+osx_ldflags +=  ['-Wl,-framework,ICADevices']
+osx_ldflags +=  ['-Wl,-framework,DeviceCheck']
 osx_ldflags +=  ['-Wl,-framework,Foundation']
 osx_ldflags +=  ['-Wl,-framework,AppKit']
 osx_ldflags +=  ['-Wl,-framework,IOKit']
@@ -24,6 +37,7 @@ osx_wg_flags +=  ['-DRWIMG_GIF']
 osx_img_flags +=  ['-lpng']
 osx_img_flags +=  ['-ljpeg']
 osx_img_flags +=  ['-lgif']
+osx_img_flags +=  ['-l','iconv']
 
 add_global_link_arguments(osx_ldflags,     language : ['c'])
 add_global_link_arguments(osx_audit_flags, language : ['c'])

@@ -2,11 +2,10 @@ debug_memory_inc = [
     inc,
   '../../../submodules/debug-memory',
 ]
-debug_memory_lib = library('debug-memory', 
+debug_memory_lib = static_library('debug-memory', 
   '../../../submodules/debug-memory/debug_memory.c',
   install: false, 
   dependencies: [
-
   ], 
   include_directories: inc,
 )

@@ -22,7 +22,7 @@ wsServer_deps = [
 
 ]
 
-wsServer_lib = shared_library('wsServer',
+wsServer_lib = static_library('wsServer',
   wsServer_srcs,
   install: false,
   dependencies: wsServer_deps,

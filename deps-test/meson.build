@@ -15,7 +15,7 @@ deps_test_deps = [
   str_replace_dep,
   tiny_regex_c_dep,
   c_vector_dep,
-  generic_print_dep,
+  
   murmurhash_dep,
   libbeaufort_dep,
   bitset_dep,
@@ -27,6 +27,8 @@ deps_test_deps = [
   socket99_dep,
   flingfd_dep,
   c_timestamp_dep,
+  libtrycatch_dep,
+  querystring_c_dep,
   libforks_dep,
   colorwheel_dep,
   siphash_dep,
@@ -60,6 +62,8 @@ deps_test_deps = [
   libut_dep,
 ]
 deps_c_args = [
+  '-DINCBIN_SILENCE_BITCODE_WARNING',
+  '-Wno-macro-redefined',
 ]
 deps_link_args = [
 ]
@@ -72,15 +76,11 @@ if get_option('enable-binaries')
      link_args: deps_link_args,
      c_args: deps_c_args,
      install: true,
-     pie: true,
   )
   if get_option('enable-binary-tests')
     test('deps-test', 
       deps_test_exec, args: ['-v','-a'],
-      timeout: 20,
-      is_parallel: true,
       workdir: meson.current_source_dir(),
-      verbose: true,
       )
   endif
 endif

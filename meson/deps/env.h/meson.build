@@ -10,7 +10,7 @@ env_h_deps = [
 
 ]
 
-#env_h_lib = shared_library('env.h',
+#env_h_lib = static_library('env.h',
 #  env_h_srcs,
 #  install: false,
 #  dependencies: env_h_deps,

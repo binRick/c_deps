@@ -20,7 +20,6 @@ if get_option('enable-binaries')
      link_args: kgflags_link_args,
      c_args: kgflags_c_args,
      install: true,
-     pie: true,
   )
   if get_option('enable-binary-tests')
     test('kgflags-test', 
@@ -28,7 +27,6 @@ if get_option('enable-binaries')
       timeout: 20,
       is_parallel: true,
       workdir: meson.current_source_dir(),
-      verbose: true,
       )
   endif
 endif

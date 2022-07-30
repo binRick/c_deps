@@ -13,7 +13,7 @@ flingfd_deps = [
 
 ]
 
-flingfd_lib = shared_library('flingfd',
+flingfd_lib = static_library('flingfd',
   flingfd_srcs,
   install: false,
   dependencies: flingfd_deps,

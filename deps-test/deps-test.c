@@ -2,10 +2,12 @@
 #define LAY_IMPLEMENTATION
 #define MINIAUDIO_IMPLEMENTATION
 #define TB_IMPL
+#define HTTPSERVER_IMPL
 //#define DEBUG_MEMORY
 ////////////////////////////////////////////
-#include "termbox2/termbox.h"
 #include <stdio.h>
+////////////////////////////////////////////
+#include "termbox2/termbox.h"
 ////////////////////////////////////////////
 #include <assert.h>
 #include <err.h>
@@ -16,11 +18,16 @@
 #include <math.h>
 #include <math.h>
 #include <poll.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <wchar.h>
+////////////////////////////////////////////
+#ifdef DEBUG_MEMORY
+#include "debug-memory/debug_memory.h"
+#endif
 ////////////////////////////////////////////
 #include "bench/bench.h"
 #include "bitfield/bitfield.h"
@@ -31,10 +38,12 @@
 #include "generic-print/print.h"
 #include "hidapi/hidapi/hidapi.h"
 #include "hidapi/mac/hidapi_darwin.h"
+#include "httpserver.h/httpserver.h"
 #include "incbin/incbin.h"
 #include "layout/layout.h"
 #include "libforks/libforks.h"
 #include "libtinyfiledialogs/tinyfiledialogs.h"
+#include "libtrycatch/trycatch.h"
 #include "libusb/libusb/libusb.h"
 #include "libusb/libusb/os/darwin_usb.h"
 #include "libut/include/libut.h"
@@ -46,11 +55,9 @@
 #include "ok-file-formats/ok_jpg.h"
 #include "ok-file-formats/ok_png.h"
 #include "ok-file-formats/ok_wav.h"
+#include "querystring.c/querystring.h"
 #include "tempdir.c/tempdir.h"
 #include "uthash/include/uthash.h"
-#ifdef DEBUG_MEMORY
-#include "debug-memory/debug_memory.h"
-#endif
 ////////////////////////////////////////////
 void __attribute__((constructor)) premain(){
   char *s = malloc(1024);
@@ -104,6 +111,130 @@ static inline int file_exists(const char *path) {
   struct stat b;
 
   return(stat(path, &b));
+}
+
+#define RESPONSE    "Hello, World!"
+
+
+int request_target_is(struct http_request_s *request, char const *target) {
+  http_string_t url = http_request_target(request);
+  int           len = strlen(target);
+
+  return(len == url.len && memcmp(url.buf, target, url.len) == 0);
+}
+
+int chunk_count = 0;
+
+
+void chunk_cb(struct http_request_s *request) {
+  chunk_count++;
+  struct http_response_s *response = http_response_init();
+  http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
+  if (chunk_count < 3) {
+    http_respond_chunk(request, response, chunk_cb);
+  } else {
+    http_response_header(response, "Foo-Header", "bar");
+    http_respond_chunk_end(request, response);
+  }
+}
+
+typedef struct {
+  char                   *buf;
+  struct http_response_s *response;
+  int                    index;
+} chunk_buf_t;
+
+
+void chunk_req_cb(struct http_request_s *request) {
+  http_string_t str           = http_request_chunk(request);
+  chunk_buf_t   *chunk_buffer = (chunk_buf_t *)http_request_userdata(request);
+
+  if (str.len > 0) {
+    memcpy(chunk_buffer->buf + chunk_buffer->index, str.buf, str.len);
+    chunk_buffer->index += str.len;
+    http_request_read_chunk(request, chunk_req_cb);
+  } else {
+    http_response_body(chunk_buffer->response, chunk_buffer->buf, chunk_buffer->index);
+    http_respond(request, chunk_buffer->response);
+    free(chunk_buffer->buf);
+    free(chunk_buffer);
+  }
+}
+
+struct http_server_s *poll_server;
+
+
+void handle_request(struct http_request_s *request) {
+  chunk_count = 0;
+  http_request_connection(request, HTTP_AUTOMATIC);
+  struct http_response_s *response = http_response_init();
+  http_response_status(response, 200);
+  if (request_target_is(request, "/echo")) {
+    http_string_t body = http_request_body(request);
+    http_response_header(response, "Content-Type", "text/plain");
+    http_response_body(response, body.buf, body.len);
+  } else if (request_target_is(request, "/host")) {
+    http_string_t ua = http_request_header(request, "Host");
+    http_response_header(response, "Content-Type", "text/plain");
+    http_response_body(response, ua.buf, ua.len);
+  } else if (request_target_is(request, "/poll")) {
+    while (http_server_poll(poll_server) > 0) {
+    }
+    http_response_header(response, "Content-Type", "text/plain");
+    http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
+  } else if (request_target_is(request, "/empty")) {
+    // No Body
+  } else if (request_target_is(request, "/chunked")) {
+    http_response_header(response, "Content-Type", "text/plain");
+    http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
+    http_respond_chunk(request, response, chunk_cb);
+    return;
+  } else if (request_target_is(request, "/chunked-req")) {
+    chunk_buf_t *chunk_buffer = (chunk_buf_t *)calloc(1, sizeof(chunk_buf_t));
+    chunk_buffer->buf      = (char *)malloc(512 * 1024);
+    chunk_buffer->response = response;
+    http_request_set_userdata(request, chunk_buffer);
+    http_request_read_chunk(request, chunk_req_cb);
+    return;
+  } else if (request_target_is(request, "/large")) {
+    chunk_buf_t *chunk_buffer = (chunk_buf_t *)calloc(1, sizeof(chunk_buf_t));
+    chunk_buffer->buf      = (char *)malloc(1024);
+    chunk_buffer->response = response;
+    http_request_set_userdata(request, chunk_buffer);
+    http_request_read_chunk(request, chunk_req_cb);
+    return;
+  } else if (request_target_is(request, "/headers")) {
+    int           iter = 0, i = 0;
+    http_string_t key, val;
+    char          buf[512];
+    while (http_request_iterate_headers(request, &key, &val, &iter)) {
+      i += snprintf(buf + i, 512 - i, "%.*s: %.*s\n", key.len, key.buf, val.len, val.buf);
+    }
+    http_response_header(response, "Content-Type", "text/plain");
+    http_response_body(response, buf, i);
+    return(http_respond(request, response));
+  } else {
+    http_response_header(response, "Content-Type", "text/plain");
+    http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
+  }
+  http_respond(request, response);
+} /* handle_request */
+
+struct http_server_s *server;
+
+
+void handle_sigterm(int signum) {
+  (void)signum;
+  free(server);
+  free(poll_server);
+  exit(0);
+}
+
+
+int httpserver_main() {
+  signal(SIGTERM, handle_sigterm);
+  server = http_server_init(8080, handle_request);
+  http_server_listen(server);
 }
 
 
@@ -1626,7 +1757,7 @@ void play_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uin
 
 
 static char *get_self_path(void){
-  char     dir[PATH_MAX];
+  char     *dir = calloc(1, PATH_MAX);
   uint32_t size = sizeof dir;
 
   _NSGetExecutablePath(dir, &size);
@@ -2117,7 +2248,7 @@ INCBIN(char *, MesonBuildTyped, "meson.build");
 
 TEST t_incbin(void){
   BENCHMARK_QTY(benchmark_incbin, 1)
-  printf("gMesonBuildTypedData:%s\n", gMesonBuildTypedData);
+  printf("gMesonBuildTypedData:%s\n", gMesonBuildTypedData[0]);
   printf("gMesonBuildTypedSize:%d\n", gMesonBuildTypedSize);
   END_BENCHMARK(benchmark_incbin)
   BENCHMARK_SUMMARY(benchmark_incbin);
@@ -2150,14 +2281,81 @@ TEST t_termbox2(void){
 }
 
 
+TEST t_httpserver(void){
+  int i = httpserver_main();
+
+  ASSERT_EQ(i, 0);
+  PASS();
+}
+struct parsed_data {
+  char *name;
+  int  age;
+  int  size;
+};
+
+
+void querystring_parser(void *data, char *fst, char *snd) {
+  struct parsed_data *parsed_data = (struct parsed_data *)data;
+
+  if (strcmp(fst, "name") == 0) {
+    parsed_data->name = snd;
+  }else if (strcmp(fst, "size") == 0) {
+    parsed_data->size = atoi(snd);
+  }else if (strcmp(fst, "age") == 0) {
+    parsed_data->age = atoi(snd);
+  }
+}
+
+
+TEST t_querystring(void){
+  char               *qs;
+  struct parsed_data data = {
+    .name = "Anonymous",
+    .age  = -1,
+    .size = -1,
+  };
+
+  asprintf(&qs, "name=%s&age=%d&aaaaaaaaaa=123&size=%d", "abc", 123, 1000);
+
+  parse_querystring(qs, (void *)&data, querystring_parser);
+
+  printf("name: %s, age: %d, size: %d\n", data.name, data.age, data.size);
+  PASS();
+}
+
+
+TEST t_libtrycatch(void){
+  try {
+    puts("try1");
+    try {
+      puts("try2");
+    } catch(ex) {
+      puts("this should not be called");
+    }
+
+    try {
+      throw(7);
+    } catch(ex) {
+      rethrow;
+    }
+    throw(5);
+  } catch(ex) {
+    printf("caught %d (should be 7)\n", ex);
+  }
+
+  PASS();
+}
+
+
 TEST t_emojis(void){
   size_t        id              = 0;
   struct Vector *emojis_names_v = get_emojis_names_v();
 
   printf("%lu emoji names\n", vector_size(emojis_names_v));
-  for (int i = 0; i < 10; i++) {
+  for (size_t i = 0; i < 10; i++) {
     struct emojis_t *e = get_emoji_t(i);
-    printf("%lu: %s -> %s [index_by_name:%d|emoji_t_by_name:%s|%s]\n", i,
+    printf("%lu: %s -> %s [index_by_name:%d|emoji_t_by_name:%s|%s]\n",
+           i,
            e->name, e->emoji,
            get_emoji_t_index_by_name(e->name),
            get_emoji_t_by_name(e->name)->name, get_emoji_t_by_name(e->name)->emoji
@@ -2396,6 +2594,18 @@ SUITE(s_dmt){
   RUN_TEST(t_dmt_summary);
   PASS();
 }
+SUITE(s_httpserver){
+  RUN_TEST(t_httpserver);
+  PASS();
+}
+SUITE(s_querystring){
+  RUN_TEST(t_querystring);
+  PASS();
+}
+SUITE(s_libtrycatch){
+  RUN_TEST(t_libtrycatch);
+  PASS();
+}
 SUITE(s_emojis){
   RUN_TEST(t_emojis);
   PASS();
@@ -2493,6 +2703,7 @@ int main(int argc, char **argv) {
   EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
   GREATEST_MAIN_BEGIN();
   if (isatty(STDOUT_FILENO)) {
+    //RUN_SUITE(s_httpserver);
     RUN_SUITE(s_libforks);
     RUN_SUITE(s_termbox2);
     RUN_SUITE(s_libtinyfiledialogs);
@@ -2540,6 +2751,8 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_incbin);
   RUN_SUITE(s_unja);
   RUN_SUITE(s_emojis);
+  RUN_SUITE(s_libtrycatch);
+  RUN_SUITE(s_querystring);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

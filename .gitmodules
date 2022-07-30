@@ -640,3 +640,9 @@
 [submodule "submodules/dns"]
 	path = submodules/dns
 	url = https://github.com/wahern/dns
+[submodule "submodules/c_kfc"]
+	path = submodules/c_kfc
+	url = git@github.com:binRick/c_kfc.git
+[submodule "submodules/querystring.c"]
+	path = submodules/querystring.c
+	url = https://github.com/jb55/querystring.c

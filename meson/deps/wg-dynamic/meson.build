@@ -1,6 +1,6 @@
 wg_dynamic_srcs = [files(
   #'../../../submodules/wg-dynamic/common.c',
-  '../../../submodules/wg-dynamic/common.h',
+  #'../../../submodules/wg-dynamic/common.h',
   #  '../../../submodules/wg-dynamic/dbg.h',
   #'../../../submodules/wg-dynamic/ipm.c',
   #'../../../submodules/wg-dynamic/ipm.h',
@@ -28,14 +28,14 @@ wg_dynamic_deps = [
 
 ]
 
-wg_dynamic_lib = shared_library('wg-dynamic',
-  wg_dynamic_srcs,
-  install: false,
-  dependencies: wg_dynamic_deps,
-  include_directories: wg_dynamic_dirs,
-)
+#wg_dynamic_lib = static_library('wg-dynamic',
+#  wg_dynamic_srcs,
+#  install: false,
+#  dependencies: wg_dynamic_deps,
+#  include_directories: wg_dynamic_dirs,
+#)
 
 wg_dynamic_dep = declare_dependency(
   include_directories: wg_dynamic_dirs,
-  link_with: wg_dynamic_lib,
+  link_with: [],
 )

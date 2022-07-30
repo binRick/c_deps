@@ -1,4 +1,6 @@
-project('meson_deps',['c','cpp'],default_options:['warning_level=0','c_std=gnu99'])
+project('meson_deps',['c','cpp'],default_options:['warning_level=0','c_std=gnu99'],version: '0.0.1',
+  subproject_dir: 'subprojects',
+  )
 #############################################################
 go_program = find_program('go', required : true)
 gofmt_program = find_program('gofmt', required : true)
@@ -34,7 +36,7 @@ version_info.set('vcs_tag', git_sha)
 summary({'version': meson.project_version(),
         'vcs_tag': git_sha,
         'go_version': go_version,
-        }, section: 'Options1')
+        }, section: 'Options')
 pwd = meson_deps_dir
 #############################################################
 inc = [
@@ -68,17 +70,19 @@ subdir('submodules')
 #subdir('meson/deps/libtermkey')
 ###########################################
 subdir('deps')
-subdir('select_description1')
-subdir('multi_select')
-subdir('multi_select0')
-subdir('multi_select1')
-subdir('confirm1')
+#subdir('select_description1')
+#subdir('multi_select')
+#subdir('multi_select0')
+#subdir('multi_select1')
+#subdir('multiselect-long0')
+#subdir('multiselect-long1')
+#subdir('confirm1')
 subdir('ctable')
 subdir('tests-table')
 subdir('introspect')
 subdir('introspect-repos')
-subdir('meson/deps/json-c')
-subdir('meson/deps/sqxclib')
+#subdir('meson/deps/json-c')
+#subdir('meson/deps/sqxclib')
 subdir('meson/deps/wireguard-tools')
 subdir('wg')
 subdir('hs')
@@ -101,8 +105,8 @@ subdir('reproc-test')
 subdir('introspect-test')
 subdir('subprocess-test')
 subdir('introspect-repos-test')
-subdir('sqxc-test')
-subdir('reflect-test')
+#subdir('sqxc-test')
+#subdir('reflect-test')
 subdir('sqldb-test')
 subdir('submodules/c_sdl/sdl-app-test')
 subdir('wg-test')

@@ -18,7 +18,6 @@
 #include "submodules/c_vector/include/vector.h"
 #include "submodules/c_workqueue/include/workqueue.h"
 #include "submodules/catpath/catpath.h"
-#include "submodules/dbg.h/dbg.h"
 #include "submodules/dmt/src/dmt.h"
 #include "submodules/http-get.c/src/http-get.h"
 #include "submodules/libbeaufort/include/beaufort.h"

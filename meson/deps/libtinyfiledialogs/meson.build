@@ -12,7 +12,7 @@ libtinyfiledialogs_deps = [
 
 ]
 
-libtinyfiledialogs_lib = shared_library('libtinyfiledialogs',
+libtinyfiledialogs_lib = static_library('libtinyfiledialogs',
   libtinyfiledialogs_srcs,
   install: false,
   dependencies: libtinyfiledialogs_deps,
