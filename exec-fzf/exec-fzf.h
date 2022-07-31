@@ -22,28 +22,56 @@
 #include "timestamp/timestamp.h"
 #include "which/src/which.h"
 //////////////////////////////////////////////
+struct fzf_keybind_t {
+    char *key;
+    char *cmd;
+    char *type;
+};
 struct fzf_exec_t {
   struct Vector          *input_options;
   struct Vector          *selected_options;
+  struct Vector          *fzf_keybinds_v;
+  struct Vector          *fzf_header_lines_v;
+  struct StringBuffer    *fzf_header_lines_sb;
+  struct StringBuffer    *fzf_keybinds_sb;
+  struct StringFNStrings output_lines;
+  char    *fzf_keybinds_s;
   char                   **input_array;
   char                   *input_s;
+  char                   *fzf_info;
+  char                   *fzf_prompt;
+  char                   *fzf_history_file;
   char                   *output_file;
   char                   *tempdir;
-  struct StringFNStrings output_lines;
   char                   *header;
   char                   *fzf_cmd;
   char                   *fzf_path;
+  char                   *fzf_default_opts;
+  char                   *fzf_default_command;
+  char                   *env_path;
+  char                   *sh_path;
   char                   **subprocess_cmd;
   int                    proc_result;
   int                    proc_exit_code;
+  int                    height;
+  int                    preview_size;
+  char *query_s;
+  int top_margin,bottom_margin,left_margin,right_margin;
+  int top_padding,bottom_padding,left_padding,right_padding;
+  char                   *preview_type;
+  char                   *preview_cmd;
+  char                   *options_file;
+  char                   *options_file_content_s;
+  char                   *input_lines_s;
+  char    *fzf_header_lines_s;
   reproc_t               *proc;
   reproc_options         reproc_options;
-  bool                   debug_mode;
+  bool                   debug_mode, select_multiple, fzf_reverse, header_first;
 };
 
-struct fzf_exec_t *setup_fzf_exec(void);
-void release_fzf_exec(struct fzf_exec_t *fzf_exec);
-int execute_fzf_process();
+struct fzf_exec_t *exec_fzf_setup(void);
+void exec_fzf_release(struct fzf_exec_t *fzf_exec);
+int exec_fzf();
 
 static void __attribute__((destructor)) __exec_fzf_destructor();
 

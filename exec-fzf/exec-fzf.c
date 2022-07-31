@@ -22,151 +22,297 @@
 #include "timestamp/timestamp.h"
 #include "which/src/which.h"
 //////////////////////////////////////////////
-#define FZF_DEBUG_MODE    (fzf_exec->debug_mode == true)
+#define FZF_DEBUG_MODE    (fe->debug_mode == true)
 
 
-void release_fzf_exec(struct fzf_exec_t *fzf_exec){
-  if (fzf_exec) {
-    free(fzf_exec);
+void exec_fzf_release(struct fzf_exec_t *fe){
+  if (fe) {
+    if (fe->fzf_keybinds_v) {
+      for (size_t i = 0; i < vector_size(fe->fzf_keybinds_v); i++) {
+        free((struct fzf_keybind_t*)vector_get(fe->fzf_keybinds_v,i));
+      }      
+      vector_release(fe->fzf_keybinds_v);
+    }
+    if (fe->fzf_keybinds_v) {
+      vector_release(fe->selected_options);
+    }
+    if(fe->selected_options){
+      vector_release(fe->selected_options);
+    }
+    if (fe->input_options) {
+      vector_release(fe->input_options);
+    }
+    if (fe->fzf_keybinds_sb) {
+      stringbuffer_release(fe->fzf_keybinds_sb);
+    }
+    free(fe);
   }
 }
 
-struct fzf_exec_t *setup_fzf_exec(void){
+struct fzf_exec_t *exec_fzf_setup(void){
   struct fzf_exec_t *e = malloc(sizeof(struct fzf_exec_t));
-
-  e->input_options    = vector_new();
-  e->selected_options = vector_new();
+    {
+      e->input_options    = vector_new();
+      e->selected_options = vector_new();
+      e->fzf_keybinds_v = vector_new();
+      e->fzf_header_lines_v = vector_new();
+    }
+    {
+      e->fzf_keybinds_sb = stringbuffer_new();
+      e->fzf_header_lines_sb = stringbuffer_new();
+    }
+  e->fzf_reverse = true;
+  e->header_first = true;
+  e->query_s = "";
+  e->fzf_prompt = ">";
+  e->fzf_default_opts = "";
+  e->fzf_default_command = "";
+  e->fzf_info = "inline";
+  e->fzf_history_file = "/dev/null";
+  e->height           = 100;
+  e->top_margin = 0;
+  e->right_margin = 0;
+  e->left_margin = 0;
+  e->bottom_margin = 0;
+  e->top_padding = 0;
+  e->right_padding = 0;
+  e->left_padding = 0;
+  e->bottom_padding = 0;
+  e->preview_size     = 70;
+  e->preview_type     = "right";
   return(e);
 }
 
 
-int execute_fzf_process(struct fzf_exec_t *fzf_exec){
-  if (fzf_exec->selected_options == NULL) {
-    fzf_exec->selected_options = vector_new();
+int exec_fzf(struct fzf_exec_t *fe){
+  if (fe->selected_options == NULL) {
+    fe->selected_options = vector_new();
   }
-  fzf_exec->reproc_options = (reproc_options) { .redirect.parent = true, };
-  if (fzf_exec->tempdir == NULL) {
-    fzf_exec->tempdir = gettempdir();
-  }
-  if (fzf_exec->fzf_path == NULL) {
-    fzf_exec->fzf_path    = (char *)which_path("fzf", getenv("PATH")),
-    fzf_exec->input_array = vector_to_array(fzf_exec->input_options);
-  }
-  fzf_exec->input_s = stringfn_join(fzf_exec->input_array, "\\n", 0, vector_size(fzf_exec->input_options));
+  fe->reproc_options = (reproc_options) { .redirect.parent = true, };
+  fe->tempdir        = gettempdir();
+  fe->fzf_path       = (char *)which_path("fzf", getenv("PATH")),
+  fe->env_path       = (char *)which_path("env", getenv("PATH")),
+  fe->sh_path       = (char *)which_path("sh", getenv("PATH")),
+  fe->input_array    = vector_to_array(fe->input_options);
+  fe->input_s        = stringfn_join(fe->input_array, "\\n", 0, vector_size(fe->input_options));
+  fe->input_lines_s        = stringfn_join(fe->input_array, "\n", 0, vector_size(fe->input_options));
   if (FZF_DEBUG_MODE) {
-    log_info("%lu in:'%s'\n", vector_size(fzf_exec->input_options), fzf_exec->input_s);
+    log_info("%lu in:'%s'\n", vector_size(fe->input_options), fe->input_s);
   }
-  asprintf(&fzf_exec->output_file, "%s.output-file-%lld.txt",
-           fzf_exec->tempdir,
+  asprintf(&fe->options_file, "%s.options-file-%lld.txt",
+           fe->tempdir,
+           timestamp()
+           );
+  asprintf(&fe->output_file, "%s.output-file-%lld.txt",
+           fe->tempdir,
            timestamp()
            );
   if (FZF_DEBUG_MODE) {
-    log_info("%s", fzf_exec->output_file);
+    log_info("%s", fe->output_file);
+    log_info("%s", fe->fzf_path);
+    log_info("%s", fe->header);
+    log_info("%s", fe->input_s);
   }
-  asprintf(&fzf_exec->fzf_cmd,
-           "printf '%s' | %s -m --reverse --header='%s' > '%s'",
-           fzf_exec->input_s,
-           fzf_exec->fzf_path,
-           fzf_exec->header,
-           fzf_exec->output_file
+
+  for(size_t i=0;i<vector_size(fe->fzf_keybinds_v);i++){
+    char *buf;
+    struct fzf_keybind_t *kb = vector_get(fe->fzf_keybinds_v,i);
+    stringbuffer_append_string(fe->fzf_keybinds_sb," ");
+    asprintf(&buf, "--bind 'ctrl-%s:%s(%s)'",
+           kb->key,
+           kb->type,
+           kb->cmd
+          );
+    stringbuffer_append_string(fe->fzf_keybinds_sb,buf);
+    stringbuffer_append_string(fe->fzf_keybinds_sb," ");
+  }
+
+  for(size_t i=0;i<vector_size(fe->fzf_header_lines_v);i++){
+    char *hl = vector_get(fe->fzf_header_lines_v,i);
+    stringbuffer_append_string(fe->fzf_header_lines_sb,hl);
+    stringbuffer_append_string(fe->fzf_header_lines_sb,"|\n");
+  }
+  {
+      fe->fzf_header_lines_s = stringbuffer_to_string(fe->fzf_header_lines_sb);
+      fe->fzf_keybinds_s = stringbuffer_to_string(fe->fzf_keybinds_sb);
+  }
+  if(fe->debug_mode){
+      log_info("keybinds_s: %s", fe->fzf_keybinds_s);
+  }
+
+  asprintf(&fe->header,
+          "%s\n%s",
+          fe->header,
+          stringfn_mut_trim(stringbuffer_to_string(fe->fzf_header_lines_sb))
+  );
+  asprintf(&fe->options_file_content_s,
+          "%s",
+          stringfn_mut_trim(fe->input_lines_s)
+  );
+  fsio_write_text_file(fe->options_file,fe->options_file_content_s);
+  log_debug("wrote %s", fe->options_file);
+  asprintf(&fe->fzf_default_opts,
+           "%s"
+           "%s"
+           "%s"
+           " --header-lines='%lu'"
+           " --header='%s'"
+           " --query='%s'"
+           " --margin='%d,%d,%d,%d'"
+           " --padding='%d,%d,%d,%d'"
+           " --preview='%s'"
+           " --preview-window='%s,%s,%s,%d%%'"
+           " --height='%d'"
+           " --info='%s'"
+           " --history='%s'"
+           " --ansi"
+           " --reverse"
+           " --border"
+           " --ansi"
+           " --color='bg:#0c0c0c,bg+:#3F3F3F,info:#BDBB72,border:#6B6B6B,spinner:#98BC99'"
+           " --color='hl:#719872,fg:#D9D9D9,header:#719872,fg+:#D9D9D9'"
+           " --color='pointer:#E12672,marker:#E17899,prompt:#98BEDE,hl+:#98BC99'"
+           " %s",
+           (fe->fzf_reverse == true) ?     " --reverse" : "",
+           (fe->select_multiple == true) ? " --multi" :   "",
+           (fe->header_first == true) ? " --header-first" :   "",
+           (size_t)0,
+           fe->header,
+           fe->query_s,
+           fe->top_margin,fe->right_margin,fe->bottom_margin,fe->left_margin,
+           fe->top_padding,fe->right_padding,fe->bottom_padding,fe->left_padding,
+           (fe->preview_cmd != NULL && strlen(fe->preview_cmd) > 0) 
+               ? fe->preview_cmd 
+               : "echo {}",
+           "nofollow", "nowrap", fe->preview_type, fe->preview_size, 
+           fe->height,
+           fe->fzf_info,
+           fe->fzf_history_file,
+           (fe->fzf_keybinds_s != NULL && strlen(fe->fzf_keybinds_s) > 10) 
+               ? fe->fzf_keybinds_s
+               : ""
+               );
+
+  asprintf(&fe->fzf_cmd,
+           "\"%s\""
+           " -i"
+           " SHELL=\"%s\""
+           " FZF_DEFAULT_OPTS=\"%s\""
+           " FZF_DEFAULT_COMMAND=\"%s\""
+           " \"%s\""
+           " < \"%s\""
+           " > \"%s\""
+           "",
+           fe->env_path,
+           fe->sh_path,
+           fe->fzf_default_opts,
+           fe->fzf_default_command,
+           fe->fzf_path,
+           fe->options_file,
+           fe->output_file
            );
 
+  if (FZF_DEBUG_MODE || (fe->debug_mode == true)) {
+    log_debug("%s", fe->fzf_cmd);
+  }
+
   const char *exec_cmd[] = {
-    "/usr/bin/env",    "sh", "--norc", "--noprofile", "-c",
-    fzf_exec->fzf_cmd,
+    fe->env_path, fe->sh_path, "--norc", "--noprofile", "-c",
+    fe->fzf_cmd,
     NULL
   };
 
-  fzf_exec->proc_result = REPROC_ENOMEM;
+  fe->proc_result = REPROC_ENOMEM;
 
-  fzf_exec->proc = reproc_new();
-  if (fzf_exec->proc == NULL) {
+  fe->proc = reproc_new();
+  if (fe->proc == NULL) {
     goto finish;
   }
 
-  if (fsio_file_exists(fzf_exec->output_file)) {
-    fsio_remove(fzf_exec->output_file);
+  if (fsio_file_exists(fe->output_file)) {
+    fsio_remove(fe->output_file);
   }
 
   if (FZF_DEBUG_MODE) {
-    log_info("%s", fzf_exec->fzf_cmd);
+    log_info("%s", fe->fzf_cmd);
   }
 
-  fzf_exec->proc_result = reproc_start(fzf_exec->proc, exec_cmd, (reproc_options){
+  fe->proc_result = reproc_start(fe->proc, exec_cmd, (reproc_options){
     .redirect.parent = true
   });
 
   if (FZF_DEBUG_MODE) {
-    log_info("%d", fzf_exec->proc_result);
+    log_info("%d", fe->proc_result);
   }
 
-  if (fzf_exec->proc_result < 0) {
+  if (fe->proc_result < 0) {
     goto finish;
   }
 
-  fzf_exec->proc_exit_code = reproc_wait(fzf_exec->proc, REPROC_INFINITE);
+  fe->proc_exit_code = reproc_wait(fe->proc, REPROC_INFINITE);
   if (FZF_DEBUG_MODE) {
-    log_info("%d", fzf_exec->proc_exit_code);
+    log_info("%d", fe->proc_exit_code);
   }
 
 finish:
   if (FZF_DEBUG_MODE) {
     log_info("finished");
   }
-  reproc_destroy(fzf_exec->proc);
+  reproc_destroy(fe->proc);
   if (FZF_DEBUG_MODE) {
     log_info("destroyed");
   }
 
 
-  if (fzf_exec->proc_result < 0) {
-    fprintf(stderr, "Error: %s\n", reproc_strerror(fzf_exec->proc_result));
+  if (fe->proc_result < 0) {
+    fprintf(stderr, "Error: %s\n", reproc_strerror(fe->proc_result));
   }else{
-    if (fsio_file_exists(fzf_exec->output_file)) {
-      char *output = stringfn_mut_trim(fsio_read_text_file(fzf_exec->output_file));
+    if (fsio_file_exists(fe->output_file)) {
+      char *output = stringfn_mut_trim(fsio_read_text_file(fe->output_file));
       if (FZF_DEBUG_MODE) {
-        log_info("out file: %s", fzf_exec->output_file);
+        log_info("out file: %s", fe->output_file);
       }
-      fzf_exec->output_lines = stringfn_split_lines_and_trim(output);
+      fe->output_lines = stringfn_split_lines_and_trim(output);
       if (FZF_DEBUG_MODE) {
-        log_info("out file lines: %d", fzf_exec->output_lines.count);
+        log_info("out file lines: %d", fe->output_lines.count);
       }
-      fsio_remove(fzf_exec->output_file);
-      for (size_t i = 0; i < fzf_exec->output_lines.count; i++) {
+      for (size_t i = 0; i < fe->output_lines.count; i++) {
         if (FZF_DEBUG_MODE) {
-          log_info("line #%lu- %s", i, fzf_exec->output_lines.strings[i]);
+          log_info("line #%lu- %s", i, fe->output_lines.strings[i]);
         }
-        if (strlen(fzf_exec->output_lines.strings[i]) > 0) {
-          vector_push(fzf_exec->selected_options, fzf_exec->output_lines.strings[i]);
+        if (strlen(fe->output_lines.strings[i]) > 0) {
+          vector_push(fe->selected_options, fe->output_lines.strings[i]);
         }
       }
       if (FZF_DEBUG_MODE) {
-        log_info("OK, %lu options selected", vector_size(fzf_exec->selected_options));
+        log_info("OK, %lu options selected", vector_size(fe->selected_options));
       }
     }
+  }
+  if (fsio_file_exists(fe->output_file)) {
+    fsio_remove(fe->output_file);
   }
 
   if (FZF_DEBUG_MODE) {
     log_info("Selected %lu/%lu Options",
-             vector_size(fzf_exec->selected_options),
-             vector_size(fzf_exec->input_options)
+             vector_size(fe->selected_options),
+             vector_size(fe->input_options)
              );
   }
 
   if (FZF_DEBUG_MODE) {
-    for (size_t i = 0; i < vector_size(fzf_exec->selected_options); i++) {
+    for (size_t i = 0; i < vector_size(fe->selected_options); i++) {
       log_info("Selected Option #%lu:  '%s'",
                i,
-               (char *)vector_get(fzf_exec->selected_options, i)
+               (char *)vector_get(fe->selected_options, i)
                );
     }
   }
   return(EXIT_SUCCESS);
 } /* execute_fwded_process */
 
-
 static void __attribute__((constructor)) __exec_fzf_constructor(){
 }
-static void __attribute__((destructor)) __exec_fzf_subprocess_destructor(){
+static void __attribute__((destructor)) __exec_fzf_destructor(){
 }
 #undef FZF_DEBUG_MODE

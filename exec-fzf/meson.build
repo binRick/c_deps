@@ -7,7 +7,6 @@ exec_fzf_inc = [
 ]
 exec_fzf_deps = [
  reproc_dep,
- list_dep,
  ansi_codes_dep,
  c_fsio_dep,
  c_stringfn_dep,
@@ -18,7 +17,6 @@ exec_fzf_deps = [
  ansi_utils_dep,
  debug_memory_dep,
  c_string_buffer_dep,
- greatest_dep,
  logh_dep,
 ]
 

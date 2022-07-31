@@ -8,7 +8,6 @@ exec_fzf_test_inc = [
 ]
 exec_fzf_test_deps = [
  reproc_dep,
- list_dep,
  ansi_codes_dep,
  c_fsio_dep,
  c_stringfn_dep,

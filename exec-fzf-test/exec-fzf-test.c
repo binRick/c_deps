@@ -36,21 +36,21 @@ static void __attribute__((constructor)) __exec_fzf_test_constructor();
 TEST t_reproc_fzf_process(void){
   int               res = -1;
 
-  struct fzf_exec_t *fzf_exec = setup_fzf_exec();
+  struct fzf_exec_t *fe = exec_fzf_setup();
 
-  ASSERT_NEQm("fzf setup OK", fzf_exec, NULL);
-  fzf_exec->header     = "my header 123444";
-  fzf_exec->debug_mode = false;
-  vector_push(fzf_exec->input_options, "option 1");
-  vector_push(fzf_exec->input_options, "option 2");
-  vector_push(fzf_exec->input_options, "option 3");
-  vector_push(fzf_exec->input_options, "option wow............");
+  ASSERT_NEQm("fzf setup OK", fe, NULL);
+  fe->header     = "my header 123444";
+  fe->debug_mode = false;
+  vector_push(fe->input_options, "option 1");
+  vector_push(fe->input_options, "option 2");
+  vector_push(fe->input_options, "option 3");
+  vector_push(fe->input_options, "option wow............");
 
-  res = execute_fzf_process(fzf_exec);
+  res = exec_fzf(fe);
   ASSERT_EQm("fzf process OK", res, 0);
-  release_fzf_exec(fzf_exec);
+  exec_fzf_release(fe);
 
-  log_info("Selected %lu/%lu options", vector_size(fzf_exec->selected_options), vector_size(fzf_exec->input_options));
+  log_info("Selected %lu/%lu options", vector_size(fe->selected_options), vector_size(fe->input_options));
 
 
   PASS();

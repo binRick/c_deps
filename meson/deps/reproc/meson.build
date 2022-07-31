@@ -1,3 +1,13 @@
+reproc_dep_system = dependency('reproc', required: true)
+
+reproc_dirs = [
+    '../../../submodules/reproc/reproc/include',
+    '../../../submodules/reproc/reproc/include/reproc',
+    '../../../submodules/reproc/reproc',
+    '../../../submodules/reproc/reproc/src',
+    '../../../submodules/reproc',
+  inc,
+]
 reproc_lib = static_library('reproc',
   '../../../submodules/reproc/reproc/src/clock.posix.c',
   '../../../submodules/reproc/reproc/src/drain.c',
@@ -18,13 +28,9 @@ reproc_lib = static_library('reproc',
   dependencies: [
    timestamp_dep, 
   ], 
-  include_directories: [
-    '../../../submodules/reproc/reproc/include',
-    '../../../submodules/reproc/reproc/include/reproc',
-    '../../../submodules/reproc/reproc',
-    '../../../submodules/reproc/reproc/src',
-    '../../../submodules/reproc',
-    inc,
-  ]
+  include_directories: reproc_dirs,
 )
-reproc_dep = declare_dependency(include_directories: [inc], link_with: reproc_lib)
+reproc_dep_local = declare_dependency(include_directories: [inc], link_with: reproc_lib)
+
+
+reproc_dep = reproc_dep_system
