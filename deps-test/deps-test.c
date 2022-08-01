@@ -41,6 +41,7 @@
 #include "httpserver.h/httpserver.h"
 #include "incbin/incbin.h"
 #include "layout/layout.h"
+#include "levenshtein.c/levenshtein.h"
 #include "libforks/libforks.h"
 #include "libtinyfiledialogs/tinyfiledialogs.h"
 #include "libtrycatch/trycatch.h"
@@ -2307,6 +2308,18 @@ void querystring_parser(void *data, char *fst, char *snd) {
 }
 
 
+TEST t_levenshtein(void){
+  char *w1 = "aaaaaaaaaa";
+  char *w2 = "aaaaaaaaaa";
+
+  printf("%s:%s -> %zu\n", w1, w2, levenshtein(w1, w2));
+  w1 = "bbbbbbbbb";
+  w2 = "aaaaaaaaaa";
+  printf("%s:%s -> %zu\n", w1, w2, levenshtein(w1, w2));
+  PASS();
+}
+
+
 TEST t_querystring(void){
   char               *qs;
   struct parsed_data data = {
@@ -2598,6 +2611,10 @@ SUITE(s_httpserver){
   RUN_TEST(t_httpserver);
   PASS();
 }
+SUITE(s_levenshtein){
+  RUN_TEST(t_levenshtein);
+  PASS();
+}
 SUITE(s_querystring){
   RUN_TEST(t_querystring);
   PASS();
@@ -2753,6 +2770,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_emojis);
   RUN_SUITE(s_libtrycatch);
   RUN_SUITE(s_querystring);
+  RUN_SUITE(s_levenshtein);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

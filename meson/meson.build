@@ -129,5 +129,6 @@ subdir('deps/c_hs')
 subdir('deps/httpd')
 subdir('deps/hidapi')
 subdir('deps/libusb')
+subdir('deps/levenshtein')
 
 ####################################

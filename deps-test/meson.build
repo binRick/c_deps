@@ -59,6 +59,7 @@ deps_test_deps = [
   incbin_dep,
   c_unja_dep,
   emojis_dep,
+  levenshtein_dep,
   libut_dep,
 ]
 deps_c_args = [

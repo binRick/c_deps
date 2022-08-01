@@ -27,7 +27,51 @@ TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *
 			   exec-fzf*/*.c exec-fzf*/*.h 
 ########################################################
 TRIGGER_FILE=.trigger.c
+test-file-names:
+	@grep greatest.h *-test/*-test.*|cut -d':' -f1|sort -u|xargs -I % basename %|cut -d'.' -f1
+
+run-binary:
+	@clear; while :; do make meson-binaries | env FZF_DEFAULT_COMMAND= \
+		fzf --reverse --preview-window='follow,wrap,bottom,80%' --preview='env bash -c {} -v -a' \
+			--ansi --border \
+			--header='Select Test Binary' \
+			--height='100%' \
+	| xargs -I % env bash -c "./%"; sleep .1; done
+
+binaries-meson-link-bin:
+	[[ -d .bin ]] || mkdir .bin
+	make meson-binaries| cut -d'/' -f2-100 | xargs -I % echo -e "ln -s build/% $$(pwd)/.bin/$$(shell basename %)"
+	#$$(pwd)/.bin/$$(basename $$f)\
+#		env bash -c "ln -s $$(pwd)/$$f $$(pwd)/.bin/\$\$(basename $$f)" \
+#		done
+#|grep \..$|cut -d. -f1|sort -u
+
+
 ##############################################################
+#suites:
+#	@find ./build/*-test/*-test -type f | 
+greatest-suites:
+	@(make test-file-names | while read -r f; do timeout .5 passh ./build/$$f/$$f -l -v; done) |grep '^* Suite '|cut -d: -f1|cut -d' ' -f3
+greatest-suite-tests:
+	@passh  ./build/exec-fzf-test/exec-fzf-test -l -v -s s_fzf_basic|grep '^* Suite ' -A 999|grep '^[[:space:]]'|tr -d ' '|cut -d' ' -f1
+
+do-muon-setup:
+	@muon setup build-muon
+
+do-muon-clean:
+	@rm -rf build-muon
+
+do-muon-build:
+	@muon samu -C build-muon -j 20 -k 1
+
+do-muon-install:
+	@cd build-muon && muon install
+do-muon-test:
+	@cd build-muon && muon -C build-muon test -w 20 -f
+build-muon: do-muon-setup do-muon-build
+do-muon: build-muon
+muon: do-muon
+
 do-setup:
 	@[[ -d submodules ]] || mkdir submodules
 setup-binaries:
@@ -55,7 +99,7 @@ uncrustify:
 	@$(UNCRUSTIFY) -c etc/uncrustify.cfg --replace $(TIDIED_FILES)||true
 uncrustify-clean:
 	@find  . -type f -maxdepth 2 -name "*unc-back*"|xargs -I % unlink %
-clean: rm-make-logs
+clean: rm-make-logs do-muon-clean
 	@rm -rf build .cache
 fix-dbg:
 	@$(SED) 's|, % c);|, %c);|g' -i $(TIDIED_FILES)
@@ -66,25 +110,6 @@ fix-dbg:
 	@$(SED) 's|, % zu);|, %zu);|g' -i $(TIDIED_FILES)
 install: do-install
 
-
-do-muon-setup:
-	@muon setup build-muon
-
-do-muon-clean:
-	@rm -rf build-muon
-
-do-muon-build:
-	@muon samu -C build-muon
-
-do-muon-install:
-	@cd build-muon && muon install
-
-
-do-muon-test:
-	@cd build-muon && muon test
-
-
-build-muon: do-muon-setup do-muon-build do-muon-test
 
 do-install: all
 	@meson install -C build
@@ -124,17 +149,20 @@ git-submodules-update:
 git-pull:
 	@git pull --recurse-submodules
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
-do-build: do-meson
-	@meson compile -C build
+meson: do-meson-build
+do-build: do-meson-build do-muon
+do-meson-build: do-meson
+	@meson compile -C build -j 20 -v
 	@meson install -C build --tags build
 do-test:
 	@passh meson test -C build -v --print-errorlogs	
+muon: do-muon
 test: do-test
-build: do-meson do-build
+build: do-meson do-build muon
 ansi: all do-sync do-ansi-make
 tidy: fmt-scripts do-uncrustify 
 dev: do-nodemon
-all: do-setup do-build do-test
+all: do-setup do-build do-test muon
 trigger:
 	@[[ -f $(TRIGGER_FILE) ]] && unlink $(TRIGGER_FILE)
 	@touch $(TRIGGER_FILE)
@@ -149,8 +177,7 @@ meson-binaries-loc:
 
 do-pull-submodules-cmds:
 	command find submodules -type d -maxdepth 1|xargs -I % echo -e "sh -c 'cd % && git pull'"
-
-run-binary:
+run-binary1:
 	@make meson-binaries | fzf --reverse | xargs -I % sh -xc "./%" 
 meson-tests-list:
 	@meson test -C build --list

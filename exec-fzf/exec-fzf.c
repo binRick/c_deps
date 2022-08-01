@@ -1,7 +1,8 @@
 //////////////////////////////////////////////
-#define DEBUG_MEMORY
+//#define DEBUG_MEMORY
 //////////////////////////////////////////////
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -9,9 +10,10 @@
 #include <unistd.h>
 //////////////////////////////////////////////
 #ifdef DEBUG_MEMORY
-#include "debug-memory/debug_memory.h"
+//#include "debug-memory/debug_memory.h"
 #endif
 #include "ansi-utils/ansi-utils.h"
+#include "b64.c/b64.h"
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
@@ -25,25 +27,47 @@
 #define FZF_DEBUG_MODE    (fe->debug_mode == true)
 
 
+bool encode_preview_cmd(struct fzf_exec_t *fe){
+  asprintf(&fe->sub_preview_cmd_file,
+           "%s.encoded-preview-cmd-%lld.txt",
+           gettempdir(),
+           timestamp()
+           );
+  asprintf(&fe->sub_preview_cmd,
+           "%s %s --norc --noprofile < %s",
+           fe->env_path, fe->sh_path, fe->sub_preview_cmd_file
+           );
+  asprintf(&fe->encoded_preview_cmd,
+           "%s %s --norc --noprofile -c \"%s\"",
+           fe->env_path, fe->sh_path, fe->sub_preview_cmd
+           );
+  fsio_write_text_file(fe->sub_preview_cmd_file, fe->sub_preview_cmd);
+  log_info("sub_preview_cmd_file: %s", fe->sub_preview_cmd_file);
+  log_info("sub_preview_cmd: %s", fe->sub_preview_cmd);
+  log_info("encoded_preview_cmd: %s", fe->encoded_preview_cmd);
+  log_info("preview_cmd: %s", fe->preview_cmd);
+  return(true);
+}
+
+
 void exec_fzf_release(struct fzf_exec_t *fe){
   if (fe) {
     if (fe->fzf_keybinds_v) {
       for (size_t i = 0; i < vector_size(fe->fzf_keybinds_v); i++) {
-        free((struct fzf_keybind_t*)vector_get(fe->fzf_keybinds_v,i));
-      }      
+        struct fzf_keybind_t *kb = vector_get(fe->fzf_keybinds_v, i);
+//        if(kb)
+//            free(kb);
+      }
       vector_release(fe->fzf_keybinds_v);
     }
-    if (fe->fzf_keybinds_v) {
-      vector_release(fe->selected_options);
-    }
-    if(fe->selected_options){
+    if (fe->selected_options) {
       vector_release(fe->selected_options);
     }
     if (fe->input_options) {
       vector_release(fe->input_options);
     }
     if (fe->fzf_keybinds_sb) {
-      stringbuffer_release(fe->fzf_keybinds_sb);
+      // stringbuffer_release(fe->fzf_keybinds_sb);
     }
     free(fe);
   }
@@ -51,35 +75,36 @@ void exec_fzf_release(struct fzf_exec_t *fe){
 
 struct fzf_exec_t *exec_fzf_setup(void){
   struct fzf_exec_t *e = malloc(sizeof(struct fzf_exec_t));
-    {
-      e->input_options    = vector_new();
-      e->selected_options = vector_new();
-      e->fzf_keybinds_v = vector_new();
-      e->fzf_header_lines_v = vector_new();
-    }
-    {
-      e->fzf_keybinds_sb = stringbuffer_new();
-      e->fzf_header_lines_sb = stringbuffer_new();
-    }
-  e->fzf_reverse = true;
-  e->header_first = true;
-  e->query_s = "";
-  e->fzf_prompt = ">";
-  e->fzf_default_opts = "";
+  {
+    e->input_options      = vector_new();
+    e->selected_options   = vector_new();
+    e->fzf_keybinds_v     = vector_new();
+    e->fzf_header_lines_v = vector_new();
+  }
+  {
+    e->fzf_keybinds_sb     = stringbuffer_new();
+    e->fzf_header_lines_sb = stringbuffer_new();
+  }
+
+  e->fzf_reverse         = true;
+  e->header_first        = true;
+  e->query_s             = "";
+  e->fzf_prompt          = ">";
+  e->fzf_default_opts    = "";
   e->fzf_default_command = "";
-  e->fzf_info = "inline";
-  e->fzf_history_file = "/dev/null";
-  e->height           = 100;
-  e->top_margin = 0;
-  e->right_margin = 0;
-  e->left_margin = 0;
-  e->bottom_margin = 0;
-  e->top_padding = 0;
-  e->right_padding = 0;
-  e->left_padding = 0;
-  e->bottom_padding = 0;
-  e->preview_size     = 70;
-  e->preview_type     = "right";
+  e->fzf_info            = "inline";
+  e->fzf_history_file    = "/dev/null";
+  e->height              = 100;
+  e->top_margin          = 0;
+  e->right_margin        = 0;
+  e->left_margin         = 0;
+  e->bottom_margin       = 0;
+  e->top_padding         = 0;
+  e->right_padding       = 0;
+  e->left_padding        = 0;
+  e->bottom_padding      = 0;
+  e->preview_size        = 70;
+  e->preview_type        = "right";
   return(e);
 }
 
@@ -92,10 +117,10 @@ int exec_fzf(struct fzf_exec_t *fe){
   fe->tempdir        = gettempdir();
   fe->fzf_path       = (char *)which_path("fzf", getenv("PATH")),
   fe->env_path       = (char *)which_path("env", getenv("PATH")),
-  fe->sh_path       = (char *)which_path("sh", getenv("PATH")),
+  fe->sh_path        = (char *)which_path("sh", getenv("PATH")),
   fe->input_array    = vector_to_array(fe->input_options);
   fe->input_s        = stringfn_join(fe->input_array, "\\n", 0, vector_size(fe->input_options));
-  fe->input_lines_s        = stringfn_join(fe->input_array, "\n", 0, vector_size(fe->input_options));
+  fe->input_lines_s  = stringfn_join(fe->input_array, "\n", 0, vector_size(fe->input_options));
   if (FZF_DEBUG_MODE) {
     log_info("%lu in:'%s'\n", vector_size(fe->input_options), fe->input_s);
   }
@@ -114,42 +139,42 @@ int exec_fzf(struct fzf_exec_t *fe){
     log_info("%s", fe->input_s);
   }
 
-  for(size_t i=0;i<vector_size(fe->fzf_keybinds_v);i++){
-    char *buf;
-    struct fzf_keybind_t *kb = vector_get(fe->fzf_keybinds_v,i);
-    stringbuffer_append_string(fe->fzf_keybinds_sb," ");
+  for (size_t i = 0; i < vector_size(fe->fzf_keybinds_v); i++) {
+    char                 *buf;
+    struct fzf_keybind_t *kb = vector_get(fe->fzf_keybinds_v, i);
+    stringbuffer_append_string(fe->fzf_keybinds_sb, " ");
     asprintf(&buf, "--bind 'ctrl-%s:%s(%s)'",
-           kb->key,
-           kb->type,
-           kb->cmd
-          );
-    stringbuffer_append_string(fe->fzf_keybinds_sb,buf);
-    stringbuffer_append_string(fe->fzf_keybinds_sb," ");
+             kb->key,
+             kb->type,
+             kb->cmd
+             );
+    stringbuffer_append_string(fe->fzf_keybinds_sb, buf);
+    stringbuffer_append_string(fe->fzf_keybinds_sb, " ");
   }
 
-  for(size_t i=0;i<vector_size(fe->fzf_header_lines_v);i++){
-    char *hl = vector_get(fe->fzf_header_lines_v,i);
-    stringbuffer_append_string(fe->fzf_header_lines_sb,hl);
-    stringbuffer_append_string(fe->fzf_header_lines_sb,"|\n");
+  for (size_t i = 0; i < vector_size(fe->fzf_header_lines_v); i++) {
+    char *hl = vector_get(fe->fzf_header_lines_v, i);
+    stringbuffer_append_string(fe->fzf_header_lines_sb, hl);
+    stringbuffer_append_string(fe->fzf_header_lines_sb, "|\n");
   }
   {
-      fe->fzf_header_lines_s = stringbuffer_to_string(fe->fzf_header_lines_sb);
-      fe->fzf_keybinds_s = stringbuffer_to_string(fe->fzf_keybinds_sb);
+    fe->fzf_header_lines_s = stringbuffer_to_string(fe->fzf_header_lines_sb);
+    fe->fzf_keybinds_s     = stringbuffer_to_string(fe->fzf_keybinds_sb);
   }
-  if(fe->debug_mode){
-      log_info("keybinds_s: %s", fe->fzf_keybinds_s);
+  if (fe->debug_mode) {
+    log_info("keybinds_s: %s", fe->fzf_keybinds_s);
   }
 
   asprintf(&fe->header,
-          "%s\n%s",
-          fe->header,
-          stringfn_mut_trim(stringbuffer_to_string(fe->fzf_header_lines_sb))
-  );
+           "%s\n%s",
+           fe->header,
+           stringfn_mut_trim(stringbuffer_to_string(fe->fzf_header_lines_sb))
+           );
   asprintf(&fe->options_file_content_s,
-          "%s",
-          stringfn_mut_trim(fe->input_lines_s)
-  );
-  fsio_write_text_file(fe->options_file,fe->options_file_content_s);
+           "%s",
+           stringfn_mut_trim(fe->input_lines_s)
+           );
+  fsio_write_text_file(fe->options_file, fe->options_file_content_s);
   log_debug("wrote %s", fe->options_file);
   asprintf(&fe->fzf_default_opts,
            "%s"
@@ -179,19 +204,19 @@ int exec_fzf(struct fzf_exec_t *fe){
            (size_t)0,
            fe->header,
            fe->query_s,
-           fe->top_margin,fe->right_margin,fe->bottom_margin,fe->left_margin,
-           fe->top_padding,fe->right_padding,fe->bottom_padding,fe->left_padding,
-           (fe->preview_cmd != NULL && strlen(fe->preview_cmd) > 0) 
-               ? fe->preview_cmd 
+           fe->top_margin, fe->right_margin, fe->bottom_margin, fe->left_margin,
+           fe->top_padding, fe->right_padding, fe->bottom_padding, fe->left_padding,
+           (fe->preview_cmd != NULL && strlen(fe->preview_cmd) > 0)
+               ? fe->preview_cmd
                : "echo {}",
-           "nofollow", "nowrap", fe->preview_type, fe->preview_size, 
+           "nofollow", "nowrap", fe->preview_type, fe->preview_size,
            fe->height,
            fe->fzf_info,
            fe->fzf_history_file,
-           (fe->fzf_keybinds_s != NULL && strlen(fe->fzf_keybinds_s) > 10) 
+           (fe->fzf_keybinds_s != NULL && strlen(fe->fzf_keybinds_s) > 10)
                ? fe->fzf_keybinds_s
                : ""
-               );
+           );
 
   asprintf(&fe->fzf_cmd,
            "\"%s\""
@@ -216,6 +241,8 @@ int exec_fzf(struct fzf_exec_t *fe){
     log_debug("%s", fe->fzf_cmd);
   }
 
+//  bool ok = encode_preview_cmd(fe);
+
   const char *exec_cmd[] = {
     fe->env_path, fe->sh_path, "--norc", "--noprofile", "-c",
     fe->fzf_cmd,
@@ -223,6 +250,7 @@ int exec_fzf(struct fzf_exec_t *fe){
   };
 
   fe->proc_result = REPROC_ENOMEM;
+
 
   fe->proc = reproc_new();
   if (fe->proc == NULL) {
