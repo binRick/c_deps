@@ -40,6 +40,7 @@
 #include "hidapi/mac/hidapi_darwin.h"
 #include "httpserver.h/httpserver.h"
 #include "incbin/incbin.h"
+#include "jinja2-cli/jinja2-cli.h"
 #include "layout/layout.h"
 #include "levenshtein.c/levenshtein.h"
 #include "libforks/libforks.h"
@@ -2308,6 +2309,29 @@ void querystring_parser(void *data, char *fst, char *snd) {
 }
 
 
+TEST t_jinja2_cli(void){
+  struct jinja2_render_template_t *CFG = jinja2_init_config();
+
+  CFG->input_json_string = "{\"abc\":\"world\"}";
+  CFG->template_file     = "test.jinja";
+  CFG->output_file       = "output.txt";
+  fsio_write_text_file(CFG->template_file, "hello {{ abc }}");
+  ASSERT_EQ(fsio_file_exists(CFG->template_file), true);
+  int res = jinja2_render_template(CFG);
+
+  ASSERT_EQ(res, 0);
+  ASSERT_EQ(CFG->success, true);
+  ASSERT_EQ(fsio_file_exists(CFG->output_file), true);
+  char *result = fsio_read_text_file(CFG->output_file);
+
+  ASSERT_EQ(strcmp(result, "hello world"), 0);
+
+  printf("%s\n", result);
+
+  PASS();
+}
+
+
 TEST t_levenshtein(void){
   char *w1 = "aaaaaaaaaa";
   char *w2 = "aaaaaaaaaa";
@@ -2611,6 +2635,10 @@ SUITE(s_httpserver){
   RUN_TEST(t_httpserver);
   PASS();
 }
+SUITE(s_jinja2_cli){
+  RUN_TEST(t_jinja2_cli);
+  PASS();
+}
 SUITE(s_levenshtein){
   RUN_TEST(t_levenshtein);
   PASS();
@@ -2771,6 +2799,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_libtrycatch);
   RUN_SUITE(s_querystring);
   RUN_SUITE(s_levenshtein);
+  RUN_SUITE(s_jinja2_cli);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

@@ -199,15 +199,14 @@ bashful-pre:
 	@clear
 
 bashful-post:
-	@ansi --load-palette
-	@ansi --show-cursor
+	@ansi -n --show-cursor
 
 bashful: bashful-pre do-bashful bashful-post
 bashful-clean: bashful-pre do-bashful-clean bashful-post
 bashful-tidy: bashful-pre do-bashful-tidy bashful-post
 bashful-build: bashful-pre do-bashful-build bashful-post
 bashful-muon-build: bashful-pre do-bashful-muon-build bashful-post
-bashful-git-status: bashful-pre do-bashful-git-status bashful-post
+bashful-git-status: bashful-pre bashful-rm-git-status-logs do-bashful-git-status bashful-post bashful-bat-git-status-logs
 bashful-git-diff: bashful-pre do-bashful-git-diff bashful-post
 bashful-build-commands: bashful-pre do-bashful-build-commands bashful-post
 bashful-test-commands: bashful-pre do-bashful-test-commands bashful-post
@@ -215,6 +214,10 @@ bashful-test: bashful-pre do-bashful-test bashful-post
 bashful-view-git-diff: bashful-pre do-bashful-view-git-diff bashful-post
 bashful-view-git-status: bashful-pre do-bashful-view-git-status bashful-post
 
+bashful-bat-git-status-logs:
+	@bat /tmp/meson-repos-git-status-*.log||true
+bashful-rm-git-status-logs:
+	@rm /tmp/meson-repos-git-status-*.log||true
 
 do-bashful-clean:
 	@passh -L /tmp/meson-repos-do-clean.log bashful run --tags clean etc/meson-repos.yaml

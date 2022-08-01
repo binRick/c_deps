@@ -61,6 +61,7 @@ deps_test_deps = [
   emojis_dep,
   levenshtein_dep,
   libut_dep,
+  jinja2_cli_dep,
 ]
 deps_c_args = [
   '-DINCBIN_SILENCE_BITCODE_WARNING',
