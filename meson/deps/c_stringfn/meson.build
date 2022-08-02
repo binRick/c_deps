@@ -1,6 +1,6 @@
 c_stringfn_dir =  'submodules/c_stringfn'
 c_stringfn_srcs = [
-  meson_deps_dir + '/' + c_stringfn_dir + '/src/stringfn.c',
+  c_deps_dir + '/' + c_stringfn_dir + '/src/stringfn.c',
   
 ]
 c_stringfn_inc = [

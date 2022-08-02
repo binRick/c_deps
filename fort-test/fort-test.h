@@ -4,7 +4,7 @@
 #include "c_stringfn/include/stringfn.h"
 #include "cargs/include/cargs.h"
 #include "submodules/assertf/assertf.h"
-#include "submodules/greatest/greatest.h"
+#include "submodules/c_greatest/greatest/greatest.h"
 #include "submodules/libfort/src/fort.h"
 #include "submodules/log.h/log.h"
 #include <ctype.h>

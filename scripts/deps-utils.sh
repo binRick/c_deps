@@ -1,5 +1,5 @@
-get_meson_deps() {
-	find meson/deps/*/meson.build -type f | sort -u | xargs -I % dirname % | egrep -v 'meson_deps'
+get_c_deps() {
+	find meson/deps/*/meson.build -type f | sort -u | xargs -I % dirname % | egrep -v 'c_deps'
 }
 
 get_missing_meson_build_subdir_deps() {
@@ -7,13 +7,13 @@ get_missing_meson_build_subdir_deps() {
 		if ! grep -q "^${l}$" meson.build; then
 			echo -e "$l"
 		fi
-	done < <(get_meson_deps_subdirs)
+	done < <(get_c_deps_subdirs)
 }
 
-get_meson_deps_subdirs() {
+get_c_deps_subdirs() {
 	while read -r d; do
 		echo -e "subdir('$d')"
-	done < <(get_meson_deps)
+	done < <(get_c_deps)
 }
 
 get_deps_fxns() {
@@ -33,7 +33,7 @@ clone_deps() {
 }
 
 get_deps_array() {
-	cat ../c_*/.gitmodules | grep '=' | cut -d= -f2 | gsed 's/^[[:space:]]//g' | paste -s -d' \n' | sort -u | grep -v 'meson_deps'
+	cat ../c_*/.gitmodules | grep '=' | cut -d= -f2 | gsed 's/^[[:space:]]//g' | paste -s -d' \n' | sort -u | grep -v 'c_deps'
 }
 
 get_add_deps_cmds() {
@@ -54,7 +54,7 @@ get_deps_du() {
 	du --max-depth=1 -b submodules | sort -u | gsed 's/[[:space:]]/ /g' | uniq -u | sort -h
 }
 
-get_meson_deps_names() {
+get_c_deps_names() {
 	while read -r meson_dep; do
 		egrep '^[a-z].*_dep ' "$meson_dep" | cut -d' ' -f1 | sort -u
 	done < <(get_meson_build_deps_meson_builds)

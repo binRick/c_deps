@@ -1,6 +1,6 @@
 #####################################################################################
 asprintf_name = 'asprintf'
-asprintf_dir = meson_deps_dir + '/submodules/asprintf.c'
+asprintf_dir = c_deps_dir + '/submodules/asprintf.c'
 asprintf_srcs = [
    asprintf_dir + '/asprintf.c',
 ]

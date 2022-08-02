@@ -1,5 +1,5 @@
 dbgp_lib = static_library('dbgp', 
-  meson_deps_dir+'/submodules/SDL_DBGP/SDL_DBGP.c',
+  c_deps_dir+'/submodules/SDL_DBGP/SDL_DBGP.c',
   install: false, dependencies: [
     sdl2_dep,
   ], 

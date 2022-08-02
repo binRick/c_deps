@@ -6,7 +6,7 @@
 #  fs = import('fs')
 #  cc = meson.get_compiler('c', native: true)
 #  cpp = meson.get_compiler('cpp', native: true)
-#  meson_deps_dir = meson.current_source_dir()
+#  c_deps_dir = meson.current_source_dir()
 #endif
 
 go_name = 'confirm1'

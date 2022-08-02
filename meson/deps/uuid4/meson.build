@@ -1,5 +1,5 @@
 uuid4_lib = static_library('uuid4', 
-    meson_deps_dir+'/submodules/uuid4/src/uuid4.c', 
+    c_deps_dir+'/submodules/uuid4/src/uuid4.c', 
     install: false, dependencies: [], 
     include_directories: [
       inc,

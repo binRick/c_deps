@@ -2,10 +2,10 @@ libmutotp_c_args = [
   '-Wno-format-security',
 ]
 libmutotp_srcs = [
-  meson_deps_dir + '/submodules/libmutotp/totp.c',
-  meson_deps_dir + '/submodules/libmutotp/sha1.c',
-  meson_deps_dir + '/submodules/libmutotp/base32codec.c',
-  meson_deps_dir + '/submodules/libmutotp/qrcode/qrcode.c',
+  c_deps_dir + '/submodules/libmutotp/totp.c',
+  c_deps_dir + '/submodules/libmutotp/sha1.c',
+  c_deps_dir + '/submodules/libmutotp/base32codec.c',
+  c_deps_dir + '/submodules/libmutotp/qrcode/qrcode.c',
 ]  
 
 libmutotp_lib = static_library('libmutotp',

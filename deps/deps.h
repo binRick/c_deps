@@ -7,6 +7,7 @@
 #include <termcap.h>
 //////////////////////////////////////////////////////
 #include "submodules/c_fsio/include/fsio.h"
+#include "submodules/c_greatest/greatest/greatest.h"
 #include "submodules/c_string_buffer/include/stringbuffer.h"
 #include "submodules/c_stringfn/include/stringfn.h"
 #include "submodules/cansid/cansid.h"
@@ -18,7 +19,6 @@
 #include "submodules/ctable/src/table.h"
 #include "submodules/ctable/src/vector.h"
 #include "submodules/debug_print_h/include/debug_print.h"
-#include "submodules/greatest/greatest.h"
 #include "submodules/libmutotp/base32codec.h"
 #include "submodules/libmutotp/base32codec.h"
 #include "submodules/parson/parson.h"

@@ -1,7 +1,7 @@
 #include "generic-print/print.h"
-#include "greatest/greatest.h"
 #include "log.h/log.h"
 #include "sqldb-test.h"
+#include "submodules/c_greatest/greatest/greatest.h"
 #include <assert.h>
 #include <inttypes.h>
 #include <math.h>

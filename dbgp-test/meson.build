@@ -8,7 +8,7 @@ dbgp_test_dbgp = [
  sdl2_dep,
  dbgp_dep,
  chan_dep,
- greatest_dep,
+ c_greatest_dep,
  ansi_codes_dep,
  logh_dep,
  ms_dep,

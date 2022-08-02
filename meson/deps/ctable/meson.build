@@ -1,10 +1,10 @@
 ctable_srcs = [
-  meson_deps_dir + '/submodules/ctable/src/table.c',
-  meson_deps_dir + '/submodules/ctable/src/constraint.c',
-  meson_deps_dir + '/submodules/ctable/src/alloc_wrappers.c',
-  meson_deps_dir + '/submodules/ctable/src/string_util.c',
-  meson_deps_dir + '/submodules/ctable/src/printing.c',
-  meson_deps_dir + '/submodules/ctable/src/vector.c',
+  c_deps_dir + '/submodules/ctable/src/table.c',
+  c_deps_dir + '/submodules/ctable/src/constraint.c',
+  c_deps_dir + '/submodules/ctable/src/alloc_wrappers.c',
+  c_deps_dir + '/submodules/ctable/src/string_util.c',
+  c_deps_dir + '/submodules/ctable/src/printing.c',
+  c_deps_dir + '/submodules/ctable/src/vector.c',
   ]  
 ctable_lib = static_library('ctable',
   ctable_srcs,

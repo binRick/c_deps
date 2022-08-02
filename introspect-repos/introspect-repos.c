@@ -471,7 +471,7 @@ size_t iterate_get_total_size(struct Vector *VECTOR){
 
 
 void iterate_parse_results(struct Vector *MESON_RESULTS){
-  char   REPOSITORY_NAME[]         = "meson_deps";
+  char   REPOSITORY_NAME[]         = "c_deps";
   Vector *REPOSITORY_EXECUTABLES_v = vector_new();
 
   for (int i = 0; i < vector_size(MESON_RESULTS); i++) {

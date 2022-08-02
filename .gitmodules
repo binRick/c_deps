@@ -646,3 +646,6 @@
 [submodule "submodules/querystring.c"]
 	path = submodules/querystring.c
 	url = https://github.com/jb55/querystring.c
+[submodule "submodules/sha256.c"]
+	path = submodules/sha256.c
+	url = https://github.com/jb55/sha256.c

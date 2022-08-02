@@ -19,7 +19,7 @@ const size_t  MESON_PROJECTS_LIMIT = 100;
 struct Vector *MESON_PATHS;
 struct Vector *INTROSPECTED_PATHS;
 const char    *BASE_PATH   = "../",
-              *PATH_FILTER = "^c_\\w+$|^meson_deps$";
+              *PATH_FILTER = "^c_\\w+$|^c_deps$";
 //////////////////////////////////////////////
 
 

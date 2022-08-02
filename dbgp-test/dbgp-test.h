@@ -10,10 +10,10 @@
 //////////////////////////////////////
 #include "cargs/include/cargs.h"
 #include "dbgp-test.h"
+#include "submodules/c_greatest/greatest/greatest.h"
 #include "submodules/c_timer/include/c_timer.h"
 #include "submodules/chan/src/chan.h"
 #include "submodules/debug_print_h/include/debug_print.h"
-#include "submodules/greatest/greatest.h"
 #include "submodules/log.h/log.h"
 #include "submodules/ms/ms.h"
 #include "submodules/SDL_DBGP/SDL_DBGP.h"

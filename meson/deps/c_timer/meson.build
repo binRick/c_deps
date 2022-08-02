@@ -1,5 +1,5 @@
 c_timer_lib = static_library('c_timer', 
-  meson_deps_dir + '/submodules/c_timer/src/c_timer.c',
+  c_deps_dir + '/submodules/c_timer/src/c_timer.c',
   install: false, 
   dependencies: [
     ms_dep,

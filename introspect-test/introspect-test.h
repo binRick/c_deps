@@ -6,7 +6,7 @@
 #include "cargs/include/cargs.h"
 #include "introspect.h"
 #include "parson.h"
-#include "submodules/greatest/greatest.h"
+#include "submodules/c_greatest/greatest/greatest.h"
 #include "submodules/log.h/log.h"
 #include <ctype.h>
 #include <stdarg.h>

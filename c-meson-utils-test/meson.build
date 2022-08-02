@@ -12,8 +12,9 @@ c_meson_utils_test_deps = [
  c_fsio_dep,
  c_meson_utils_dep,
  c_stringfn_dep,
+ ansi_codes_dep,
  c_string_buffer_dep,
- greatest_dep,
+ c_greatest_dep,
  ansi_codes_dep,
  logh_dep,
 ]

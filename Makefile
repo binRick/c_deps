@@ -118,7 +118,7 @@ rm-make-logs:
 do-meson:
 	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; }
 do-sync:
-	rsync -arv ~/repos/meson_deps \
+	rsync -arv ~/repos/c_deps \
 		~/repos/c_ansi/submodules/. \
 		--exclude="*/.git/*" \
 		--exclude=".git/*" \
@@ -151,8 +151,10 @@ git-pull:
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
 meson: do-meson-build
 do-build: do-meson-build do-muon
+meson-build: do-meson-build
 do-meson-build: do-meson
 	@meson compile -C build -j 20 -v
+do-meson-install: do-meson
 	@meson install -C build --tags build
 do-test:
 	@passh meson test -C build -v --print-errorlogs	
@@ -207,17 +209,25 @@ bashful-tidy: bashful-pre do-bashful-tidy bashful-post
 bashful-build: bashful-pre do-bashful-build bashful-post
 bashful-muon-build: bashful-pre do-bashful-muon-build bashful-post
 bashful-git-status: bashful-pre bashful-rm-git-status-logs do-bashful-git-status bashful-post bashful-bat-git-status-logs
+bashful-modified-files: bashful-pre bashful-rm-modified-files-logs do-bashful-modified-files bashful-post bashful-bat-modified-files-logs
 bashful-git-diff: bashful-pre do-bashful-git-diff bashful-post
 bashful-build-commands: bashful-pre do-bashful-build-commands bashful-post
 bashful-test-commands: bashful-pre do-bashful-test-commands bashful-post
 bashful-test: bashful-pre do-bashful-test bashful-post
 bashful-view-git-diff: bashful-pre do-bashful-view-git-diff bashful-post
 bashful-view-git-status: bashful-pre do-bashful-view-git-status bashful-post
+bashful-view-modified-files: bashful-pre do-bashful-view-modified-files bashful-post
+
+
+bashful-bat-modified-files-logs:
+	@bat /tmp/meson-repos-modified-files-*.log 2>/dev/null||true
+bashful-rm-modified-files-logs:
+	@rm /tmp/meson-repos-modified-files-*.log 2>/dev/null||true
 
 bashful-bat-git-status-logs:
-	@bat /tmp/meson-repos-git-status-*.log||true
+	@bat /tmp/meson-repos-git-status-*.log 2>/dev/null||true
 bashful-rm-git-status-logs:
-	@rm /tmp/meson-repos-git-status-*.log||true
+	@rm /tmp/meson-repos-git-status-*.log 2>/dev/null||true
 
 do-bashful-clean:
 	@passh -L /tmp/meson-repos-do-clean.log bashful run --tags clean etc/meson-repos.yaml
@@ -233,6 +243,8 @@ do-bashful-test-commands:
 	@passh -L /tmp/meson-repos-do-test-commands.log bashful run --tags test-commands etc/meson-repos-info.yaml
 do-bashful-test:
 	@passh -L /tmp/meson-repos-do-test.log bashful run --tags test etc/meson-repos.yaml
+do-bashful-modified-files:
+	@passh -L /tmp/meson-repos-do-modified-files.log bashful run --tags modified-files etc/meson-repos-info.yaml
 do-bashful-git-status:
 	@passh -L /tmp/meson-repos-do-git-status.log bashful run --tags git-status etc/meson-repos-info.yaml
 do-bashful-git-diff:
@@ -241,6 +253,8 @@ do-bashful-git-diff:
 
 do-bashful-view-git-diff:
 	@passh bat --style=full /tmp/meson-repos-git-diff-*.log
+do-bashful-view-modified-files:
+	@passh bat --style=full /tmp/meson-repos-modified-files-*.log
 do-bashful-view-git-status:
 	@passh bat --style=full /tmp/meson-repos-git-status-*.log
 

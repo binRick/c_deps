@@ -1,5 +1,5 @@
 smaz_srcs = [
-  meson_deps_dir + '/submodules/smaz/smaz.c',
+  c_deps_dir + '/submodules/smaz/smaz.c',
 ]  
 smaz_lib = static_library('smaz', 
   smaz_srcs,

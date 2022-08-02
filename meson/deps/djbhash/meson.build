@@ -1,7 +1,7 @@
 
 djbhash_dir =  'submodules/djbhash'
 djbhash_srcs = [
-  meson_deps_dir + '/' + djbhash_dir + '/src/djbhash.c',
+  c_deps_dir + '/' + djbhash_dir + '/src/djbhash.c',
 ]
 djbhash_cargs = [
   '-Wno-pointer-sign',

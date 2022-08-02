@@ -2,7 +2,7 @@
 #include "../submodules/generic-print/print.h"
 #include "../submodules/log.h/log.h"
 #include "reflect-test.h"
-#include "submodules/greatest/greatest.h"
+#include "submodules/c_greatest/greatest/greatest.h"
 #include <assert.h>
 #include <inttypes.h>
 #include <math.h>

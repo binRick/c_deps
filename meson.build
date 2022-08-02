@@ -1,4 +1,4 @@
-project('meson_deps',['c','cpp'],default_options:['warning_level=0','c_std=gnu99'],version: '0.0.1',
+project('c_deps',['c','cpp'],default_options:['warning_level=0','c_std=gnu99'],version: '0.0.1',
   subproject_dir: 'subprojects',
   )
 #############################################################
@@ -18,7 +18,7 @@ git = find_program('git', required: true)
 fs = import('fs')
 cc = meson.get_compiler('c', native: true)
 cpp = meson.get_compiler('cpp', native: true)
-meson_deps_dir = meson.current_source_dir()
+c_deps_dir = meson.current_source_dir()
 #############################################################
 if fs.is_dir('.git')
     git_rev_parse = run_command(git, 'rev-parse', '--short', '@', check: true)
@@ -37,7 +37,7 @@ summary({'version': meson.project_version(),
         'vcs_tag': git_sha,
         'go_version': go_version,
         }, section: 'Options')
-pwd = meson_deps_dir
+pwd = c_deps_dir
 #############################################################
 inc = [
   include_directories('submodules'),

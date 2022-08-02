@@ -3,8 +3,8 @@ spng_dep = dependency('spng',
   #  //include_directories: include_directories('include'),
   )
 #libspng_lib = static_library('libspng',
-#  meson_deps_dir+'/submodules/libspng/spng/spng.c',
-#  meson_deps_dir+'/submodules/libspng/spng/spng.h',
+#  c_deps_dir+'/submodules/libspng/spng/spng.c',
+#  c_deps_dir+'/submodules/libspng/spng/spng.h',
 #  install: false, 
 #  dependencies: [
 #  ], 

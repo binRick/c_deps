@@ -7,7 +7,7 @@ hs_inc = [
  inc,
 ]
 hs_deps = [
- greatest_dep,
+ c_greatest_dep,
  wireguard_tools_dep,
 ]
 

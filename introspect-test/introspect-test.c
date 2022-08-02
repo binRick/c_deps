@@ -116,7 +116,7 @@ TEST t_introspect_palettes(void){
 }
 
 
-TEST t_introspect_meson_deps(void){
+TEST t_introspect_c_deps(void){
   char meson_build_file[] = "./meson.build";
 
   char *OUTPUT = execute_processes(meson_build_file);
@@ -126,7 +126,7 @@ TEST t_introspect_meson_deps(void){
 }
 
 SUITE(s_introspect_base){
-  RUN_TEST(t_introspect_meson_deps);
+  RUN_TEST(t_introspect_c_deps);
   RUN_TEST(t_introspect_ansi);
   RUN_TEST(t_introspect_db);
   RUN_TEST(t_introspect_palettes);
@@ -144,7 +144,7 @@ SUITE(s_iterate){
   RUN_TESTp(t_introspect_iterate, "../c_mui/meson.build");
   RUN_TESTp(t_introspect_iterate, "../c_sdl/meson.build");
   RUN_TESTp(t_introspect_iterate, "../c_hl/meson.build");
-//  RUN_TESTp(t_introspect_iterate, "../meson_deps/meson.build");
+//  RUN_TESTp(t_introspect_iterate, "../c_deps/meson.build");
 }
 
 GREATEST_MAIN_DEFS();

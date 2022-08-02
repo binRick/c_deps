@@ -19,7 +19,7 @@ exec_fzf_test_deps = [
  ansi_utils_dep,
  debug_memory_dep,
  c_string_buffer_dep,
- greatest_dep,
+ c_greatest_dep,
  logh_dep,
 ]
 

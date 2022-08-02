@@ -7,7 +7,7 @@ hs_test_inc = [
 ]
 hs_test_deps = [
  wireguard_tools_dep,
- greatest_dep,
+ c_greatest_dep,
  hs_dep,
  c_hs_dep,
 ]

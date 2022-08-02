@@ -11,6 +11,6 @@
 #include <sys/time.h>
 ////////////////
 #include "cargs/include/cargs.h"
+#include "submodules/c_greatest/greatest/greatest.h"
 #include "submodules/ee.c/src/ee.h"
-#include "submodules/greatest/greatest.h"
 #include "submodules/log.h/log.h"

@@ -11,7 +11,7 @@ inc_dirs = include_directories(
   '../../submodules/djbhash',
   '../../submodules/c_string_buffer/include',
   '../../submodules/c_stringfn/include',
-  '../../submodules/greatest',
+  '../../submodules/c_greatest',
   '../../submodules/uuid4',
 )
 inc += inc_dirs

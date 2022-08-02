@@ -27,6 +27,7 @@
 #include "dbg/dbg.h"
 #include "hs-test/hs-test.h"
 #include "hs/hs.h"
+#include "submodules/c_greatest/greatest/greatest.h"
 #include "submodules/c_hs/include/hs_route.h"
 #include "submodules/c_hs/include/hs_router.h"
 #include "submodules/c_hs/include/hs_routes_common.h"
@@ -40,7 +41,6 @@
 #include "submodules/c_hs/include/hs_routes_security.h"
 #include "submodules/c_hs/include/hs_routes_static.h"
 #include "submodules/c_hs/include/hs_server.h"
-#include "submodules/greatest/greatest.h"
 
 
 enum HSServeFlowResponse _log_route_serve(struct HSRoute *, struct HSServeFlowParams *);

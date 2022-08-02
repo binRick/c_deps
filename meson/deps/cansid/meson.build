@@ -1,5 +1,5 @@
 cansid_srcs = [  
-  meson_deps_dir + '/submodules/cansid/cansid.c',
+  c_deps_dir + '/submodules/cansid/cansid.c',
 ]
 
 cansid_lib = static_library('cansid',

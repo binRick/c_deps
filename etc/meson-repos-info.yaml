@@ -26,6 +26,15 @@ tasks:
         ignore-failure: false
         cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-git-status-%.log git status"
 
+  - name: Print Meson Repos Git Modified Files
+    tags: [modified-files]
+    parallel-tasks:
+      - name: Print Meson Repo Git Modified Files %
+        for-each: *meson-dirs
+        ignore-failure: false
+        cmd: env bash -c "cd ~/repos/%/. && { passh -L /tmp/meson-repos-git-modified-files-%.log git status -s||true; } | grep ' M ' 2>/dev/null"
+
+
   - name: Print Meson Repos Git Diff
     tags: [git-diff]
     parallel-tasks:

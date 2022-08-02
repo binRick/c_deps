@@ -10,6 +10,8 @@ deps_args = [
 ]
 
 deps_deps = [
+  parson_dep,
+  c_greatest_dep,
   rhash_md5_dep,
   ansi_codes_dep,
   asprintf_dep,
@@ -29,7 +31,6 @@ deps_deps = [
   djbhash_dep,
   fs_dep,
   
-  greatest_dep,
   http_get_dep,
   incbin_dep,
   libyaml_dep,
@@ -37,7 +38,6 @@ deps_deps = [
   ms_dep,
   #  occurrences_dep,
   progress_dep,
-  parson_dep,
   rgba_dep,
   smaz_dep,
   sqlite3_dep,

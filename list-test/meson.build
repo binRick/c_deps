@@ -12,7 +12,7 @@ list_test_deps = [
  c_fsio_dep,
  c_stringfn_dep,
  c_string_buffer_dep,
- greatest_dep,
+ c_greatest_dep,
  logh_dep,
  list_dep,
 ]

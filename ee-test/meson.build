@@ -7,7 +7,7 @@ ee_test_inc = [
 ee_test_deps = [
  ee_dep,
  list_dep,
- greatest_dep,
+ c_greatest_dep,
  ansi_codes_dep,
  logh_dep,
 ]

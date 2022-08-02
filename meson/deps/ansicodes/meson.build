@@ -1,5 +1,5 @@
 ansicodes_lib = static_library('ansicodes', 
-  meson_deps_dir+'/submodules/c_ansi/ansi-codes/ansi-codes.c',
+  c_deps_dir+'/submodules/c_ansi/ansi-codes/ansi-codes.c',
   install: false, 
   dependencies: [
   ], 

@@ -3,7 +3,7 @@ strdup_dirs = [
   inc,
   ]
 strdup_lib = static_library('strdup', 
-  meson_deps_dir + '/submodules/strdup/strdup.c',
+  c_deps_dir + '/submodules/strdup/strdup.c',
   install: false, 
   dependencies: [
   ], 

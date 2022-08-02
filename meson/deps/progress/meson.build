@@ -2,7 +2,7 @@ progress_cargs = [
   '-Wno-macro-redefined',
 ]
 progress_srcs = [
-  meson_deps_dir + '/submodules/progress.c/progress.c',
+  c_deps_dir + '/submodules/progress.c/progress.c',
 ]
 progress_lib = static_library('progress', 
   progress_srcs,

@@ -57,6 +57,7 @@
 #include "ok-file-formats/ok_jpg.h"
 #include "ok-file-formats/ok_png.h"
 #include "ok-file-formats/ok_wav.h"
+#include "process/process.h"
 #include "querystring.c/querystring.h"
 #include "tempdir.c/tempdir.h"
 #include "uthash/include/uthash.h"
@@ -2309,6 +2310,13 @@ void querystring_parser(void *data, char *fst, char *snd) {
 }
 
 
+TEST t_my_cwd(void){
+  char *d = get_my_cwd();
+
+  PASS();
+}
+
+
 TEST t_jinja2_cli(void){
   struct jinja2_render_template_t *CFG = jinja2_init_config();
 
@@ -2635,6 +2643,10 @@ SUITE(s_httpserver){
   RUN_TEST(t_httpserver);
   PASS();
 }
+SUITE(s_my_cwd){
+  RUN_TEST(t_my_cwd);
+  PASS();
+}
 SUITE(s_jinja2_cli){
   RUN_TEST(t_jinja2_cli);
   PASS();
@@ -2800,6 +2812,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_querystring);
   RUN_SUITE(s_levenshtein);
   RUN_SUITE(s_jinja2_cli);
+  RUN_SUITE(s_my_cwd);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

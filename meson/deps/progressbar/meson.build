@@ -1,6 +1,6 @@
 progressbar_srcs = [
-  meson_deps_dir + '/submodules/progressbar/lib/progressbar.c',
-  meson_deps_dir + '/submodules/progressbar/lib/statusbar.c',
+  c_deps_dir + '/submodules/progressbar/lib/progressbar.c',
+  c_deps_dir + '/submodules/progressbar/lib/statusbar.c',
 ]
 
 progressbar_lib = static_library('progressbar',

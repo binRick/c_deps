@@ -1,5 +1,5 @@
 #include "dbg/dbg.h"
-#include "submodules/greatest/greatest.h"
+#include "submodules/c_greatest/greatest/greatest.h"
 #include "submodules/wireguard-tools/src/containers.h"
 #include "wg-test/wg-test.h"
 #include "wg/wg.h"

@@ -10,6 +10,7 @@ deps_test_deps = [
   miniaudio_dep,
   c89atomic_dep,
   tempdir_dep,
+  process_dep,
   deps_dep,
   occurrences_dep,
   str_replace_dep,

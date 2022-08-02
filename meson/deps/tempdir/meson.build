@@ -2,7 +2,7 @@ tempdir_dirs = [
   inc,
   ]
 tempdir_lib = static_library('tempdir', 
-  meson_deps_dir + '/submodules/tempdir.c/tempdir.c',
+  c_deps_dir + '/submodules/tempdir.c/tempdir.c',
   install: false, 
   dependencies: [],
   include_directories: tempdir_dirs,
