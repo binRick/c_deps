@@ -150,7 +150,7 @@ git-pull:
 	@git pull --recurse-submodules
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
 meson: do-meson-build
-do-build: do-meson-build do-muon
+do-build: do-meson-build
 meson-build: do-meson-build
 do-meson-build: do-meson
 	@meson compile -C build -j 20 -v
@@ -160,7 +160,7 @@ do-test:
 	@passh meson test -C build -v --print-errorlogs	
 muon: do-muon
 test: do-test
-build: do-meson do-build muon
+build: do-meson do-build
 ansi: all do-sync do-ansi-make
 tidy: fmt-scripts do-uncrustify 
 dev: do-nodemon

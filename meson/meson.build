@@ -131,5 +131,7 @@ subdir('deps/httpd')
 subdir('deps/hidapi')
 subdir('deps/libusb')
 subdir('deps/levenshtein')
+subdir('deps/uri.c')
+subdir('deps/libyuarel')
 
 ####################################

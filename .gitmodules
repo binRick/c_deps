@@ -378,7 +378,7 @@
 	url = https://github.com/jirutka/tty-copy
 [submodule "submodules/c_vector"]
 	path = submodules/c_vector
-	url = https://github.com/sagiegurari/c_vector
+	url = https://github.com/binRick/c_vector
 [submodule "submodules/c_workqueue"]
 	path = submodules/c_workqueue
 	url = https://github.com/sagiegurari/c_workqueue
@@ -649,3 +649,9 @@
 [submodule "submodules/sha256.c"]
 	path = submodules/sha256.c
 	url = https://github.com/jb55/sha256.c
+[submodule "submodules/uri.c"]
+	path = submodules/uri.c
+	url = https://github.com/littlstar/uri.c
+[submodule "submodules/libyuarel"]
+	path = submodules/libyuarel
+	url = https://github.com/jacketizer/libyuarel

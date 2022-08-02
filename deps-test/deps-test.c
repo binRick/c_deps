@@ -3,6 +3,7 @@
 #define MINIAUDIO_IMPLEMENTATION
 #define TB_IMPL
 #define HTTPSERVER_IMPL
+#define HTTPSERVER_LISTEN_PORT    8199
 //#define DEBUG_MEMORY
 ////////////////////////////////////////////
 #include <stdio.h>
@@ -32,7 +33,6 @@
 #include "bench/bench.h"
 #include "bitfield/bitfield.h"
 #include "c89atomic/c89atomic.h"
-#include "c_unja/src/unja_template.h"
 #include "deps-test/deps-test.h"
 #include "emojis/emojis.h"
 #include "generic-print/print.h"
@@ -51,6 +51,7 @@
 #include "libut/include/libut.h"
 #include "libut/include/ringbuf.h"
 #include "libut/include/utvector.h"
+#include "libyuarel/yuarel.h"
 #include "log.h/log.h"
 #include "miniaudio/miniaudio.h"
 #include "minmax/include/minmax.h"
@@ -60,6 +61,7 @@
 #include "process/process.h"
 #include "querystring.c/querystring.h"
 #include "tempdir.c/tempdir.h"
+#include "uri.c/uri.h"
 #include "uthash/include/uthash.h"
 ////////////////////////////////////////////
 void __attribute__((constructor)) premain(){
@@ -94,7 +96,7 @@ static char *EXECUTABLE_PATH_DIRNAME;
  * ////////////////////////////////////////
  */
 
-#define DEF_PORT    8080
+#define DEF_PORT    HTTPSERVER_LISTEN_PORT
 #define MAX_NAME    40
 static int port = DEF_PORT;
 typedef struct {
@@ -116,8 +118,6 @@ static inline int file_exists(const char *path) {
   return(stat(path, &b));
 }
 
-#define RESPONSE    "Hello, World!"
-
 
 int request_target_is(struct http_request_s *request, char const *target) {
   http_string_t url = http_request_target(request);
@@ -126,52 +126,85 @@ int request_target_is(struct http_request_s *request, char const *target) {
   return(len == url.len && memcmp(url.buf, target, url.len) == 0);
 }
 
-int chunk_count = 0;
-
-
-void chunk_cb(struct http_request_s *request) {
-  chunk_count++;
-  struct http_response_s *response = http_response_init();
-  http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
-  if (chunk_count < 3) {
-    http_respond_chunk(request, response, chunk_cb);
-  } else {
-    http_response_header(response, "Foo-Header", "bar");
-    http_respond_chunk_end(request, response);
-  }
-}
-
-typedef struct {
-  char                   *buf;
-  struct http_response_s *response;
-  int                    index;
-} chunk_buf_t;
-
-
-void chunk_req_cb(struct http_request_s *request) {
-  http_string_t str           = http_request_chunk(request);
-  chunk_buf_t   *chunk_buffer = (chunk_buf_t *)http_request_userdata(request);
-
-  if (str.len > 0) {
-    memcpy(chunk_buffer->buf + chunk_buffer->index, str.buf, str.len);
-    chunk_buffer->index += str.len;
-    http_request_read_chunk(request, chunk_req_cb);
-  } else {
-    http_response_body(chunk_buffer->response, chunk_buffer->buf, chunk_buffer->index);
-    http_respond(request, chunk_buffer->response);
-    free(chunk_buffer->buf);
-    free(chunk_buffer);
-  }
-}
 
 struct http_server_s *poll_server;
+struct http_req_s    *_s;
 
 
 void handle_request(struct http_request_s *request) {
-  chunk_count = 0;
   http_request_connection(request, HTTP_AUTOMATIC);
+  http_string_t url = http_request_target(request);
+
+  {
+    dbg(url.buf, %s);
+    char                   *U             = stringfn_substring(url.buf, 0, url.len);
+    struct StringFNStrings lines          = stringfn_split_lines_and_trim(url.buf);
+    char                   *req_data      = lines.strings[lines.count - 1];
+    struct StringFNStrings params_strings = stringfn_split(req_data, '&');
+    struct StringFNStrings url_strings    = stringfn_split(U, '/');
+
+
+    int                 p;
+    struct yuarel       yurl;
+    struct yuarel_param params[params_strings.count];
+    char                *parts[3];
+    char                *url_string;
+    asprintf(&url_string, "http://localhost:%d%s?%s", HTTPSERVER_LISTEN_PORT, U, req_data);
+    dbg(url_string, %s);
+
+    if (-1 == yuarel_parse(&yurl, url_string)) {
+      fprintf(stderr, "Could not parse url!\n");
+      return(1);
+    }
+
+    if (false) {
+      dbg(params_strings.count, %d);
+      dbg(U, %s);
+      dbg(req_data, %s);
+      dbg(lines.count, %d);
+      printf("scheme:\t%s\n", yurl.scheme);
+      printf("host:\t%s\n", yurl.host);
+      printf("port:\t%d\n", yurl.port);
+      printf("path:\t%s\n", yurl.path);
+      printf("query:\t%s\n", yurl.query);
+      printf("fragment:\t%s\n", yurl.fragment);
+    }
+    dbg(url_strings.count, %d);
+
+
+    printf("Query string parameters:\n");
+    p = yuarel_parse_query(yurl.query, '&', params, params_strings.count);
+    while (p-- > 0) {
+      if (params[p].key && params[p].val) {
+        printf("\t%s: %s\n", params[p].key, params[p].val);
+      }
+    }
+    if (url_strings.count > 1) {
+      yuarel_split_path(yurl.path, parts, url_strings.count - 1);
+      for (int i = 0; i < url_strings.count - 1; i++) {
+        printf("part #%d: %s\n", i, parts[i]);
+      }
+    }
+
+
+    char *uri_encoded = uri_encode("Betty's favorite language is Français");
+    char *uri_decoded = uri_decode(req_data);
+
+    char *u;
+    asprintf(&u, "\n\turl:%s\n\tlen:%d\n", url.buf, url.len);
+    if (false) {
+      dbg(uri_decoded, %s);
+      dbg(uri_encoded, %s);
+      printf("%s", u);
+    }
+  }
   struct http_response_s *response = http_response_init();
   http_response_status(response, 200);
+  char                   *R;
+  asprintf(&R, "%lld", timestamp());
+  if (false) {
+    printf("R:%s\n", R);
+  }
   if (request_target_is(request, "/echo")) {
     http_string_t body = http_request_body(request);
     http_response_header(response, "Content-Type", "text/plain");
@@ -180,45 +213,12 @@ void handle_request(struct http_request_s *request) {
     http_string_t ua = http_request_header(request, "Host");
     http_response_header(response, "Content-Type", "text/plain");
     http_response_body(response, ua.buf, ua.len);
-  } else if (request_target_is(request, "/poll")) {
-    while (http_server_poll(poll_server) > 0) {
-    }
+  } else if (request_target_is(request, "/ts")) {
     http_response_header(response, "Content-Type", "text/plain");
-    http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
-  } else if (request_target_is(request, "/empty")) {
-    // No Body
-  } else if (request_target_is(request, "/chunked")) {
-    http_response_header(response, "Content-Type", "text/plain");
-    http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
-    http_respond_chunk(request, response, chunk_cb);
-    return;
-  } else if (request_target_is(request, "/chunked-req")) {
-    chunk_buf_t *chunk_buffer = (chunk_buf_t *)calloc(1, sizeof(chunk_buf_t));
-    chunk_buffer->buf      = (char *)malloc(512 * 1024);
-    chunk_buffer->response = response;
-    http_request_set_userdata(request, chunk_buffer);
-    http_request_read_chunk(request, chunk_req_cb);
-    return;
-  } else if (request_target_is(request, "/large")) {
-    chunk_buf_t *chunk_buffer = (chunk_buf_t *)calloc(1, sizeof(chunk_buf_t));
-    chunk_buffer->buf      = (char *)malloc(1024);
-    chunk_buffer->response = response;
-    http_request_set_userdata(request, chunk_buffer);
-    http_request_read_chunk(request, chunk_req_cb);
-    return;
-  } else if (request_target_is(request, "/headers")) {
-    int           iter = 0, i = 0;
-    http_string_t key, val;
-    char          buf[512];
-    while (http_request_iterate_headers(request, &key, &val, &iter)) {
-      i += snprintf(buf + i, 512 - i, "%.*s: %.*s\n", key.len, key.buf, val.len, val.buf);
-    }
-    http_response_header(response, "Content-Type", "text/plain");
-    http_response_body(response, buf, i);
-    return(http_respond(request, response));
+    http_response_body(response, R, strlen(R));
   } else {
     http_response_header(response, "Content-Type", "text/plain");
-    http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
+    http_response_body(response, R, strlen(R));
   }
   http_respond(request, response);
 } /* handle_request */
@@ -236,7 +236,7 @@ void handle_sigterm(int signum) {
 
 int httpserver_main() {
   signal(SIGTERM, handle_sigterm);
-  server = http_server_init(8080, handle_request);
+  server = http_server_init(HTTPSERVER_LISTEN_PORT, handle_request);
   http_server_listen(server);
 }
 
@@ -1061,6 +1061,11 @@ TEST t_workqueue(void){
 }
 
 
+void H(size_t I, void *HANDLED_ITEM){
+  printf(" Handled Item: #%lu> %s\n", I, (char *)HANDLED_ITEM);
+}
+
+
 TEST t_vector(void){
   MEASURE(example_measure1)
   struct Vector *vector = vector_new();
@@ -1102,6 +1107,15 @@ TEST t_vector(void){
   size     = vector_ensure_capacity(vector, 100);
   capacity = vector_capacity(vector);
   printf("Current size: %zu capacity: %zu\n", size, capacity);
+  vector_push(vector, "test push");
+  vector_push(vector, "test push");
+  vector_push(vector, "test push");
+
+  struct Vector *V = vector_new();
+  vector_push(V, "v0");
+  vector_push(V, "v1");
+  vector_push(V, "v2");
+
 
   // when we are done with the vector, we release it
   vector_release(vector);
@@ -2411,81 +2425,6 @@ TEST t_emojis(void){
 }
 
 
-void unja_test_for_loop(){
-  char *input = "\n"
-                "{%- for n in names -%}"
-                "\n{{ n }}\n"
-                "{%- endfor -%}\n"
-                "\n";
-  struct unja_hashmap *ctx = unja_hashmap_new();
-
-  struct unja_vector  *names = unja_vector_new(3);
-
-  unja_vector_push(names, "John");
-  unja_vector_push(names, "Sally");
-  unja_vector_push(names, "Bob");
-  unja_hashmap_insert(ctx, "names", names);
-
-  char *output = unja_template_string(input, ctx);
-
-  unja_vector_free(names);
-  unja_hashmap_free(ctx);
-  printf("\n=======================\n");
-  printf("%s", output);
-  printf("\n=======================\n");
-  assert(strcmp(output, "John\nSally\nBob") == 0);
-  free(output);
-}
-
-
-void unja_test_dot_notation(){
-  char *input  = "Hello {{user.name}}!";
-  char *output = NULL;
-
-  BENCHMARK_QTY(benchmark_unja_test_dot_notation, 500)
-  struct unja_hashmap *ctx  = unja_hashmap_new();
-  struct unja_hashmap *user = unja_hashmap_new();
-
-  unja_hashmap_insert(user, "name", "Danny");
-  unja_hashmap_insert(ctx, "user", user);
-  output = unja_template_string(input, ctx);
-
-  assert(strcmp(output, "Hello Danny!") == 0);
-  unja_hashmap_free(user);
-  unja_hashmap_free(ctx);
-  END_BENCHMARK(benchmark_unja_test_dot_notation)
-  printf("\n=======================\n");
-  printf("%s", output);
-  printf("\n=======================\n");
-  free(output);
-  BENCHMARK_SUMMARY(benchmark_unja_test_dot_notation);
-}
-
-
-void unja_test_basic(){
-  char                *input = "Hello {{name}}.";
-  struct unja_hashmap *ctx   = unja_hashmap_new();
-
-  unja_hashmap_insert(ctx, "name", "world");
-  char *output = unja_template_string(input, ctx);
-
-  assert(strcmp(output, "Hello world.") == 0);
-  unja_hashmap_free(ctx);
-  printf("\n=======================\n");
-  printf("%s", output);
-  printf("\n=======================\n");
-  free(output);
-}
-
-
-TEST t_unja(void){
-  unja_test_basic();
-  unja_test_dot_notation();
-  unja_test_for_loop();
-  PASS();
-}
-
-
 TEST t_ok_file_format_jpg(void){
   char *jpg_file = malloc(1024);
 
@@ -2737,10 +2676,6 @@ SUITE(s_path) {
   RUN_TEST(t_which);
   PASS();
 }
-SUITE(s_unja) {
-  RUN_TEST(t_unja);
-  PASS();
-}
 SUITE(s_debug) {
   RUN_TEST(t_debug_print);
   PASS();
@@ -2760,7 +2695,9 @@ int main(int argc, char **argv) {
   EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
   GREATEST_MAIN_BEGIN();
   if (isatty(STDOUT_FILENO)) {
-    //RUN_SUITE(s_httpserver);
+    if (getenv("HTTPSERVER") != NULL) {
+      RUN_SUITE(s_httpserver);
+    }
     RUN_SUITE(s_libforks);
     RUN_SUITE(s_termbox2);
     RUN_SUITE(s_libtinyfiledialogs);
@@ -2806,7 +2743,6 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_bench);
   RUN_SUITE(s_bitfield);
   RUN_SUITE(s_incbin);
-  RUN_SUITE(s_unja);
   RUN_SUITE(s_emojis);
   RUN_SUITE(s_libtrycatch);
   RUN_SUITE(s_querystring);
