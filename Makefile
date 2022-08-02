@@ -125,6 +125,7 @@ do-sync:
 		--exclude '.git'
 do-nodemon:
 	@$(PASSH) -L .nodemon.log $(NODEMON) \
+		-V \
 		--delay .3 \
 		-w "dbgp-test/*.h" -w "dbgp-test/*.c"\
 		-w 'meson/meson.build' -w 'meson/deps/*/meson.build' -w 'meson.build' \

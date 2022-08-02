@@ -99,6 +99,8 @@ struct fzf_exec_t *exec_fzf_setup(void){
   e->right_margin        = 0;
   e->left_margin         = 0;
   e->bottom_margin       = 0;
+  e->fzf_pointer         = ">";
+  e->fzf_marker          = ">";
   e->top_padding         = 0;
   e->right_padding       = 0;
   e->left_padding        = 0;
@@ -175,7 +177,7 @@ int exec_fzf(struct fzf_exec_t *fe){
            stringfn_mut_trim(fe->input_lines_s)
            );
   fsio_write_text_file(fe->options_file, fe->options_file_content_s);
-  log_debug("wrote %s", fe->options_file);
+  //log_debug("wrote %s", fe->options_file);
   asprintf(&fe->fzf_default_opts,
            "%s"
            "%s"
@@ -190,6 +192,9 @@ int exec_fzf(struct fzf_exec_t *fe){
            " --height='%d'"
            " --info='%s'"
            " --history='%s'"
+           " --pointer='%s'"
+           " --marker='%s'"
+           " --prompt='%s'"
            " --ansi"
            " --reverse"
            " --border"
@@ -213,6 +218,9 @@ int exec_fzf(struct fzf_exec_t *fe){
            fe->height,
            fe->fzf_info,
            fe->fzf_history_file,
+           fe->fzf_pointer,
+           fe->fzf_marker,
+           fe->fzf_prompt,
            (fe->fzf_keybinds_s != NULL && strlen(fe->fzf_keybinds_s) > 10)
                ? fe->fzf_keybinds_s
                : ""

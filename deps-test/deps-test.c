@@ -33,6 +33,7 @@
 #include "bench/bench.h"
 #include "bitfield/bitfield.h"
 #include "c89atomic/c89atomic.h"
+#include "c_string_buffer/include/stringbuffer.h"
 #include "deps-test/deps-test.h"
 #include "emojis/emojis.h"
 #include "generic-print/print.h"
@@ -41,6 +42,7 @@
 #include "httpserver.h/httpserver.h"
 #include "incbin/incbin.h"
 #include "jinja2-cli/jinja2-cli.h"
+#include "kitty/kitty.h"
 #include "layout/layout.h"
 #include "levenshtein.c/levenshtein.h"
 #include "libforks/libforks.h"
@@ -142,6 +144,18 @@ void handle_request(struct http_request_s *request) {
     char                   *req_data      = lines.strings[lines.count - 1];
     struct StringFNStrings params_strings = stringfn_split(req_data, '&');
     struct StringFNStrings url_strings    = stringfn_split(U, '/');
+    struct Vector          *url_v         = vector_new();
+    struct StringBuffer    *url_sb        = stringbuffer_new();
+    for (size_t usi = 0; usi < url_strings.count; usi++) {
+      if (strlen(url_strings.strings[usi]) > 0) {
+        vector_push(url_v, url_strings.strings[usi]);
+        stringbuffer_append_string(url_sb, "/");
+        stringbuffer_append_string(url_sb, url_strings.strings[usi]);
+      }
+    }
+    char                   *normalized_url = stringbuffer_to_string(url_sb);
+    dbg(normalized_url, %s);
+    struct StringFNStrings normalized_url_strings = stringfn_split(normalized_url, '/');
 
 
     int                 p;
@@ -149,7 +163,7 @@ void handle_request(struct http_request_s *request) {
     struct yuarel_param params[params_strings.count];
     char                *parts[3];
     char                *url_string;
-    asprintf(&url_string, "http://localhost:%d%s?%s", HTTPSERVER_LISTEN_PORT, U, req_data);
+    asprintf(&url_string, "http://localhost:%d%s?%s", HTTPSERVER_LISTEN_PORT, normalized_url, req_data);
     dbg(url_string, %s);
 
     if (-1 == yuarel_parse(&yurl, url_string)) {
@@ -158,31 +172,33 @@ void handle_request(struct http_request_s *request) {
     }
 
     if (false) {
-      dbg(params_strings.count, %d);
-      dbg(U, %s);
-      dbg(req_data, %s);
-      dbg(lines.count, %d);
       printf("scheme:\t%s\n", yurl.scheme);
       printf("host:\t%s\n", yurl.host);
-      printf("port:\t%d\n", yurl.port);
-      printf("path:\t%s\n", yurl.path);
-      printf("query:\t%s\n", yurl.query);
-      printf("fragment:\t%s\n", yurl.fragment);
     }
-    dbg(url_strings.count, %d);
+    dbg(params_strings.count, %d);
+    dbg(req_data, %s);
+    dbg(lines.count, %d);
+    dbg(normalized_url_strings.count, %d);
+    printf("port:\t%d\n", yurl.port);
+    printf("path:\t%s\n", yurl.path);
+    printf("query:\t%s\n", yurl.query);
+    printf("fragment:\t%s\n", yurl.fragment);
 
 
+    printf("Print Path items\n");
+    if (normalized_url_strings.count > 1 && strlen(normalized_url) > 1) {
+      yuarel_split_path(yurl.path, parts, normalized_url_strings.count - 1);
+      for (int i = 0; i < normalized_url_strings.count - 1; i++) {
+        if (parts[i]) {
+          printf("part #%d: %s\n", i, parts[i]);
+        }
+      }
+    }
     printf("Query string parameters:\n");
     p = yuarel_parse_query(yurl.query, '&', params, params_strings.count);
     while (p-- > 0) {
       if (params[p].key && params[p].val) {
         printf("\t%s: %s\n", params[p].key, params[p].val);
-      }
-    }
-    if (url_strings.count > 1) {
-      yuarel_split_path(yurl.path, parts, url_strings.count - 1);
-      for (int i = 0; i < url_strings.count - 1; i++) {
-        printf("part #%d: %s\n", i, parts[i]);
       }
     }
 
@@ -2324,6 +2340,179 @@ void querystring_parser(void *data, char *fst, char *snd) {
 }
 
 
+TEST t_kitty_send_text(void){
+  char *ok = kitty_send_text("pwd");
+
+  ASSERT_EQ(ok, true);
+  char *text = kitty_get_last_cmd_output();
+
+  printf(AC_RESETALL AC_YELLOW "text:%s\n%lu bytes\n"AC_RESETALL,
+         text,
+         strlen(text)
+         );
+  PASS();
+}
+
+
+TEST t_kitty_get_colors(void){
+  char *text = kitty_get_colors();
+
+  printf(AC_RESETALL AC_YELLOW "text:%s\n%lu bytes\n"AC_RESETALL,
+         text,
+         strlen(text)
+         );
+  PASS();
+}
+
+
+TEST t_kitty_list_fonts(void){
+  char *text = kitty_list_fonts();
+
+  printf(AC_RESETALL AC_BLUE "text:%s\n%lu bytes\n"AC_RESETALL,
+         text,
+         strlen(text)
+         );
+  PASS();
+}
+
+
+TEST t_kitty_query_terminal(void){
+  char *text = kitty_query_terminal();
+
+  printf(AC_RESETALL AC_BLUE "text:%s\n%lu bytes\n"AC_RESETALL,
+         text,
+         strlen(text)
+         );
+  PASS();
+}
+
+
+TEST t_kitty_ls_kittens(void){
+  char *text = kitty_ls_kittens();
+
+  printf(AC_RESETALL AC_YELLOW "text:%s\n%lu bytes\n"AC_RESETALL,
+         text,
+         strlen(text)
+         );
+  PASS();
+}
+
+
+TEST t_kitty_get_text(void){
+  char *text = kitty_get_text();
+
+  printf("text:%s\n%lu bytes\n",
+         text,
+         strlen(text)
+         );
+  PASS();
+}
+
+
+TEST t_kitty_set_window_title(void){
+  char *title;
+
+  asprintf(&title, "window %d", getpid());
+  bool ok = kitty_set_window_title(title);
+
+  ASSERT_EQ(ok, true);
+  PASS();
+}
+
+
+TEST t_kitty_set_tab_title(void){
+  char *title;
+
+  asprintf(&title, "pid %d", getpid());
+  bool ok = kitty_set_tab_title(title);
+
+  ASSERT_EQ(ok, true);
+  PASS();
+}
+
+
+TEST t_kitty_ls(void){
+  char *ls = kitty_get_ls();
+
+  printf("ls text:%s\n%lu bytes\n",
+         ls,
+         strlen(ls)
+         );
+  PASS();
+}
+
+
+TEST t_kitty_set_layout_vertical(void){
+  bool ok = kitty_set_layout("vertical");
+
+  ASSERT_EQ(ok, true);
+
+  PASS();
+}
+
+
+TEST t_kitty_reset_tab_color(void){
+  bool ok = kitty_set_tab_color("active_fg", "NONE");
+
+  ASSERT_EQ(ok, true);
+  ok = kitty_set_tab_color("active_bg", "NONE");
+  ASSERT_EQ(ok, true);
+  ok = kitty_set_tab_color("inactive_fg", "NONE");
+  ASSERT_EQ(ok, true);
+  ok = kitty_set_tab_color("inactive_bg", "NONE");
+  ASSERT_EQ(ok, true);
+  PASS();
+}
+
+
+TEST t_kitty_set_tab_color(void){
+  bool ok = kitty_set_tab_color("active_fg", "green");
+
+  ASSERT_EQ(ok, true);
+  ok = kitty_set_tab_color("active_bg", "black");
+  ASSERT_EQ(ok, true);
+  ok = kitty_set_tab_color("inactive_fg", "yellow");
+  ASSERT_EQ(ok, true);
+  ok = kitty_set_tab_color("inactive_bg", "blue");
+  ASSERT_EQ(ok, true);
+  PASS();
+}
+
+
+TEST t_kitty_set_layout_stack(void){
+  bool ok = kitty_set_layout("stack");
+
+  ASSERT_EQ(ok, true);
+
+  PASS();
+}
+
+
+TEST t_kitty_set_font_size(void){
+  bool ok = kitty_set_font_size(30);
+
+  ASSERT_EQ(ok, true);
+  PASS();
+}
+
+
+TEST t_kitty_image(void){
+  bool ok = kitty_draw_image();
+
+  ASSERT_EQ(ok, true);
+  PASS();
+}
+
+
+TEST t_kitty(void){
+  bool ok = kitty_clear_screen();
+
+  ASSERT_EQ(ok, true);
+
+  PASS();
+}
+
+
 TEST t_my_cwd(void){
   char *d = get_my_cwd();
 
@@ -2582,6 +2771,25 @@ SUITE(s_httpserver){
   RUN_TEST(t_httpserver);
   PASS();
 }
+SUITE(s_kitty){
+  RUN_TEST(t_kitty);
+  RUN_TEST(t_kitty_image);
+  RUN_TEST(t_kitty_set_font_size);
+  RUN_TEST(t_kitty_ls);
+  RUN_TEST(t_kitty_set_layout_stack);
+  RUN_TEST(t_kitty_set_layout_vertical);
+  RUN_TEST(t_kitty_reset_tab_color);
+  RUN_TEST(t_kitty_set_tab_color);
+  RUN_TEST(t_kitty_set_tab_title);
+  RUN_TEST(t_kitty_set_window_title);
+  RUN_TEST(t_kitty_get_text);
+  RUN_TEST(t_kitty_get_colors);
+  RUN_TEST(t_kitty_ls_kittens);
+  RUN_TEST(t_kitty_query_terminal);
+  RUN_TEST(t_kitty_list_fonts);
+  RUN_TEST(t_kitty_send_text);
+  PASS();
+}
 SUITE(s_my_cwd){
   RUN_TEST(t_my_cwd);
   PASS();
@@ -2749,6 +2957,7 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_levenshtein);
   RUN_SUITE(s_jinja2_cli);
   RUN_SUITE(s_my_cwd);
+  RUN_SUITE(s_kitty);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

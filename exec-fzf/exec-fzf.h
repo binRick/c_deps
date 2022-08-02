@@ -22,11 +22,11 @@
 #include "timestamp/timestamp.h"
 #include "which/src/which.h"
 //////////////////////////////////////////////
-struct fzf_keybind_t {
-  char *key;
-  char *cmd;
-  char *type;
-};
+static void __attribute__((destructor)) __exec_fzf_destructor();
+
+static void __attribute__((constructor)) __exec_fzf_constructor();
+
+struct fzf_keybind_t { char *key; char *cmd; char *type; };
 struct fzf_exec_t {
   struct Vector          *input_options;
   struct Vector          *selected_options;
@@ -44,7 +44,7 @@ struct fzf_exec_t {
   char                   *output_file;
   char                   *tempdir;
   char                   *header;
-  char                   *fzf_cmd;
+  char                   *fzf_cmd, *fzf_pointer, *fzf_marker;
   char                   *fzf_path;
   char                   *fzf_default_opts;
   char                   *fzf_default_command;
@@ -73,6 +73,3 @@ struct fzf_exec_t *exec_fzf_setup(void);
 void exec_fzf_release(struct fzf_exec_t *fzf_exec);
 int exec_fzf();
 
-static void __attribute__((destructor)) __exec_fzf_destructor();
-
-static void __attribute__((constructor)) __exec_fzf_constructor();

@@ -214,6 +214,10 @@ TEST t_fzf_multiple(void){
   fe->debug_mode      = true;
   fe->height          = 100;
   fe->select_multiple = true;
+  fe->fzf_pointer     = "->";
+  fe->fzf_marker      = "* ";
+  fe->fzf_prompt      = "Select Items > ";
+  fe->fzf_info        = "default";
   fe->header          = "Multiple Test";
   fe->preview_size    = 0;
   fe->preview_cmd     = "echo {}";
@@ -226,6 +230,37 @@ TEST t_fzf_multiple(void){
   ASSERT_EQm("fzf process OK", res, 0);
   log_info("Selected %lu/%lu options", vector_size(fe->selected_options), vector_size(fe->input_options));
   exec_fzf_release(fe);
+
+  PASS();
+}
+
+
+TEST t_fzf_short(void){
+  int               res = -1;
+
+  struct fzf_exec_t *fe = exec_fzf_setup();
+
+  ASSERT_NEQm("fzf setup OK", fe, NULL);
+  fe->header       = "my header 123444";
+  fe->debug_mode   = false;
+  fe->height       = 25;
+  fe->preview_size = 0;
+  fe->fzf_pointer  = "->";
+  fe->fzf_marker   = "* ";
+  fe->fzf_info     = "inline";
+  fe->header       = "[Short Test]";
+  fe->fzf_prompt   = "Select an Item > ";
+  vector_push(fe->input_options, "option 1");
+  vector_push(fe->input_options, "option 2");
+  vector_push(fe->input_options, "option 3");
+  vector_push(fe->input_options, "option wow............");
+
+  res = exec_fzf(fe);
+  ASSERT_EQm("fzf process OK", res, 0);
+
+  //log_info("Selected %lu/%lu options", vector_size(fe->selected_options), vector_size(fe->input_options));
+  exec_fzf_release(fe);
+
 
   PASS();
 }
@@ -258,6 +293,7 @@ TEST t_fzf_single(void){
 }
 
 SUITE(s_fzf_basic){
+  RUN_TEST(t_fzf_short);
   RUN_TEST(t_fzf_single);
   RUN_TEST(t_fzf_multiple);
   RUN_TEST(t_fzf_preview);
