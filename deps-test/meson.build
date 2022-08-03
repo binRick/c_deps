@@ -29,6 +29,15 @@ deps_test_deps = [
   csplit_dep,
   subhook_dep,
   socket99_dep,
+  container_of_dep,
+  genpassword_c_dep,
+  genpassword_c_dep,
+  c_timestamp_dep,
+  url_router_dep,
+  hashmap_h_dep,
+  str_flatten_c_dep,
+  pidfile_dep,
+  semver_c_dep,
   flingfd_dep,
   c_timestamp_dep,
   libtrycatch_dep,
@@ -50,11 +59,17 @@ deps_test_deps = [
   ok_file_formats_dep,
   vtparse_dep,
   cansid_dep,
+  path_module_dep,
   ansi_utils_dep,
   http_get_dep,
   mkcreflect_dep,
   libtinyfiledialogs_dep,
   termbox2_dep,
+  url_h_dep,
+  path_normalize_c_dep,
+  extname_c_dep,
+  wildcardcmp_dep,
+  is_number_c_dep,
   minmax_dep,
   bench_dep,
   bitfield_dep,
@@ -74,6 +89,10 @@ deps_c_args = [
 deps_link_args = [
 ]
 
+deps_cur_dir = join_paths(meson.current_source_dir(), '..')
+deps_scripts_dir = join_paths(meson.current_source_dir(), 'scripts')
+deps_ls_tests_script = join_paths(c_deps_dir,'scripts/ls_deps_test_tests.sh')
+
 if get_option('enable-binaries')
   deps_test_exec = executable('deps-test',
      deps_test_srcs,
@@ -83,10 +102,21 @@ if get_option('enable-binaries')
      c_args: deps_c_args,
      install: true,
   )
+  if get_option('enable-greatest-tests')
+    test('deps-test|List Test Cases', sh_program,
+
+      args: [
+        '-c',
+        deps_ls_tests_script,
+        ],
+      workdir: meson.current_source_dir(),
+      )
+  endif
   if get_option('enable-deps-test')
     test('deps-test', 
+      workdir: deps_cur_dir,
+      deps_ls_tests_scripts,
       deps_test_exec, args: ['-v','-a'],
-      workdir: meson.current_source_dir(),
       )
   endif
 endif

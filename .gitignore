@@ -31,3 +31,4 @@ loc.sh
 */*.sum
 .bashful
 .bin
+*/.venv-*

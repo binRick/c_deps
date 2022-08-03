@@ -30,7 +30,7 @@ introspect_repos_deps = [
  b64_dep,
  c_vector_dep,
  subprocess_dep,
- path_normalize_dep,
+ path_normalize_c_dep,
  
  timestamp_dep,
  bytes_dep,

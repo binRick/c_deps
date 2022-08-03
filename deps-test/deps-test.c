@@ -32,15 +32,21 @@
 ////////////////////////////////////////////
 #include "bench/bench.h"
 #include "bitfield/bitfield.h"
+#include "c-timestamp/timestamp.h"
 #include "c89atomic/c89atomic.h"
 #include "c_string_buffer/include/stringbuffer.h"
+#include "container_of/container_of.h"
 #include "deps-test/deps-test.h"
 #include "emojis/emojis.h"
+#include "extname.c/src/extname.h"
 #include "generic-print/print.h"
+#include "genpassword.c/src/genpassword.h"
+#include "hashmap.h/hashmap.h"
 #include "hidapi/hidapi/hidapi.h"
 #include "hidapi/mac/hidapi_darwin.h"
 #include "httpserver.h/httpserver.h"
 #include "incbin/incbin.h"
+#include "is_number.c/is_number.h"
 #include "jinja2-cli/jinja2-cli.h"
 #include "kitty/kitty.h"
 #include "layout/layout.h"
@@ -60,11 +66,19 @@
 #include "ok-file-formats/ok_jpg.h"
 #include "ok-file-formats/ok_png.h"
 #include "ok-file-formats/ok_wav.h"
+#include "path-basename.c/src/path-basename.h"
+#include "path-normalize.c/src/path-normalize.h"
+#include "path_module/src/path.h"
+#include "pidfile/pidfile.h"
 #include "process/process.h"
 #include "querystring.c/querystring.h"
+#include "semver.c/semver.h"
+#include "str-flatten.c/src/str-flatten.h"
 #include "tempdir.c/tempdir.h"
 #include "uri.c/uri.h"
-#include "uthash/include/uthash.h"
+#include "url.h/url.h"
+#include "url_router/include/url_router/url_router.h"
+#include "wildcardcmp/wildcardcmp.h"
 ////////////////////////////////////////////
 void __attribute__((constructor)) premain(){
   char *s = malloc(1024);
@@ -870,8 +884,7 @@ TEST t_layout(void){
 
 
 TEST t_libbeaufort(void){
-  BENCHMARK_QTY(benchmark_name, 25)
-  static char *monkey = NULL;
+  static char *monkey   = NULL;
   static char *monkey_s = NULL;
 
   static char *goodman   = NULL;
@@ -901,8 +914,7 @@ TEST t_libbeaufort(void){
   dbg(groove, %s);
   dbg(groove_s, %s);
 
-  END_BENCHMARK(benchmark_name)
-  BENCHMARK_SUMMARY(benchmark_name);
+  // BENCHMARK_SUMMARY(benchmark_name);
   PASS();
 }
 
@@ -991,9 +1003,8 @@ TEST t_dmt(void){
 
 
 TEST t_microtar_read(void){
-  BENCHMARK_QTY(benchmark_microtar, 2)
   //DO_WORK
-  mtar_t tar;
+  mtar_t        tar;
   mtar_header_t h;
   char          *p;
 
@@ -1015,8 +1026,7 @@ TEST t_microtar_read(void){
 
 /* Close archive */
   mtar_close(&tar);
-  END_BENCHMARK(benchmark_microtar)
-  BENCHMARK_SUMMARY(benchmark_microtar);
+  //BENCHMARK_SUMMARY(benchmark_microtar);
   PASS();
 }
 
@@ -1083,7 +1093,6 @@ void H(size_t I, void *HANDLED_ITEM){
 
 
 TEST t_vector(void){
-  MEASURE(example_measure1)
   struct Vector *vector = vector_new();
 
   // populate vector using multiple available functions
@@ -1128,6 +1137,7 @@ TEST t_vector(void){
   vector_push(vector, "test push");
 
   struct Vector *V = vector_new();
+
   vector_push(V, "v0");
   vector_push(V, "v1");
   vector_push(V, "v2");
@@ -1135,8 +1145,6 @@ TEST t_vector(void){
 
   // when we are done with the vector, we release it
   vector_release(vector);
-  END_MEASURE(example_measure1)
-  MEASURE_SUMMARY(example_measure1);
   PASS();
 } /* test_vector */
 
@@ -1900,10 +1908,7 @@ TEST t_miniaudio_record_file(void *RECORD_FILE){
 
 
 TEST t_tempdir(void){
-  MEASURE(example_measure1)
   char *temp_dir = gettempdir();
-  END_MEASURE(example_measure1)
-  MEASURE_SUMMARY(example_measure1);
 
   fprintf(stdout, "temp_dir:%s\n", temp_dir);
   PASS();
@@ -2197,48 +2202,16 @@ const char *getl(const char *prompt){
 }
 
 
-TEST t_uthash(void){
-  BENCHMARK_QTY(benchmark_uthash, 20)
-  int id = 1;
-  struct my_struct *s;
-  int              temp;
-  int              _uid = 12345;
-
-  add_user(id++, "user1");
-  add_user(id++, "user2");
-  add_user(id++, "user3");
-  temp = HASH_COUNT(users);
-  printf("there are %d users\n", temp);
-  print_users();
-
-  s = find_user(1);
-  printf("user: %s\n", s ? s->name : "unknown");
-  printf("  id: %d\n", s ? s->id : -1);
-  if (s != NULL) {
-    delete_user(s);
-  }
-  temp = HASH_COUNT(users);
-  printf("there are %d users\n", temp);
-  print_users();
-
-  END_BENCHMARK(benchmark_uthash)
-  BENCHMARK_SUMMARY(benchmark_uthash);
-
-  PASS();
-}
-
-
 TEST t_bitfield(void){
-  BENCHMARK(bitfield_benchmark, 1)
   bitfield_t *bf = bitfield_new(100);
+
   bitfield_mark(bf, 77);
   bitfield_unmark(bf, 50);
   bool im = bitfield_is_marked(bf, 77);
+
   ASSERT_EQ(im, true);
   im = bitfield_is_marked(bf, 78);
   ASSERT_EQ(im, false);
-  END_BENCHMARK(bitfield_benchmark)
-  BENCHMARK_SUMMARY(bitfield_benchmark);
   printf("77th bit is marked\n");
   printf("78th bit is not marked\n");
   PASS();
@@ -2246,23 +2219,17 @@ TEST t_bitfield(void){
 
 
 TEST t_bench(void){
-  BENCHMARK(example_bench, 3)
-
   FILE *file;
+
   file = fopen("/etc/passwd", "r");
   fclose(file);
 
-  END_BENCHMARK(example_bench)
-  BENCHMARK_SUMMARY(example_bench);
-
-  MEASURE(example_measure1)
 
   FILE *file1;
+
   file1 = fopen("/etc/passwd", "r");
   fclose(file1);
 
-  END_MEASURE(example_measure1)
-  MEASURE_SUMMARY(example_measure1);
   PASS();
 }
 
@@ -2280,11 +2247,8 @@ INCBIN(char *, MesonBuildTyped, "meson.build");
 
 
 TEST t_incbin(void){
-  BENCHMARK_QTY(benchmark_incbin, 1)
   printf("gMesonBuildTypedData:%s\n", gMesonBuildTypedData[0]);
   printf("gMesonBuildTypedSize:%d\n", gMesonBuildTypedSize);
-  END_BENCHMARK(benchmark_incbin)
-  BENCHMARK_SUMMARY(benchmark_incbin);
   PASS();
 }
 
@@ -2524,21 +2488,344 @@ TEST t_jinja2_cli(void){
   struct jinja2_render_template_t *CFG = jinja2_init_config();
 
   CFG->input_json_string = "{\"abc\":\"world\"}";
-  CFG->template_file     = "test.jinja";
-  CFG->output_file       = "output.txt";
-  fsio_write_text_file(CFG->template_file, "hello {{ abc }}");
-  ASSERT_EQ(fsio_file_exists(CFG->template_file), true);
+  CFG->template_s        = "hello {{ abc }}";
+  CFG->debug_mode        = true;
+  CFG->debug_mode        = false;
   int res = jinja2_render_template(CFG);
 
   ASSERT_EQ(res, 0);
   ASSERT_EQ(CFG->success, true);
-  ASSERT_EQ(fsio_file_exists(CFG->output_file), true);
-  char *result = fsio_read_text_file(CFG->output_file);
+  ASSERT_EQ(strcmp(CFG->output_s, "hello world"), 0);
 
-  ASSERT_EQ(strcmp(result, "hello world"), 0);
+  printf(AC_RESETALL AC_BLUE "%s" AC_RESETALL "\n", CFG->output_s);
 
-  printf("%s\n", result);
+  PASS();
+}
 
+typedef struct {
+  char *name;
+  int  cash;
+} account_t;
+
+
+void deposit(int *current_balance, int change){
+  account_t *acc = container_of(current_balance, account_t, cash);
+
+  printf("Increased %s's account by %d\n", acc->name, change);
+}
+
+
+TEST t_path_normalize(void){
+  char *path = NULL;
+
+  assert(NULL == path_normalize(NULL));
+
+  path = path_normalize("/home//stephen//");
+  assert(0 == strcmp("/home/stephen/", path));
+  free(path);
+
+  path = path_normalize("home//stephen//");
+  assert(0 == strcmp("home/stephen/", path));
+  free(path);
+
+  path = path_normalize("/home//stephen//");
+  assert(0 == strcmp("/home/stephen/", path));
+  free(path);
+
+  path = path_normalize("////home//stephen");
+  assert(0 == strcmp("/home/stephen", path));
+  free(path);
+
+  PASS();
+}
+
+
+TEST t_hashmap_h_4(){
+  struct hashmap_s hashmap;
+  int              x = 42;
+
+  ASSERT_EQ(0, hashmap_create(1, &hashmap));
+  ASSERT_EQ(0, hashmap_put(&hashmap, "foo", (unsigned)strlen("foo"), &x));
+  ASSERT_EQ(0, hashmap_remove(&hashmap, "foo", (unsigned)strlen("foo")));
+  hashmap_destroy(&hashmap);
+  PASS();
+}
+
+
+TEST t_hashmap_h_3(){
+  const char *const key = "foo&bar";
+
+  struct hashmap_s  hashmap;
+  int               x = 42;
+
+  ASSERT_EQ(0, hashmap_create(1, &hashmap));
+  ASSERT_EQ(0, hashmap_put(&hashmap, key, 3, &x));
+
+  /* Use a new string here so that we definitely have a different pointer key
+   * being provided. */
+  ASSERT_EQ(key, hashmap_remove_and_return_key(&hashmap, "foo",
+                                               (unsigned)strlen("foo")));
+  hashmap_destroy(&hashmap);
+
+  PASS();
+}
+
+
+TEST t_hashmap_h_2(){
+  struct hashmap_s hashmap;
+  int              x = 42;
+
+  ASSERT_EQ(0, hashmap_create(1, &hashmap));
+  ASSERT_EQ(0u, hashmap_num_entries(&hashmap));
+  ASSERT_EQ(0, hashmap_put(&hashmap, "foo", (unsigned)strlen("foo"), &x));
+  ASSERT_EQ(1u, hashmap_num_entries(&hashmap));
+  ASSERT_EQ(0, hashmap_remove(&hashmap, "foo", (unsigned)strlen("foo")));
+  ASSERT_EQ(0u, hashmap_num_entries(&hashmap));
+  hashmap_destroy(&hashmap);
+  PASS();
+}
+
+
+TEST t_semver(){
+  char     current[] = "1.5.10";
+  char     compare[] = "2.3.0";
+
+  semver_t current_version = {};
+  semver_t compare_version = {};
+
+  if (semver_parse(current, &current_version)
+      || semver_parse(compare, &compare_version)) {
+    fprintf(stderr, "Invalid semver string\n");
+    return(-1);
+  }
+
+  int resolution = semver_compare(compare_version, current_version);
+
+  if (resolution == 0) {
+    printf("Versions %s is equal to: %s\n", compare, current);
+  }else if (resolution == -1) {
+    printf("Version %s is lower than: %s\n", compare, current);
+  }else {
+    printf("Version %s is higher than: %s\n", compare, current);
+  }
+
+  // Free allocated memory when we're done
+  semver_free(&current_version);
+  semver_free(&compare_version);
+  return(0);
+
+  PASS();
+}
+
+
+TEST t_path_module(){
+  char        *pathname = "/projects/path_module/path.c";
+  struct Path path      = path_parse(pathname);
+
+  printf("dirname: %.*s\n", (int)path.dirname_len, path.dirname);
+  printf("basename: %s\n", path.basename);
+
+  // copy to another buffer
+  char dirname[path.dirname_len + 1];
+
+  memset(dirname, 0, sizeof(dirname));
+
+  memcpy(dirname, path.dirname, path.dirname_len);
+  printf("your dirname: %s\n", dirname);
+  PASS();
+}
+
+
+TEST t_pidfile(){
+  char *pid_file_name = "/tmp/pid.txt";
+  FILE *fp            = fopen(pid_file_name, "wt");
+
+  if (!fp) {
+    fprintf(stderr, "failed to open pid file:%s:%s\n",
+            pid_file_name, strerror(errno));
+    abort();
+  }
+  fprintf(fp, "%d\n", (int)getpid());
+  fclose(fp);
+  PASS();
+}
+
+
+TEST t_str_flatten(){
+  char *arr[] = {
+    "this",
+    "was",
+    "ripped",
+    "from",
+    "sphia"
+  };
+
+  char *s = str_flatten(arr, 0, 5);
+
+  puts(s);
+  int r = strcmp("this was ripped from sphia", s);
+
+  ASSERT_EQ(r, 0);
+  PASS();
+}
+
+
+TEST t_hashmap_h_0(){
+  PASS();
+}
+
+
+TEST t_hashmap_h_1(){
+  struct hashmap_s hashmap;
+  int              x = 42;
+
+  ASSERT_EQ(0, hashmap_create(1, &hashmap));
+  ASSERT_EQ(0, hashmap_put(&hashmap, "foo", (unsigned)strlen("foo"), &x));
+  ASSERT_EQ(&x, hashmap_get(&hashmap, "foo", (unsigned)strlen("foo")));
+  hashmap_destroy(&hashmap);
+  PASS();
+}
+
+
+TEST t_url_router(){
+  char             *str1 = "hello world";
+  char             *str2 = "woooooooooo";
+  char             *arg;
+  char             *data;
+
+  URL_ROUTER_ERROR err;
+  struct Dict      *args;
+  UrlRouter        *r = url_router_new();
+
+  err = url_router_insert(r, "/a/b/c", str1);
+  if (err != URL_ROUTER_E_OK) {
+    printf("Insert /a/b/c failed\n");
+    return(-1);
+  }
+
+  err = url_router_match(r, "/a/b/c", &args, (void **)&data);
+  if (err == URL_ROUTER_E_OK) {
+    printf("%s\n", data);
+  }
+  url_router_dict_free(args);
+
+  err = url_router_insert(r, "/r/:var/c", str2);
+  if (err != URL_ROUTER_E_OK) {
+    printf("Insert /r/:var/c failed\n");
+    return(-1);
+  }
+
+  err = url_router_match(r, "/r/b/c", &args, (void **)&data);
+  if (err == URL_ROUTER_E_OK) {
+    char *var = dict_get(args, "var");
+    if (var != NULL) {
+      printf("Args: %s\n", var);
+    }
+  }
+  url_router_dict_free(args);
+  url_router_free(r);
+
+  printf("Done\n");
+
+  PASS();
+} /* t_url_router */
+
+
+TEST t_c_timestamp(void){
+  timestamp_t ts;
+
+  ts.sec    = 0;
+  ts.offset = 0;
+  ts.nsec   = -1;
+  dbg(timestamp_valid(&ts), %d);
+
+  ts.nsec = 1000000000;
+  dbg(!timestamp_valid(&ts), %d);
+
+  ts.nsec   = 0;
+  ts.offset = -23 * 60 - 60;
+  dbg(!timestamp_valid(&ts), %d);
+
+  ts.offset = +23 * 60 + 60;
+  dbg(!timestamp_valid(&ts), %d);
+
+  ts.offset = 0;
+  ts.sec    = INT64_C(-62135596801);
+  dbg(!timestamp_valid(&ts), %d);
+  ts.sec = INT64_C(253402387140);
+  timestamp_t ts1;
+  struct tm   tm1;
+
+  ts.sec    = INT64_C(-62135551755);
+  ts.nsec   = 0;
+  ts.offset = 0;
+  memset(&tm1, 0, sizeof(tm1));
+  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_year), %d);
+  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_mon), %d);
+  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_hour), %d);
+  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_sec), %d);
+
+
+  PASS();
+}
+
+
+TEST t_genpassword_c(void){
+  PASS();
+}
+
+
+TEST t_extname_c(void){
+  assert(strcmp(extname("some/extension.ext"), ".ext") == 0);
+  assert(strcmp(extname(".derp"), ".derp") == 0);
+  assert(strcmp(extname("."), ".") == 0);
+  assert(strcmp(extname("nothing"), "") == 0);
+  PASS();
+}
+
+
+TEST t_container_of(void){
+  account_t *acc = calloc(1, sizeof(account_t));
+
+  acc->name = strdup("Alice");
+  deposit(&acc->cash, 100);
+  PASS();
+}
+
+
+TEST t_wildcardcmp(void){
+  PASS();
+}
+
+
+TEST t_is_number(void){
+  const char *str = "1.0";
+  int        is_num;
+
+  is_num = is_number("1.0", 3);
+  assert(is_num);
+
+  is_num = is_number_with("1.", 2, ALLOW_EMPTY_POST_DOT);
+  assert(is_num);
+
+  is_num = is_number("1.", 2);
+  assert(!is_num);
+  PASS();
+}
+
+
+TEST t_url_h(void){
+  char       *gh_url = "git://git@github.com:jwerle/url.h.git";
+  char       *url    = "http://user:pass@subdomain.host.com:8080/p/a/t/h?query=string#hash";
+
+  url_data_t *parsed    = url_parse(url);
+  url_data_t *gh_parsed = url_parse(gh_url);
+
+  assert(parsed);
+  assert(gh_parsed);
+
+  url_data_inspect(parsed);
+  url_data_inspect(gh_parsed);
   PASS();
 }
 
@@ -2644,6 +2931,57 @@ TEST t_ok_file_format_png(void){
   }
   PASS();
 }
+SUITE(s_semver) {
+  RUN_TEST(t_semver);
+}
+SUITE(s_path_module) {
+  RUN_TEST(t_path_module);
+}
+SUITE(s_pidfile) {
+  RUN_TEST(t_pidfile);
+}
+SUITE(s_str_flatten) {
+  RUN_TEST(t_str_flatten);
+}
+
+SUITE(s_hashmap_h) {
+  RUN_TEST(t_hashmap_h_0);
+  RUN_TEST(t_hashmap_h_1);
+  RUN_TEST(t_hashmap_h_2);
+  RUN_TEST(t_hashmap_h_3);
+  RUN_TEST(t_hashmap_h_4);
+}
+SUITE(s_url_router) {
+  RUN_TEST(t_url_router);
+}
+SUITE(s_path_normalize) {
+  RUN_TEST(t_path_normalize);
+}
+SUITE(s_c_timestamp) {
+  RUN_TEST(t_c_timestamp);
+}
+SUITE(s_genpassword_c) {
+  RUN_TEST(t_genpassword_c);
+}
+SUITE(s_extname_c) {
+  RUN_TEST(t_extname_c);
+}
+SUITE(s_container_of) {
+  RUN_TEST(t_container_of);
+}
+SUITE(s_wildcardcmp) {
+  RUN_TEST(t_wildcardcmp);
+}
+
+
+SUITE(s_is_number) {
+  RUN_TEST(t_is_number);
+}
+
+SUITE(s_url_h) {
+  RUN_TEST(t_url_h);
+}
+
 
 SUITE(s_ok_file_formats) {
   RUN_TEST(t_ok_file_format_wav);
@@ -2669,9 +3007,6 @@ SUITE(s_miniaudio) {
   RUN_TESTp(t_miniaudio_play_file, (void *)record_file);
 }
 
-SUITE(s_uthash) {
-  RUN_TEST(t_uthash);
-}
 SUITE(s_incbin) {
   RUN_TEST(t_incbin);
 }
@@ -2691,15 +3026,9 @@ SUITE(s_hidapi) {
   RUN_TEST(t_hidapi);
 }
 SUITE(s_libusb) {
-  BENCHMARK_QTY(benchmark_libusb1, 1)
   RUN_TEST(t_libusb1);
-  END_BENCHMARK(benchmark_libusb1)
-  BENCHMARK_SUMMARY(benchmark_libusb1);
 
-  BENCHMARK_QTY(benchmark_libusb2, 1)
   RUN_TEST(t_libusb2);
-  END_BENCHMARK(benchmark_libusb2)
-  BENCHMARK_SUMMARY(benchmark_libusb2);
 }
 SUITE(s_tempdir) {
   RUN_TEST(t_tempdir);
@@ -2945,7 +3274,6 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_libusb);
   RUN_SUITE(s_miniaudio);
   RUN_SUITE(s_c89atomic);
-  RUN_SUITE(s_uthash);
   RUN_SUITE(s_ok_file_formats);
   RUN_SUITE(s_minmax);
   RUN_SUITE(s_bench);
@@ -2958,6 +3286,20 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_jinja2_cli);
   RUN_SUITE(s_my_cwd);
   RUN_SUITE(s_kitty);
+  RUN_SUITE(s_url_h);
+  RUN_SUITE(s_is_number);
+  RUN_SUITE(s_wildcardcmp);
+  RUN_SUITE(s_container_of);
+  RUN_SUITE(s_path_normalize);
+  RUN_SUITE(s_extname_c);
+  RUN_SUITE(s_genpassword_c);
+  RUN_SUITE(s_c_timestamp);
+  RUN_SUITE(s_url_router);
+  RUN_SUITE(s_hashmap_h);
+  RUN_SUITE(s_str_flatten);
+  RUN_SUITE(s_pidfile);
+  RUN_SUITE(s_path_module);
+  RUN_SUITE(s_semver);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

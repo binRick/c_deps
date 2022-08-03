@@ -7,7 +7,7 @@ DEPS_BASE="$(pwd)/deps"
 NAME="$1"
 TEMPLATE="${TEMPLATE:-templates/meson.build-library-dep}"
 INSTALL="${INSTALL:-false}"
-TYPE="${TYPE:-shared}"
+TYPE="${TYPE:-static}"
 DEPS="${DEPS:-}"
 MB=$DEPS_BASE/$NAME/meson.build
 

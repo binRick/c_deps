@@ -655,3 +655,72 @@
 [submodule "submodules/libyuarel"]
 	path = submodules/libyuarel
 	url = https://github.com/jacketizer/libyuarel
+[submodule "submodules/http-parser"]
+	path = submodules/http-parser
+	url = https://github.com/nodejs/http-parser
+[submodule "submodules/url.h"]
+	path = submodules/url.h
+	url = https://github.com/jwerle/url.h
+[submodule "submodules/is_number.c"]
+	path = submodules/is_number.c
+	url = https://github.com/jb55/is_number.c
+[submodule "submodules/probarlib"]
+	path = submodules/probarlib
+	url = https://github.com/DevManu-de/probarlib
+[submodule "submodules/libcyaml"]
+	path = submodules/libcyaml
+	url = https://github.com/tlsa/libcyaml
+[submodule "submodules/panic"]
+	path = submodules/panic
+	url = https://github.com/daddinuz/panic
+[submodule "submodules/container_of"]
+	path = submodules/container_of
+	url = https://github.com/clibs/container_of
+[submodule "submodules/extname.c"]
+	path = submodules/extname.c
+	url = https://github.com/jb55/extname.c
+[submodule "submodules/font"]
+	path = submodules/font
+	url = https://github.com/petabyt/font
+[submodule "submodules/genpassword.c"]
+	path = submodules/genpassword.c
+	url = https://github.com/brendanashworth/genpassword.c
+[submodule "submodules/C99FunctionOverload"]
+	path = submodules/C99FunctionOverload
+	url = https://github.com/jason-deng/C99FunctionOverload
+[submodule "submodules/hashmap.h"]
+	path = submodules/hashmap.h
+	url = https://github.com/sheredom/hashmap.h
+[submodule "submodules/json2c"]
+	path = submodules/json2c
+	url = https://github.com/orangeduck/json2c
+[submodule "submodules/utf8-iterator"]
+	path = submodules/utf8-iterator
+	url = https://github.com/adrianwk94/utf8-iterator
+[submodule "submodules/cookies.c"]
+	path = submodules/cookies.c
+	url = https://github.com/icholy/cookies.c
+[submodule "submodules/url_router"]
+	path = submodules/url_router
+	url = https://github.com/yanagiis/url_router
+[submodule "submodules/hexify.c"]
+	path = submodules/hexify.c
+	url = https://github.com/pepaslabs/hexify.c
+[submodule "submodules/acinerella"]
+	path = submodules/acinerella
+	url = https://github.com/astoeckel/acinerella
+[submodule "submodules/str-flatten.c"]
+	path = submodules/str-flatten.c
+	url = https://github.com/stephenmathieson/str-flatten.c
+[submodule "submodules/pidfile"]
+	path = submodules/pidfile
+	url = https://github.com/willemt/pidfile
+[submodule "submodules/msgbox"]
+	path = submodules/msgbox
+	url = https://github.com/tylerneylon/msgbox
+[submodule "submodules/semver.c"]
+	path = submodules/semver.c
+	url = https://github.com/h2non/semver.c
+[submodule "submodules/ttyasc"]
+	path = submodules/ttyasc
+	url = https://github.com/krpors/ttyasc

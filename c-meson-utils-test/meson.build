@@ -26,6 +26,6 @@ if get_option('enable-binaries')
      include_directories: c_meson_utils_test_inc,
   )
   if get_option('enable-binary-tests')
-    test('meson-utils-test', c_meson_utils_test_exec, args: [])
+    test('c-meson-utils-test', c_meson_utils_test_exec, args: [])
   endif
 endif

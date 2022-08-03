@@ -9,6 +9,12 @@ option('enable-binary-tests',
   value : true,
   description : 'Enables binary tests.'
 )
+option('enable-greatest-tests',
+  type : 'boolean',
+  value : true,
+  description : 'Enables greatest tests.'
+)
+
 
 option('enable-deps-test',
   type : 'boolean',

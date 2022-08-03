@@ -30,6 +30,7 @@ if get_option('enable-binaries')
      include_directories: exec_fzf_test_inc,
   )
   if get_option('enable-binary-tests')
-    test('exec-fzf-test', exec_fzf_test_exec, args: [])
+    test('exec-fzf-test|List Tests', exec_fzf_test_exec, args: ['-v','-l'])
+    test('exec-fzf-test|Run Tests', exec_fzf_test_exec, args: [])
   endif
 endif
