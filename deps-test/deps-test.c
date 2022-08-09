@@ -31,6 +31,7 @@
 #include "debug-memory/debug_memory.h"
 #endif
 ////////////////////////////////////////////
+#include "ansi-rgb-utils/ansi-rgb-utils.h"
 #include "ansi-utils/ansi-utils.h"
 #include "bench/bench.h"
 #include "bitfield/bitfield.h"
@@ -82,7 +83,10 @@
 #include "semver.c/semver.h"
 #include "str-flatten.c/src/str-flatten.h"
 #include "subhook/subhook.h"
+#include "tai64n/tai64n.h"
 #include "tempdir.c/tempdir.h"
+#include "sense-c/src/git.h"
+#include "sense-c/src/lang.h"
 #include "uptime/include/uptime/uptime.h"
 #include "uri.c/uri.h"
 #include "url.h/url.h"
@@ -2744,6 +2748,61 @@ int cb_validate_bookmark(cfg_t *cfg, cfg_opt_t *opt){
 }
 
 
+TEST t_color_boxes(){
+    char *boxes = get_color_boxes();
+    printf("%s",boxes);
+    ASSERT_GTE(strlen(boxes),100);
+    PASS();
+}
+TEST t_sense_c(){
+    int lang = get_lang("../");
+    printf("../ lang: %s\n", get_lang_name(lang));
+
+    lang = get_lang("./");
+    printf("./ lang: %s\n", get_lang_name(lang));
+
+    lang = get_lang("./confirm1");
+    printf("./confirm1 lang: %s\n", get_lang_name(lang));
+
+
+    int git = has_git("./");
+    if (git) {
+        printf("Is git!\n");
+    } else {
+        printf("Is not git.\n");
+    }
+
+    int local = is_local_git("./");
+    if (local) {
+        printf("Is local!\n");
+    } else {
+        printf("Is not local.\n");
+    }
+    
+    PASS();
+}
+TEST t_tai64n(){
+  size_t ts = tai64ts();
+
+  printf("ts: %lu\n", ts);
+  struct tai64n *now = tai64();
+
+  printf("now sec: %lu\n", now->sec);
+  printf("now nano: %lu\n", now->nano);
+  ASSERT_GTE(now->sec, 999);
+  ASSERT_GTE(now->nano, 999);
+  ASSERT_GTE(ts, 999);
+  char *msg;
+
+  asprintf(&msg, "now: %lu | %lu | ts: %lu |",
+           now->sec,
+           now->nano,
+           ts
+           );
+  PASSm(msg);
+}
+
+
 TEST t_tty_copy(){
   char *s;
 
@@ -3282,6 +3341,15 @@ SUITE(s_flingfd_client) {
 SUITE(s_flingfd_server) {
   RUN_TEST(t_flingfd_server);
 }
+SUITE(s_color_boxes) {
+  RUN_TEST(t_color_boxes);
+}
+SUITE(s_sense_c) {
+  RUN_TEST(t_sense_c);
+}
+SUITE(s_tai64n) {
+  RUN_TEST(t_tai64n);
+}
 SUITE(s_tty_copy) {
   RUN_TEST(t_tty_copy);
 }
@@ -3691,6 +3759,9 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_subhook);
   RUN_SUITE(s_libconfuse);
   RUN_SUITE(s_tty_copy);
+  RUN_SUITE(s_tai64n);
+  RUN_SUITE(s_sense_c);
+  RUN_SUITE(s_color_boxes);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

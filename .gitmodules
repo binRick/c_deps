@@ -733,3 +733,9 @@
 [submodule "submodules/libconfig"]
 	path = submodules/libconfig
 	url = https://github.com/hyperrealm/libconfig
+[submodule "submodules/sense-c"]
+	path = submodules/sense-c
+	url = https://github.com/JakeRoggenbuck/sense-c
+[submodule "submodules/c_libansilove"]
+	path = submodules/c_libansilove
+	url = ssh://git@github.com/binRick/c_libansilove

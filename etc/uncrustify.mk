@@ -10,4 +10,4 @@ fix-dbg:
 	@$(SED) 's|, % d);|, %d);|g' -i $(TIDIED_FILES)
 	@$(SED) 's|, % zu);|, %zu);|g' -i $(TIDIED_FILES)
 
-tidy: uncrustify uncrustify-clean fix-dbg rm-make-logs
+tidy: uncrustify uncrustify-clean fix-dbg 
