@@ -9,3 +9,4 @@ do-muon-test:
 build-muon: do-muon-setup do-muon-build
 do-muon: do-muon-setup do-muon-build
 muon: build-muon do-muon-test
+muon-build: build-muon

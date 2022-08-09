@@ -31,6 +31,7 @@
 #include "debug-memory/debug_memory.h"
 #endif
 ////////////////////////////////////////////
+#include "ansi-utils/ansi-utils.h"
 #include "bench/bench.h"
 #include "bitfield/bitfield.h"
 #include "c-timestamp/timestamp.h"
@@ -64,7 +65,6 @@
 #include "libut/include/libut.h"
 #include "libut/include/ringbuf.h"
 #include "libut/include/utvector.h"
-#include "ansi-utils/ansi-utils.h"
 #include "libyuarel/yuarel.h"
 #include "log.h/log.h"
 #include "miniaudio/miniaudio.h"
@@ -2745,14 +2745,17 @@ int cb_validate_bookmark(cfg_t *cfg, cfg_opt_t *opt){
 
 
 TEST t_tty_copy(){
-    char *s;
-    asprintf(&s,"tty_copy-copied-text-%lu",(size_t)timestamp());
-    size_t wrote_chars = ansi_utils_tty_copy(s);
-    char *msg;
-    ASSERT_GTE(wrote_chars,3);
-    asprintf(&msg,"Wrote %lu chars",wrote_chars);
-    PASSm(msg);
+  char *s;
+
+  asprintf(&s, "tty_copy-copied-text-%lu", (size_t)timestamp());
+  size_t wrote_chars = ansi_utils_tty_copy(s);
+  char   *msg;
+
+  ASSERT_GTE(wrote_chars, 3);
+  asprintf(&msg, "Wrote %lu chars", wrote_chars);
+  PASSm(msg);
 }
+
 
 TEST t_libconfuse(){
   char *cfg_s      = "\

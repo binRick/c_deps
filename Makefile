@@ -36,11 +36,6 @@ binaries-meson-link-bin:
 ##############################################################
 #suites:
 #	@find ./build/*-test/*-test -type f | 
-greatest-suites:
-	@(make test-file-names | while read -r f; do timeout .5 passh ./build/$$f/$$f -l -v; done) |grep '^* Suite '|cut -d: -f1|cut -d' ' -f3
-greatest-suite-tests:
-	@passh  ./build/exec-fzf-test/exec-fzf-test -l -v -s s_fzf_basic|grep '^* Suite ' -A 999|grep '^[[:space:]]'|tr -d ' '|cut -d' ' -f1
-
 do-setup:
 	@[[ -d submodules ]] || mkdir submodules
 setup-binaries:
@@ -71,8 +66,6 @@ do-install: all
 	@meson install -C build
 rm-make-logs:
 	@rm .make-log* 2>/dev/null||true
-do-meson:
-	@eval cd . && {  meson build || { meson build --reconfigure || { meson build --wipe; } && meson build; }; }
 do-sync:
 	rsync -arv ~/repos/c_deps \
 		~/repos/c_ansi/submodules/. \
@@ -113,16 +106,6 @@ git-submodules-update:
 git-pull:
 	@git pull --recurse-submodules
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
-do-build: do-meson-build
-meson-build: do-meson-build
-do-meson-build: do-meson
-	@meson compile -C build -j 20 -v
-do-meson-install: do-meson
-	@meson install -C build --tags build
-do-test:
-	@meson test -C build -v --print-errorlogs	
-test: do-test
-build: do-meson do-build
 ansi: all do-sync do-ansi-make
 tidy: fmt-scripts do-uncrustify 
 dev: do-nodemon
@@ -130,14 +113,8 @@ all: do-setup do-build do-test muon
 trigger:
 	@[[ -f $(TRIGGER_FILE) ]] && unlink $(TRIGGER_FILE)
 	@touch $(TRIGGER_FILE)
-deps-test-ls-tests:
-	@eval build/deps-test/deps-test -l
-deps-test-ls-suites:
-	@eval build/deps-test/deps-test -L
 do-pull-submodules-cmds:
 	command find submodules -type d -maxdepth 1|xargs -I % echo -e "sh -c 'cd % && git pull'"
-run-binary1:
-	@make meson-binaries | fzf --reverse | xargs -I % sh -xc "./%" 
 meson-ls-meson-build-files:
 	@make meson-ls-buildsystem-files|grep "/meson.build$$"|sort -u
 
@@ -197,7 +174,8 @@ do-bashful-modified-files:
 do-bashful-git-status:
 	@passh -L /tmp/meson-repos-do-git-status.log bashful run --tags git-status etc/meson-repos-info.yaml
 do-bashful-git-diff:
-	@passh -L /tmp/meson-repos-do-git-diff.log bashful run --tags git-diff etc/meson-repos.yaml
+	@passh -L /tmp/meson-repos-do-git-diff.log bashful run --tags git-diff etc/meson-repos-info.yaml
+	@make do-bashful-view-git-diff
 
 
 do-bashful-view-git-diff:
@@ -213,115 +191,5 @@ do-bashful:
 
 meson-get-source-files:
 	@meson introspect build --targets|jq '.[].target_sources[0].sources' -Mrc|cut -d'"' -f2|sort -u|gsed  "s|$(shell pwd)/||g"
-run-binary:
-	@clear; make meson-binaries | env FZF_DEFAULT_COMMAND= \
-        fzf --reverse \
-            --preview-window='follow,wrap,right,80%' \
-            --bind 'ctrl-b:preview(make meson-build)' \
-            --preview='env bash -c {} -v -a' \
-            --ansi --border \
-            --cycle \
-            --header='Select Test Binary' \
-            --height='100%' \
-    | xargs -I % env bash -c "./%"
-run-binary-nodemon:
-	@make meson-binaries | fzf --reverse | xargs -I % nodemon -w build --delay 1000 -x passh "./%"
-meson-tests-list:
-	@meson test -C build --list
 	
-meson-tests-preview-header:
-	@printf "%s\n"   " $(shell ansi --green --bold "Keybinds") "
-	@printf "         |-------------------------------|"
-	@printf "\n"
-	@printf "         | - %s           |\n"    "$(shell ansi --yellow "control+p:sources")"
-	@printf "         | - %s           |\n"    "$(shell ansi --red "control+b:rebuild")"
-	@printf "         | - %s             |\n" "$(shell ansi --magenta --italic "control+k:clean")"
-	@printf "         | - %s             |\n" "$(shell ansi --yellow-intense --italic "control+t:tests")"
-	@printf "         | - %s  |" "$(shell ansi --green-intense "control+/,control+l:hwidth")"
-	@printf "\n"
-	@printf "         |"
-	@printf "\n"
-	@printf "         |%s|"   " $(shell ansi --green --bold "Layout") "
-	@printf "\n"
-	@printf "                 - Adjust Vertical Layout      :   %s" "$(shell ansi --red-intense "control+/   control+n")"
-	@printf "\n"
-	@printf "                 - Adjust Horizontal Layout    :   %s" "$(shell ansi --red-intense "control+n   control+m")"
-	@printf "\n"
-	@printf "                 - Meson Test Suites           :   %s" "$(shell ansi --cyan --italic "control+s")"
-	@printf "\n"
-	@printf "         |%s|"   " $(shell ansi --green --bold "Source Code") "
-	@printf "\n"
-	@printf "         |%s|"   " $(shell ansi --green --bold "Dependencies") "
-	@printf "\n"
-	@printf "         |  - %s           |" "$(shell ansi --green-intense "control+v:configured")"
-	@printf "\n"
-	@printf "         |  - %s         |" "$(shell ansi --magenta-intense "control+w:unconfigured")"
-	@printf "\n"
-	@printf "         |%s|"   " $(shell ansi --green --bold "Build") "
-	@printf "\n"
-	@printf "         |%s|"   " $(shell ansi --green --bold "GIT") "
-	@printf "\n"
-	@printf "         |  - %s   |" "$(shell ansi --green-intense "control+e:git status")"
-	@printf "\n"
-	@printf "         |  - %s         |" "$(shell ansi --magenta-intense "control+g:tidy")"
-	@printf "\n"
-	@printf "         |%s|"   " $(shell ansi --green --bold "Dependencies") "
-	@printf "\n"
-	@printf "         |%s|"   " $(shell ansi --green --bold "deps-test") "
-	@printf "\n"
-	@printf "         |-------------------------------|"
-	@printf "\n"
 
-#	@printf "ctrl+s:suites|ctrl+t:tests|ctrl+b:rebuild|ctrl+k:clean|ctrl+l:width|ctrl+/:thin width|ctrl+y/u:scroll preview|ctrl+g:tidy|ctrl+e:git-status|ctrl+w:unconf deps|ctrl+v:conf deps|ctrl+i:make dev|ctrl+r:bashful build"
-meson-tests:
-	@\
-	{ \
-	make meson-tests-list; } \
-  	  |fzf \
-		--border=sharp\
-		--margin=0,0,0,0 --padding=0,0,0,0 \
-		--no-info \
-        --reverse --ansi --no-multi --cycle --info=inline \
-        --bind 'ctrl-w:preview(./meson/ls_unconfigured_submodules.sh)' \
-        --bind 'ctrl-v:preview(./meson/ls_configured_submodules.sh)' \
-        --bind 'ctrl-space:preview(make meson-tests-preview-header)'\
-        --bind 'ctrl-e:preview(git status)' \
-        --bind 'ctrl-g:preview(make tidy)' \
-        --bind 'ctrl-b:preview(make meson-build)' \
-		--bind 'ctrl-x:preview(passh muon info options)'\
-		--bind 'ctrl-p:change-prompt(Source Files > )'\
-			--bind 'ctrl-p:+change-preview(make bat --color always --italic-text always --decorations always --theme "Monokai Extended" {})'\
-		    --bind 'ctrl-p:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
-			--bind 'ctrl-p:+reload(make meson-get-source-files)'\
-		--bind 'ctrl-o:change-prompt(Meson Tests > )'\
-		    --bind 'ctrl-o:+change-preview(meson test --num-processes 1 -C build -v --no-stdsplit --print-errorlogs {} || build/{}/{})' \
-		    --bind 'ctrl-o:+change-preview-window(follow,nowrap)'\
-			--bind 'ctrl-o:+reload(make meson-tests-list)' \
-        --bind 'ctrl-k:preview(make clean meson-build)'\
-		--bind 'ctrl-h:preview(passh build/deps-test/deps-test -v -e -a -t {} )'\
-		--bind 'ctrl-j:preview(passh build/deps-test/deps-test -v -e -a -s {} )'\
-		--bind 'ctrl-t:change-prompt(Tests -> ctrl+h to run > )'\
-        	--bind 'ctrl-t:+change-preview(scripts/deps-test-view-test.sh {})'\
-			--bind 'ctrl-t:+reload(make deps-test-ls-tests -B)'\
-		    --bind 'ctrl-t:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
-		--bind 'ctrl-s:+change-prompt(Suites -> ctrl+j to run > )'\
-        	--bind 'ctrl-s:+change-preview(scripts/deps-test-view-suite.sh {})'\
-     		--bind 'ctrl-s:+reload(make deps-test-ls-suites -B)'\
-		    --bind 'ctrl-s:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
-        --bind 'ctrl-y:preview-half-page-up'\
-        --bind 'ctrl-u:preview-half-page-down'\
-        --bind 'ctrl-/:change-preview-window(right,80%|right,70%,border-horizontal)'\
-        --bind 'ctrl-l:change-preview-window(right,60%|right,50%,border-horizontal)'\
-        --bind 'ctrl-m:change-preview-window(down,80%|down,70%,border-vertical)' \
-        --bind 'ctrl-n:change-preview-window(down,60%|down,50%,border-vertical)' \
-        --bind 'ctrl-i:change-preview(scripts/deps-test-view-test.sh {})'\
-        --preview='meson test --num-processes 1 -C build -v --no-stdsplit --print-errorlogs {}' \
-        --preview-window='follow,wrap,right,75%' \
-        --header='Control Space For Menu'\
-        --header-lines=0 \
-        --height='100%'\
-
-
-
-#meson-tests-preview-header:
-#		mesonSelect Test Case |ctrl+p:sources|ctrl+s:suites|ctrl+t:tests|ctrl+b:rebuild|ctrl+k:clean|ctrl+l:width|ctrl+/:thin width|ctrl+y/u:scroll preview|ctrl+g:tidy|ctrl+e:git-status|ctrl+w:unconf deps|ctrl+v:conf deps|ctrl+i:make dev|ctrl+r:bashful build|'\
