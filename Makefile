@@ -1,21 +1,13 @@
 default: all
 ##############################################################
-PASSH=$(shell command -v passh)
-GIT=$(shell command -v git)
-SED=$(shell command -v gsed||command -v sed)
-NODEMON=$(shell command -v nodemon)
-FZF=$(shell command -v fzf)
-BLINE=$(shell command -v bline)
-UNCRUSTIFY=$(shell command -v uncrustify)
-PWD=$(shell command -v pwd)
-FIND=$(shell command -v find)
-EMBED_BINARY=$(shell command -v embed)
-JQ_BIN=$(shell command -v jq)
-DIR=$(shell pwd)	
+include submodules/c_deps/etc/tools.mk
 TESTS_LIST_LOG_FILE = $(shell pwd)/.tests-list.log
 TESTS_SUITES_LOG_FILE=$(shell pwd)/.tests-suites.log
 TESTS_TESTS_LOG_FILE=$(shell pwd)/.tests-tests.log
 IGNORED_GO_H_FILES=$(shell ls "*/*.go"|gsed  's/\\.go$/\\.h/g' | xargs -I % echo -ne "-i % ")
+DIR=$(shell pwd)
+ETC_DIR=$(DIR)/etc
+
 ##############################################################
 TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h cgif-test/*.c *-test/*.c *-test/*.h chan-test/*.c chan-test/*.h \
 			   introspect-test/*.c introspect-test/*.h \
@@ -27,6 +19,7 @@ TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *
 			   exec-fzf*/*.c exec-fzf*/*.h 
 ########################################################
 TRIGGER_FILE=.trigger.c
+include submodules/c_deps/etc/includes.mk
 test-file-names:
 	@grep greatest.h *-test/*-test.*|cut -d':' -f1|sort -u|xargs -I % basename %|cut -d'.' -f1
 
@@ -47,23 +40,6 @@ greatest-suites:
 	@(make test-file-names | while read -r f; do timeout .5 passh ./build/$$f/$$f -l -v; done) |grep '^* Suite '|cut -d: -f1|cut -d' ' -f3
 greatest-suite-tests:
 	@passh  ./build/exec-fzf-test/exec-fzf-test -l -v -s s_fzf_basic|grep '^* Suite ' -A 999|grep '^[[:space:]]'|tr -d ' '|cut -d' ' -f1
-
-do-muon-setup:
-	@muon setup build-muon
-
-do-muon-clean:
-	@rm -rf build-muon
-
-do-muon-build:
-	@muon samu -C build-muon -j 20 -k 1
-
-do-muon-install:
-	@cd build-muon && muon install
-do-muon-test:
-	@cd build-muon && muon -C build-muon test -w 20 -f
-build-muon: do-muon-setup do-muon-build
-do-muon: build-muon
-muon: do-muon
 
 do-setup:
 	@[[ -d submodules ]] || mkdir submodules
@@ -88,19 +64,6 @@ git-add:
 	@git status
 fmt-scripts:
 	@shfmt -w scripts/*.sh
-uncrustify:
-	@$(UNCRUSTIFY) -c etc/uncrustify.cfg --replace $(TIDIED_FILES)||true
-uncrustify-clean:
-	@find  . -type f -maxdepth 2 -name "*unc-back*"|xargs -I % unlink %
-clean: rm-make-logs do-muon-clean
-	@rm -rf build .cache
-fix-dbg:
-	@$(SED) 's|, % c);|, %c);|g' -i $(TIDIED_FILES)
-	@$(SED) 's|, % u);|, %u);|g' -i $(TIDIED_FILES)
-	@$(SED) 's|, % s);|, %s);|g' -i $(TIDIED_FILES)
-	@$(SED) 's|, % lu);|, %lu);|g' -i $(TIDIED_FILES)
-	@$(SED) 's|, % d);|, %d);|g' -i $(TIDIED_FILES)
-	@$(SED) 's|, % zu);|, %zu);|g' -i $(TIDIED_FILES)
 install: do-install
 
 
@@ -117,13 +80,12 @@ do-sync:
 		--exclude=".git/*" \
 		--exclude '.git'
 do-nodemon:
-	@$(PASSH) -L .nodemon.log $(NODEMON) \
-		-V \
+	@$(NODEMON) \
+		-I \
 		--delay .3 \
 		-w "dbgp-test/*.h" -w "dbgp-test/*.c"\
 		-w 'meson/meson.build' -w 'meson/deps/*/meson.build' -w 'meson.build' \
 		-w Makefile \
-		-i '*/embeds/*' -i 'subprojects/*/' -i submodules -i 'build/*' \
 		-w "term-tests" \
 		-w "chan-test/*.c" -w "chan-test/*.h" \
 		-w "reproc-test/*.c" -w "reproc-test/*.h" \
@@ -132,10 +94,18 @@ do-nodemon:
 	    -w "introspect-test/*.c" -w "introspect-test/*.h" \
 	    -w "introspect/*.c" -w "introspect/*.h" \
 		-w "term-tests-test" \
-		-i confirm1/confirm1.h -i flinch/new.h -i multi_select/multi_select.h -i multi_select0/multi_select0.h -i multi_select1/multi_select1.h -i select_description1/select_description1.h \
+		-i submodules -i meson-muon -i .cache -i subprojects \
+		-i '*/embeds/*' -i 'subprojects/*/' -i submodules -i 'build/*' \
+		-i confirm1/confirm1.h -i flinch/new.h -i multi_select/multi_select.h \
+		-i multi_select0/multi_select0.h -i multi_select1/multi_select1.h \
+		-i select_description1/select_description1.h \
 		-i build \
+		-i build-muon \
+		-i .cache \
+		-i .git \
+		-i submodules \
 			-e Makefile,tpl,build,sh,c,h,Makefile \
-			-x env -- bash -c 'make||true'
+			-x env -- bash --norc --noprofile -c 'clear;make||true'
 git-submodules-pull:
 	@git submodule foreach git pull origin master --jobs=10
 git-submodules-update:
@@ -143,7 +113,6 @@ git-submodules-update:
 git-pull:
 	@git pull --recurse-submodules
 do-uncrustify: uncrustify uncrustify-clean fix-dbg
-meson: do-meson-build
 do-build: do-meson-build
 meson-build: do-meson-build
 do-meson-build: do-meson
@@ -151,8 +120,7 @@ do-meson-build: do-meson
 do-meson-install: do-meson
 	@meson install -C build --tags build
 do-test:
-	@passh meson test -C build -v --print-errorlogs	
-muon: do-muon
+	@meson test -C build -v --print-errorlogs	
 test: do-test
 build: do-meson do-build
 ansi: all do-sync do-ansi-make
@@ -162,15 +130,6 @@ all: do-setup do-build do-test muon
 trigger:
 	@[[ -f $(TRIGGER_FILE) ]] && unlink $(TRIGGER_FILE)
 	@touch $(TRIGGER_FILE)
-meson-introspect-all:
-	@meson introspect --all -i meson.build
-meson-introspect-targets:
-	@meson introspect --targets -i meson.build
-meson-binaries:
-	@meson introspect --targets   build -i | jq 'map(select(.type == "executable").filename)|flatten|join("\n")' -Mrc
-#	#@meson introspect --targets  meson.build -i | jq 'map(select(.type == "executable").filename)|flatten|join("\n")' -Mrc|xargs -I % echo build/%
-meson-binaries-loc:
-	@make meson-binaries|xargs -I % echo %.c|sort -u|xargs Loc --files|bline -a bold:green -r yellow -R 1-6
 deps-test-ls-tests:
 	@eval build/deps-test/deps-test -l
 deps-test-ls-suites:

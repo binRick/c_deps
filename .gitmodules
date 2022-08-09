@@ -724,3 +724,12 @@
 [submodule "submodules/ttyasc"]
 	path = submodules/ttyasc
 	url = https://github.com/krpors/ttyasc
+[submodule "submodules/procname"]
+	path = submodules/procname
+	url = https://github.com/fredrikpe/procname
+[submodule "submodules/libucl"]
+	path = submodules/libucl
+	url = https://github.com/vstakhov/libucl
+[submodule "submodules/libconfig"]
+	path = submodules/libconfig
+	url = https://github.com/hyperrealm/libconfig

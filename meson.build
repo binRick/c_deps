@@ -40,6 +40,7 @@ summary({'version': meson.project_version(),
 pwd = c_deps_dir
 #############################################################
 inc = [
+  include_directories('.'),
   include_directories('submodules'),
   include_directories('submodules/reproc/reproc/include'),
   include_directories('submodules/progress.c'),
@@ -58,8 +59,7 @@ inc = [
   include_directories('submodules/c_darwin/app-utils', 'submodules/c_darwin/active-app'),
   include_directories('submodules/c_darwin/window-utils'),
   include_directories('submodules/c_ansi'),
-  include_directories('submodules'),
-  include_directories('.'),
+  include_directories('submodules/c_pick'),
   include_directories('submodules/sqxclib/sqxc'),
 ]  
 ###########################################

@@ -16,10 +16,11 @@
 #include <inttypes.h>
 #include <libgen.h>
 #include <limits.h>
-#include <math.h>
+#include <locale.h>
 #include <math.h>
 #include <poll.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -35,10 +36,13 @@
 #include "c-timestamp/timestamp.h"
 #include "c89atomic/c89atomic.h"
 #include "c_string_buffer/include/stringbuffer.h"
+#include "chfreq.c/chfreq.h"
 #include "container_of/container_of.h"
 #include "deps-test/deps-test.h"
+#include "dotenv-c/src/dotenv.h"
 #include "emojis/emojis.h"
 #include "extname.c/src/extname.h"
+#include "flingfd/src/flingfd.h"
 #include "generic-print/print.h"
 #include "genpassword.c/src/genpassword.h"
 #include "hashmap.h/hashmap.h"
@@ -51,6 +55,7 @@
 #include "kitty/kitty.h"
 #include "layout/layout.h"
 #include "levenshtein.c/levenshtein.h"
+#include "libconfuse/src/confuse.h"
 #include "libforks/libforks.h"
 #include "libtinyfiledialogs/tinyfiledialogs.h"
 #include "libtrycatch/trycatch.h"
@@ -59,10 +64,12 @@
 #include "libut/include/libut.h"
 #include "libut/include/ringbuf.h"
 #include "libut/include/utvector.h"
+#include "ansi-utils/ansi-utils.h"
 #include "libyuarel/yuarel.h"
 #include "log.h/log.h"
 #include "miniaudio/miniaudio.h"
 #include "minmax/include/minmax.h"
+#include "msgbox/msgbox.h"
 #include "ok-file-formats/ok_jpg.h"
 #include "ok-file-formats/ok_png.h"
 #include "ok-file-formats/ok_wav.h"
@@ -74,11 +81,14 @@
 #include "querystring.c/querystring.h"
 #include "semver.c/semver.h"
 #include "str-flatten.c/src/str-flatten.h"
+#include "subhook/subhook.h"
 #include "tempdir.c/tempdir.h"
+#include "uptime/include/uptime/uptime.h"
 #include "uri.c/uri.h"
 #include "url.h/url.h"
 #include "url_router/include/url_router/url_router.h"
 #include "wildcardcmp/wildcardcmp.h"
+//#include "libucl/include/ucl.h"
 ////////////////////////////////////////////
 void __attribute__((constructor)) premain(){
   char *s = malloc(1024);
@@ -432,11 +442,24 @@ void do_test_libspinner(){
 
 
 void do_test_which(){
-  char *name = "ls";
-  char *path = (char *)which(name);
+  char *name    = "ls";
+  char *path    = (char *)which(name);
+  char *ffmpeg  = (char *)which("ffmpeg");
+  char *convert = (char *)which("convert");
+  char *meson   = (char *)which("meson");
+  char *sh      = (char *)which("sh");
+  char *bash    = (char *)which("bash");
+  char *env     = (char *)which("env");
+  char *passh   = (char *)which("passh");
 
-  printf("\n<WHICH>%s: %s\n\n", name, path ? path : "not found");
-
+  printf("PATH:        %s\n", getenv("PATH"));
+  printf("\n<WHICH>%s: %s\n\n", "name", path ? path : "not found");
+  printf("\n<WHICH>%s: %s\n\n", "ffmpeg", ffmpeg ? ffmpeg : "not found");
+  printf("\n<WHICH>%s: %s\n\n", "convert", convert ? convert : "not found");
+  printf("\n<WHICH>%s: %s\n\n", "meson", meson ? meson : "not found");
+  printf("\n<WHICH>%s: %s\n\n", "sh", sh ? sh : "not found");
+  printf("\n<WHICH>%s: %s\n\n", "env", env ? env : "not found");
+  printf("\n<WHICH>%s: %s\n\n", "passh", passh ? passh : "not found");
   name = "ls1";
   path = (char *)which(name);
   printf("\n<WHICH>%s: %s\n\n", name, path ? path : "not found");
@@ -650,7 +673,7 @@ int do_forever_callback(void *context, const unsigned char started, int stat_loc
     // do something with the context
   }
   dbg(stat_loc, %d);
-  dbg(started, %c);
+  dbg(started, % c);
   if (stat_loc == 0 || !started) {
     return(-1); // no more retries
   }
@@ -2252,6 +2275,83 @@ TEST t_incbin(void){
   PASS();
 }
 
+static volatile size_t svr_recv_msgs = 0;
+static volatile size_t cl_recv_msgs  = 0;
+
+
+void msg_update_server(msg_Conn *conn, msg_Event event, msg_Data data) {
+  if (event == msg_request) {
+    msg_send(conn, data);
+    svr_recv_msgs++;
+  }
+}
+
+
+void msg_update_client(msg_Conn *conn, msg_Event event, msg_Data data) {
+  if (event == msg_connection_ready) {
+    msg_Data data = msg_new_data("hello!");
+    msg_get(conn, data, msg_no_context);
+    msg_delete_data(data);
+  }
+  if (event == msg_reply) {
+    printf("Got the reply: '%s'.\n", msg_as_str(data));
+    cl_recv_msgs++;
+  }
+}
+
+
+TEST t_msgbox_tcp_client(void){
+  msg_connect("tcp://127.0.0.1:2101", msg_update_client, msg_no_context);
+  while (cl_recv_msgs < 1) {
+    msg_runloop(10);
+  }
+  ASSERT_GTE(cl_recv_msgs, 1);
+  char *msg;
+  asprintf(&msg, "Receieved %lu messages on client", cl_recv_msgs);
+  PASSm(msg);
+}
+
+
+TEST t_msgbox_udp_client(void){
+  msg_connect("udp://127.0.0.1:2100", msg_update_client, msg_no_context);
+  while (cl_recv_msgs < 1) {
+    msg_runloop(10);
+  }
+  ASSERT_GTE(cl_recv_msgs, 1);
+  char *msg;
+  asprintf(&msg, "Receieved %lu messages on client", cl_recv_msgs);
+  PASSm(msg);
+}
+
+
+TEST t_msgbox_tcp_server(void){
+  msg_listen("tcp://*:2101", msg_update_server);
+  while (svr_recv_msgs < 2) {
+    msg_runloop(10);
+  }
+  ASSERT_GTE(svr_recv_msgs, 2);
+  char *msg;
+  asprintf(&msg, "Receieved %lu messages on server", svr_recv_msgs);
+  PASSm(msg);
+}
+
+
+TEST t_msgbox_udp_server(void){
+  msg_listen("udp://*:2100", msg_update_server);
+  while (svr_recv_msgs < 2) {
+    msg_runloop(10);
+  }
+  ASSERT_GTE(svr_recv_msgs, 2);
+  char *msg;
+  asprintf(&msg, "Receieved %lu messages on server", svr_recv_msgs);
+  PASSm(msg);
+}
+
+
+TEST t_msgbox(void){
+  PASS();
+}
+
 
 TEST t_termbox2(void){
   struct tb_event ev;
@@ -2586,6 +2686,213 @@ TEST t_hashmap_h_2(){
 }
 
 
+TEST t_flingfd_client(){
+  int fd = fileno(stdout);
+
+  flingfd_simple_send("/tmp/some_unique_path", fd);
+  printf("fd sent\n");
+  PASS();
+}
+
+
+TEST t_flingfd_server(){
+  int fd = flingfd_simple_recv("/tmp/some_unique_path");
+
+  printf("fd recvd\n");
+  write(fd, "Hello world\n", 12);
+  PASS();
+}
+subhook_t foo_hook1;
+
+
+void foo1(int x) {
+  printf("real foo1(%d) called\n", x);
+}
+
+
+void my_foo1(int x) {
+  subhook_remove(foo_hook1);
+  printf("hooked foo1(%d) called\n", x);
+  foo1(x);
+  subhook_install(foo_hook1);
+}
+
+
+TEST t_subhook1(){
+  foo_hook1 = subhook_new((void *)foo1, (void *)my_foo1, 0);
+  subhook_install(foo_hook1);
+  foo1(123);
+  subhook_remove(foo_hook1);
+  subhook_free(foo_hook1);
+  PASS();
+}
+
+
+int cb_validate_bookmark(cfg_t *cfg, cfg_opt_t *opt){
+  /* only validate the last bookmark */
+  cfg_t *sec = cfg_opt_getnsec(opt, cfg_opt_size(opt) - 1);
+
+  if (!sec) {
+    cfg_error(cfg, "section is NULL!?");
+    return(-1);
+  }
+  if (cfg_getstr(sec, "machine") == NULL) {
+    cfg_error(cfg, "machine option must be set for bookmark '%s'", cfg_title(sec));
+    return(-1);
+  }
+  return(0);
+}
+
+
+TEST t_tty_copy(){
+    char *s;
+    asprintf(&s,"tty_copy-copied-text-%lu",(size_t)timestamp());
+    size_t wrote_chars = ansi_utils_tty_copy(s);
+    char *msg;
+    ASSERT_GTE(wrote_chars,3);
+    asprintf(&msg,"Wrote %lu chars",wrote_chars);
+    PASSm(msg);
+}
+
+TEST t_libconfuse(){
+  char *cfg_s      = "\
+\n\
+\# this is a comment\n\
+\n\
+verbose=true\n\
+#server = \"localhost\"\n\
+user = \"joe\"\n\
+debug = 17\n\
+targets = {\"Fish\", \"Cat\"}\n\
+#delay = 6.77712472349623E-139\n\
+env {\n\
+	foo = bar\n\
+	baz = foo\n\
+}\n\
+include(/tmp/simple-inc.conf)\n\
+\n";
+  char *cfg_inc0_s = "\n\
+bookmark baz {\n\
+ machine = \"ssh://localhost\"\n\
+ login = baz\n\
+}\n\
+\n";
+
+  fsio_write_text_file("/tmp/simple.conf", cfg_s);
+  fsio_write_text_file("/tmp/simple-inc.conf", cfg_inc0_s);
+  static cfg_bool_t verbose   = cfg_false;
+  static char       *server   = NULL;
+  static double     delay     = 1.356e-32;
+  static char       *username = NULL;
+  static long int   debug     = 1;
+
+
+  size_t    i;
+  cfg_opt_t proxy_opts[] = {
+    CFG_INT("type",         0,                        CFGF_NONE),
+    CFG_STR("host",         NULL,                     CFGF_NONE),
+    CFG_STR_LIST("exclude", "{localhost, .localnet}", CFGF_NONE),
+    CFG_INT("port",         21,                       CFGF_NONE),
+    CFG_END()
+  };
+  cfg_opt_t bookmark_opts[] = {
+    CFG_STR("machine",       NULL,       CFGF_NONE),
+    CFG_INT("port",          21,         CFGF_NONE),
+    CFG_STR("login",         NULL,       CFGF_NONE),
+    CFG_STR("password",      NULL,       CFGF_NONE),
+    CFG_STR("directory",     NULL,       CFGF_NONE),
+    CFG_BOOL("passive-mode", cfg_false,  CFGF_NONE),
+    CFG_SEC("proxy",         proxy_opts, CFGF_NONE),
+    CFG_END()
+  };
+  cfg_opt_t opts[] = {
+    CFG_SIMPLE_BOOL("verbose", &verbose),
+    CFG_SIMPLE_STR("server",   &server),
+    CFG_SIMPLE_STR("user",     &username),
+    CFG_SIMPLE_INT("debug",    &debug),
+    CFG_SIMPLE_FLOAT("delay",  &delay),
+    CFG_STR_LIST("targets",    0,            CFGF_MULTI),
+    CFG_SEC("bookmark",        bookmark_opts,CFGF_MULTI | CFGF_TITLE),
+    CFG_SEC("env",             NULL,         CFGF_KEYSTRVAL),
+    CFG_FUNC("include",        &cfg_include),
+    CFG_END(),
+  };
+  cfg_t     *cfg;
+
+  cfg = cfg_init(opts, CFGF_NONE);
+  if (cfg_parse(cfg, "/tmp/simple.conf") == CFG_PARSE_ERROR) {
+    return(1);
+  }
+
+  cfg_print_indent(cfg, stdout, 1);
+
+  printf("verbose: %s\n", verbose ? "true" : "false");
+  printf("server: %s\n", server);
+  printf("username: %s\n", username);
+  printf("debug: %ld\n", debug);
+  printf("delay: %G\n", delay);
+
+  cfg_t *sec = cfg_getsec(cfg, "env");
+
+  if (sec) {
+    unsigned int i;
+
+    for (i = 0; i < cfg_num(sec); i++) {
+      cfg_opt_t *opt = cfg_getnopt(sec, i);
+
+      printf(AC_RESETALL AC_YELLOW "%s = \"%s\"" AC_RESETALL "\n", cfg_opt_name(opt), cfg_opt_getstr(opt));
+    }
+  }
+
+  cfg_free(cfg);
+
+  PASS();
+} /* t_libconfuse */
+
+
+TEST t_dotenv(){
+  fsio_write_text_file("/tmp/.env",
+                       "EXTRA_VAR=\"xxxxxxxxx\""
+                       "\nV1=\"v1data\""
+                       "\nV2='v2data'"
+                       "\nV3=v3data"
+                       "\nEMPTY="
+                       "\n"
+                       );
+  env_load("/tmp/.env", false);
+  printf("EXTRA_VAR: %s\n", getenv("EXTRA_VAR"));
+  printf("V1: %s\n", getenv("V1"));
+  printf("V2: %s\n", getenv("V2"));
+  printf("V3: %s\n", getenv("V3"));
+  printf("EMPTY: %s\n", getenv("EMPTY"));
+  PASS();
+}
+
+
+TEST t_chfreq(){
+  char     *str = "110aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz102";
+  uint32_t **f  = chfreq(str);
+  uint32_t *cur = NULL;
+
+  printf("str: %s\n", str);
+  for (int i = 0; NULL != (cur = f[i]); ++i) {
+    char c  = cur[0];
+    int  cf = cur[1];
+    printf("#%d> char: %c | qty: %d |\n", i, c, cf);
+  }
+  PASS();
+}
+
+
+TEST t_uptime(){
+  unsigned long long u = getUptime();
+
+  printf("Uptime: %lu\n", u);
+  ASSERT_GTE(u, 0);
+  PASS();
+}
+
+
 TEST t_semver(){
   char     current[] = "1.5.10";
   char     compare[] = "2.3.0";
@@ -2688,7 +2995,7 @@ TEST t_hashmap_h_1(){
 
 
 TEST t_url_router(){
-  char             *str1 = "hello world";
+  char             *str1 = "hello world1";
   char             *str2 = "woooooooooo";
   char             *arg;
   char             *data;
@@ -2705,11 +3012,11 @@ TEST t_url_router(){
 
   err = url_router_match(r, "/a/b/c", &args, (void **)&data);
   if (err == URL_ROUTER_E_OK) {
-    printf("%s\n", data);
+    printf("data:    %s\n", data);
   }
   url_router_dict_free(args);
 
-  err = url_router_insert(r, "/r/:var/c", str2);
+  err = url_router_insert(r, "/r/:var/:var", str2);
   if (err != URL_ROUTER_E_OK) {
     printf("Insert /r/:var/c failed\n");
     return(-1);
@@ -2771,6 +3078,41 @@ TEST t_c_timestamp(void){
 
 
 TEST t_genpassword_c(void){
+  int passed = true;
+
+  srand(1337);
+
+  int  length    = 10;
+  char *password = generate_password(length);
+
+  if (strlen(password) == length) {
+  } else {
+    passed = false;
+    printf("\x1B[31mFirst test failed. \n");     // Print in red
+    printf("Generated password: %s, at length: %i\n", password, length);
+  }
+  printf("\x1B[32mFirst test passed.:      '%s' \n", password);      // Print in green
+
+  // free memory
+  free(password);
+
+  // Second test
+  length   = 15;
+  password = generate_password(length);
+  if (strlen(password) == length) {
+    printf("\x1B[32mSecond test passed. \n");     // Print in green
+  } else {
+    passed = false;
+    printf("\x1B[31mSecond test failed. \n");     // Print in red
+    printf("Generated password: %s, at length: %i\n", password, length);
+  }
+
+  printf("\x1B[32msecond test passed.:      '%s' \n", password);      // Print in green
+  // Return to normal color.
+  printf("\x1B[0m");
+
+  // free memory
+  free(password);
   PASS();
 }
 
@@ -2931,6 +3273,30 @@ TEST t_ok_file_format_png(void){
   }
   PASS();
 }
+SUITE(s_flingfd_client) {
+  RUN_TEST(t_flingfd_client);
+}
+SUITE(s_flingfd_server) {
+  RUN_TEST(t_flingfd_server);
+}
+SUITE(s_tty_copy) {
+  RUN_TEST(t_tty_copy);
+}
+SUITE(s_libconfuse) {
+  RUN_TEST(t_libconfuse);
+}
+SUITE(s_subhook) {
+  RUN_TEST(t_subhook1);
+}
+SUITE(s_dotenv) {
+  RUN_TEST(t_dotenv);
+}
+SUITE(s_chfreq) {
+  RUN_TEST(t_chfreq);
+}
+SUITE(s_uptime) {
+  RUN_TEST(t_uptime);
+}
 SUITE(s_semver) {
   RUN_TEST(t_semver);
 }
@@ -3018,6 +3384,17 @@ SUITE(s_bench) {
 }
 SUITE(s_minmax) {
   RUN_TEST(t_minmax);
+}
+SUITE(s_msgbox_client) {
+  RUN_TEST(t_msgbox_udp_client);
+  RUN_TEST(t_msgbox_tcp_client);
+}
+SUITE(s_msgbox_server) {
+  RUN_TEST(t_msgbox_udp_server);
+  RUN_TEST(t_msgbox_tcp_server);
+}
+SUITE(s_msgbox) {
+  RUN_TEST(t_msgbox);
 }
 SUITE(s_termbox2) {
   RUN_TEST(t_termbox2);
@@ -3238,6 +3615,11 @@ int main(int argc, char **argv) {
     RUN_SUITE(s_libforks);
     RUN_SUITE(s_termbox2);
     RUN_SUITE(s_libtinyfiledialogs);
+    RUN_SUITE(s_msgbox);
+    RUN_SUITE(s_msgbox_server);
+    RUN_SUITE(s_msgbox_client);
+    RUN_SUITE(s_flingfd_client);
+    RUN_SUITE(s_flingfd_server);
   }
   RUN_SUITE(s_json);
   RUN_SUITE(s_string);
@@ -3300,6 +3682,12 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_pidfile);
   RUN_SUITE(s_path_module);
   RUN_SUITE(s_semver);
+  RUN_SUITE(s_uptime);
+  RUN_SUITE(s_chfreq);
+  RUN_SUITE(s_dotenv);
+  RUN_SUITE(s_subhook);
+  RUN_SUITE(s_libconfuse);
+  RUN_SUITE(s_tty_copy);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

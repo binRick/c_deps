@@ -17,7 +17,6 @@ vt100utils_deps = [
 #  include_directories: vt100utils_dirs,
 #)
 #
-#vt100utils_dep = declare_dependency(
-#  include_directories: vt100utils_dirs,
-#  link_with: vt100utils_lib,
-#)
+vt100utils_dep = declare_dependency(
+  include_directories: vt100utils_dirs,
+)

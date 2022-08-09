@@ -1,6 +1,5 @@
 flingfd_srcs = [files(
   '../../../submodules/flingfd/src/flingfd.c',
-  '../../../submodules/flingfd/src/flingfd.h',
 )]
 
 flingfd_dirs = [

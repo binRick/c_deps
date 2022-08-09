@@ -11,7 +11,7 @@ option('enable-binary-tests',
 )
 option('enable-greatest-tests',
   type : 'boolean',
-  value : true,
+  value : false,
   description : 'Enables greatest tests.'
 )
 

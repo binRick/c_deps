@@ -19,7 +19,6 @@ deps_test_deps = [
   kitty_dep,
   tiny_regex_c_dep,
   c_vector_dep,
-  
   murmurhash_dep,
   libbeaufort_dep,
   bitset_dep,
@@ -28,6 +27,8 @@ deps_test_deps = [
   layout_dep,
   csplit_dep,
   subhook_dep,
+  #  libucl_dep,
+  libconfuse_dep,
   socket99_dep,
   container_of_dep,
   genpassword_c_dep,
@@ -39,6 +40,7 @@ deps_test_deps = [
   pidfile_dep,
   semver_c_dep,
   flingfd_dep,
+  uptime_dep,
   c_timestamp_dep,
   libtrycatch_dep,
   querystring_c_dep,
@@ -81,6 +83,10 @@ deps_test_deps = [
   levenshtein_dep,
   libut_dep,
   jinja2_cli_dep,
+  chfreq_c_dep,
+  msgbox_dep,
+  dotenv_c_dep,
+  flingfd_dep,
 ]
 deps_c_args = [
   '-DINCBIN_SILENCE_BITCODE_WARNING',
@@ -103,14 +109,10 @@ if get_option('enable-binaries')
      install: true,
   )
   if get_option('enable-greatest-tests')
-    test('deps-test|List Test Cases', sh_program,
-
-      args: [
-        '-c',
-        deps_ls_tests_script,
-        ],
-      workdir: meson.current_source_dir(),
-      )
+    #    test('deps-test|List Test Cases',sh_program,
+    #  args: ['-c',deps_ls_tests_script],
+    #  workdir: meson.current_source_dir(),
+    #)
   endif
   if get_option('enable-deps-test')
     test('deps-test', 

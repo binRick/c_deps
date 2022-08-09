@@ -667,6 +667,9 @@ char *execute_meson_introspect(void *_MESON_PATH){
   } while (bytes_read != 0);
 
   result = subprocess_join(&subprocess, &exited);
+  if (result != 0) {
+    fprintf(stderr, "Meson path '%s' failed with result code '%d'\n", MESON_PATH, result);
+  }
   assert(result == 0);
   assert(exited == 0);
 

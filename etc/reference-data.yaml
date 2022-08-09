@@ -2,6 +2,7 @@ x-reference-data:
   log-path: &log-path /tmp/meson-repos-build.log
   meson-base-dir: &meson-base-dir ~/repos
   meson-dirs: &meson-dirs
+    - c_pick
     - c_deps
     - c_palettes
     - c_ansi

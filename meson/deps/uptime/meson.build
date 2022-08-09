@@ -1,5 +1,4 @@
 uptime_srcs = [files(
-  '../../../submodules/uptime/include/uptime/uptime.h',
   '../../../submodules/uptime/src/uptime.c',
 )]
 
