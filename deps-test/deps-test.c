@@ -67,6 +67,7 @@
 #include "libut/include/ringbuf.h"
 #include "libut/include/utvector.h"
 #include "libyuarel/yuarel.h"
+#include "list/src/list.h"
 #include "log.h/log.h"
 #include "miniaudio/miniaudio.h"
 #include "minmax/include/minmax.h"
@@ -78,15 +79,17 @@
 #include "path-normalize.c/src/path-normalize.h"
 #include "path_module/src/path.h"
 #include "pidfile/pidfile.h"
+#include "posix-tree/posix-tree.h"
 #include "process/process.h"
 #include "querystring.c/querystring.h"
 #include "semver.c/semver.h"
-#include "str-flatten.c/src/str-flatten.h"
-#include "subhook/subhook.h"
-#include "tai64n/tai64n.h"
-#include "tempdir.c/tempdir.h"
 #include "sense-c/src/git.h"
 #include "sense-c/src/lang.h"
+#include "str-flatten.c/src/str-flatten.h"
+#include "subhook/subhook.h"
+#include "submodules/seethe/seethe.h"
+#include "tai64n/tai64n.h"
+#include "tempdir.c/tempdir.h"
 #include "uptime/include/uptime/uptime.h"
 #include "uri.c/uri.h"
 #include "url.h/url.h"
@@ -2748,39 +2751,75 @@ int cb_validate_bookmark(cfg_t *cfg, cfg_opt_t *opt){
 }
 
 
+TEST t_posix_tree(){
+  tree_demo();
+  PASS();
+}
+
+
+TEST t_seethe(){
+  debug("debug log");
+  info("informational log");
+  notice("notice log");
+  warning("warning log");
+  error("error log");
+  critical("critical log");
+
+  // sample usage
+  info("starting program");
+  char *my_string;
+  if (!(my_string = malloc(BUFSIZ * sizeof(char)))) {
+    critical("failed to make size-%zu buffer. exiting\n", BUFSIZ);
+    abort();
+  }
+  debug("getting input from user");
+  error("fgets failed to return a proper result");
+
+  PASS();
+}
+
+
 TEST t_color_boxes(){
-    char *boxes = get_color_boxes();
-    printf("%s",boxes);
-    ASSERT_GTE(strlen(boxes),100);
-    PASS();
+  char *boxes = get_color_boxes();
+
+  printf("%s", boxes);
+  ASSERT_GTE(strlen(boxes), 100);
+  PASS();
 }
+
+
 TEST t_sense_c(){
-    int lang = get_lang("../");
-    printf("../ lang: %s\n", get_lang_name(lang));
+  int lang = get_lang("../");
 
-    lang = get_lang("./");
-    printf("./ lang: %s\n", get_lang_name(lang));
+  printf("../ lang: %s\n", get_lang_name(lang));
 
-    lang = get_lang("./confirm1");
-    printf("./confirm1 lang: %s\n", get_lang_name(lang));
+  lang = get_lang("./");
+  printf("./ lang: %s\n", get_lang_name(lang));
+
+  lang = get_lang("./confirm1");
+  printf("./confirm1 lang: %s\n", get_lang_name(lang));
 
 
-    int git = has_git("./");
-    if (git) {
-        printf("Is git!\n");
-    } else {
-        printf("Is not git.\n");
-    }
+  int git = has_git("./");
 
-    int local = is_local_git("./");
-    if (local) {
-        printf("Is local!\n");
-    } else {
-        printf("Is not local.\n");
-    }
-    
-    PASS();
+  if (git) {
+    printf("Is git!\n");
+  } else {
+    printf("Is not git.\n");
+  }
+
+  int local = is_local_git("./");
+
+  if (local) {
+    printf("Is local!\n");
+  } else {
+    printf("Is not local.\n");
+  }
+
+  PASS();
 }
+
+
 TEST t_tai64n(){
   size_t ts = tai64ts();
 
@@ -3179,6 +3218,121 @@ TEST t_genpassword_c(void){
 }
 
 
+TEST t_list_iterate_reverse(void){
+  list_t          *langs = list_new();
+
+  list_node_t     *c    = list_rpush(langs, list_node_new("c"));
+  list_node_t     *js   = list_rpush(langs, list_node_new("js"));
+  list_node_t     *ruby = list_rpush(langs, list_node_new("ruby"));
+
+  list_node_t     *node;
+  list_iterator_t *it = list_iterator_new(langs, LIST_TAIL);
+
+  while ((node = list_iterator_next(it))) {
+    fprintf(stderr, "\tITERATE> %s\n", (char *)node->val);
+  }
+
+  list_iterator_destroy(it);
+  list_destroy(langs);
+  PASS();
+}
+
+
+TEST t_list_iterate(void){
+  list_t          *langs = list_new();
+
+  list_node_t     *c    = list_rpush(langs, list_node_new("c"));
+  list_node_t     *js   = list_rpush(langs, list_node_new("js"));
+  list_node_t     *ruby = list_rpush(langs, list_node_new("ruby"));
+
+  list_node_t     *node;
+  list_iterator_t *it = list_iterator_new(langs, LIST_HEAD);
+
+  while ((node = list_iterator_next(it))) {
+    fprintf(stderr, "\tITERATE> %s\n", (char *)node->val);
+  }
+
+  list_iterator_destroy(it);
+  list_destroy(langs);
+  PASS();
+}
+
+
+TEST t_list_find(void){
+  list_t      *langs = list_new();
+  list_node_t *js    = list_rpush(langs, list_node_new("js"));
+  list_node_t *a     = list_find(langs, "js");
+  list_node_t *c     = list_find(langs, "ABSENT");
+
+  assert(js == a);
+  assert(NULL == c);
+
+  list_destroy(langs);
+
+  PASS();
+}
+
+
+TEST t_list_indexed(void){
+  list_t      *list = list_new();
+  list_node_t *a    = list_node_new("a");
+  list_node_t *b    = list_node_new("b");
+  list_node_t *c    = list_node_new("c");
+
+  list_rpush(list, a);
+  list_rpush(list, b);
+  list_rpush(list, c);
+
+  assert(a == list_at(list, 0));
+  assert(b == list_at(list, 1));
+  assert(c == list_at(list, 2));
+  assert(NULL == list_at(list, 3));
+
+  assert(c == list_at(list, -1));
+  assert(b == list_at(list, -2));
+  assert(a == list_at(list, -3));
+  assert(NULL == list_at(list, -4));
+
+  list_destroy(list);
+  PASS();
+}
+
+
+TEST t_list_push(void){
+  list_t      *list = list_new();
+  list_node_t *a    = list_node_new("a");
+  list_node_t *b    = list_node_new("b");
+  list_node_t *c    = list_node_new("c");
+
+  list_rpush(list, a);
+  list_rpush(list, b);
+  list_rpush(list, c);
+
+  assert(a == list->head);
+  assert(c == list->tail);
+  assert(3 == list->len);
+  assert(b == a->next);
+  assert(NULL == a->prev);
+  assert(c == b->next);
+  assert(a == b->prev);
+  assert(NULL == c->next);
+  assert(b == c->prev);
+
+  list_destroy(list);
+  PASS();
+}
+
+
+TEST t_list_node(void){
+  char        *val  = "some value";
+  list_node_t *node = list_node_new(val);
+
+  assert(node->val == val);
+  free(node);
+  PASS();
+}
+
+
 TEST t_extname_c(void){
   assert(strcmp(extname("some/extension.ext"), ".ext") == 0);
   assert(strcmp(extname(".derp"), ".derp") == 0);
@@ -3341,9 +3495,24 @@ SUITE(s_flingfd_client) {
 SUITE(s_flingfd_server) {
   RUN_TEST(t_flingfd_server);
 }
+SUITE(s_posix_tree) {
+  RUN_TEST(t_posix_tree);
+}
+SUITE(s_seethe) {
+  RUN_TEST(t_seethe);
+}
 SUITE(s_color_boxes) {
   RUN_TEST(t_color_boxes);
 }
+SUITE(s_list){
+  RUN_TEST(t_list_node);
+  RUN_TEST(t_list_push);
+  RUN_TEST(t_list_indexed);
+  RUN_TEST(t_list_find);
+  RUN_TEST(t_list_iterate);
+  RUN_TEST(t_list_iterate_reverse);
+}
+
 SUITE(s_sense_c) {
   RUN_TEST(t_sense_c);
 }
@@ -3761,7 +3930,10 @@ int main(int argc, char **argv) {
   RUN_SUITE(s_tty_copy);
   RUN_SUITE(s_tai64n);
   RUN_SUITE(s_sense_c);
+  RUN_SUITE(s_list);
   RUN_SUITE(s_color_boxes);
+  RUN_SUITE(s_seethe);
+  RUN_SUITE(s_posix_tree);
   GREATEST_MAIN_END();
 
   size_t used = do_dmt_summary();

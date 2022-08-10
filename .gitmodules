@@ -739,3 +739,12 @@
 [submodule "submodules/c_libansilove"]
 	path = submodules/c_libansilove
 	url = ssh://git@github.com/binRick/c_libansilove
+[submodule "submodules/seethe"]
+	path = submodules/seethe
+	url = https://github.com/jnguyen1098/seethe
+[submodule "submodules/posix-tree"]
+	path = submodules/posix-tree
+	url = https://github.com/Mati365/posix-tree
+[submodule "submodules/c_posix-tree"]
+	path = submodules/c_posix-tree
+	url = https://github.com/binRick/c_posix-tree.git

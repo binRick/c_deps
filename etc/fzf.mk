@@ -79,21 +79,24 @@ meson-tests-preview-header:
 	@printf "\n"
 	@printf "         |       - Adjust Horizontal Layout    :   %s" "$(shell ansi --red-intense "control+/")"
 	@printf "\n"
+	@printf "         |                                     :   %s" "$(shell ansi --red-intense "control+l")"
+	@printf "\n"
 	@printf "         |%s"   " $(shell ansi --green --bold "Misc") "
 	@printf "\n"
 	@printf "         |       - Tests                       :   %s" "$(shell ansi --yellow-intense --italic "control+t")"
+	@printf "\n"
+	@printf "         |       - Suites                      :   %s" "$(shell ansi --yellow-intense --italic "control+s")"
 	@printf "\n"
 	@printf "         |-----------------------------------------------------------------|"
 	@printf "\n"
 menu: meson-tests
 MENU_PALETTE=base16-equilibrium
 meson-tests:
-	@vterm-ctrl title "Meson Menu"
+	@{ env|grep -q KITTY_PID && kitty @set-tab-title "Meson Menu"; } || vterm-ctrl title "Meson Menu"
 	@ansi --save-palette
 	@kfc -p $(MENU_PALETTE) 2>/dev/null
 	@\
-	{ \
-	make meson-tests-list; } \
+	{ make meson-tests-list; } \
   	  |fzf \
 		--border=sharp\
 		--margin=0,0,0,0 --padding=0,0,0,0 \
@@ -116,31 +119,31 @@ meson-tests:
         --bind 'ctrl-l:change-preview-window(right,60%|right,50%)'\
         --bind 'ctrl-m:change-preview-window(down,80%|down,70%)' \
         --bind 'ctrl-n:change-preview-window(down,60%|down,50%)' \
+		--bind 'ctrl-x:preview(passh muon info options)'\
 		--bind 'ctrl-j:change-prompt(Build Files > )'\
 			--bind 'ctrl-j:+change-preview-window(nofollow,wrap)'\
-        	--bind 'ctrl-j:+change-preview(bat --color always --italic-text always --decorations always --theme "Monokai Extended" {})'\
+        	--bind 'ctrl-j:+change-preview(env bat -f --theme gruvbox-dark {})'\
         	--bind 'ctrl-j:+reload(make meson-introspect-build-files)'\
         --bind 'ctrl-k:preview(make clean meson-build)'\
 			--bind 'ctrl-k:+change-preview-window(follow,wrap)'\
-		--bind 'ctrl-x:preview(passh muon info options)'\
 		--bind 'ctrl-b:preview(passh make build)' \
 			--bind 'ctrl-b:+change-preview-window(follow,wrap)'\
 		--bind 'ctrl-p:change-prompt(Source Files > )'\
-			--bind 'ctrl-p:+change-preview(make bat --color always --italic-text always --decorations always --theme "Monokai Extended" {})'\
+			--bind 'ctrl-p:+change-preview(bat --color always --italic-text always --decorations always --theme "Monokai Extended" {})'\
 			--bind 'ctrl-p:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
 			--bind 'ctrl-p:+reload(make meson-get-source-files)'\
 		--bind 'ctrl-o:change-prompt(Meson Tests > )'\
 				--bind 'ctrl-o:+change-preview(meson test --num-processes 1 -C build -v --no-stdsplit --print-errorlogs {} || build/{}/{})' \
 				--bind 'ctrl-o:+change-preview-window(follow,nowrap)'\
 				--bind 'ctrl-o:+reload(make meson-tests-list)' \
-		--bind 'ctrl-t:change-prompt(Tests -> ctrl+h to run > )'\
+		--bind 'ctrl-t:change-prompt(Tests > )'\
 				--bind 'ctrl-t:+change-preview(submodules/c_deps/scripts/deps-test-view-test.sh {})'\
-				--bind 'ctrl-t:+reload(make deps-test-ls-tests -B)'\
 				--bind 'ctrl-t:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
-		--bind 'ctrl-s:change-prompt(Suites -> ctrl+j to run > )'\
+				--bind 'ctrl-t:+reload(make deps-test-ls-tests -B)'\
+		--bind 'ctrl-s:change-prompt(Suites > )'\
 				--bind 'ctrl-s:+change-preview(submodules/c_deps/scripts/deps-test-view-suite.sh {})'\
-					--bind 'ctrl-s:+reload(make deps-test-ls-suites -B)'\
 				--bind 'ctrl-s:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
+				--bind 'ctrl-s:+reload(make deps-test-ls-suites -B)'\
 		--bind 'ctrl-z:change-prompt(Inspect Tests > )'\
 				--bind 'ctrl-z:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
 				--bind 'ctrl-z:+change-preview(submodules/c_deps/scripts/list-test-tests.sh {})'\
@@ -154,4 +157,5 @@ meson-tests:
 				--bind 'ctrl-v:+reload(make meson-binaries)'\
 		||true
 	@ansi --restore-palette
+	@{ env|grep -q KITTY_PID && kitty @set-tab-title "$(shell pwd)"; } || vterm-ctrl title "$(shell pwd)"
 
