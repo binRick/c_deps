@@ -68,6 +68,8 @@ deps_test_deps = [
   list_dep,
   seethe_dep,
   posix_tree_dep,
+  knock_dep,
+  probarlib_dep,
   ansi_utils_dep,
   http_get_dep,
   mkcreflect_dep,

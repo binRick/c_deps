@@ -748,3 +748,9 @@
 [submodule "submodules/c_posix-tree"]
 	path = submodules/c_posix-tree
 	url = https://github.com/binRick/c_posix-tree.git
+[submodule "submodules/knock"]
+	path = submodules/knock
+	url = https://github.com/jvinet/knock
+[submodule "submodules/readkey"]
+	path = submodules/readkey
+	url = https://github.com/michael105/readkey

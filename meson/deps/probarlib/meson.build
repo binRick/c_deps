@@ -1,9 +1,11 @@
 probarlib_srcs = [files(
+  '../../../submodules/probarlib/include/probar.h',
   '../../../submodules/probarlib/src/probar.c',
 )]
 
 probarlib_dirs = [
   '../../../submodules/probarlib',
+  '../../../submodules/probarlib/images',
   '../../../submodules/probarlib/include',
   '../../../submodules/probarlib/src',
   inc,

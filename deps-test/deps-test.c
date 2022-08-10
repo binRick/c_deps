@@ -80,6 +80,7 @@
 #include "path_module/src/path.h"
 #include "pidfile/pidfile.h"
 #include "posix-tree/posix-tree.h"
+#include "probarlib/include/probar.h"
 #include "process/process.h"
 #include "querystring.c/querystring.h"
 #include "semver.c/semver.h"
