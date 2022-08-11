@@ -1,7 +1,8 @@
 ////////////////////////////////////////////
-{%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}//{%endif%}#ifdef DEBUG_MEMORY
-{%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}//{%endif%}#include "debug-memory/debug_memory.h"
-{%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}//{%endif%}#endif
+{%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}{%endif%}#define DEBUG_MEMORY
+#ifdef DEBUG_MEMORY
+#include "debug-memory/debug_memory.h"
+#endif
 ////////////////////////////////////////////
 #include "{{TEST_CASE_NAME}}/{{TEST_CASE_NAME}}.h"
 ////////////////////////////////////////////

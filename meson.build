@@ -117,4 +117,3 @@ subdir('kgflags-test')
 ###########################################
 subdir('c-meson-utils-test')
 subdir('exec-fzf-test')
-subdir('tuibox-dev-test')
