@@ -1,8 +1,12 @@
+ENTRY_MAKE_ARGS=build
+ENTR_CMD=make entr-files|entr -c make $(ENTRY_MAKE_ARGS)
+
+_entr-files:
+	@find . -type f -name "*.c" -or -name "*.h" -or -name "meson.build" -or -name "Makefile" -or -name "*.mk" -maxdepth 3
+	@find ~/repos/c_vt100utils -type f -name "*.c" -or -name "*.h"
+
 entr-files:
-	@find . -type f -name "*.c" -or -name "*.h" -or -name "meson.build" -or -name "Makefile" -or -name "*.mk" -maxdepth 2
-entr-run-cmd:
-	@echo make build
-entr-cmd:
-	@echo "make entr-files|entr -c env bash -c \"$(shell make entr-run-cmd)\""
+	@make _entr-files|xargs -I % realpath % |egrep -v '/submodules/'| sort -u
+
 entr:
-	@eval $(shell make entr-cmd)
+	@$(ENTR_CMD)

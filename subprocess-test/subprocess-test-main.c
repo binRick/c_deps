@@ -31,7 +31,7 @@ int subprocess_test_main(char *CMD){
 
   stringbuffer_release(SB);
   dbg(command_line[4], %s);
-  dbg(strlen(READ_STDOUT), %lu);
+  dbg(strlen(READ_STDOUT), %u);
   if (DEBUG_STDOUT) {
     fprintf(stderr, "%s", READ_STDOUT);
   }

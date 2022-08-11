@@ -76,7 +76,7 @@ void *get_struct_field_name(void *STRUCT, const char *FIELD_NAME){
   case MKCREFLECT_TYPES_INTEGER:
     if (FIELD_LEN > 0) {
       VALID_FIELD = true;
-      dbg((long long)FIELD, % lld);
+      dbg((long long)FIELD, %ld);
       PRINT("valid integer field!- ", (char *)FIELD_NAME, "len:", FIELD_LEN);
     }
     break;
@@ -114,12 +114,12 @@ TEST t_mkcreflect(void){
     dbg(S_NAME(Address), %s);
     dbg(S_NAME(TestStruct), %s);
     dbg(_S_INFO("TestStruct"), %s);
-    dbg(S_SIZE(Address), %lu);
-    dbg(S_SIZE(TestStruct), %lu);
-    dbg(S_PACKED_SIZE(TestStruct), %lu);
-    dbg(S_PACKED_SIZE(Address), %lu);
-    dbg(S_FIELDS_COUNT(Address), %lu);
-    dbg(S_FIELDS_COUNT(TestStruct), %lu);
+    dbg(S_SIZE(Address), %u);
+    dbg(S_SIZE(TestStruct), %u);
+    dbg(S_PACKED_SIZE(TestStruct), %u);
+    dbg(S_PACKED_SIZE(Address), %u);
+    dbg(S_FIELDS_COUNT(Address), %u);
+    dbg(S_FIELDS_COUNT(TestStruct), %u);
   }
   PASS();
 } /* t_mkcreflect */

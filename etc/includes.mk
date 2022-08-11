@@ -6,3 +6,5 @@ include submodules/c_deps/etc/uncrustify.mk
 include submodules/c_deps/etc/clean.mk
 include submodules/c_deps/etc/loc.mk
 include submodules/c_deps/etc/fzf.mk
+include submodules/c_deps/etc/bashful.mk
+include submodules/c_deps/etc/git.mk

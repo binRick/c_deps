@@ -828,7 +828,7 @@ int do_forever_callback(void *context, const unsigned char started, int stat_loc
     // do something with the context
   }
   dbg(stat_loc, %d);
-  dbg(started, % c);
+  dbg(started, %c);
   if (stat_loc == 0 || !started) {
     return(-1); // no more retries
   }
@@ -4336,6 +4336,6 @@ int main(int argc, char **argv) {
 
   size_t used = do_dmt_summary();
 
-  dbg(used, %lu);
+  dbg(used, %u);
   assert(used == 0);
 } /* main */

@@ -60,7 +60,7 @@ char *subprocess_fzf_test_0(void){
 
   stringbuffer_release(SB);
   dbg(exec_cmd[5], %s);
-  dbg(strlen(READ_STDOUT), %lu);
+  dbg(strlen(READ_STDOUT), %u);
   if (DEBUG_STDOUT) {
     fprintf(stderr, "%s", READ_STDOUT);
   }

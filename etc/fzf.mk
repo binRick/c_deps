@@ -2,7 +2,7 @@
 deps-test-includes:
 	@egrep '^#include.*"' deps-test/deps-test.c|cut -d'"' -f2|sort -u
 deps-test-includes-paths:
-	@make deps-test-includes|while read -r f; do\
+	@$(MAKE) deps-test-includes|while read -r f; do\
 		if [[ -f "$$f" ]]; then echo "$$f"; \
 		elif [[ -f "submodules/$$f" ]]; then echo "submodules/$$f"; \
 		elif [[ -f "submodules/c_deps/submodules/c_ansi/$$f" ]]; then echo "submodules/c_deps/submodules/c_ansi/$$f"; \
@@ -17,15 +17,15 @@ deps-test-ls-tests:
 deps-test-ls-suites:
 	@eval build/deps-test/deps-test -L
 greatest-suites:
-	@(make test-file-names | while read -r f; do timeout .5 passh ./build/$$f/$$f -l -v; done) |grep '^* Suite '|cut -d: -f1|cut -d' ' -f3
+	@($(MAKE) test-file-names | while read -r f; do timeout .5 $(PASSH) ./build/$$f/$$f -l -v; done) |grep '^* Suite '|cut -d: -f1|cut -d' ' -f3
 greatest-suite-tests:
-	@passh  ./build/exec-fzf-test/exec-fzf-test -l -v -s s_fzf_basic|grep '^* Suite ' -A 999|grep '^[[:space:]]'|tr -d ' '|cut -d' ' -f1
+	@$(PASSH)  ./build/exec-fzf-test/exec-fzf-test -l -v -s s_fzf_basic|grep '^* Suite ' -A 999|grep '^[[:space:]]'|tr -d ' '|cut -d' ' -f1
 
 run-binary:
-	@clear; make meson-binaries | env FZF_DEFAULT_COMMAND= \
+	@clear; $(MAKE) meson-binaries | env FZF_DEFAULT_COMMAND= \
         fzf --reverse \
             --preview-window='follow,wrap,right,80%' \
-            --bind 'ctrl-b:preview(make meson-build)' \
+            --bind 'ctrl-b:preview($(MESON) meson-build)' \
             --preview='env bash -c {} -v -a' \
             --ansi --border \
             --cycle \
@@ -33,9 +33,9 @@ run-binary:
             --height='100%' \
     | xargs -I % env bash -c "./%"
 run-binary-nodemon:
-	@make meson-binaries | fzf --reverse | xargs -I % nodemon -w build --delay 1000 -x passh "./%"
+	@$(MAKE) meson-binaries | fzf --reverse | xargs -I % nodemon -w build --delay 1000 -x $(PASSH) "./%"
 meson-tests-list:
-	@meson test -C build --list
+	@$(MESON) test -C build --list
 meson-tests-preview-header:
 	@printf "%s\n"   " $(shell ansi --green --bold "Keybinds") "
 	@printf "         |-----------------------------------------------------------------|"
@@ -117,13 +117,13 @@ meson-tests:
 	@ansi --save-palette
 	@kfc -p $(MENU_PALETTE) 2>/dev/null
 	@\
-	{ make meson-tests-list; } \
+	{ $(MAKE) meson-tests-list; } \
   	  |fzf \
 		--border=sharp\
 		--margin=0,0,0,0 --padding=0,0,0,0 \
 		--no-info \
         --reverse --ansi --no-multi --cycle --info=inline \
-        --preview='make meson-tests-preview-header'\
+        --preview='$(MAKE) meson-tests-preview-header'\
         --preview-window='follow,nowrap,right,75%' \
         --header='Control Space For Menu'\
         --header-lines='0' \
@@ -135,52 +135,52 @@ meson-tests:
         --bind 'pgdn:preview-half-page-down'\
         --bind 'ctrl-/:change-preview-window(right,50%|right,60%|right,70%|right,80%|right,90%)'\
         --bind 'ctrl-\:change-preview-window(down,50%|down,60%|down,70%|down,80%|down,90%)' \
-        --bind 'ctrl-space:preview(make meson-tests-preview-header)'\
-        --bind 'ctrl-e:preview(passh git status)' \
-        --bind 'ctrl-g:preview(passh make tidy)' \
-        --bind 'ctrl-i:preview(passh meson wrap status)' \
-		--bind 'ctrl-x:preview(passh muon info options)'\
+        --bind 'ctrl-space:preview($(MAKE) meson-tests-preview-header)'\
+        --bind 'ctrl-e:preview($(PASSH) git status)' \
+        --bind 'ctrl-g:preview($(PASSH) $(MAKE) tidy)' \
+        --bind 'ctrl-i:preview($(PASSH) $(MESON) wrap status)' \
+		--bind 'ctrl-x:preview($(PASSH) muon info options)'\
         --bind 'ctrl-w:preview(submodules/c_deps/meson/ls_unconfigured_submodules.sh)' \
        	--bind 'ctrl-]:preview(submodules/c_deps/meson/ls_configured_submodules.sh)' \
 		--bind 'ctrl-a:change-prompt(Build Includes > )'\
 			--bind 'ctrl-a:+change-preview(bat -f --theme gruvbox-dark submodules/{})'\
 			--bind 'ctrl-a:+change-preview-window(nofollow,nowrap)'\
-			--bind 'ctrl-a:+reload(make deps-test-includes-paths)'\
+			--bind 'ctrl-a:+reload($(MAKE) deps-test-includes-paths)'\
 		--bind 'ctrl-j:change-prompt(Build Files > )'\
 			--bind 'ctrl-j:+change-preview-window(nofollow,wrap)'\
         	--bind 'ctrl-j:+change-preview(env bat -f --theme gruvbox-dark {})'\
-        	--bind 'ctrl-j:+reload(make meson-introspect-build-files)'\
-        --bind 'ctrl-k:preview(make clean meson-build)'\
+        	--bind 'ctrl-j:+reload($(MAKE) meson-introspect-build-files)'\
+        --bind 'ctrl-k:preview($(MAKE) clean meson-build)'\
 			--bind 'ctrl-k:+change-preview-window(follow,wrap)'\
-		--bind 'ctrl-b:preview(passh make build)' \
+		--bind 'ctrl-b:preview($(PASSH) $(MAKE) build)' \
 			--bind 'ctrl-b:+change-preview-window(follow,wrap)'\
 		--bind 'ctrl-p:change-prompt(Source Files > )'\
 			--bind 'ctrl-p:+change-preview(bat --color always --italic-text always --decorations always --theme "Monokai Extended" {})'\
 			--bind 'ctrl-p:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
-			--bind 'ctrl-p:+reload(make meson-get-source-files)'\
+			--bind 'ctrl-p:+reload($(MAKE) meson-get-source-files)'\
 		--bind 'ctrl-o:change-prompt(Meson Tests > )'\
-			--bind 'ctrl-o:+change-preview(meson test --num-processes 1 -C build -v --no-stdsplit --print-errorlogs {} || build/{}/{})' \
+			--bind 'ctrl-o:+change-preview($(MESON) test --num-processes 1 -C build -v --no-stdsplit --print-errorlogs {} || build/{}/{})' \
 			--bind 'ctrl-o:+change-preview-window(follow,nowrap)'\
-			--bind 'ctrl-o:+reload(make meson-tests-list)' \
+			--bind 'ctrl-o:+reload($(MAKE) meson-tests-list)' \
 		--bind 'ctrl-t:change-prompt(Tests > )'\
-			--bind 'ctrl-t:+change-preview(submodules/c_deps/scripts/deps-test-view-test.sh {} && env passh env bash -x -c "build/deps-test/deps-test -a -v -e -t {}")'\
+			--bind 'ctrl-t:+change-preview(submodules/c_deps/scripts/deps-test-view-test.sh {} && env $(PASSH) env bash -x -c "build/deps-test/deps-test -a -v -e -t {}")'\
 			--bind 'ctrl-t:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
-			--bind 'ctrl-t:+reload(make deps-test-ls-tests -B)'\
+			--bind 'ctrl-t:+reload($(MAKE) deps-test-ls-tests -B)'\
 		--bind 'ctrl-s:change-prompt(Suites > )'\
-			--bind 'ctrl-s:+change-preview(submodules/c_deps/scripts/deps-test-view-suite.sh {} && passh env bash -x -c "build/deps-test/deps-test -a -v -e -s {}")'\
+			--bind 'ctrl-s:+change-preview(submodules/c_deps/scripts/deps-test-view-suite.sh {} && $(PASSH) env bash -x -c "build/deps-test/deps-test -a -v -e -s {}")'\
 			--bind 'ctrl-s:+change-preview-window(follow,wrap,~4,+{2}+4/2)'\
-			--bind 'ctrl-s:+reload(make deps-test-ls-suites -B)'\
+			--bind 'ctrl-s:+reload($(MAKE) deps-test-ls-suites -B)'\
 		--bind 'ctrl-z:change-prompt(Inspect Tests > )'\
 			--bind 'ctrl-z:+change-preview-window(follow,wrap,~4,+{2}+4/2)'\
 			--bind 'ctrl-z:+change-preview(submodules/c_deps/scripts/list-test-tests.sh {})'\
-			--bind 'ctrl-z:+reload(make meson-binaries)'\
+			--bind 'ctrl-z:+reload($(MAKE) meson-binaries)'\
 		--bind 'ctrl-d:change-prompt(Inspect Suites > )'\
 			--bind 'ctrl-d:+change-preview(submodules/c_deps/scripts/list-test-suites.sh {})'\
 			--bind 'ctrl-d:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
-			--bind 'ctrl-d:+reload(make meson-binaries)'\
+			--bind 'ctrl-d:+reload($(MAKE) meson-binaries)'\
 		--bind 'ctrl-v:change-prompt(Run Test > )'\
 			--bind 'ctrl-v:+change-preview(./build/{}/{} -v -a)'\
-			--bind 'ctrl-v:+reload(make meson-binaries)'\
+			--bind 'ctrl-v:+reload($(MAKE) meson-binaries)'\
 		||true
 	@ansi --restore-palette
 	@{ env|grep -q KITTY_PID && kitty @set-tab-title "$(shell pwd)"; } || vterm-ctrl title "$(shell pwd)"
