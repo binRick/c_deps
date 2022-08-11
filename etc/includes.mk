@@ -1,3 +1,4 @@
+include submodules/c_deps/etc/tools.mk
 include submodules/c_deps/etc/entr.mk
 include submodules/c_deps/etc/introspect.mk
 include submodules/c_deps/etc/muon.mk

@@ -1,6 +1,6 @@
 muon-clean:
-	@rm -rf build-muon .cache
+	@$(RM) -rf build-muon .cache
 meson-clean: 
-	@rm -rf build 
+	@$(RM) -rf build 
 
 clean: meson-clean muon-clean

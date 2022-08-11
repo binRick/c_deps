@@ -1,124 +1,124 @@
 
 deps-test-includes:
-	@egrep '^#include.*"' deps-test/deps-test.c|cut -d'"' -f2|sort -u
+	@$(GREP) '^#include.*"' deps-test/deps-test.c|cut -d'"' -f2|$(SORT) -u
 deps-test-includes-paths:
 	@$(MAKE) deps-test-includes|while read -r f; do\
 		if [[ -f "$$f" ]]; then echo "$$f"; \
 		elif [[ -f "submodules/$$f" ]]; then echo "submodules/$$f"; \
-		elif [[ -f "submodules/c_deps/submodules/c_ansi/$$f" ]]; then echo "submodules/c_deps/submodules/c_ansi/$$f"; \
+		elif [[ -f "submodules/c_deps/submodules/c_$(ANSI)/$$f" ]]; then echo "submodules/c_deps/submodules/c_$(ANSI)/$$f"; \
 		elif [[ -f "submodules/c_deps/submodules/c_darwin/$$f" ]]; then echo "submodules/c_deps/submodules/c_darwin/$$f"; \
-		else ansi --red "$$f" >&2; fi \
-	done | grep "^submodules/"|gsed "s|^submodules/||g"|sort -u
+		else $(ANSI) --red "$$f" >&2; fi \
+	done | $(GREP) "^submodules/"|gsed "s|^submodules/||g"|$(SORT) -u
 
 ls-greatest:
-	@grep -H GREATEST_MAIN_DEF *-test/*.c|cut -d: -f1|sort -u|xargs -I % basename % .c|sort -u
+	@$(GREP) -H GREATEST_MAIN_DEF *-test/*.c|cut -d: -f1|$(SORT) -u|xargs -I % basename % .c|$(SORT) -u
 deps-test-ls-tests:
 	@eval build/deps-test/deps-test -l
 deps-test-ls-suites:
 	@eval build/deps-test/deps-test -L
 greatest-suites:
-	@($(MAKE) test-file-names | while read -r f; do timeout .5 $(PASSH) ./build/$$f/$$f -l -v; done) |grep '^* Suite '|cut -d: -f1|cut -d' ' -f3
+	@($(MAKE) test-file-names | while read -r f; do timeout .5 $(PASSH) ./build/$$f/$$f -l -v; done) |$(GREP) '^* Suite '|cut -d: -f1|cut -d' ' -f3
 greatest-suite-tests:
-	@$(PASSH)  ./build/exec-fzf-test/exec-fzf-test -l -v -s s_fzf_basic|grep '^* Suite ' -A 999|grep '^[[:space:]]'|tr -d ' '|cut -d' ' -f1
+	@$(PASSH)  ./build/exec-$(FZF)-test/exec-$(FZF)-test -l -v -s s_$(FZF)_basic|$(GREP) '^* Suite ' -A 999|$(GREP) '^[[:space:]]'|tr -d ' '|cut -d' ' -f1
 
 run-binary:
-	@clear; $(MAKE) meson-binaries | env FZF_DEFAULT_COMMAND= \
-        fzf --reverse \
+	@clear; $(MAKE) meson-binaries | $(ENV) FZF_DEFAULT_COMMAND= \
+        $(FZF) --reverse \
             --preview-window='follow,wrap,right,80%' \
             --bind 'ctrl-b:preview($(MESON) meson-build)' \
-            --preview='env bash -c {} -v -a' \
+            --preview='$(ENV) bash -c {} -v -a' \
             --ansi --border \
             --cycle \
             --header='Select Test Binary' \
             --height='100%' \
-    | xargs -I % env bash -c "./%"
+    | xargs -I % $(ENV) bash -c "./%"
 run-binary-nodemon:
-	@$(MAKE) meson-binaries | fzf --reverse | xargs -I % nodemon -w build --delay 1000 -x $(PASSH) "./%"
+	@$(MAKE) meson-binaries | $(FZF) --reverse | xargs -I % nodemon -w build --delay 1000 -x $(PASSH) "./%"
 meson-tests-list:
 	@$(MESON) test -C build --list
 meson-tests-preview-header:
-	@printf "%s\n"   " $(shell ansi --green --bold "Keybinds") "
+	@printf "%s\n"   " $(shell $(ANSI) --green --bold "Keybinds") "
 	@printf "         |-----------------------------------------------------------------|"
 	@printf "\n"
 	@printf "         |"
 	@printf "\n"
-	@printf "         |%s"   " $(shell ansi --green --bold "Menu") "
+	@printf "         |%s"   " $(shell $(ANSI) --green --bold "Menu") "
 	@printf "\n"
-	@printf "         |       - Menu Keybinds               :   %s" "$(shell ansi --yellow-intense "control+space")"
+	@printf "         |       - Menu Keybinds               :   %s" "$(shell $(ANSI) --yellow-intense "control+space")"
 	@printf "\n"
-	@printf "         |%s"   " $(shell ansi --green --bold "Layout") "
+	@printf "         |%s"   " $(shell $(ANSI) --green --bold "Layout") "
 	@printf "\n"
-	@printf "         |       - Adjust Vertical Layout      :   %s" "$(shell ansi --yellow-intense "control+\\")"
+	@printf "         |       - Adjust Vertical Layout      :   %s" "$(shell $(ANSI) --yellow-intense "control+\\")"
 	@printf "\n"
-	@printf "         |       - Adjust Horizontal Layout    :   %s" "$(shell ansi --yellow-intense "control+/")"
+	@printf "         |       - Adjust Horizontal Layout    :   %s" "$(shell $(ANSI) --yellow-intense "control+/")"
 	@printf "\n"
-	@printf "         |%s"   " $(shell ansi --green --bold "Source Code") "
+	@printf "         |%s"   " $(shell $(ANSI) --green --bold "Source Code") "
 	@printf "\n"
-	@printf "         |       - Build                       :   %s" "$(shell ansi --blue-intense "control+b")"
+	@printf "         |       - Build                       :   %s" "$(shell $(ANSI) --blue-intense "control+b")"
 	@printf "\n"
-	@printf "         |       - Clean                       :   %s" "$(shell ansi --blue-intense "control+k")"
+	@printf "         |       - Clean                       :   %s" "$(shell $(ANSI) --blue-intense "control+k")"
 	@printf "\n"
-	@printf "         |       - Tidy                        :   %s" "$(shell ansi --blue-intense "control+g")"
+	@printf "         |       - Tidy                        :   %s" "$(shell $(ANSI) --blue-intense "control+g")"
 	@printf "\n"
-	@printf "         |       - List Sources                :   %s" "$(shell ansi --blue-intense "control+p")"
+	@printf "         |       - List Sources                :   %s" "$(shell $(ANSI) --blue-intense "control+p")"
 	@printf "\n"
-	@printf "         |       - Inspect Includes            :   %s" "$(shell ansi --red-intense "control+a")"
+	@printf "         |       - Inspect Includes            :   %s" "$(shell $(ANSI) --red-intense "control+a")"
 	@printf "\n"
-	@printf "         |%s"   " $(shell ansi --green --bold "Dependencies") "
+	@printf "         |%s"   " $(shell $(ANSI) --green --bold "Dependencies") "
 	@printf "\n"
-	@printf "         |       - Unconfigured Dependencies   :   %s" "$(shell ansi --cyan-intense "control+w")"
+	@printf "         |       - Unconfigured Dependencies   :   %s" "$(shell $(ANSI) --cyan-intense "control+w")"
 	@printf "\n"
-	@printf "         |       - Configured Dependencies     :   %s" "$(shell ansi --cyan-intense "control+]")"
+	@printf "         |       - Configured Dependencies     :   %s" "$(shell $(ANSI) --cyan-intense "control+]")"
 	@printf "\n"
-	@printf "         |       - Subprojects Status          :   %s" "$(shell ansi --cyan-intense "control+i")"
+	@printf "         |       - Subprojects Status          :   %s" "$(shell $(ANSI) --cyan-intense "control+i")"
 	@printf "\n"
-	@printf "         |%s"   " $(shell ansi --green --bold "Meson Project") "
+	@printf "         |%s"   " $(shell $(ANSI) --green --bold "Meson Project") "
 	@printf "\n"
-	@printf "         |       - Project Options             :   %s" "$(shell ansi --cyan-intense "control+x")"
+	@printf "         |       - Project Options             :   %s" "$(shell $(ANSI) --cyan-intense "control+x")"
 	@printf "\n"
-	@printf "         |       - Wrap Status                 :   %s" "$(shell ansi --cyan-intense "control+i")"
+	@printf "         |       - Wrap Status                 :   %s" "$(shell $(ANSI) --cyan-intense "control+i")"
 	@printf "\n"
-	@printf "         |       - Build Files                 :   %s" "$(shell ansi --cyan-intense "control+j")"
+	@printf "         |       - Build Files                 :   %s" "$(shell $(ANSI) --cyan-intense "control+j")"
 	@printf "\n"
-	@printf "         |       - Tests                       :   %s" "$(shell ansi --cyan-intense "control+o")"
+	@printf "         |       - Tests                       :   %s" "$(shell $(ANSI) --cyan-intense "control+o")"
 	@printf "\n"
-	@printf "         |%s"   " $(shell ansi --green --bold "GIT") "
+	@printf "         |%s"   " $(shell $(ANSI) --green --bold "GIT") "
 	@printf "\n"
-	@printf "         |       - Git Status                  :   %s" "$(shell ansi --green-intense "control+e")"
+	@printf "         |       - Git Status                  :   %s" "$(shell $(ANSI) --green-intense "control+e")"
 	@printf "\n"
-	@printf "         |%s"   " $(shell ansi --green --bold "Tests") "
+	@printf "         |%s"   " $(shell $(ANSI) --green --bold "Tests") "
 	@printf "\n"
-	@printf "         |       - Inspect Test Functions      :   %s" "$(shell ansi --red-intense "control+t")"
+	@printf "         |       - Inspect Test Functions      :   %s" "$(shell $(ANSI) --red-intense "control+t")"
 	@printf "\n"
-	@printf "         |       - Inspect Suite Functions     :   %s" "$(shell ansi --red-intense "control+s")"
+	@printf "         |       - Inspect Suite Functions     :   %s" "$(shell $(ANSI) --red-intense "control+s")"
 	@printf "\n"
-	@printf "         |       - Inspect Tests               :   %s" "$(shell ansi --red-intense "control+z")"
+	@printf "         |       - Inspect Tests               :   %s" "$(shell $(ANSI) --red-intense "control+z")"
 	@printf "\n"
-	@printf "         |       - Inspect Suites              :   %s" "$(shell ansi --red-intense "control+d")"
+	@printf "         |       - Inspect Suites              :   %s" "$(shell $(ANSI) --red-intense "control+d")"
 	@printf "\n"
-	@printf "         |       - Test Execution              :   %s" "$(shell ansi --red-intense "control+v")"
+	@printf "         |       - Test Execution              :   %s" "$(shell $(ANSI) --red-intense "control+v")"
 	@printf "\n"
-	@printf "         |%s"   " $(shell ansi --green --bold "Preview Window") "
+	@printf "         |%s"   " $(shell $(ANSI) --green --bold "Preview Window") "
 	@printf "\n"
-	@printf "         |       - Scroll Preview Top          :   %s" "$(shell ansi --magenta-intense "home")"
+	@printf "         |       - Scroll Preview Top          :   %s" "$(shell $(ANSI) --magenta-intense "home")"
 	@printf "\n"
-	@printf "         |       - Scroll Preview Bottom       :   %s" "$(shell ansi --magenta-intense "end")"
+	@printf "         |       - Scroll Preview Bottom       :   %s" "$(shell $(ANSI) --magenta-intense "end")"
 	@printf "\n"
-	@printf "         |       - Scroll Preview Up           :   %s" "$(shell ansi --magenta-intense "page-up")"
+	@printf "         |       - Scroll Preview Up           :   %s" "$(shell $(ANSI) --magenta-intense "page-up")"
 	@printf "\n"
-	@printf "         |       - Scroll Preview Down         :   %s" "$(shell ansi --magenta-intense "page-down")"
+	@printf "         |       - Scroll Preview Down         :   %s" "$(shell $(ANSI) --magenta-intense "page-down")"
 	@printf "\n"
 	@printf "         |-----------------------------------------------------------------|"
 	@printf "\n"
 menu: meson-tests
 MENU_PALETTE=base16-equilibrium
 meson-tests:
-	@{ env|grep -q KITTY_PID && kitty @set-tab-title "Meson Menu"; } || vterm-ctrl title "Meson Menu"
-	@ansi --save-palette
+	@{ $(ENV)|$(GREP) -q KITTY_PID && kitty @set-tab-title "Meson Menu"; } || vterm-ctrl title "Meson Menu"
+	@$(ANSI) --save-palette
 	@kfc -p $(MENU_PALETTE) 2>/dev/null
 	@\
 	{ $(MAKE) meson-tests-list; } \
-  	  |fzf \
+  	  |$(FZF) \
 		--border=sharp\
 		--margin=0,0,0,0 --padding=0,0,0,0 \
 		--no-info \
@@ -148,7 +148,7 @@ meson-tests:
 			--bind 'ctrl-a:+reload($(MAKE) deps-test-includes-paths)'\
 		--bind 'ctrl-j:change-prompt(Build Files > )'\
 			--bind 'ctrl-j:+change-preview-window(nofollow,wrap)'\
-        	--bind 'ctrl-j:+change-preview(env bat -f --theme gruvbox-dark {})'\
+        	--bind 'ctrl-j:+change-preview($(ENV) bat -f --theme gruvbox-dark {})'\
         	--bind 'ctrl-j:+reload($(MAKE) meson-introspect-build-files)'\
         --bind 'ctrl-k:preview($(MAKE) clean meson-build)'\
 			--bind 'ctrl-k:+change-preview-window(follow,wrap)'\
@@ -163,11 +163,11 @@ meson-tests:
 			--bind 'ctrl-o:+change-preview-window(follow,nowrap)'\
 			--bind 'ctrl-o:+reload($(MAKE) meson-tests-list)' \
 		--bind 'ctrl-t:change-prompt(Tests > )'\
-			--bind 'ctrl-t:+change-preview(submodules/c_deps/scripts/deps-test-view-test.sh {} && env $(PASSH) env bash -x -c "build/deps-test/deps-test -a -v -e -t {}")'\
+			--bind 'ctrl-t:+change-preview(submodules/c_deps/scripts/deps-test-view-test.sh {} && $(ENV) $(PASSH) $(ENV) bash -x -c "build/deps-test/deps-test -a -v -e -t {}")'\
 			--bind 'ctrl-t:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
 			--bind 'ctrl-t:+reload($(MAKE) deps-test-ls-tests -B)'\
 		--bind 'ctrl-s:change-prompt(Suites > )'\
-			--bind 'ctrl-s:+change-preview(submodules/c_deps/scripts/deps-test-view-suite.sh {} && $(PASSH) env bash -x -c "build/deps-test/deps-test -a -v -e -s {}")'\
+			--bind 'ctrl-s:+change-preview(submodules/c_deps/scripts/deps-test-view-suite.sh {} && $(PASSH) $(ENV) bash -x -c "build/deps-test/deps-test -a -v -e -s {}")'\
 			--bind 'ctrl-s:+change-preview-window(follow,wrap,~4,+{2}+4/2)'\
 			--bind 'ctrl-s:+reload($(MAKE) deps-test-ls-suites -B)'\
 		--bind 'ctrl-z:change-prompt(Inspect Tests > )'\
@@ -182,6 +182,6 @@ meson-tests:
 			--bind 'ctrl-v:+change-preview(./build/{}/{} -v -a)'\
 			--bind 'ctrl-v:+reload($(MAKE) meson-binaries)'\
 		||true
-	@ansi --restore-palette
-	@{ env|grep -q KITTY_PID && kitty @set-tab-title "$(shell pwd)"; } || vterm-ctrl title "$(shell pwd)"
+	@$(ANSI) --restore-palette
+	@{ $(ENV)|$(GREP) -q KITTY_PID && kitty @set-tab-title "$(shell pwd)"; } || vterm-ctrl title "$(shell pwd)"
 

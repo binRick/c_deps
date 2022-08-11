@@ -1,6 +1,5 @@
 default: all
 ##############################################################
-include submodules/c_deps/etc/tools.mk
 DIR=$(shell pwd)
 ETC_DIR=$(DIR)/etc
 
@@ -73,7 +72,7 @@ do-nodemon:
 			-x env -- bash --norc --noprofile -c 'clear;make||true'
 ansi: all do-sync do-ansi-make
 dev: do-nodemon
-all: do-setup do-build do-test muon
+all: meson muon test
 meson-ls-meson-build-files:
 	@make meson-ls-buildsystem-files|grep "/meson.build$$"|sort -u
 meson-ls-buildsystem-files:

@@ -1,5 +1,5 @@
 muon-setup:
-	@$(MUON) setup muon-build
+	@$(MUON) setup build-muon
 muon-build:
 	@$(MUON) samu -C build-muon
 muon-install:

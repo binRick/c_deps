@@ -6,7 +6,7 @@ _entr-files:
 	@find ~/repos/c_vt100utils -type f -name "*.c" -or -name "*.h"
 
 entr-files:
-	@make _entr-files|xargs -I % realpath % |egrep -v '/submodules/'| sort -u
+	@make _entr-files|xargs -I % realpath % |egrep -v '/submodules/'| $(SORT) -u
 
 entr:
 	@$(ENTR_CMD)
