@@ -18,6 +18,7 @@ static char *EXECUTABLE;
 static char *EXECUTABLE_PATH_DIRNAME;
 static bool DEBUG_MODE_ENABLED = false;
 void __attribute__((constructor)) __constructor__blocks_test();
+
 void __attribute__((destructor)) __destructor__blocks_test();
 void __blocks_test__setup_executable_path(const char **argv);
 
@@ -26,36 +27,40 @@ typedef int (^cb_int_t)(int, int);
 typedef void (^void_cb_t)(void);
 typedef summer_t (^summer_creator_t)(summer_t cb, int, int);
 
+
 int callback(summer_t cb, int a, int b) {
   return(cb(a, b));
 }
+
 
 summer_t callback_creator(int a, int b) {
   summer_t summer = ^ int (int a, int b){
     return(a + b);
   };
-  return summer;
+
+  return(summer);
 }
 
 struct callback_summer_s {
-    summer_t cb; int y; int x;
+  summer_t cb; int y; int x;
 };
+
 
 TEST t_blocks_test_callback_struct1(void){
   struct callback_summer_s callbacks[] = {
-    { 
-        .cb = callback_creator(0,0), 
-        .x = 200, .y = 100, 
+    {
+      .cb = callback_creator(0, 0),
+      .x  = 200, .y = 100,
     },
-    { .cb = callback_creator(0,0), .x = 20, .y = 100, },
+    { .cb = callback_creator(0, 0), .x = 20, .y = 100, },
     { 0 },
   };
 
   struct callback_summer_s *tmp = callbacks;
 
-  for(size_t i = 0; tmp->cb != NULL; tmp++, i++){
-    printf("calling callback #%lu\n",i);
-    int val = tmp->cb(tmp->x,tmp->y);
+  for (size_t i = 0; tmp->cb != NULL; tmp++, i++) {
+    printf("calling callback #%lu\n", i);
+    int val = tmp->cb(tmp->x, tmp->y);
     printf("      callback val: %d\n", val);
   }
 
@@ -63,28 +68,27 @@ TEST t_blocks_test_callback_struct1(void){
 }
 
 struct callback_t {
-    cb_int_t cb;
-    int x; int y;
+  cb_int_t cb;
+  int      x; int y;
 };
+
+
 TEST t_blocks_test_callback_struct(void){
   struct callback_t callbacks[] = {
-    { .cb = callback_creator(0,0), 
-        .x = 5, .y = 10,
-    },
-    { .cb = callback_creator(0,0), 
-        .x = 50, .y = 100,
-    },
-    { .cb = callback_creator(0,0), 
-        .x = 50, .y = 100,
-    },
+    { .cb = callback_creator(0, 0),
+      .x  = 5, .y = 10, },
+    { .cb = callback_creator(0, 0),
+      .x  = 50, .y = 100, },
+    { .cb = callback_creator(0, 0),
+      .x  = 50, .y = 100, },
     { 0 },
   };
 
   struct callback_t *tmp = callbacks;
 
-  for(size_t i = 0; tmp->cb != NULL; tmp++, i++){
-    printf("calling callback #%lu\n",i);
-    int val = tmp->cb(tmp->x,tmp->y);
+  for (size_t i = 0; tmp->cb != NULL; tmp++, i++) {
+    printf("calling callback #%lu\n", i);
+    int val = tmp->cb(tmp->x, tmp->y);
     printf("      callback val: %d\n", val);
   }
 
@@ -93,17 +97,18 @@ TEST t_blocks_test_callback_struct(void){
 
 
 TEST t_blocks_test_callback_creator(void){
-  int y = 2, z = 5;
+  int      y = 2, z = 5;
   summer_t created = callback_creator(y, z);
-  int sum = created(y,z);
+  int      sum     = created(y, z);
+
   printf("sum is %d\n", sum);
   PASS();
 }
 
 
-
 TEST t_blocks_test_callback(void){
-  int      x = 1000;
+  int x = 1000;
+
   int (^summer)(int, int) = ^ int (int a, int b){
     return(a + b + x);
   };
