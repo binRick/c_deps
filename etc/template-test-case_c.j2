@@ -1,5 +1,5 @@
 ////////////////////////////////////////////
-{%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}{%endif%}#define DEBUG_MEMORY
+{%if TEST_CASE_DEBUG_MEMORY_ENABLED%}#define DEBUG_MEMORY{%endif%}
 #ifdef DEBUG_MEMORY
 #include "debug-memory/debug_memory.h"
 #endif

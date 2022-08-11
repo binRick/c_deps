@@ -117,3 +117,5 @@ subdir('kgflags-test')
 ###########################################
 subdir('c-meson-utils-test')
 subdir('exec-fzf-test')
+subdir('richard-100-test')
+subdir('blocks-test')
