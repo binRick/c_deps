@@ -5,16 +5,17 @@
 ////////////////////////////////////////////
 #include "{{TEST_CASE_NAME}}/{{TEST_CASE_NAME}}.h"
 ////////////////////////////////////////////
-{%for i in INCLUDED_HEADERS.split(' ') %}
+{%for i in INCLUDED_HEADERS.split(' ') -%}
 #include "{{i}}"
 {%endfor%}
 ////////////////////////////////////////////
 static char EXECUTABLE_PATH[PATH_MAX + 1] = { 0 };
+static char *EXECUTABLE;
 static char *EXECUTABLE_PATH_DIRNAME;
 static bool DEBUG_MODE_ENABLED = {%if TEST_CASE_DEBUG_MODE%}true{%else%}false{%endif%};
-void __{{TEST_CASE_NAME_SLUG}}__setup_executable_path(const char **argv);
 void __attribute__((constructor)) __constructor__{{TEST_CASE_NAME_SLUG}}();
 void __attribute__((destructor)) __destructor__{{TEST_CASE_NAME_SLUG}}();
+void __{{TEST_CASE_NAME_SLUG}}__setup_executable_path(const char **argv);
 
 /////////////////////////////////////
 //  Test Cases
@@ -37,8 +38,8 @@ TEST t_{{TEST_CASE_NAME_SLUG}}(void *PARAMETER){
 
   /////////////////////////////////////
   //  Generate Pass Message
-  asprintf(&msg,"Test Case {{TEST_CASE_NAME}} (%s) @ (%s) Validated tested_value: %d",
-    EXECUTABLE_PATH,
+  asprintf(&msg,"Test Case {{TEST_CASE_NAME}} OK\n\t(%s) @ (%s)\n\tValidated tested_value: %d",
+    EXECUTABLE,
     EXECUTABLE_PATH_DIRNAME,
     tested_value
   );
@@ -79,8 +80,10 @@ int main(const int argc, const char **argv) {
 
 void __{{TEST_CASE_NAME_SLUG}}__setup_executable_path(const char **argv){
   realpath(argv[0], EXECUTABLE_PATH);
+  EXECUTABLE = basename(EXECUTABLE_PATH);
   EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
-  fprintf(stderr,"{{TEST_CASE_NAME}} Initialized @ %s/%s\n", EXECUTABLE_PATH_DIRNAME,EXECUTABLE_PATH);
+  if(DEBUG_MODE_ENABLED)
+      fprintf(stderr,"{{TEST_CASE_NAME}} Initialized @ %s/%s\n", EXECUTABLE_PATH_DIRNAME,EXECUTABLE_PATH);
 }
 
 void __attribute__((constructor)) __constructor__{{TEST_CASE_NAME_SLUG}}(){
