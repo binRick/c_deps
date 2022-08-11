@@ -1,5 +1,5 @@
 tuibox_dirs = [
-  '../../../submodules/tuibox',
+  '../../../submodules/c_tuibox',
   inc,
 ]
 

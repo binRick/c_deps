@@ -1,0 +1,97 @@
+////////////////////////////////////////////
+{%if not DEBUG_MEMORY_ENABLED%}//%{endif%}#ifdef DEBUG_MEMORY
+{%if not DEBUG_MEMORY_ENABLED%}//%{endif%}#include "debug-memory/debug_memory.h"
+{%if not DEBUG_MEMORY_ENABLED%}//%{endif%}#endif
+////////////////////////////////////////////
+#include "{{TEST_CASE_NAME}}/{{TEST_CASE_NAME}}.h"
+////////////////////////////////////////////
+{%for i in INCLUDED_HEADERS.split(' ') %}
+#include "{{i}}"
+{%endfor%}
+////////////////////////////////////////////
+static char EXECUTABLE_PATH[PATH_MAX + 1] = { 0 };
+static char EXECUTABLE_PATH_DIRNAME[PATH_MAX + 1] = { 0 };
+static bool DEBUG_MODE_ENABLED = {{TEST_CASE_DEBUG_MODE}};
+void __{{TEST_CASE_SLUG}}__setup_executable_path(const char **argv);
+void __attribute__((constructor)) __constructor__{{TEST_CASE_SLUG}}();
+void __attribute__((destructor)) __destructor__{{TEST_CASE_SLUG}}();
+
+/////////////////////////////////////
+//  Test Cases
+TESTp t_{{TEST_CASE_SLUG}}((void*) PARAMETER){
+  /////////////////////////////////////
+  //  Initialize Test Case Variables
+  char *msg = NULL;
+  int tested_value = -1;
+  /////////////////////////////////////
+
+  /////////////////////////////////////
+  //  Perform Test Logic and set tested_value here
+  tested_value = 1;
+  /////////////////////////////////////
+
+  /////////////////////////////////////
+  //  Validate Tested Value
+  ASSERT_EQm("Test Value should equal One", tested_value, 1);
+  /////////////////////////////////////
+
+  /////////////////////////////////////
+  //  Generate Pass Message
+  asprintf(&msg,"Test Case {{TEST_CASE_NAME}} (%s) @ (%s) Validated tested_value: %d",
+    EXECUTABLE_PATH,
+    EXECUTABLE_PATH_DIRNAME,
+    tested_value
+  );
+  /////////////////////////////////////
+
+  /////////////////////////////////////
+  //  Pass Test
+  PASSm(msg);
+  /////////////////////////////////////
+}
+/////////////////////////////////////
+
+/////////////////////////////////////
+//  Test Suites
+SUITE(s_{{TEST_CASE_SLUG}}) {
+  void *TEST_PARAM = 0;  
+  RUN_TESTp(t_{{TEST_CASE_SLUG}}, (void*)TEST_PARAM);
+}
+/////////////////////////////////////
+
+GREATEST_MAIN_DEFS();
+
+int main(const int argc, const char **argv) {
+  GREATEST_MAIN_BEGIN();
+  if (isatty(STDOUT_FILENO)) {
+    /////////////////////////////////////
+    //  Tests restricted to interactive terminal
+    /////////////////////////////////////
+  }
+  /////////////////////////////////////
+  //  Test Suites
+  RUN_SUITE(s_{{TEST_CASE_SLUG}});
+  /////////////////////////////////////
+  GREATEST_MAIN_END();
+}
+
+
+void __{{TEST_CASE_SLUG}}__setup_executable_path(const char **argv){
+  realpath(argv[0], EXECUTABLE_PATH);
+  EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
+  fprintf(stderr,"{{TEST_CASE_NAME}} Initialized @ %s/%s\n", EXECUTABLE_PATH_DIRNAME,EXECUTABLE_PATH);
+}
+
+void __attribute__((constructor)) __constructor__{{TEST_CASE_SLUG}}(){
+    DEBUG_MODE_ENABLED = (getenv("DEBUG")) ? true 
+      : (getenv("DEBUG_MODE")) ? true 
+        : (getenv("DEBUGMODE")) ? true 
+          : false;
+}
+
+void __attribute__((destructor)) __destructor__{{TEST_CASE_SLUG}}(){
+#ifdef DEBUG_MEMORY
+  fprintf(stderr,"\nChecking for {{TEST_CASE_NAME}} memory leaks\n");
+  print_allocated_memory();
+#endif
+}

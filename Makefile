@@ -16,7 +16,10 @@ TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *
 			   list-test/*.c list-test/*.h \
 			   *-test/*.c *-test/*.h \
 			   intro*/*.c intro*/*.h \
-			   exec-fzf*/*.c exec-fzf*/*.h 
+			   exec-fzf*/*.c exec-fzf*/*.h \
+			   submodules/c_vt100utils/vt100utils.h \
+			   submodules/c_vt100utils/demos/tuibox.h
+
 ########################################################
 TRIGGER_FILE=.trigger.c
 include submodules/c_deps/etc/includes.mk

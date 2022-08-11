@@ -1,11 +1,12 @@
-libtermkey_srcs = [files(
+libtermkey_srcs = [
   '../../../submodules/libtermkey/driver-csi.c',
   '../../../submodules/libtermkey/driver-ti.c',
-  '../../../submodules/libtermkey/termkey-internal.h',
+  '../../../submodules/libtermkey/driver-ti.c',
   '../../../submodules/libtermkey/termkey.c',
-)]
+]
 
 libtermkey_dirs = [
+  '../../../submodules',
   '../../../submodules/libtermkey',
   inc,
 ]
@@ -14,10 +15,15 @@ libtermkey_deps = [
 
 ]
 
-libtermkey_lib = static_library('libtermkey',
+libtermkey_lib = library('libtermkey-lib',
   libtermkey_srcs,
   install: false,
   dependencies: libtermkey_deps,
+  c_args: [ 
+    ],
+  link_args: [ 
+    '-lcurses',
+  ],
   include_directories: libtermkey_dirs,
 )
 

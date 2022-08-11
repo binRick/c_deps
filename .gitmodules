@@ -754,3 +754,6 @@
 [submodule "submodules/readkey"]
 	path = submodules/readkey
 	url = https://github.com/michael105/readkey
+[submodule "submodules/variation-ui"]
+	path = submodules/variation-ui
+	url = https://github.com/hanilr/variation-ui
