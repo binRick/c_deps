@@ -1,5 +1,5 @@
 ////////////////////////////////////////////
-
+#define DEBUG_MEMORY
 #ifdef DEBUG_MEMORY
 #include "debug-memory/debug_memory.h"
 #endif
@@ -22,6 +22,8 @@ void __attribute__((destructor)) __destructor__blocks_test();
 void __blocks_test__setup_executable_path(const char **argv);
 
 typedef int (^summer_t)(int, int);
+typedef int (^cb_int_t)(int, int);
+typedef void (^void_cb_t)(void);
 typedef summer_t (^summer_creator_t)(summer_t cb, int, int);
 
 int callback(summer_t cb, int a, int b) {
@@ -35,14 +37,69 @@ summer_t callback_creator(int a, int b) {
   return summer;
 }
 
+struct callback_summer_s {
+    summer_t cb; int y; int x;
+};
+
+TEST t_blocks_test_callback_struct1(void){
+  struct callback_summer_s callbacks[] = {
+    { 
+        .cb = callback_creator(0,0), 
+        .x = 200, .y = 100, 
+    },
+    { .cb = callback_creator(0,0), .x = 20, .y = 100, },
+    { 0 },
+  };
+
+  struct callback_summer_s *tmp = callbacks;
+
+  for(size_t i = 0; tmp->cb != NULL; tmp++, i++){
+    printf("calling callback #%lu\n",i);
+    int val = tmp->cb(tmp->x,tmp->y);
+    printf("      callback val: %d\n", val);
+  }
+
+  PASS();
+}
+
+struct callback_t {
+    cb_int_t cb;
+    int x; int y;
+};
+TEST t_blocks_test_callback_struct(void){
+  struct callback_t callbacks[] = {
+    { .cb = callback_creator(0,0), 
+        .x = 5, .y = 10,
+    },
+    { .cb = callback_creator(0,0), 
+        .x = 50, .y = 100,
+    },
+    { .cb = callback_creator(0,0), 
+        .x = 50, .y = 100,
+    },
+    { 0 },
+  };
+
+  struct callback_t *tmp = callbacks;
+
+  for(size_t i = 0; tmp->cb != NULL; tmp++, i++){
+    printf("calling callback #%lu\n",i);
+    int val = tmp->cb(tmp->x,tmp->y);
+    printf("      callback val: %d\n", val);
+  }
+
+  PASS();
+}
+
+
 TEST t_blocks_test_callback_creator(void){
   int y = 2, z = 5;
   summer_t created = callback_creator(y, z);
   int sum = created(y,z);
   printf("sum is %d\n", sum);
-
   PASS();
 }
+
 
 
 TEST t_blocks_test_callback(void){
@@ -93,6 +150,8 @@ SUITE(s_blocks_test) {
   RUN_TEST(t_blocks_test_args);
   RUN_TEST(t_blocks_test_callback);
   RUN_TEST(t_blocks_test_callback_creator);
+  RUN_TEST(t_blocks_test_callback_struct);
+  RUN_TEST(t_blocks_test_callback_struct1);
 }
 
 GREATEST_MAIN_DEFS();
