@@ -1,24 +1,23 @@
 #!/usr/bin/env bash
 set -eou pipefail
-REPO_DIR="$(pwd)"
+TEST_CASE_NAME="${1:-}"
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source deps-utils.sh
 SCRIPTS_DIR="$(pwd)"
 J2_BIN="$(command -v jinja2)"
 JO_BIN="$(command -v jo)"
 JQ_BIN="$(command -v jq)"
+UNCRUSTIFY_BIN="$(command -v uncrustify)"
 J2_ARGS="--strict --format json"
 TEMPLATE_VARS_FILE=$(mktemp)
 TEMPLATE_VARS_FILE=/tmp/vars.json
 J2_CMDS="jq < $TEMPLATE_VARS_FILE"
-
-
-cd ../.
 DEPENDENCIES="greatest_dep c_vector_dep c_fsio_dep c_stringfn_dep debug_memory"
 INCLUDED_HEADERS="greatest/greatest.h"
-TEMPLATES_DIR="$(pwd)/etc"
-TEST_CASE_NAME="${1:-}"
 TEST_CASE_NAME="${TEST_CASE_NAME}-test"
+TEST_CASE_RENDERED_C_FILE="/tmp/${TEST_CASE_NAME}.c"
+TEST_CASE_RENDERED_H_FILE="/tmp/${TEST_CASE_NAME}.h"
+TEST_CASE_RENDERED_MESON_BUILD_FILE="/tmp/meson.build"
 TEST_CASE_DIR="${REPO_DIR}/${TEST_CASE_NAME}"
 TEST_CASE_NAME_SLUG="$(echo $TEST_CASE_NAME|tr '-' '_'|tr '[A-Z]' '[a-z]')"
 TEMPLATE_MESON_BUILD="$TEMPLATES_DIR/template-test-case_meson.build.j2"
@@ -35,6 +34,13 @@ TEST_CASE_DEBUG_MEMORY_ENABLED=false
 TEST_CASE_DEBUG_MEMORY_ENABLED=true
 TEST_CASE_DEBUG_MODE=true
 echo -n "" > $JO_ARGS_FILE
+
+cd ../.
+SCRIPTS_DIR="$(pwd)/scripts"
+TEMPLATES_DIR="$(pwd)/etc"
+REPO_DIR="$(pwd)"
+
+UNCRUSTIFY_CFG="$ETC_DIR/uncrustify.cfg"
 
 
 if [[ "$TEST_CASE_NAME" == "" ]]; then
@@ -70,12 +76,13 @@ new_j2_cmd(){
     J2_CMDS+="&& $J2_CMD"
 }
 prepare_vars_file
-new_j2_cmd "test-meson.build" "$TEMPLATE_MESON_BUILD" "x=y|a=123"
-new_j2_cmd "test-h" "$TEMPLATE_H" "x=y|a=123"
-new_j2_cmd "test-c" "$TEMPLATE_C" "x=y|a=123"
+new_j2_cmd $TEST_CASE_RENDERED_MESON_BUILD_FILE "$TEMPLATE_MESON_BUILD" "x=y|a=123"
+new_j2_cmd $TEST_CASE_RENDERED_H_FILE "$TEMPLATE_H" "x=y|a=123"
+new_j2_cmd $TEST_CASE_RENDERED_C_FILE "$TEMPLATE_C" "x=y|a=123"
 
+J2_POST_CMDS="$UNCRUSTIFY_BIN -c $UNCRUSTIFY_CFG $"
 
 msg="Generating test case '$(ansi -n --green "$TEST_CASE_NAME")' @ '$(ansi -n --cyan "$TEST_CASE_DIR")' using \n\t$(ansi -n --magenta "$TEMPLATE_MESON_BUILD, $TEMPLATE_H, $TEMPLATE_C")\nWith Commands\n\t'$(ansi -n --red "$J2_CMDS")'"
 
 echo -e "$msg"
-bash -xec "$J2_CMDS"
+bash -xec "$J2_CMDS && $J2_POST_CMDS"
