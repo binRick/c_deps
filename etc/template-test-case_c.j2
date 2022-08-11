@@ -1,9 +1,7 @@
-{%- set ifdef = "#ifdef" -%}
-{%- set eif = "#endif" -%}
 ////////////////////////////////////////////
-{%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}//{%endif%}#{{ifdef}} DEBUG_MEMORY
+{%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}//{%endif%}#ifdef DEBUG_MEMORY
 {%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}//{%endif%}#include "debug-memory/debug_memory.h"
-{%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}//{%endif%}#{{eif}}
+{%if not TEST_CASE_DEBUG_MEMORY_ENABLED%}//{%endif%}#endif
 ////////////////////////////////////////////
 #include "{{TEST_CASE_NAME}}/{{TEST_CASE_NAME}}.h"
 ////////////////////////////////////////////
@@ -12,15 +10,15 @@
 {%endfor%}
 ////////////////////////////////////////////
 static char EXECUTABLE_PATH[PATH_MAX + 1] = { 0 };
-static char EXECUTABLE_PATH_DIRNAME[PATH_MAX + 1] = { 0 };
-static bool DEBUG_MODE_ENABLED = {{TEST_CASE_DEBUG_MODE}};
+static char *EXECUTABLE_PATH_DIRNAME;
+static bool DEBUG_MODE_ENABLED = {%if TEST_CASE_DEBUG_MODE%}true{%else%}false{%endif%};
 void __{{TEST_CASE_NAME_SLUG}}__setup_executable_path(const char **argv);
 void __attribute__((constructor)) __constructor__{{TEST_CASE_NAME_SLUG}}();
 void __attribute__((destructor)) __destructor__{{TEST_CASE_NAME_SLUG}}();
 
 /////////////////////////////////////
 //  Test Cases
-TESTp t_{{TEST_CASE_NAME_SLUG}}((void*) PARAMETER){
+TEST t_{{TEST_CASE_NAME_SLUG}}(void *PARAMETER){
   /////////////////////////////////////
   //  Initialize Test Case Variables
   char *msg = NULL;
@@ -64,6 +62,7 @@ SUITE(s_{{TEST_CASE_NAME_SLUG}}) {
 GREATEST_MAIN_DEFS();
 
 int main(const int argc, const char **argv) {
+  __{{TEST_CASE_NAME_SLUG}}__setup_executable_path(argv);
   GREATEST_MAIN_BEGIN();
   if (isatty(STDOUT_FILENO)) {
     /////////////////////////////////////
@@ -92,8 +91,8 @@ void __attribute__((constructor)) __constructor__{{TEST_CASE_NAME_SLUG}}(){
 }
 
 void __attribute__((destructor)) __destructor__{{TEST_CASE_NAME_SLUG}}(){
-{{ifdef}} DEBUG_MEMORY
+#ifdef DEBUG_MEMORY
   fprintf(stderr,"\nChecking {{TEST_CASE_NAME}} memory leaks\n");
   print_allocated_memory();
-{{eif}}
+#endif
 }
