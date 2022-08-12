@@ -3,25 +3,64 @@
 #ifdef DEBUG_MEMORY
 #include "debug-memory/debug_memory.h"
 #endif
-////////////////////////////////////////////
-#include "blocks-test/blocks-test.h"
-////////////////////////////////////////////
 #include "ansi-codes/ansi-codes.h"
 #include "c_fsio/include/fsio.h"
 #include "c_greatest/greatest/greatest.h"
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/include/vector.h"
-
+////////////////////////////////////////////
+#include "blocks-test/blocks-test.h"
 ////////////////////////////////////////////
 static char EXECUTABLE_PATH[PATH_MAX + 1] = { 0 };
 static char *EXECUTABLE;
 static char *EXECUTABLE_PATH_DIRNAME;
 static bool DEBUG_MODE_ENABLED = false;
+////////////////////////////////////////////
 void __attribute__((constructor)) __constructor__blocks_test();
-
 void __attribute__((destructor)) __destructor__blocks_test();
 void __blocks_test__setup_executable_path(const char **argv);
+////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+enum OPTYPE {
+  OPTYPE_ADD,
+  OPTYPE_SUBTRACT,
+  OPTYPES_QTY,
+} OPTYPE;
+struct CHANGEOP_t;
+typedef int (^CHANGEOP_b)(int, int);
+struct CHANGEOP_t {
+  CHANGEOP_b op;
+};
+struct CHANGEOP_t ops[] = {
+  [OPTYPE_ADD] = { 
+    .op = ^int(int a, int b){ return(a + b); },
+  },
+  [OPTYPE_SUBTRACT] = { 
+    .op = ^int(int a, int b){ return(a - b); },
+  },
+  [OPTYPES_QTY] = { 0 },
+};
+
+TEST t_blocks_test_op_type(void){
+  int x = 10, y = 5;
+
+  int sum = ops[OPTYPE_ADD].op(x,y);
+  int diff = ops[OPTYPE_SUBTRACT].op(x,y);
+
+  ASSERT_EQm("The sum should be 15", sum, 15);
+  ASSERT_EQm("The difference should be 5", diff, 5);
+
+  printf("\tThe sum is %d\n", sum);
+  printf("\tThe diff is %d\n", diff);
+  PASS();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef void (^void_cb_t)(void);
 typedef int (^summer_t)(int, int);
 struct callback_summer_s {
@@ -29,11 +68,9 @@ struct callback_summer_s {
 };
 typedef summer_t (^summer_creator_t)(summer_t cb, int, int);
 
-
 int callback(summer_t cb, int a, int b) {
   return(cb(a, b));
 }
-
 
 summer_t callback_creator(int a, int b) {
   summer_t summer = ^ int (int a, int b){
@@ -42,7 +79,6 @@ summer_t callback_creator(int a, int b) {
 
   return(summer);
 }
-
 
 TEST t_blocks_test_callback_struct_created(void){
   struct callback_summer_s callbacks[] = {
@@ -65,11 +101,11 @@ TEST t_blocks_test_callback_struct_created(void){
   PASS();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 struct callback_t {
   summer_t cb;
   int      x; int y;
 };
-
 
 TEST t_blocks_test_callback_struct(void){
   struct callback_t callbacks[] = {
@@ -95,7 +131,7 @@ TEST t_blocks_test_callback_struct(void){
   PASS();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 TEST t_blocks_test_callback_creator(void){
   int      y = 2, z = 5;
   summer_t created = callback_creator(y, z);
@@ -105,7 +141,7 @@ TEST t_blocks_test_callback_creator(void){
   PASS();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 TEST t_blocks_test_callback(void){
   int x = 1000;
 
@@ -116,13 +152,12 @@ TEST t_blocks_test_callback(void){
   int y = 25, z = 50;
   int sum = callback(summer, y, z);
 
-
   printf("sum of x, y is %d\n", sum);
 
   PASS();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 TEST t_blocks_test_args(void){
   typedef int (^summer_b)(int, int);
   int      x = 1000;
@@ -138,7 +173,7 @@ TEST t_blocks_test_args(void){
   PASS();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 TEST t_blocks_test_basic(void){
   int  x = 10;
 
@@ -148,6 +183,7 @@ TEST t_blocks_test_basic(void){
 
   PASS();
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 SUITE(s_blocks_test) {
   void *TEST_PARAM = 0;
 
@@ -157,10 +193,10 @@ SUITE(s_blocks_test) {
   RUN_TEST(t_blocks_test_callback_creator);
   RUN_TEST(t_blocks_test_callback_struct);
   RUN_TEST(t_blocks_test_callback_struct_created);
+  RUN_TEST(t_blocks_test_op_type);
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 GREATEST_MAIN_DEFS();
-
 
 int main(const int argc, const char **argv) {
   __blocks_test__setup_executable_path(argv);
@@ -171,7 +207,7 @@ int main(const int argc, const char **argv) {
   GREATEST_MAIN_END();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 void __blocks_test__setup_executable_path(const char **argv){
   realpath(argv[0], EXECUTABLE_PATH);
   EXECUTABLE              = basename(EXECUTABLE_PATH);
@@ -180,17 +216,101 @@ void __blocks_test__setup_executable_path(const char **argv){
     fprintf(stderr, "blocks-test Initialized @ %s/%s\n", EXECUTABLE_PATH_DIRNAME, EXECUTABLE_PATH);
   }
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 void __attribute__((constructor)) __constructor__blocks_test(){
   DEBUG_MODE_ENABLED = (getenv("DEBUG")) ? true
       : (getenv("DEBUG_MODE")) ? true
         : (getenv("DEBUGMODE")) ? true
           : false;
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 void __attribute__((destructor)) __destructor__blocks_test(){
 #ifdef DEBUG_MEMORY
   fprintf(stderr, "\nChecking blocks-test memory leaks\n");
   print_allocated_memory();
 #endif
 }
+/*
+ * https://stackoverflow.com/questions/1579494/is-this-the-right-way-for-a-block-inside-a-struct-to-access-a-member-variable-in
+ * typedef enum
+ * {
+ * opTypeAdd = 0,
+ * opTypeSubtract = 1,
+ * opTypeTotal
+ * } opType;
+ *
+ * struct someMathStruct; // Forward declare this as a type so we can use it in the
+ *                     // changeBlock typedef
+ *
+ * typedef void (^changeBlock) (opType,struct someMathStruct*);
+ * typedef void (^mathBlock) (int,int,int*);
+ *
+ * //hold two blocks, to be defined later at runtime
+ * typedef struct someMathStruct{
+ * mathBlock doMath;
+ * changeBlock changeOperation;
+ * } SomeMath;
+ * int main()
+ * {
+ *
+ *  //i want to declare an array of blocks of type mathBlock
+ *  //the intent is to have the array index to correspond with the opTypes
+ *  // enumerated above
+ *  mathBlock *m = calloc(opTypeTotal, sizeof(mathBlock *));
+ *
+ *  //just two simple math operations as blocks
+ *  m[opTypeAdd] = ^(int a,int b,int *result){*result = a+b;};
+ *  m[opTypeSubtract] = ^(int a,int b,int *result){*result = a-b;};
+ *
+ *  changeBlock changeMe = ^(opType a, SomeMath *b) {
+ *    //should make adding operations as easy as just adding cases
+ *   switch (a)
+ *   {
+ *    case opTypeAdd: b->doMath = m[a]; break;
+ *    case opTypeSubtract:
+ *    default:  b->doMath = m[a];  //catch-all goes to subtracting
+ *   }
+ *  };
+ *
+ *  SomeMath mathFun;
+ *  int theTotal = 0;  //a test int to work with
+ *
+ *  mathFun.changeOperation = changeMe;
+ *
+ *  mathFun.changeOperation(opTypeAdd, &mathFun);
+ *  mathFun.doMath(theTotal,11,&theTotal); //result should be 11
+ *
+ *  mathFun.changeOperation(opTypeSubtract, &mathFun);
+ *  mathFun.doMath(theTotal,3,&theTotal); //result should be 8
+ *
+ *  NSLog(@"the result: %d",theTotal); //should output "the result: 8"
+ * }
+ *
+ */
+/*
+ * https://stackoverflow.com/questions/43133611/how-to-save-obj-c-block-in-a-c-struct
+ * typedef struct {
+ * char *json;
+ * __unsafe_unretained NSString *name;
+ * __unsafe_unretained CompletionBlock block;
+ * } SampleStruct;
+ */
+/*
+ * https://stackoverflow.com/questions/27162567/syntax-to-define-a-block-that-takes-a-block-and-returns-a-block-in-objective-c
+ * //setup
+ * typedef void (^ReturnedBlock)(void);
+ * ReturnedBlock retBlock = ^void(void){};
+ *
+ * typedef void (^ParamBlock)(void);
+ * ParamBlock paramBlock = ^void(void){};
+ *
+ * //the thing you want to do
+ * ReturnedBlock (^someBlock)(ParamBlock) = ^ReturnedBlock(ParamBlock param){
+ *
+ *  return retBlock;
+ * };
+ *
+ * //perform the block
+ * ReturnedBlock r = someBlock(paramBlock);
+ */
+//////////////////////////////////////////////////////////////////////////////////////////////////////
