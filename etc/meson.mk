@@ -26,4 +26,4 @@ meson: do-meson
 
 build: meson muon
 
-all: build
+all: build test

@@ -16,7 +16,7 @@ c_timestamp_deps = [
 
 ]
 
-c_timestamp_lib = both_libraries('c-timestamp',
+c_timestamp_lib = static_library('c-timestamp',
   c_timestamp_srcs,
   install: false,
   dependencies: c_timestamp_deps,

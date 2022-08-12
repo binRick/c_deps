@@ -4,7 +4,7 @@ c_eventemitter_inc = [
   '../../../submodules/c_eventemitter',
   inc,
 ]
-c_eventemitter_lib = both_libraries('c_eventemitter', 
+c_eventemitter_lib = static_library('c_eventemitter', 
   '../../../submodules/c_eventemitter/src/eventemitter.c',
   install: false, 
   dependencies: [

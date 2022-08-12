@@ -3,7 +3,7 @@ dmt_inc = [
   '../../../submodules/dmt',
   inc,
 ]
-dmt_lib = both_libraries('dmt', 
+dmt_lib = static_library('dmt', 
   '../../../submodules/dmt/src/dmt.c',
   install: false, 
   dependencies: [
