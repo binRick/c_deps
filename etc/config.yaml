@@ -1,13 +1,19 @@
-config:
+config: &config
   log-path: *log-path
-  max-parallel-commands: 5
+  max-parallel-commands: 8
   replica-replace-pattern: '%'
   show-failure-report: yes
   ignore-failure: no
-  show-task-times: true
+  show-task-times: false
   show-failure-report: true
   show-summary-errors: true
-  show-summary-steps: true
-  show-summary-times: true
+  show-summary-steps: false
+  show-summary-times: false
   stop-on-failure: true
   show-summary-footer: true
+  update-interval: 5000
+  success-status-color: 76
+  running-status-color: 190
+  pending-status-color: 237
+  error-status-color: 160  
+  show-task-output: yes

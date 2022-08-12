@@ -1,6 +1,10 @@
+
+fmt-scripts:
+	@shfmt -w scripts/*.sh
+
 uncrustify:
 	@ansi --green Uncrustify
-	@find -L $(TIDIED_FILES) -type f -maxdepth 3| $(SORT) -u|xargs -P 10 -I {} $(UNCRUSTIFY) -c $(ETC_DIR)/uncrustify.cfg --replace "{}" 
+	@find -L $(TIDIED_FILES) -type f -maxdepth 3| $(SORT) -u|xargs -P 10 -I {} $(UNCRUSTIFY) -c ~/repos/c_deps/etc/uncrustify.cfg --replace "{}" 
 
 uncrustify-clean:
 	@ansi --yellow Clean Uncrustify Cruft Files
@@ -19,4 +23,10 @@ fix-dbg:
 	@$(SED)   's|, %[[:space:]].*d);|, %d);|g'  -i $(TIDIED_FILES)
 	@$(SED)   's|, %[[:space:]].*zu);|, %zu);|g' -i $(TIDIED_FILES)
 
-tidy: uncrustify uncrustify-clean fix-dbg 
+shfmt:
+	@if [[ -d scripts ]]; then find scripts/*.sh -type f >/dev/null||true && make fmt-scripts||true; fi
+	@true
+
+do-tidy: uncrustify uncrustify-clean shfmt
+	@make fix-dbg||true
+tidy: do-tidy

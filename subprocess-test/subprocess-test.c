@@ -39,7 +39,7 @@ char *subprocess_fzf_test_0(void){
                        index                                  = 0;
 
   result = subprocess_create(exec_cmd, 0, &subprocess);
-  assert_eq(result, 0, %d);
+  assert_eq(result, 0, % d);
 
   FILE *p_stdin = subprocess_stdin(&subprocess);
 
@@ -52,15 +52,15 @@ char *subprocess_fzf_test_0(void){
   } while (bytes_read != 0);
 
   result = subprocess_join(&subprocess, &exited);
-  assert_eq(result, 0, %d);
-  dbg(exited, %d);
-  assert_eq(exited, 0, %d);
+  assert_eq(result, 0, % d);
+  dbg(exited, % d);
+  assert_eq(exited, 0, % d);
 
   READ_STDOUT = stringbuffer_to_string(SB);
 
   stringbuffer_release(SB);
-  dbg(exec_cmd[5], %s);
-  dbg(strlen(READ_STDOUT), %u);
+  dbg(exec_cmd[5], % s);
+  dbg(strlen(READ_STDOUT), % u);
   if (DEBUG_STDOUT) {
     fprintf(stderr, "%s", READ_STDOUT);
   }

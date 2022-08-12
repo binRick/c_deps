@@ -15,7 +15,7 @@ int subprocess_test_main(char *CMD){
                        index                                  = 0;
 
   result = subprocess_create(command_line, 0, &subprocess);
-  assert_eq(result, 0, %d);
+  assert_eq(result, 0, % d);
   do {
     bytes_read = subprocess_read_stdout(&subprocess, stdout_buffer, STDOUT_READ_BUFFER_SIZE - 1);
     stringbuffer_append_string(SB, stdout_buffer);
@@ -23,15 +23,15 @@ int subprocess_test_main(char *CMD){
   } while (bytes_read != 0);
 
   result = subprocess_join(&subprocess, &exited);
-  assert_eq(result, 0, %d);
-  dbg(exited, %d);
-  assert_eq(exited, 0, %d);
+  assert_eq(result, 0, % d);
+  dbg(exited, % d);
+  assert_eq(exited, 0, % d);
 
   READ_STDOUT = stringbuffer_to_string(SB);
 
   stringbuffer_release(SB);
-  dbg(command_line[4], %s);
-  dbg(strlen(READ_STDOUT), %u);
+  dbg(command_line[4], % s);
+  dbg(strlen(READ_STDOUT), % u);
   if (DEBUG_STDOUT) {
     fprintf(stderr, "%s", READ_STDOUT);
   }

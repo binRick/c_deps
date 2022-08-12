@@ -2,7 +2,7 @@
 deps-test-includes:
 	@$(GREP) '^#include.*"' deps-test/deps-test.c|cut -d'"' -f2|$(SORT) -u
 deps-test-includes-paths:
-	@$(MAKE) deps-test-includes|while read -r f; do\
+	@$(MAKE) -B deps-test-includes|while read -r f; do\
 		if [[ -f "$$f" ]]; then echo "$$f"; \
 		elif [[ -f "submodules/$$f" ]]; then echo "submodules/$$f"; \
 		elif [[ -f "submodules/c_deps/submodules/c_$(ANSI)/$$f" ]]; then echo "submodules/c_deps/submodules/c_$(ANSI)/$$f"; \
@@ -17,12 +17,12 @@ deps-test-ls-tests:
 deps-test-ls-suites:
 	@eval build/deps-test/deps-test -L
 greatest-suites:
-	@($(MAKE) test-file-names | while read -r f; do timeout .5 $(PASSH) ./build/$$f/$$f -l -v; done) |$(GREP) '^* Suite '|cut -d: -f1|cut -d' ' -f3
+	@($(MAKE) -B test-file-names | while read -r f; do timeout .5 $(PASSH) ./build/$$f/$$f -l -v; done) |$(GREP) '^* Suite '|cut -d: -f1|cut -d' ' -f3
 greatest-suite-tests:
 	@$(PASSH)  ./build/exec-$(FZF)-test/exec-$(FZF)-test -l -v -s s_$(FZF)_basic|$(GREP) '^* Suite ' -A 999|$(GREP) '^[[:space:]]'|tr -d ' '|cut -d' ' -f1
 
 run-binary:
-	@clear; $(MAKE) meson-binaries | $(ENV) FZF_DEFAULT_COMMAND= \
+	@clear; $(MAKE) -B meson-binaries | $(ENV) FZF_DEFAULT_COMMAND= \
         $(FZF) --reverse \
             --preview-window='follow,wrap,right,80%' \
             --bind 'ctrl-b:preview($(MESON) meson-build)' \
@@ -33,7 +33,7 @@ run-binary:
             --height='100%' \
     | xargs -I % $(ENV) bash -c "./%"
 run-binary-nodemon:
-	@$(MAKE) meson-binaries | $(FZF) --reverse | xargs -I % nodemon -w build --delay 1000 -x $(PASSH) "./%"
+	@$(MAKE) -B meson-binaries | $(FZF) --reverse | xargs -I % nodemon -w build --delay 1000 -x $(PASSH) "./%"
 meson-tests-list:
 	@$(MESON) test -C build --list
 meson-tests-preview-header:
@@ -117,13 +117,13 @@ meson-tests:
 	@$(ANSI) --save-palette
 	@kfc -p $(MENU_PALETTE) 2>/dev/null
 	@\
-	{ $(MAKE) meson-tests-list; } \
+	{ $(MAKE) -B meson-tests-list; } \
   	  |$(FZF) \
 		--border=sharp\
 		--margin=0,0,0,0 --padding=0,0,0,0 \
 		--no-info \
         --reverse --ansi --no-multi --cycle --info=inline \
-        --preview='$(MAKE) meson-tests-preview-header'\
+        --preview='$(MAKE) -B meson-tests-preview-header'\
         --preview-window='follow,nowrap,right,75%' \
         --header='Control Space For Menu'\
         --header-lines='0' \
@@ -135,9 +135,9 @@ meson-tests:
         --bind 'pgdn:preview-half-page-down'\
         --bind 'ctrl-/:change-preview-window(right,50%|right,60%|right,70%|right,80%|right,90%)'\
         --bind 'ctrl-\:change-preview-window(down,50%|down,60%|down,70%|down,80%|down,90%)' \
-        --bind 'ctrl-space:preview($(MAKE) meson-tests-preview-header)'\
+        --bind 'ctrl-space:preview($(MAKE) -B meson-tests-preview-header)'\
         --bind 'ctrl-e:preview($(PASSH) git status)' \
-        --bind 'ctrl-g:preview($(PASSH) $(MAKE) tidy)' \
+        --bind 'ctrl-g:preview($(PASSH) $(MAKE) -B tidy)' \
         --bind 'ctrl-i:preview($(PASSH) $(MESON) wrap status)' \
 		--bind 'ctrl-x:preview($(PASSH) muon info options)'\
         --bind 'ctrl-w:preview(submodules/c_deps/meson/ls_unconfigured_submodules.sh)' \
@@ -165,11 +165,11 @@ meson-tests:
 		--bind 'ctrl-t:change-prompt(Tests > )'\
 			--bind 'ctrl-t:+change-preview(submodules/c_deps/scripts/deps-test-view-test.sh {} && $(ENV) $(PASSH) $(ENV) bash -x -c "build/deps-test/deps-test -a -v -e -t {}")'\
 			--bind 'ctrl-t:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
-			--bind 'ctrl-t:+reload($(MAKE) deps-test-ls-tests -B)'\
+			--bind 'ctrl-t:+reload($(MAKE) deps-test-ls-tests)'\
 		--bind 'ctrl-s:change-prompt(Suites > )'\
 			--bind 'ctrl-s:+change-preview(submodules/c_deps/scripts/deps-test-view-suite.sh {} && $(PASSH) $(ENV) bash -x -c "build/deps-test/deps-test -a -v -e -s {}")'\
 			--bind 'ctrl-s:+change-preview-window(follow,wrap,~4,+{2}+4/2)'\
-			--bind 'ctrl-s:+reload($(MAKE) deps-test-ls-suites -B)'\
+			--bind 'ctrl-s:+reload($(MAKE) deps-test-ls-suites)'\
 		--bind 'ctrl-z:change-prompt(Inspect Tests > )'\
 			--bind 'ctrl-z:+change-preview-window(follow,wrap,~4,+{2}+4/2)'\
 			--bind 'ctrl-z:+change-preview(submodules/c_deps/scripts/list-test-tests.sh {})'\

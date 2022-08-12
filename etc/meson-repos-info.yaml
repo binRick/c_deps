@@ -1,6 +1,10 @@
 $include: etc/reference-data.yaml
 $include: etc/config.yaml
 
+config:
+  <<: *config
+  max-parallel-commands: 20
+
 tasks:
   - name: Print Meson Repos Clean Commands
     tags: [clean-commands]
@@ -8,7 +12,7 @@ tasks:
       - name: Print Meson Repo % Clean Command
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-tidy-commands-%.log make clean -bn"
+        cmd: env bash -c "cd ~/repos/%/. && make clean -Bbn"
 
   - name: Print Meson Repos Tidy Commands
     tags: [tidy-commands]
@@ -16,7 +20,7 @@ tasks:
       - name: Print Meson Repo % Tidy Command
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-tidy-commands-%.log make tidy -bn"
+        cmd: env bash -c "cd ~/repos/%/. && make tidy -Bbn"
 
   - name: Print Meson Repos Git Status
     tags: [git-status]
@@ -24,16 +28,7 @@ tasks:
       - name: Print Meson Repo Git Status %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-git-status-%.log git status"
-
-  - name: Print Meson Repos Git Modified Files
-    tags: [modified-files]
-    parallel-tasks:
-      - name: Print Meson Repo Git Modified Files %
-        for-each: *meson-dirs
-        ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && { passh -L /tmp/meson-repos-git-modified-files-%.log git status -s||true; } | grep ' M ' 2>/dev/null"
-
+        cmd: env bash -c "cd ~/repos/%/. && git status > /tmp/meson-repos-git-status-%.log"
 
   - name: Print Meson Repos Git Diff
     tags: [git-diff]
@@ -41,7 +36,7 @@ tasks:
       - name: Print Meson Repo Git diff %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && git diff"
+        cmd: env bash -c "cd ~/repos/%/. && git diff > /tmp/meson-repos-git-diff-%.log"
 
   - name: Print Meson Repos Build Commands
     tags: [build-commands]
@@ -49,7 +44,7 @@ tasks:
       - name: Print Meson Repo % Build Command
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-build-commands-%.log make build -bn"
+        cmd: env bash -c "cd ~/repos/%/. && make build -Bbn"
 
   - name: Print Meson Repos Test Commands
     tags: [test-commands]
@@ -57,5 +52,5 @@ tasks:
       - name: Print Meson Repo Test Command %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-test-commands-%.log make test -bn"
+        cmd: env bash -c "cd ~/repos/%/. && make test -Bbn"
 

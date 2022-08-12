@@ -1,6 +1,10 @@
 $include: etc/reference-data.yaml
 $include: etc/config.yaml
 
+config:
+  <<: *config
+  max-parallel-commands: 7
+  update-interval: 5000
 
 tasks:
   - name: Clean Meson Repos
@@ -9,7 +13,7 @@ tasks:
       - name: Clean Meson Repo %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && make clean"
+        cmd: env bash -c "cd ~/repos/%/. && make -B clean"
 
   - name: Tidy Meson Repos
     tags: [tidy]
@@ -17,15 +21,15 @@ tasks:
       - name: Tidy Meson Repo %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && make tidy"
+        cmd: env bash -c "cd ~/repos/%/. && make -B tidy"
 
   - name: Build Meson Repos
     tags: [build]
     parallel-tasks:
-      - name: Print Meson Repo Build Command %
+      - name: Build Meson Repo %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && make build"
+        cmd: env bash -c "cd ~/repos/%/. && make -B build"
 
   - name: Test Meson Repos
     tags: [test]
@@ -33,4 +37,4 @@ tasks:
       - name: Test Meson Repo %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-test-%.log make test"
+        cmd: env bash -c "cd ~/repos/%/. && passh -L /tmp/meson-repos-test-%.log make -B test"
