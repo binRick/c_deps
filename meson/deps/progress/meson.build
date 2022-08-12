@@ -4,7 +4,7 @@ progress_cargs = [
 progress_srcs = [
   c_deps_dir + '/submodules/progress.c/progress.c',
 ]
-progress_lib = both_libraries('progress', 
+progress_lib = static_library('progress', 
   progress_srcs,
   install: false, 
   dependencies: [

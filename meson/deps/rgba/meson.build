@@ -3,7 +3,7 @@ rgba_dirs = [
   '../../../submodules/rgba',
   inc,
 ]
-rgba_lib = both_libraries('rgba', 
+rgba_lib = static_library('rgba', 
   '../../../submodules/rgba/src/rgba.c',
   install: false, dependencies: [], 
   include_directories: rgba_dirs,

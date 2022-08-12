@@ -46,12 +46,9 @@ struct callback_summer_s {
 };
 
 
-TEST t_blocks_test_callback_struct1(void){
+TEST t_blocks_test_callback_struct_created(void){
   struct callback_summer_s callbacks[] = {
-    {
-      .cb = callback_creator(0, 0),
-      .x  = 200, .y = 100,
-    },
+    { .cb = callback_creator(0, 0),.x  = 200, .y = 1000, },
     { .cb = callback_creator(0, 0), .x = 20, .y = 100, },
     { 0 },
   };
@@ -59,9 +56,12 @@ TEST t_blocks_test_callback_struct1(void){
   struct callback_summer_s *tmp = callbacks;
 
   for (size_t i = 0; tmp->cb != NULL; tmp++, i++) {
-    printf("calling callback #%lu\n", i);
-    int val = tmp->cb(tmp->x, tmp->y);
-    printf("      callback val: %d\n", val);
+    summer_t created = ^ int (int a, int b){
+      return(tmp->cb(tmp->x, tmp->y) + a + b);
+    };
+    printf("calling created callback #%lu\n", i);
+    int val = created(5, 100);
+    printf("      created val: %d\n", val);
   }
 
   PASS();
@@ -156,7 +156,7 @@ SUITE(s_blocks_test) {
   RUN_TEST(t_blocks_test_callback);
   RUN_TEST(t_blocks_test_callback_creator);
   RUN_TEST(t_blocks_test_callback_struct);
-  RUN_TEST(t_blocks_test_callback_struct1);
+  RUN_TEST(t_blocks_test_callback_struct_created);
 }
 
 GREATEST_MAIN_DEFS();

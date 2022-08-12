@@ -2,7 +2,7 @@
 ms_inc = [
     inc,
 ]
-ms_lib = both_libraries('ms', 
+ms_lib = static_library('ms', 
   c_deps_dir + '/submodules/ms/ms.c',
   install: false, 
   dependencies: [
