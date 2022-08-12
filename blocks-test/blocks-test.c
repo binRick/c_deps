@@ -20,6 +20,51 @@ void __attribute__((constructor)) __constructor__blocks_test();
 void __attribute__((destructor)) __destructor__blocks_test();
 void __blocks_test__setup_executable_path(const char **argv);
 ////////////////////////////////////////////
+#define RUN_TESTS() { do  { \
+  RUN_TEST(t_blocks_test_basic);\
+  RUN_TEST(t_blocks_test_args);\
+  RUN_TEST(t_blocks_test_callback);\
+  RUN_TEST(t_blocks_test_callback_creator);\
+  RUN_TEST(t_blocks_test_callback_struct);\
+  RUN_TEST(t_blocks_test_callback_struct_created);\
+  RUN_TEST(t_blocks_test_op_type);\
+  RUN_TEST(t_blocks_test_parser_ops);\
+} while(0); }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+enum PARSER_TYPE_e {
+  PARSER_TYPE_1,
+  PARSER_TYPE_2,
+ PARSER_TYPES_QTY,
+};
+struct PARSER_OP_s;
+typedef int (^PARSER_OP_b)(int, int);
+struct PARSER_OP_s {
+  PARSER_OP_b op;
+};
+struct PARSER_OP_s parser_ops[] = {
+  [PARSER_TYPE_1] = { 
+    .op = ^int(int a, int b){ return(a + b); },
+  },
+  [PARSER_TYPE_2] = { 
+    .op = ^int(int a, int b){ return(a - b); },
+  },
+  [PARSER_TYPES_QTY] = { 0 },
+};
+
+TEST t_blocks_test_parser_ops(void){
+  int x = 10, y = 5;
+
+  int sum = parser_ops[PARSER_TYPE_1].op(x,y);
+  int diff = parser_ops[PARSER_TYPE_2].op(x,y);
+  ASSERT_EQm("The sum should be 15", sum, 15);
+  ASSERT_EQm("The difference should be 5", diff, 5);
+
+  printf("\n\tThe sum is %d\n", sum);
+  printf("\tThe diff is %d\n", diff);
+  PASS();
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 enum OPTYPE {
@@ -47,11 +92,10 @@ TEST t_blocks_test_op_type(void){
 
   int sum = ops[OPTYPE_ADD].op(x,y);
   int diff = ops[OPTYPE_SUBTRACT].op(x,y);
-
   ASSERT_EQm("The sum should be 15", sum, 15);
   ASSERT_EQm("The difference should be 5", diff, 5);
 
-  printf("\tThe sum is %d\n", sum);
+  printf("\n\tThe sum is %d\n", sum);
   printf("\tThe diff is %d\n", diff);
   PASS();
 }
@@ -186,14 +230,7 @@ TEST t_blocks_test_basic(void){
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 SUITE(s_blocks_test) {
   void *TEST_PARAM = 0;
-
-  RUN_TEST(t_blocks_test_basic);
-  RUN_TEST(t_blocks_test_args);
-  RUN_TEST(t_blocks_test_callback);
-  RUN_TEST(t_blocks_test_callback_creator);
-  RUN_TEST(t_blocks_test_callback_struct);
-  RUN_TEST(t_blocks_test_callback_struct_created);
-  RUN_TEST(t_blocks_test_op_type);
+  RUN_TESTS();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 GREATEST_MAIN_DEFS();
