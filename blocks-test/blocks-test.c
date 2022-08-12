@@ -22,9 +22,11 @@ void __attribute__((constructor)) __constructor__blocks_test();
 void __attribute__((destructor)) __destructor__blocks_test();
 void __blocks_test__setup_executable_path(const char **argv);
 
-typedef int (^summer_t)(int, int);
-typedef int (^cb_int_t)(int, int);
 typedef void (^void_cb_t)(void);
+typedef int (^summer_t)(int, int);
+struct callback_summer_s {
+  summer_t cb; int y; int x;
+};
 typedef summer_t (^summer_creator_t)(summer_t cb, int, int);
 
 
@@ -41,15 +43,11 @@ summer_t callback_creator(int a, int b) {
   return(summer);
 }
 
-struct callback_summer_s {
-  summer_t cb; int y; int x;
-};
-
 
 TEST t_blocks_test_callback_struct_created(void){
   struct callback_summer_s callbacks[] = {
-    { .cb = callback_creator(0, 0),.x  = 200, .y = 1000, },
-    { .cb = callback_creator(0, 0), .x = 20, .y = 100, },
+    { .cb = callback_creator(0, 0), .x = 200, .y = 1000, },
+    { .cb = callback_creator(0, 0), .x = 20,  .y = 100,  },
     { 0 },
   };
 
@@ -68,15 +66,17 @@ TEST t_blocks_test_callback_struct_created(void){
 }
 
 struct callback_t {
-  cb_int_t cb;
+  summer_t cb;
   int      x; int y;
 };
 
 
 TEST t_blocks_test_callback_struct(void){
   struct callback_t callbacks[] = {
-    { .cb = callback_creator(0, 0),
-      .x  = 5, .y = 10, },
+    { .cb = callback_creator(0, 0), .x = 5, .y = 10, },
+    { .cb = callback_creator(0, 0), .x = 5, .y = 10, },
+    { .cb = callback_creator(0, 0), .x = 5, .y = 10, },
+    { .cb = callback_creator(0, 0), .x = 5, .y = 10, },
     { .cb = callback_creator(0, 0),
       .x  = 50, .y = 100, },
     { .cb = callback_creator(0, 0),

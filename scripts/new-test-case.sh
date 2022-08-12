@@ -110,7 +110,7 @@ fi
 UNCRUSTIFY_BIN="$(command -v uncrustify)"
 J2_ARGS="--strict --format json"
 TEMPLATE_VARS_FILE=$(mktemp)
-J2_CMDS="jq -Mrc < $TEMPLATE_VARS_FILE >/dev/null"
+J2_CMDS="$JQ_BIN -Mrc < $TEMPLATE_VARS_FILE >/dev/null"
 TEST_CASE_NAME="${TEST_CASE_NAME}-test"
 TEST_CASE_RENDERED_C_FILE=$(mktemp)
 TEST_CASE_RENDERED_H_FILE=$(mktemp)
@@ -140,7 +140,7 @@ MESON_CMDS=" && ( cd $REPO_DIR && $MESON_ADD_SUBDIR_CMD && meson setup --reconfi
 J2_POST_CMDS="$UNCRUSTIFY_BIN --no-backup -l c -q -c $UNCRUSTIFY_CFG $TEST_CASE_RENDERED_C_FILE $TEST_CASE_RENDERED_H_FILE && muon check $TEST_CASE_RENDERED_MESON_BUILD_FILE && { [[ -d "$TEST_CASE_DIR" ]] || mkdir $TEST_CASE_DIR; } && cp $TEST_CASE_RENDERED_C_FILE $TEST_CASE_DIR/$TEST_CASE_NAME.c && cp $TEST_CASE_RENDERED_H_FILE $TEST_CASE_DIR/$TEST_CASE_NAME.h && cp $TEST_CASE_RENDERED_MESON_BUILD_FILE $TEST_CASE_DIR/meson.build $MESON_CMDS"
 
 prepare_vars_file() {
-	echo -n "" >$TEMPLATE_VARS_FILE
+	rm $JO_ARGS_FILE
 	echo -ne " \"TEST_CASE_NAME\"=\"$TEST_CASE_NAME\"" >>$JO_ARGS_FILE
 	echo -ne " \"TEST_CASE_NAME_SLUG\"=\"$TEST_CASE_NAME_SLUG\"" >>$JO_ARGS_FILE
 	echo -ne " \"TEST_CASE_ENABLED\"=$TEST_CASE_ENABLED" >>$JO_ARGS_FILE
@@ -159,6 +159,7 @@ new_j2_cmd() {
 	local JO_CMD="$JO_BIN"
 
 	echo -e "$TEMPLATE_VARS" | tr '|' '\n' | while read -r KV; do echo -e "$KV" | while IFS='=' read -r K V; do
+		[[ "$K" == "" ]] && continue
 		echo -ne " \"$K\"=\"$V\"" >>$JO_ARGS_FILE
 	done; done
 	JO_CMD="$JO_BIN $(cat $JO_ARGS_FILE)"
@@ -175,7 +176,7 @@ new_j2_cmd $TEST_CASE_RENDERED_C_FILE "$TEMPLATE_C" "$EXTRA_TEMPLATE_VARS"
 if [[ "$DRY_RUN_MODE" == 1 || "$DEBUG_MODE" == 1 ]]; then
 	msg="Generating test case '$(ansi -n --green "$TEST_CASE_NAME")' @ '$(ansi -n --cyan "$TEST_CASE_DIR")' using \n\t$(ansi -n --magenta "$TEMPLATE_MESON_BUILD, $TEMPLATE_H, $TEMPLATE_C")\nWith Commands\n\t'$(ansi -n --red "$J2_CMDS")'"
 	echo -e "$msg"
-	eval $JQ_BIN -Mrc <$TEMPLATE_VARS_FILE
+	eval $JQ_BIN -rC <$TEMPLATE_VARS_FILE
 	ansi --yellow --italic "$J2_CMDS && $J2_POST_CMDS"
 	if [[ "$DRY_RUN_MODE" == 1 ]]; then exit; fi
 fi

@@ -11,7 +11,11 @@ TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *
 			   intro*/*.c intro*/*.h \
 			   exec-fzf*/*.c exec-fzf*/*.h \
 			   submodules/c_vt100utils/vt100utils.h \
-			   submodules/c_vt100utils/demos/tuibox.h
+			   submodules/c_vt100utils/vt100utils.c \
+			   submodules/c_vt100utils/tuibox.c \
+			   submodules/c_vt100utils/tuibox.h \
+			   submodules/c_vt100utils/tuibox-vec.c \
+			   submodules/c_vt100utils/tuibox-vec.h
 
 ########################################################
 setup-binaries:
