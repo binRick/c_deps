@@ -56,7 +56,7 @@ struct PARSER_OP_s parser_ops[] = {
   [PARSER_TYPE_1] =    {
     .op                = ^ int (int a, int b){ return(a - b);    },
     .wc_pattern        = "ello*",
-    .regex_pattern     = ".[Hh]ello\\s.*[Ww]orld",
+    .regex_pattern     = "[Hh]ello\\s.*[Ww]orld",
     .regex_match_start = 0,            .regex_match_length = 0,
     .regex_extracted_chars = NULL,
   },
@@ -73,8 +73,9 @@ char *search_strings[] = {
 TEST t_blocks_test_parser_ops(void){
   const char **tmp = search_strings;
 
-  for (char *search_string = NULL; *tmp != NULL; tmp++) {
+  for (char *search_string = NULL; *tmp != NULL; *tmp++) {
     search_string = *tmp;
+
     printf("["AC_BLUE "%s" AC_RESETALL "]\n", strdup_escaped(search_string));
     for (size_t i = 0; i < PARSER_TYPES_QTY; i++) {
       parser_ops[i].wc_match          = wildcardcmp(parser_ops[i].wc_pattern, search_string);
