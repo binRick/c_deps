@@ -4,12 +4,16 @@
 #include "debug-memory/debug_memory.h"
 #endif
 #include "ansi-codes/ansi-codes.h"
+#include "ansi-utils/ansi-utils.h"
 #include "c_fsio/include/fsio.h"
 #include "c_greatest/greatest/greatest.h"
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/include/vector.h"
 ////////////////////////////////////////////
 #include "blocks-test/blocks-test.h"
+#include "tiny-regex-c/re.h"
+#include "tinydir/tinydir.h"
+#include "wildcardcmp/wildcardcmp.h"
 ////////////////////////////////////////////
 static char EXECUTABLE_PATH[PATH_MAX + 1] = { 0 };
 static char *EXECUTABLE;
@@ -20,48 +24,83 @@ void __attribute__((constructor)) __constructor__blocks_test();
 void __attribute__((destructor)) __destructor__blocks_test();
 void __blocks_test__setup_executable_path(const char **argv);
 ////////////////////////////////////////////
-#define RUN_TESTS() { do  { \
-  RUN_TEST(t_blocks_test_basic);\
-  RUN_TEST(t_blocks_test_args);\
-  RUN_TEST(t_blocks_test_callback);\
-  RUN_TEST(t_blocks_test_callback_creator);\
-  RUN_TEST(t_blocks_test_callback_struct);\
-  RUN_TEST(t_blocks_test_callback_struct_created);\
-  RUN_TEST(t_blocks_test_op_type);\
-  RUN_TEST(t_blocks_test_parser_ops);\
-} while(0); }
+#define RUN_TESTS()    { do  {                                              \
+                           RUN_TEST(t_blocks_test_basic);                   \
+                           RUN_TEST(t_blocks_test_args);                    \
+                           RUN_TEST(t_blocks_test_callback);                \
+                           RUN_TEST(t_blocks_test_callback_creator);        \
+                           RUN_TEST(t_blocks_test_callback_struct);         \
+                           RUN_TEST(t_blocks_test_callback_struct_created); \
+                           RUN_TEST(t_blocks_test_op_type);                 \
+                           RUN_TEST(t_blocks_test_parser_ops);              \
+                         } while (0); }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 enum PARSER_TYPE_e {
   PARSER_TYPE_1,
-  PARSER_TYPE_2,
- PARSER_TYPES_QTY,
+  PARSER_TYPES_QTY,
 };
 struct PARSER_OP_s;
 typedef int (^PARSER_OP_b)(int, int);
 struct PARSER_OP_s {
   PARSER_OP_b op;
+  char        *regex_pattern;
+  bool        *regex_match;
+  int      regex_match_start;
+  int      regex_match_length;
+  char        *wc_pattern;
+  char        *regex_extracted_chars;
+  bool        wc_match;
 };
 struct PARSER_OP_s parser_ops[] = {
-  [PARSER_TYPE_1] = { 
-    .op = ^int(int a, int b){ return(a + b); },
+  [PARSER_TYPE_1] =    {
+    .op                = ^ int (int a, int b){ return(a - b);    },
+    .wc_pattern        = "ello*",
+    .regex_pattern     = ".[Hh]ello\\s.*[Ww]orld",
+    .regex_match_start = 0,            .regex_match_length = 0,
+    .regex_extracted_chars = NULL,
   },
-  [PARSER_TYPE_2] = { 
-    .op = ^int(int a, int b){ return(a - b); },
-  },
-  [PARSER_TYPES_QTY] = { 0 },
+  [PARSER_TYPES_QTY] = { 0                                       },
+};
+char *search_strings[] = {
+  "Hello world",
+  "''hello world",
+  "ahem.. 'hello\t\nWorld !' ..",
+  ".... 'Hello world ..........",
+  NULL,
 };
 
 TEST t_blocks_test_parser_ops(void){
-  int x = 10, y = 5;
+  const char **tmp = search_strings;
 
-  int sum = parser_ops[PARSER_TYPE_1].op(x,y);
-  int diff = parser_ops[PARSER_TYPE_2].op(x,y);
-  ASSERT_EQm("The sum should be 15", sum, 15);
-  ASSERT_EQm("The difference should be 5", diff, 5);
+  for (char *search_string = NULL; *tmp != NULL; tmp++) {
+    search_string = *tmp;
+    printf("["AC_BLUE "%s" AC_RESETALL "]\n", strdup_escaped(search_string));
+    for (size_t i = 0; i < PARSER_TYPES_QTY; i++) {
+      parser_ops[i].wc_match          = wildcardcmp(parser_ops[i].wc_pattern, search_string);
+      parser_ops[i].regex_match_start = re_match(parser_ops[i].regex_pattern, search_string, &parser_ops[i].regex_match_length);
+      parser_ops[i].regex_extracted_chars = (parser_ops[i].regex_match_start > 0) 
+        ? stringfn_substring(search_string,parser_ops[i].regex_match_start,parser_ops[i].regex_match_length)
+        : NULL;
 
-  printf("\n\tThe sum is %d\n", sum);
-  printf("\tThe diff is %d\n", diff);
+      printf(AC_YELLOW "\tParser #%lu> Wildcard: %s%s\n" AC_RESETALL,
+             i,
+             parser_ops[i].wc_match ? AC_GREEN : AC_RED,
+             parser_ops[i].wc_match ? "Yes" : "No"
+             );
+      printf(AC_MAGENTA "\tParser #%lu> Regex: %s(%s) %s :: (chars %d-%d): " AC_RESETALL AC_CYAN "%s" AC_RESETALL "\n" AC_RESETALL,
+             i,
+             (parser_ops[i].regex_match_start>0) ? AC_GREEN : AC_RED,
+             parser_ops[i].regex_pattern,
+             (parser_ops[i].regex_match_start > 0) ? "Yes" : "No",
+             (parser_ops[i].regex_match_start > 0) ? (parser_ops[i].regex_match_start) : 0,
+             (parser_ops[i].regex_match_start > 0) ? (parser_ops[i].regex_match_length) : 0,
+             (parser_ops[i].regex_match_start > 0) 
+              ? (strdup_escaped(parser_ops[i].regex_extracted_chars))
+              : ""
+             );
+    }
+  }
   PASS();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,20 +117,21 @@ struct CHANGEOP_t {
   CHANGEOP_b op;
 };
 struct CHANGEOP_t ops[] = {
-  [OPTYPE_ADD] = { 
-    .op = ^int(int a, int b){ return(a + b); },
+  [OPTYPE_ADD] =      {
+    .op = ^ int (int a, int b){ return(a + b);              },
   },
-  [OPTYPE_SUBTRACT] = { 
-    .op = ^int(int a, int b){ return(a - b); },
+  [OPTYPE_SUBTRACT] = {
+    .op = ^ int (int a, int b){ return(a - b);              },
   },
-  [OPTYPES_QTY] = { 0 },
+  [OPTYPES_QTY] =     { 0                           },
 };
 
 TEST t_blocks_test_op_type(void){
   int x = 10, y = 5;
 
-  int sum = ops[OPTYPE_ADD].op(x,y);
-  int diff = ops[OPTYPE_SUBTRACT].op(x,y);
+  int sum  = ops[OPTYPE_ADD].op(x, y);
+  int diff = ops[OPTYPE_SUBTRACT].op(x, y);
+
   ASSERT_EQm("The sum should be 15", sum, 15);
   ASSERT_EQm("The difference should be 5", diff, 5);
 
@@ -230,6 +270,7 @@ TEST t_blocks_test_basic(void){
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 SUITE(s_blocks_test) {
   void *TEST_PARAM = 0;
+
   RUN_TESTS();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
