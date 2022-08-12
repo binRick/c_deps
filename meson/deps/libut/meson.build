@@ -24,7 +24,7 @@ libut_deps = [
 
 ]
 
-libut_lib = both_libraries('libut',
+libut_lib = library('libut',
   libut_srcs,
   install: false,
   dependencies: libut_deps,

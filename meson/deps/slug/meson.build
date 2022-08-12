@@ -1,4 +1,4 @@
-slug_lib = both_libraries('slug',
+slug_lib = library('slug',
   c_deps_dir + '/submodules/slug.c/src/slug.c',
   c_deps_dir + '/submodules/slug.c/deps/case.c',
   c_deps_dir + '/submodules/slug.c/deps/trim.c',

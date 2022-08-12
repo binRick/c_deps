@@ -10,7 +10,7 @@ c_stringfn_inc = [
   inc,
 ]
 
-c_stringfn_lib = static_library('c_stringfn', c_stringfn_srcs,
+c_stringfn_lib = library('c_stringfn', c_stringfn_srcs,
   install: false, 
   dependencies: [
   ], 

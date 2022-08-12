@@ -11,7 +11,7 @@ png2gif_deps = [
 
 ]
 
-png2gif_lib = both_libraries('png2gif',
+png2gif_lib = library('png2gif',
   png2gif_srcs,
   install: false,
   dependencies: png2gif_deps,

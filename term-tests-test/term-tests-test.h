@@ -18,6 +18,7 @@
 #include <sys/time.h>
 
 int parse_args(int argc, char *argv[]);
+
 int debug_args();
 
 typedef struct CLI_ARGS {
@@ -71,6 +72,5 @@ static struct cag_option options[] = {
     .access_name    = "help",
     .description    = "Shows the command help" }
 };
-
 
 #endif

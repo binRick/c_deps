@@ -1,7 +1,10 @@
 #include "ee-test.h"
 int ee_main(void);
+
 int ee_main_once(void);
+
 int ee_main_loop(void);
+
 void on_added_new_listener(void *arg);
 
 ee_t *EE;
@@ -9,8 +12,8 @@ ee_t *EE;
 #define L           log_info
 
 void on_hello(void *arg);
-void on_hi(void *arg);
 
+void on_hi(void *arg);
 
 TEST test_logh(void){
   log_info("logging an info message");
@@ -21,18 +24,15 @@ TEST test_logh(void){
   PASS();
 }
 
-
 TEST test_ee_loop(void){
   ee_main_loop();
   PASS();
 }
 
-
 TEST test_ee_once(void){
   ee_main_once();
   PASS();
 }
-
 
 TEST test_ee(void){
   ee_main();
@@ -58,7 +58,6 @@ SUITE(suite_ee) {
 
 GREATEST_MAIN_DEFS();
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
@@ -71,14 +70,12 @@ int main(int argc, char **argv) {
   return(0);
 }
 
-
 void on_added_new_listener(void *arg) {
   ee_new_listener_t *listener;
 
   listener = (ee_new_listener_t *)arg;
   L("New listener added for event '%s'.", listener->name);
 }
-
 
 int ee_main_once(void) {
   const char *event_hello = "hello";
@@ -92,7 +89,6 @@ int ee_main_once(void) {
   ee_emit(EE, event_hi, "world"); /* => nothing happens */
   return(0);
 }
-
 
 int ee_main_loop(void) {
   const char *event_hello = "hello";
@@ -108,20 +104,17 @@ int ee_main_loop(void) {
   }
 }
 
-
 void on_hello(void *arg) {
   char *s = (char *)arg;
 
   L("Invoked `on_hello` with  '%s'", s);
 }
 
-
 void on_hi(void *arg) {
   char *s = (char *)arg;
 
   L("Invoked `on_hi` with  '%s'", s);
 }
-
 
 int ee_main(void) {
   const char *event_hello = "hello";

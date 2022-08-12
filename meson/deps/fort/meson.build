@@ -1,4 +1,4 @@
-fort_lib = static_library('fort',
+fort_lib = library('fort',
   '../../../submodules/libfort/lib/fort.c',
   install: false, 
   dependencies: [

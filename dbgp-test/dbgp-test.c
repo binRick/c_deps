@@ -54,7 +54,6 @@ char            msg0[1024 * 2];
 #define JOBS_QTY           45500
 #define WORKER_SLEEP_MS    100
 
-
 /////////////////////////////////////////////////////////////
 void *worker(void *WID){
   void      *job;
@@ -120,7 +119,6 @@ void *worker(void *WID){
   return(NULL);
 } /* worker */
 
-
 void test_send_channel(void){
   char *sent_dur;
 
@@ -148,7 +146,6 @@ void test_send_channel(void){
   free(sent_dur);
 }
 
-
 void test_setup_channels(void){
   JOBS_CHANNEL = chan_init(BUFFER_QTY);
   DONE_CHANNEL = chan_init(0);
@@ -159,7 +156,6 @@ void test_setup_channels(void){
   int res = pthread_create(&worker_threads[1], NULL, worker, (void *)1);
   ASSERT_EQ(0, res);
 }
-
 
 TEST test_dbgp(void){
   dbgp_main();
@@ -173,14 +169,12 @@ SUITE(dbgp) {
 
 GREATEST_MAIN_DEFS();
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   //RUN_SUITE(dbgp);
   GREATEST_MAIN_END();
   return(0);
 }
-
 
 void screenshot(SDL_Renderer *renderer, const char *filename) {
   int width  = 0;
@@ -197,7 +191,6 @@ void screenshot(SDL_Renderer *renderer, const char *filename) {
   SDL_SaveBMP(screenshot, filename);
   SDL_FreeSurface(screenshot);
 }
-
 
 void render_screen(void){
   SDL_SetRenderDrawColor(renderer, 0x30, 0x30, 0x30, 0xff);
@@ -244,7 +237,6 @@ void render_screen(void){
   SDL_RenderPresent(renderer);
 } /* render_screen */
 
-
 int dbgp_main(void) {
   pthread_t th;
 
@@ -282,14 +274,12 @@ int dbgp_main(void) {
     return(1);
   }
 
-
   if (DBGP_OpenFont(
         &unscii8, renderer, DBGP_UNSCII8, sizeof(DBGP_UNSCII8),
         DBGP_UNSCII8_WIDTH, DBGP_UNSCII8_HEIGHT) != 0) {
     SDL_Log("Unable to initialise DBGP_UNSCII8: %s", SDL_GetError());
     return(1);
   }
-
 
   fprintf(stderr,
           "\n**OPTIONS**\n\n"

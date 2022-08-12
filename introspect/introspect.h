@@ -27,5 +27,7 @@
 typedef void (*ee_target_handler)(JSON_Object *Target);
 
 char *execute_processes();
+
 JSON_Array *parse_execution_result(char *OUTPUT);
+
 void iterate_targets(ee_t *ee, JSON_Array *A);

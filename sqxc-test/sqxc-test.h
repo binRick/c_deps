@@ -35,4 +35,3 @@ struct User {
   unsigned int  test_drop;
   unsigned int  test_rename;
 };
-

@@ -12,7 +12,7 @@ flingfd_deps = [
 
 ]
 
-flingfd_lib = both_libraries('flingfd',
+flingfd_lib = library('flingfd',
   flingfd_srcs,
   install: false,
   dependencies: flingfd_deps,

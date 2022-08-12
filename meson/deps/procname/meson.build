@@ -12,7 +12,7 @@ procname_deps = [
 
 ]
 
-procname_lib = both_libraries('procname',
+procname_lib = library('procname',
   procname_srcs,
   install: false,
   dependencies: procname_deps,

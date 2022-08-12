@@ -6,7 +6,7 @@ ctable_srcs = [
   c_deps_dir + '/submodules/ctable/src/printing.c',
   c_deps_dir + '/submodules/ctable/src/vector.c',
   ]  
-ctable_lib = both_libraries('ctable',
+ctable_lib = library('ctable',
   ctable_srcs,
   install: false, 
   dependencies: [

@@ -8,7 +8,7 @@ libmutotp_srcs = [
   c_deps_dir + '/submodules/libmutotp/qrcode/qrcode.c',
 ]  
 
-libmutotp_lib = both_libraries('libmutotp',
+libmutotp_lib = library('libmutotp',
   libmutotp_srcs,
   install: false, 
   dependencies: [

@@ -7,10 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 
-
 //////////////////////////////////////////////
-
-
 TEST t_list_iterate_reverse(void){
   list_t          *langs = list_new();
 
@@ -29,7 +26,6 @@ TEST t_list_iterate_reverse(void){
   list_destroy(langs);
   PASS();
 }
-
 
 TEST t_list_iterate(void){
   list_t          *langs = list_new();
@@ -50,7 +46,6 @@ TEST t_list_iterate(void){
   PASS();
 }
 
-
 TEST t_list_find(void){
   list_t      *langs = list_new();
   list_node_t *js    = list_rpush(langs, list_node_new("js"));
@@ -64,7 +59,6 @@ TEST t_list_find(void){
 
   PASS();
 }
-
 
 TEST t_list_indexed(void){
   list_t      *list = list_new();
@@ -90,7 +84,6 @@ TEST t_list_indexed(void){
   PASS();
 }
 
-
 TEST t_list_push(void){
   list_t      *list = list_new();
   list_node_t *a    = list_node_new("a");
@@ -115,7 +108,6 @@ TEST t_list_push(void){
   PASS();
 }
 
-
 TEST t_list_node(void){
   char        *val  = "some value";
   list_node_t *node = list_node_new(val);
@@ -137,7 +129,6 @@ SUITE(t_list){
   PASS();
 }
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
@@ -146,4 +137,3 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_END();
   return(0);
 }
-

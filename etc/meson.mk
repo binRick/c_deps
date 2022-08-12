@@ -9,8 +9,11 @@ meson-build: meson-setup
 
 do-build: meson-build muon-build
 
+scan-build:
+	@env SCANBUILD=$(SCAN_BUILD) ninja -C $(MESON_BUILD_DIR) scan-build
+
 meson-install: do-meson
-	@$(MESON) install -C $(MESON_BUILD_DIR) --tags build
+	@$(MESON) install -C $(MESON_BUILD_DIR)
 
 install: meson-install
 

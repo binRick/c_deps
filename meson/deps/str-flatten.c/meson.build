@@ -12,7 +12,7 @@ str_flatten_c_deps = [
 
 ]
 
-str_flatten_c_lib = both_libraries('str-flatten.c',
+str_flatten_c_lib = library('str-flatten.c',
   str_flatten_c_srcs,
   install: false,
   dependencies: str_flatten_c_deps,

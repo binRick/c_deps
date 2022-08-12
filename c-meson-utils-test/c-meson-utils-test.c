@@ -14,9 +14,8 @@
 #include "c_fsio/include/fsio.h"
 #include "jinja2-cli/jinja2-cli.h"
 #include "tempdir.c/tempdir.h"
+
 //////////////////////////////////////////////
-
-
 char *RENDER_TEMPLATE_VARS(char *TEMPLATE_s, char *VARS_s, char *COLOR){
   struct jinja2_render_template_t *c = jinja2_init_config();
 
@@ -156,7 +155,6 @@ SUITE(s_c_meson_utils_render_test_executable){
 
 GREATEST_MAIN_DEFS();
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
@@ -169,4 +167,3 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_END();
   return(0);
 }
-

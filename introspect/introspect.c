@@ -18,7 +18,6 @@
 #include "submodules/debug-memory/debug_memory.h"
 #endif
 
-
 void iterate_targets(ee_t *ee, JSON_Array *A){
   JSON_Value  *V = json_value_init_object();
   JSON_Object *O = json_value_init_object();
@@ -39,7 +38,6 @@ void iterate_targets(ee_t *ee, JSON_Array *A){
   json_value_free(V);
 }
 
-
 JSON_Array *parse_execution_result(char *OUTPUT){
   JSON_Array *A = NULL;
 
@@ -58,7 +56,6 @@ JSON_Array *parse_execution_result(char *OUTPUT){
   //D("parse........%lu", json_array_get_count(A));
   return(A);
 }
-
 
 char *execute_processes(char *MESON_BUILD_FILE){
   uint8_t             output[MAX_OUTPUT_BYTES];

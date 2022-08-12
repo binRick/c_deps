@@ -21,7 +21,7 @@ libconfuse_deps = [
 
 ]
 
-#libconfuse_lib = both_libraries('libconfuse',
+#libconfuse_lib = library('libconfuse',
 #  libconfuse_srcs,
 #  install: false,
 #  dependencies: libconfuse_deps,

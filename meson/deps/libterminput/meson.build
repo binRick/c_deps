@@ -12,7 +12,7 @@ libterminput_deps = [
 
 ]
 
-libterminput_lib = both_libraries('libterminput',
+libterminput_lib = library('libterminput',
   libterminput_srcs,
   install: false,
   dependencies: libterminput_deps,

@@ -41,7 +41,6 @@ static const SqColumn userColumnsVer1[] = {
   { SQ_TYPE_UINT,         "test_rename",           offsetof(User, test_rename), 0                                            },
 };
 
-
 // ALTER TABLE "users"
 static const SqColumn userColumnsVer2[] = {
   // ADD COLUMN "test_add"
@@ -93,7 +92,6 @@ static const SqColumn userColumnsVer4[] = {
 //	{.old_name = "ints",   .name = "test_ints" },
 };
 
-
 User *user_new(void) {
   User *user;
 
@@ -102,7 +100,6 @@ User *user_new(void) {
   sq_intptr_array_init(&user->ints, 8);
   return(user);
 }
-
 
 void user_free(User *user) {
   sq_intptr_array_final(&user->ints);
@@ -115,7 +112,6 @@ void user_free(User *user) {
   }
   free(user);
 }
-
 
 void user_print(User *user) {
   printf("\n"
@@ -152,17 +148,14 @@ void user_print(User *user) {
          user->test_add, user->test_drop, user->test_rename);
 }
 
-
 City *city_new(void) {
   return(calloc(1, sizeof(City)));
 }
-
 
 void city_free(City *city) {
   free(city->name);
   free(city);
 }
-
 
 void city_print(City *city) {
   printf("\n"
@@ -170,7 +163,6 @@ void city_print(City *city) {
          "city.name = %s\n",
          city->id, city->name);
 }
-
 
 void storage_make_migrated_schema(SqStorage *storage, int end_version){
   SqSchema *schema;
@@ -254,7 +246,6 @@ void storage_make_migrated_schema(SqStorage *storage, int end_version){
   sq_storage_migrate(storage, NULL);
 } /* storage_make_migrated_schema */
 
-
 void  storage_query_join(SqStorage *storage){
   SqPtrArray *array;
   SqQuery    *query;
@@ -291,7 +282,6 @@ void  storage_query_join(SqStorage *storage){
 
   sq_query_free(query);
 }
-
 
 int  main(void){
   Sqdb             *db;

@@ -11,7 +11,6 @@ static Test         (*test_getters[])() = {
   get_table_test,
 };
 
-
 int main(){
   Table table = get_empty_table();
 

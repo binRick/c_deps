@@ -19,7 +19,6 @@ char *arrayA[4][4] = {
   { " 3....... ", RED " 23.1132310 " COL_RESET, "c ",        " 333"    },
 };
 
-
 bool table_test(__attribute__((unused)) Vector *error_builder){
   // Case 1
   Table t1 = get_empty_table();
@@ -113,7 +112,6 @@ bool table_test(__attribute__((unused)) Vector *error_builder){
 
   return(true);
 } /* table_test */
-
 
 Test get_table_test(){
   return((Test){

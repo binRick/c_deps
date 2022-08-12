@@ -26,7 +26,6 @@
 //////////////////////////////////////////////
 #define FZF_DEBUG_MODE    (fe->debug_mode == true)
 
-
 bool encode_preview_cmd(struct fzf_exec_t *fe){
   asprintf(&fe->sub_preview_cmd_file,
            "%s.encoded-preview-cmd-%lld.txt",
@@ -48,7 +47,6 @@ bool encode_preview_cmd(struct fzf_exec_t *fe){
   log_info("preview_cmd: %s", fe->preview_cmd);
   return(true);
 }
-
 
 void exec_fzf_release(struct fzf_exec_t *fe){
   if (fe) {
@@ -109,7 +107,6 @@ struct fzf_exec_t *exec_fzf_setup(void){
   e->preview_type        = "right";
   return(e);
 }
-
 
 int exec_fzf(struct fzf_exec_t *fe){
   if (fe->selected_options == NULL) {
@@ -259,7 +256,6 @@ int exec_fzf(struct fzf_exec_t *fe){
 
   fe->proc_result = REPROC_ENOMEM;
 
-
   fe->proc = reproc_new();
   if (fe->proc == NULL) {
     goto finish;
@@ -298,7 +294,6 @@ finish:
   if (FZF_DEBUG_MODE) {
     log_info("destroyed");
   }
-
 
   if (fe->proc_result < 0) {
     fprintf(stderr, "Error: %s\n", reproc_strerror(fe->proc_result));

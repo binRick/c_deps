@@ -8,7 +8,6 @@
 #include <math.h>
 ////////////////////////////////////////////////////////
 
-
 Address    addresses[] = {
   { .street = "henry", .number = 1279, },
 };
@@ -21,7 +20,6 @@ TestStruct test_structs[] = {
   },
 };
 
-
 size_t get_field_name_size(const char *FIELD_NAME){
   for (size_t i = 0; i < S_FIELDS_COUNT(TestStruct); i++) {
     MKCREFLECT_FieldInfo *F = &S_INFO(TestStruct)()->fields[i];
@@ -31,7 +29,6 @@ size_t get_field_name_size(const char *FIELD_NAME){
   }
   return(-1);
 }
-
 
 void *get_struct_field_name(void *STRUCT, const char *FIELD_NAME){
   void   *FIELD             = NULL;
@@ -99,7 +96,6 @@ void *get_struct_field_name(void *STRUCT, const char *FIELD_NAME){
   }
 } /* get_struct_field_name */
 
-
 TEST t_mkcreflect(void){
   for (size_t si = 0; si < (sizeof(test_structs) / sizeof(test_structs[0])); si++) {
     for (size_t fi = 0; fi < S_FIELDS_COUNT(TestStruct); fi++) {
@@ -130,7 +126,6 @@ SUITE(s_mkcreflect) {
 }
 
 GREATEST_MAIN_DEFS();
-
 
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();

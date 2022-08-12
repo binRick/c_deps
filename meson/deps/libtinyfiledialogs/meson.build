@@ -12,7 +12,7 @@ libtinyfiledialogs_deps = [
 
 ]
 
-libtinyfiledialogs_lib = both_libraries('libtinyfiledialogs',
+libtinyfiledialogs_lib = library('libtinyfiledialogs',
   libtinyfiledialogs_srcs,
   install: false,
   dependencies: libtinyfiledialogs_deps,

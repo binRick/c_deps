@@ -72,30 +72,41 @@ typedef struct {                       //          List of repos
 
 //////////////////////////////////////////////////////////////
 repos_t init_repos(); //    initialize a list of repos
+
 repo_t init_repo();   //    initialize a repo
 
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 void add_repo(repos_t **REPOS, repo_t *REPO);             //   add a repo to list of repos
+
 repo_t parse_repo_type(JSON_Object *O);
+
 void add_repo_type(repo_t *repo, repo_item_t *repo_item); //     add a repo item to repo
 
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 struct Vector * get_meson_paths(char *BASE_PATH, char *PATH_FILTER, size_t PATH_LIMIT);                           //   get a list of meson.build paths
+
 void iterate_paths(struct Vector *MESON_PATHS);
+
 void iterate_free(struct Vector *VECTOR);
+
 void iterate_parse_results(struct Vector *MESON_RESULTS);
+
 size_t iterate_get_total_size(struct Vector *VECTOR);
+
 void free_paths(struct Vector *MESON_PATHS);
+
 void iterate_print(struct Vector *VECTOR);
+
 struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS);
 
 //////////////////////////////////////////////////////////////
 
-
 char *execute_processes();
+
 JSON_Array *parse_execution_result(char *OUTPUT);
+
 void iterate_targets(ee_t *ee, JSON_Array *A);

@@ -38,7 +38,9 @@ Table table = { 0 };
 chan_t        *JOBS_CHANNEL, *RESULTS_CHANNEL, *DONE_CHANNEL;
 struct Vector *meson_results;
 char * get_cached_key_file_name(const char *KEY);
+
 char * get_cached_key_file(const char *KEY);
+
 bool cached_key_file_exists(const char *KEY);
 
 struct Vector     *TEST_EXECUTABLES_v;
@@ -184,9 +186,8 @@ typedef struct  MESON_JOB_RESULT_T {
       assert(JR->ScanDependencies_a != NULL);                           \
                                                                         \
     }while (0); }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 static char *style_name(const char *name){
   char *s = calloc(1, strlen(name) + 128);
 
@@ -194,14 +195,12 @@ static char *style_name(const char *name){
   return(s);
 }
 
-
 static char *number_to_string(size_t number){
   char *s = calloc(1, number / 10 + 1);
 
   sprintf(s, "%lu", number);
   return(s);
 }
-
 
 static void introspection_progress_start(progress_data_t *data) {
   assert(data);
@@ -218,11 +217,9 @@ static void introspection_progress_start(progress_data_t *data) {
   progress_write(data->holder);
 }
 
-
 static void introspection_progress(progress_data_t *data) {
   progress_write(data->holder);
 }
-
 
 static void introspection_progress_end(progress_data_t *data) {
   fprintf(stdout,
@@ -232,7 +229,6 @@ static void introspection_progress_end(progress_data_t *data) {
           "\n"
           );
 }
-
 
 ////////////////////////////////////////////////
 struct Vector *extract_repository_executables(char *REPOSITORY_NAME, struct Vector *MESON_RESULTS){
@@ -258,7 +254,6 @@ struct Vector *extract_repository_executables(char *REPOSITORY_NAME, struct Vect
   }
   return(REPOSITORY_EXECUTABLES_v);
 }
-
 
 static void generate_results_table(struct Vector *MESON_RESULTS){
   table = get_empty_table();
@@ -300,7 +295,6 @@ static void generate_results_table(struct Vector *MESON_RESULTS){
   free_table(&table);
 } /* gen_table */
 
-
 static void write_cached_key_file_content(const char *KEY, const char *KEY_CONTENT){
   if (KEY_CONTENT == NULL) {
     return;
@@ -313,7 +307,6 @@ static void write_cached_key_file_content(const char *KEY, const char *KEY_CONTE
   return(res);
 }
 
-
 static char * cached_key_file_content(const char *KEY){
   char *K   = get_cached_key_file(KEY);
   char *res = fsio_read_text_file(K);
@@ -324,7 +317,6 @@ static char * cached_key_file_content(const char *KEY){
   return(res);
 }
 
-
 bool cached_key_file_exists(const char *KEY){
   char *K  = get_cached_key_file(KEY);
   bool res = fsio_file_exists(K);
@@ -334,7 +326,6 @@ bool cached_key_file_exists(const char *KEY){
   }
   return((res) && (fsio_file_size(K) > 1024));
 }
-
 
 char * get_cached_key_file(const char *KEY){
   char *FN = get_cached_key_file_name(KEY);
@@ -349,7 +340,6 @@ char * get_cached_key_file(const char *KEY){
   }
   return(p);
 }
-
 
 char * get_cached_key_file_name(const char *KEY){
   char          *p         = calloc(1, 1024);
@@ -391,10 +381,9 @@ struct Vector *get_meson_paths(char *BASE_PATH, char *PATH_FILTER, size_t PATH_L
       goto bail;
     }
 
-    int  match_length = 0, match_idx = -1;
-    bool IS_MATCH = false;
-    re_t pattern;
-
+    int                    match_length = 0, match_idx = -1;
+    bool                   IS_MATCH = false;
+    re_t                   pattern;
 
     struct StringFNStrings regexes     = stringfn_split(PATH_FILTER, '|');
     bool                   found_match = false;
@@ -445,7 +434,6 @@ bail:
   return(vector);
 } /* get_meson_paths */
 
-
 void iterate_free(struct Vector *VECTOR){
   for (size_t i = 0; i < vector_size(VECTOR); i++) {
     meson_job_result_t *j = (meson_job_result_t *)vector_get(VECTOR, i);
@@ -459,7 +447,6 @@ void iterate_free(struct Vector *VECTOR){
   vector_release(VECTOR);
 }
 
-
 size_t iterate_get_total_size(struct Vector *VECTOR){
   size_t total_size = 0;
 
@@ -468,7 +455,6 @@ size_t iterate_get_total_size(struct Vector *VECTOR){
   }
   return(total_size);
 }
-
 
 void iterate_parse_results(struct Vector *MESON_RESULTS){
   char   REPOSITORY_NAME[]         = "c_deps";
@@ -539,7 +525,6 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
   generate_results_table(MESON_RESULTS);
 } /* iterate_parse_results */
 
-
 void iterate_targets(ee_t *ee, JSON_Array *A){
   JSON_Value  *V = json_value_init_object();
   JSON_Object *O = json_value_init_object();
@@ -561,7 +546,6 @@ void iterate_targets(ee_t *ee, JSON_Array *A){
   json_value_free(V);
 }
 
-
 JSON_Array *parse_execution_result(char *OUTPUT){
   JSON_Array *A = NULL;
 
@@ -580,14 +564,12 @@ JSON_Array *parse_execution_result(char *OUTPUT){
   return(A);
 }
 
-
 repos_t init_repos(){
   repos_t REPOS = {
   };
 
   return(REPOS);
 }
-
 
 repo_t init_repo(){
   repo_t REPO = {
@@ -596,7 +578,6 @@ repo_t init_repo(){
   return(REPO);
 }
 
-
 repo_t parse_repo_type(JSON_Object *O){
   repo_t REPO = {
   };
@@ -604,11 +585,9 @@ repo_t parse_repo_type(JSON_Object *O){
   return(REPO);
 }
 
-
 void *receive_meson_results(void *_RESULTS_QTY){
   void   *_result;
   size_t qty = 0, RESULTS_QTY = (size_t)_RESULTS_QTY;
-
 
   if (DEBUG_RECEIVE_MESON_RESULTS) {
     fprintf(stderr, ">Waiting for %lu results\n", RESULTS_QTY);
@@ -632,7 +611,6 @@ void *receive_meson_results(void *_RESULTS_QTY){
   }
   chan_send(DONE_CHANNEL, NULL);
 }
-
 
 char *execute_meson_introspect(void *_MESON_PATH){
   char *MESON_PATH = strdup((char *)_MESON_PATH);
@@ -688,7 +666,6 @@ char *execute_meson_introspect(void *_MESON_PATH){
   return(READ_STDOUT);
 } /* execute_meson_introspect */
 
-
 void *execute_meson_job(void *_WORKER_ID){
   size_t                 WORKER_ID = (size_t)_WORKER_ID;
   void                   *_job;
@@ -721,7 +698,6 @@ void *execute_meson_job(void *_WORKER_ID){
   }
   stringfn_release_strings_struct(items);
 }
-
 
 struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
   unsigned long prog_qty = vector_size(MESON_PATHS);
@@ -786,7 +762,6 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
 
   return(meson_results);
 } /* execute_meson_introspects */
-
 
 char *execute_processes(char *MESON_BUILD_FILE){
   uint8_t             output[MAX_OUTPUT_BYTES];

@@ -124,11 +124,14 @@ if get_option('enable-binaries')
     #  workdir: meson.current_source_dir(),
     #)
   endif
+    test('jinja2-cli', 
+      deps_test_exec, args: ['-v','-a','-e','-s','s_jinja2_cli'],
+      workdir: deps_cur_dir,
+      )
   if get_option('enable-deps-test')
     test('deps-test', 
-      workdir: deps_cur_dir,
-      deps_ls_tests_scripts,
       deps_test_exec, args: ['-v','-a'],
+      workdir: deps_cur_dir,
       )
   endif
 endif

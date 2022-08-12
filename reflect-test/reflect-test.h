@@ -50,7 +50,6 @@ MKCREFLECT_DEFINE_STRUCT(Address,
                          (INTEGER, unsigned int, number)
                          )
 
-
 MKCREFLECT_DEFINE_STRUCT(TestStruct,
                          (INTEGER, int, i),
                          (INTEGER, long, l),
@@ -88,4 +87,3 @@ MKCREFLECT_DEFINE_STRUCT(TestStruct,
 #define S_FIELDS(N)                  (MKCREFLECT_FieldInfo *)S_INFO(N)()->fields
 #define S_FIELD(N, F)                S_INFO(N)()->fields[F]
 //////////////////////////////////////
-

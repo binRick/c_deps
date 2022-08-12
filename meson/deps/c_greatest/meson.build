@@ -9,7 +9,7 @@ c_greatest_files = [
   '../../../submodules/c_greatest/greatest/greatest.c',
 ]
 
-c_greatest_lib = both_libraries('c_greatest',
+c_greatest_lib = library('c_greatest',
   c_greatest_files,
   install: false,
   dependencies: c_greatest_deps,

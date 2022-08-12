@@ -64,19 +64,24 @@ named_color_menu(termpaint_attr * attr_ui, termpaint_attr * attr_to_change, int 
 menu(termpaint_attr * attr_ui, termpaint_attr * attr_sample),
 draw_box()
 ;
+
 static event *
 key_wait(void)
 ;
+
 static char
 *tp__basename(const char *path)
 ;
+
 static int
 term_init(void),
 min(int a, int b)
 ;
+
 int
 term_tests_main(const int argc, const char **argv)
 ;
+
 char
 *cell_at(board_t *, int, int)
 ;
@@ -169,14 +174,10 @@ cursor_profile_t
 *cursor_profile
 ;
 
-
 ///////////////////////////////////////////////
-
-
 static void logging_func(termpaint_integration *integration, const char *data, int length){
   fprintf(stderr, AC_RESETALL AC_GREEN "[logging_func] len:%d|data:'%s'\n" AC_RESETALL "\n", length, data);
 }
-
 
 int term_tests_main(const int argc, const char **argv) {
   if (term_init() != EXIT_SUCCESS) {
@@ -196,7 +197,6 @@ int term_tests_main(const int argc, const char **argv) {
   return(0);
 }
 
-
 static void draw_box() {
   const int screen_width     = termpaint_surface_width(surface),
             screen_height    = termpaint_surface_height(surface),
@@ -205,7 +205,6 @@ static void draw_box() {
   bool TITLE_RESTORE_CAPABLE = termpaint_terminal_capable(terminal, TERMPAINT_CAPABILITY_TITLE_RESTORE);
 
   termpaint_terminal_set_title(terminal, "🔥💣💥🔫💊", TERMPAINT_TITLE_MODE_PREFER_RESTORE);
-
 
   termpaint_surface_write_with_colors(surface, top_left_x, top_left_y,
                                       "┌───────────────────────┐",
@@ -234,13 +233,11 @@ static void draw_box() {
   // repaint_all(attr_ui, attr_sample);
 } /* popup_box */
 
-
 static void update_cursor_profile(){
   termpaint_terminal_set_cursor_position(terminal, cursor_profile->x, cursor_profile->y);
   termpaint_terminal_set_cursor_visible(terminal, cursor_profile->visible);
   termpaint_terminal_set_cursor_style(terminal, cursor_profile->style, cursor_profile->blink);
 }
-
 
 static void cycle_cursor_blink(){
   if (cursor_profile->blink) {
@@ -251,7 +248,6 @@ static void cycle_cursor_blink(){
   update_cursor_profile();
 }
 
-
 static void cycle_cursor_visiblity(){
   if (cursor_profile->visible) {
     cursor_profile->visible = false;
@@ -260,7 +256,6 @@ static void cycle_cursor_visiblity(){
   }
   update_cursor_profile();
 }
-
 
 static void cycle_cursor_style(){
   if (cursor_profile->style == TERMPAINT_CURSOR_STYLE_BAR) {
@@ -273,7 +268,6 @@ static void cycle_cursor_style(){
 
   update_cursor_profile();
 }
-
 
 static void event_callback(void *userdata, termpaint_event *tp_event) {
   (void)userdata;
@@ -344,7 +338,6 @@ static void event_callback(void *userdata, termpaint_event *tp_event) {
   }
 } /* event_callback */
 
-
 static int term_init(void) {
   attr_ui         = termpaint_attr_new(TERMPAINT_DEFAULT_COLOR, TERMPAINT_DEFAULT_COLOR);
   attr_sample     = termpaint_attr_new(TERMPAINT_DEFAULT_COLOR, TERMPAINT_DEFAULT_COLOR);
@@ -366,9 +359,7 @@ static int term_init(void) {
     fprintf(stderr, AC_RESETALL AC_GREEN "[self_reported_name_and_version] %s\n" AC_RESETALL "\n", self_reported_name_and_version);
   }
 
-
   //termpaint_terminal_set_log_mask(terminal, TERMPAINT_LOG_AUTO_DETECT_TRACE | TERMPAINT_LOG_TRACE_RAW_INPUT);
-
 
   termpaint_terminal_set_mouse_mode(terminal, TERMPAINT_MOUSE_MODE_CLICKS);
   termpaint_terminal_set_mouse_mode(terminal, TERMPAINT_MOUSE_MODE_DRAG);
@@ -385,7 +376,6 @@ static int term_init(void) {
   return(EXIT_SUCCESS);
 }
 
-
 static void cleanup(void) {
   termpaint_terminal_free_with_restore(terminal);
   while (event_current) {
@@ -395,7 +385,6 @@ static void cleanup(void) {
     event_current = next;
   }
 }
-
 
 static event *key_wait(void) {
   while (!event_current->next) {
@@ -414,14 +403,12 @@ static event *key_wait(void) {
   return(next);
 }
 
-
 static void write_sample(termpaint_attr *attr_ui, termpaint_attr *attr_sample, int line, char const *name, int style) {
   termpaint_surface_write_with_attr(surface, 0, line, name, attr_ui);
   termpaint_attr_reset_style(attr_sample);
   termpaint_attr_set_style(attr_sample, style);
   termpaint_surface_write_with_attr(surface, 11, line, "Sample", attr_sample);
 }
-
 
 static void repaint_samples(termpaint_attr *attr_ui, termpaint_attr *attr_sample){
   write_sample(attr_ui, attr_sample, 3, "No Style:", 0);
@@ -452,7 +439,6 @@ static void repaint_samples(termpaint_attr *attr_ui, termpaint_attr *attr_sample
   update_cursor_profile();
 }
 
-
 static void repaint_all(termpaint_attr *attr_ui, termpaint_attr *attr_sample){
   termpaint_surface_clear_with_attr(surface, attr_ui);
   termpaint_surface_write_with_attr(surface, 1, 0, "Terminal UI", attr_ui);
@@ -460,10 +446,8 @@ static void repaint_all(termpaint_attr *attr_ui, termpaint_attr *attr_sample){
 
   termpaint_surface_write_with_attr(surface, 25, 2, "Select Color", attr_ui);
 
-
   termpaint_surface_write_with_attr(surface, 2, 20, "q: Quit", attr_ui);
 } /* repaint_all */
-
 
 static void update_current_key_display(termpaint_attr *attr_ui, event *evt) {
   if (evt->type == TERMPAINT_EV_CHAR || evt->type == TERMPAINT_EV_KEY) {
@@ -473,7 +457,6 @@ static void update_current_key_display(termpaint_attr *attr_ui, event *evt) {
     termpaint_surface_write_with_attr(surface, 11, 23, buff, attr_ui);
   }
 }
-
 
 static void named_color_menu(termpaint_attr *attr_ui, termpaint_attr *attr_to_change, int which_color) {
   int color = 0;
@@ -536,7 +519,6 @@ static void named_color_menu(termpaint_attr *attr_ui, termpaint_attr *attr_to_ch
     }
   }
 } /* named_color_menu */
-
 
 static void indexed_color_menu(termpaint_attr *attr_ui, termpaint_attr *attr_to_change, int which_color) {
   int color = 0;
@@ -614,7 +596,6 @@ static void indexed_color_menu(termpaint_attr *attr_ui, termpaint_attr *attr_to_
   }
 } /* indexed_color_menu */
 
-
 static void rgb_color_menu(termpaint_attr *attr_ui, termpaint_attr *attr_to_change, int which_color) {
   int red   = 0;
   int green = 0;
@@ -627,7 +608,6 @@ static void rgb_color_menu(termpaint_attr *attr_ui, termpaint_attr *attr_to_chan
   termpaint_surface_write_with_attr(surface, 29, 13, "esc: abort", attr_ui);
   termpaint_surface_write_with_attr(surface, 29, 14, "enter: activate color", attr_ui);
   termpaint_surface_write_with_attr(surface, 29, 15, "+: activate cursor visiblity", attr_ui);
-
 
   while (!quit) {
     char buff[40];
@@ -713,7 +693,6 @@ static void rgb_color_menu(termpaint_attr *attr_ui, termpaint_attr *attr_to_chan
   }
 } /* rgb_color_menu */
 
-
 static void clear_bottom_msg(bool SKIP_FLUSH, bool FORCE_FLUSH){
   bool cursor_visible = cursor_profile->visible;
 
@@ -751,7 +730,6 @@ static void clear_bottom_msg(bool SKIP_FLUSH, bool FORCE_FLUSH){
   cursor_profile->visible = cursor_visible;
 }
 
-
 void redraw_bottom_msg(){
   clear_bottom_msg(true, false);
   termpaint_surface_write_with_colors(surface,
@@ -763,12 +741,10 @@ void redraw_bottom_msg(){
   termpaint_terminal_flush(terminal, false);
 }
 
-
 static void write_bottom_msg(const char *BOTTOM_MSG){
   sprintf(CACHED_BOTTOM_MSG, "%s", BOTTOM_MSG);
   redraw_bottom_msg();
 }
-
 
 static void menu(termpaint_attr *attr_ui, termpaint_attr *attr_sample) {
   bool sample = true;
@@ -801,7 +777,6 @@ static void menu(termpaint_attr *attr_ui, termpaint_attr *attr_sample) {
       cycle_cursor_visiblity();
     } else if (evt->type == TERMPAINT_EV_CHAR && strcmp(evt->string, "t") == 0) {
       title_updates_qty++;
-
 
       char *NEW_TITLE   = malloc(1024);
       char *title_chars = TITLE_CHARS[title_updates_qty < 10 ? title_updates_qty : title_updates_qty % 10];
@@ -948,4 +923,3 @@ static void menu(termpaint_attr *attr_ui, termpaint_attr *attr_sample) {
     }
   }
 } /* menu */
-

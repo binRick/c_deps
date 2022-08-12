@@ -1,7 +1,7 @@
 chan_c_args = [
   '-Wno-macro-redefined',
 ]
-chan_lib = both_libraries('chan', 
+chan_lib = library('chan', 
     '../../../submodules/chan/src/chan.c',
     '../../../submodules/chan/src/queue.c',
     install: false, 

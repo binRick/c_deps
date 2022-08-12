@@ -12,7 +12,7 @@ levenshtein_deps = [
 
 ]
 
-levenshtein_lib = both_libraries('levenshtein',
+levenshtein_lib = library('levenshtein',
   levenshtein_srcs,
   install: false,
   dependencies: levenshtein_deps,

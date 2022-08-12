@@ -70,6 +70,7 @@ struct fzf_exec_t {
 };
 
 struct fzf_exec_t *exec_fzf_setup(void);
-void exec_fzf_release(struct fzf_exec_t *fzf_exec);
-int exec_fzf();
 
+void exec_fzf_release(struct fzf_exec_t *fzf_exec);
+
+int exec_fzf();

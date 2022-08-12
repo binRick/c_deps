@@ -7,7 +7,6 @@
 #define WIDTH     1024
 #define HEIGHT    1024
 
-
 /* Small helper functions to initialize GIF- and frame-configuration */
 static void initGIFConfig(CGIF_Config *pConfig, char *path, uint16_t width, uint16_t height, uint8_t *pPalette, uint16_t numColors) {
   memset(pConfig, 0, sizeof(CGIF_Config));
@@ -18,12 +17,10 @@ static void initGIFConfig(CGIF_Config *pConfig, char *path, uint16_t width, uint
   pConfig->path                    = path;
 }
 
-
 static void initFrameConfig(CGIF_FrameConfig *pConfig, uint8_t *pImageData) {
   memset(pConfig, 0, sizeof(CGIF_FrameConfig));
   pConfig->pImageData = pImageData;
 }
-
 
 /* This is an example code that creates a GIF-image with random pixels. */
 int main(void) {

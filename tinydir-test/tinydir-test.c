@@ -7,10 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 
-
 //////////////////////////////////////////////
-
-
 TEST t_tinydir_0(void *PATH){
   tinydir_dir dir;
 
@@ -53,7 +50,6 @@ SUITE(t_tinydir){
   PASS();
 }
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
@@ -62,4 +58,3 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_END();
   return(0);
 }
-

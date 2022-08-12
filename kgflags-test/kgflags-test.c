@@ -9,7 +9,6 @@ kgflags_string_array_t string_arr;
 kgflags_int_array_t    int_arr;
 kgflags_double_array_t double_arr;
 
-
 int main(int argc, char **argv) {
   kgflags_string("string", "lorem", "String flag.", false, &string_val);
   kgflags_bool("bool", false, "Boolean flag.", false, &bool_val);

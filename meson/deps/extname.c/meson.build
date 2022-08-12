@@ -14,7 +14,7 @@ extname_c_srcs = [files(
   '../../../submodules/extname.c/src/extname.c',
 )]
 
-extname_c_lib = both_libraries('extname-c',
+extname_c_lib = library('extname-c',
   extname_c_srcs,
   install: false,
   dependencies: extname_c_deps,

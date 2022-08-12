@@ -42,8 +42,8 @@
 #include "submodules/c_hs/include/hs_routes_static.h"
 #include "submodules/c_hs/include/hs_server.h"
 
-
 enum HSServeFlowResponse _log_route_serve(struct HSRoute *, struct HSServeFlowParams *);
+
 bool _fs_basic_auth(char *, void *);
 
 enum LookingFor {
@@ -53,7 +53,6 @@ enum LookingFor {
   LOOKING_FOR_PRIVATE_KEY,
   LOOKING_FOR_CERTIFICATE,
 };
-
 
 int main(int argc, char *argv[]){
   // This is our main server
@@ -208,7 +207,6 @@ int main(int argc, char *argv[]){
   return(0);
 } /* main */
 
-
 enum HSServeFlowResponse _log_route_serve(struct HSRoute *route, struct HSServeFlowParams *params){
   if (route == NULL) {
     return(HS_SERVE_FLOW_RESPONSE_DONE);
@@ -220,7 +218,6 @@ enum HSServeFlowResponse _log_route_serve(struct HSRoute *route, struct HSServeF
   return(HS_SERVE_FLOW_RESPONSE_CONTINUE);
 }
 
-
 bool _fs_basic_auth(char *auth_value, void *context){
   if (context != NULL) {
     return(false);
@@ -228,4 +225,3 @@ bool _fs_basic_auth(char *auth_value, void *context){
 
   return(!strcmp(auth_value, "bXl1c2VyOm15cGFzc3dvcmQ=")); // myuser:mypassword
 }
-

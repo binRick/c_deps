@@ -3,7 +3,6 @@
 #define STDOUT_READ_BUFFER_SIZE    1024 * 16
 #include "c_string_buffer/include/stringbuffer.h"
 
-
 int subprocess_test_main(char *CMD){
   char                 *READ_STDOUT;
   int                  exited, result;

@@ -22,7 +22,7 @@ wsServer_deps = [
 
 ]
 
-wsServer_lib = both_libraries('wsServer',
+wsServer_lib = library('wsServer',
   wsServer_srcs,
   install: false,
   dependencies: wsServer_deps,

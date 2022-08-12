@@ -9,7 +9,6 @@
                                termpaint_terminal_flush(terminal, false);                                         \
                              } while (0); }
 
-
 #define HANDLE_EVENTS()    { do {                                                                     \
                                if (evt->type == TERMPAINT_EV_CHAR && strcmp(evt->string, "q") == 0) { \
                                  quit = true;                                                         \

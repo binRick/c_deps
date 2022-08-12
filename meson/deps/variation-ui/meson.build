@@ -20,7 +20,7 @@ variation_ui_deps = [
 
 ]
 
-variation_ui_lib = both_libraries('variation-ui',
+variation_ui_lib = library('variation-ui',
   variation_ui_srcs,
   install: false,
   dependencies: variation_ui_deps,

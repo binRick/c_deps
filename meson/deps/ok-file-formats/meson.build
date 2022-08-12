@@ -24,7 +24,7 @@ ok_file_formats_deps = [
 
 ]
 
-ok_file_formats_lib = both_libraries('ok-file-formats',
+ok_file_formats_lib = library('ok-file-formats',
   ok_file_formats_srcs,
   install: false,
   dependencies: ok_file_formats_deps,

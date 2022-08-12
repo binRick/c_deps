@@ -1,4 +1,4 @@
-occurrences_lib = both_libraries('occurrences',
+occurrences_lib = library('occurrences',
   '../../../submodules/occurrences/occurrences.c',
   install: false, 
   dependencies: [

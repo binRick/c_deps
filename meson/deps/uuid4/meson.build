@@ -1,4 +1,4 @@
-uuid4_lib = static_library('uuid4', 
+uuid4_lib = library('uuid4', 
     c_deps_dir+'/submodules/uuid4/src/uuid4.c', 
     install: false, dependencies: [], 
     include_directories: [

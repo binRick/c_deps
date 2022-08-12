@@ -4,7 +4,7 @@ incbin_deps = [
 incbin_c_args = [
   '-DINCBIN_SILENCE_BITCODE_WARNING',
 ]
-incbin_lib = both_libraries('incbin', 
+incbin_lib = library('incbin', 
   '../../../submodules/incbin/incbin.c',
   install: false, 
   dependencies: incbin_deps,

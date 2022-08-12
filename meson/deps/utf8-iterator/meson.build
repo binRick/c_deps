@@ -12,7 +12,7 @@ utf8_iterator_deps = [
 
 ]
 
-utf8_iterator_lib = static_library('utf8-iterator',
+utf8_iterator_lib = library('utf8-iterator',
   utf8_iterator_srcs,
   install: false,
   dependencies: utf8_iterator_deps,

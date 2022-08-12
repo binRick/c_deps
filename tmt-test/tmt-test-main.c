@@ -6,8 +6,8 @@
 unsigned int callbacks_qty;
 
 void callback(tmt_msg_t m, TMT *vt, const void *a, void *p);
-void printTerminal(TMT *vt);
 
+void printTerminal(TMT *vt);
 
 int tmt_test_main(){
   char   *l = NULL;
@@ -28,13 +28,11 @@ int tmt_test_main(){
     tmt_write(vt, "WENT HOME\n", 0);
   }
 
-
   tmt_close(vt);
   free(l);
   printf(AC_RESETALL AC_REVERSED AC_BRIGHT_YELLOW AC_BOLD "\n%d %s\n" AC_RESETALL, callbacks_qty, "x");
   return(EXIT_SUCCESS);
 }
-
 
 void callback(tmt_msg_t m, TMT *vt, const void *a, void *p){
   callbacks_qty++;
@@ -90,12 +88,10 @@ void callback(tmt_msg_t m, TMT *vt, const void *a, void *p){
   } /* switch */
 }   /* callback */
 
-
 void printTerminal(TMT *vt){
   const TMTSCREEN *s                = tmt_screen(vt);
   const TMTPOINT  *c                = tmt_cursor(vt);
   unsigned int    qty_cells_printed = 0;
-
 
   for (size_t r = 0; r < s->nline; r++) {
     if (!s->lines[r]->dirty) {
@@ -132,4 +128,3 @@ void printTerminal(TMT *vt){
     );
   tmt_clean(vt);
 } /* printTerminal */
-

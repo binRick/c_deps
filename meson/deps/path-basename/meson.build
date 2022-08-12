@@ -1,4 +1,4 @@
-path_basename_lib = both_libraries('path-basename', 
+path_basename_lib = library('path-basename', 
   '../../../submodules/path-basename.c/src/path-basename.c',
   install: false, 
   dependencies: [

@@ -8,10 +8,7 @@
 #include <time.h>
 #include <unistd.h>
 
-
 //////////////////////////////////////////////
-
-
 TEST t_tmt_0(void *CMD){
   tmt_test_main();
 }
@@ -23,7 +20,6 @@ SUITE(t_tmt){
   PASS();
 }
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
@@ -31,4 +27,3 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_END();
   return(0);
 }
-

@@ -259,8 +259,8 @@ void __attribute__((destructor)) postmain(){
 #endif
 }
 
-
 static int do_get_google();
+
 static inline int file_exists(const char *path);
 
 static char *EXECUTABLE_PATH_DIRNAME;
@@ -293,13 +293,11 @@ typedef struct {
 char JSON_TESTS_FILE[] = ".tests.json",
      *JSON_TESTS_CONTENT;
 
-
 static inline int file_exists(const char *path) {
   struct stat b;
 
   return(stat(path, &b));
 }
-
 
 int request_target_is(struct http_request_s *request, char const *target) {
   http_string_t url = http_request_target(request);
@@ -310,7 +308,6 @@ int request_target_is(struct http_request_s *request, char const *target) {
 
 struct http_server_s *poll_server;
 struct http_req_s    *_s;
-
 
 void handle_request(struct http_request_s *request) {
   http_request_connection(request, HTTP_AUTOMATIC);
@@ -336,12 +333,11 @@ void handle_request(struct http_request_s *request) {
     dbg(normalized_url, %s);
     struct StringFNStrings normalized_url_strings = stringfn_split(normalized_url, '/');
 
-
-    int                 p;
-    struct yuarel       yurl;
-    struct yuarel_param params[params_strings.count];
-    char                *parts[3];
-    char                *url_string;
+    int                    p;
+    struct yuarel          yurl;
+    struct yuarel_param    params[params_strings.count];
+    char                   *parts[3];
+    char                   *url_string;
     asprintf(&url_string, "http://localhost:%d%s?%s", HTTPSERVER_LISTEN_PORT, normalized_url, req_data);
     dbg(url_string, %s);
 
@@ -363,7 +359,6 @@ void handle_request(struct http_request_s *request) {
     printf("query:\t%s\n", yurl.query);
     printf("fragment:\t%s\n", yurl.fragment);
 
-
     printf("Print Path items\n");
     if (normalized_url_strings.count > 1 && strlen(normalized_url) > 1) {
       yuarel_split_path(yurl.path, parts, normalized_url_strings.count - 1);
@@ -380,7 +375,6 @@ void handle_request(struct http_request_s *request) {
         printf("\t%s: %s\n", params[p].key, params[p].val);
       }
     }
-
 
     char *uri_encoded = uri_encode("Betty's favorite language is Français");
     char *uri_decoded = uri_decode(req_data);
@@ -420,7 +414,6 @@ void handle_request(struct http_request_s *request) {
 
 struct http_server_s *server;
 
-
 void handle_sigterm(int signum) {
   (void)signum;
   free(server);
@@ -428,13 +421,11 @@ void handle_sigterm(int signum) {
   exit(0);
 }
 
-
 int httpserver_main() {
   signal(SIGTERM, handle_sigterm);
   server = http_server_init(HTTPSERVER_LISTEN_PORT, handle_request);
   http_server_listen(server);
 }
-
 
 void do_socket99_tcp_server(void *PARAM){
   int             v_true = 1;
@@ -527,7 +518,6 @@ void do_socket99_tcp_server(void *PARAM){
   close(res.fd);
 } /* do_socket99_tcp_server */
 
-
 static int do_get_google(){
   http_get_response_t *res = http_get("https://api.github.com/repos/clibs/clib/releases/latest");
 
@@ -542,10 +532,8 @@ static int do_get_google(){
   printf("\nok=%d\n", ok);
   printf("file exists:%d\n\n", file_exists(f));
 
-
   return(0);
 }
-
 
 void do_work_fn(void *args){
   struct FnArgs *fn_args = (struct FnArgs *)args;
@@ -556,7 +544,6 @@ void do_work_fn(void *args){
   free(fn_args);
 }
 
-
 size_t do_dmt_summary(void){
   size_t usage = dmt_usage();
 
@@ -564,23 +551,19 @@ size_t do_dmt_summary(void){
   return(usage);
 }
 
-
 static void on_start(void *event_data, void *context){
   printf("OnStart, data: %s context: %s\n", (char *)event_data, (char *)context);
 }
 
-
 static void on_end(void *event_data, void *context){
   printf("OnEnd, data: %s context: %s\n", (char *)event_data, (char *)context);
 }
-
 
 static void on_unhandled(int event_id, void *event_data, void *context){
   printf("OnUnhandled, did not set listener for event: %d data: %s context: %s\n", event_id, (char *)event_data, (char *)context);
 }
 
 #define SLEEP_US    100000
-
 
 void do_test_libspinner(){
   spinner_t *s = spinner_new(32);
@@ -594,7 +577,6 @@ void do_test_libspinner(){
   spinner_stop(s);
   spinner_free(s);
 }
-
 
 void do_test_which(){
   char *name    = "ls";
@@ -621,7 +603,6 @@ void do_test_which(){
 
   free(path);
 }
-
 
 void do_test_slug(){
   char *s0 = "foo b ar@-";
@@ -679,7 +660,6 @@ void do_test_slug(){
                              _FEED(STR);                                                       \
                            }while (0); }
 
-
 void do_test_cansid(void){
   struct cansid_state state;
 
@@ -721,7 +701,6 @@ void do_test_cansid(void){
   }
 }
 
-
 void do_test_progressbar(void){
   int         max     = 60 / 1;
   progressbar *smooth = progressbar_new("Smooth", max);
@@ -757,7 +736,6 @@ void do_test_progressbar(void){
   progressbar_finish(custom);
 }
 
-
 void do_test_statusbar(void){
   statusbar *status = statusbar_new("Indeterminate");
 
@@ -784,7 +762,6 @@ void do_test_statusbar(void){
   statusbar_finish(customStatus);
 }
 
-
 int32_t FillFromURANDOM(uint8_t *out, size_t outlen){
   FILE *fpurandom = fopen("/dev/urandom", "r");
 
@@ -796,7 +773,6 @@ int32_t FillFromURANDOM(uint8_t *out, size_t outlen){
   fclose(fpurandom);
   return(bread < outlen ? -1 : bread);
 }
-
 
 void demo_ansi_qrcode(){
   char secret[33] = { 0 };
@@ -811,7 +787,6 @@ void demo_ansi_qrcode(){
   free(qrcodeansi);
 }
 
-
 void do_forever_my_program(void *context){
   dbg("t_forever_my_program", %s);
   if (context != NULL) {
@@ -821,7 +796,6 @@ void do_forever_my_program(void *context){
   usleep(100);
   exit(0);
 }
-
 
 int do_forever_callback(void *context, const unsigned char started, int stat_loc){
   if (context != NULL) {
@@ -835,7 +809,6 @@ int do_forever_callback(void *context, const unsigned char started, int stat_loc
   dbg("do_forever_callback", %s);
   return(500); // wait 500 millies before next invocation, 0 for no wait.
 }
-
 
 void demo_totp_calculation(){
   char secret[33] = { 0 };
@@ -851,30 +824,25 @@ void demo_totp_calculation(){
   printf("OTP code>\n\tSecret:\t%s\n\tTOTP:\t%06d\n", buf, otp);
 }
 
-
 TEST t_statusbar(void){
   do_test_statusbar();
   PASS();
 }
-
 
 TEST t_progressbar(void){
   do_test_progressbar();
   PASS();
 }
 
-
 TEST t_totp(void){
   demo_totp_calculation();
   PASS();
 }
 
-
 TEST t_qrcode(void){
   demo_ansi_qrcode();
   PASS();
 }
-
 
 TEST t_spin(void){
   const int big_number = 1000000000 / 1;
@@ -903,12 +871,10 @@ TEST t_spin(void){
   PASS();
 }
 
-
 TEST t_cansid(void){
   do_test_cansid();
   PASS();
 }
-
 
 TEST t_timestamp(void){
   int ts = (int)timestamp();
@@ -917,24 +883,20 @@ TEST t_timestamp(void){
   PASS();
 }
 
-
 TEST t_libspinner(void){
   do_test_libspinner();
   PASS();
 }
-
 
 TEST t_which(void){
   do_test_which();
   PASS();
 }
 
-
 TEST t_slug(void){
   do_test_slug();
   PASS();
 }
-
 
 TEST t_debug_print(void){
   int  o  = 123;
@@ -945,7 +907,6 @@ TEST t_debug_print(void){
   DEBUG_PRINT("OK", .colorscheme = FORE_YELLOW BACK_BLACK, .filestream = stderr);
   PASS();
 }
-
 
 TEST t_process_json_lines(void){
   struct StringFNStrings LINES = stringfn_split_lines_and_trim(JSON_TESTS_CONTENT);
@@ -992,7 +953,6 @@ TEST t_process_json_lines(void){
   PASS();
 } /* process_json_lines */
 
-
 TEST t_socket99_tcp_client(void){
   socket99_config cfg = {
     .host = "127.0.0.1",
@@ -1016,7 +976,6 @@ TEST t_socket99_tcp_client(void){
   close(res.fd);
   PASS();
 }
-
 
 TEST t_layout(void){
   lay_context ctx;
@@ -1060,7 +1019,6 @@ TEST t_layout(void){
   PASS();
 }
 
-
 TEST t_libbeaufort(void){
   static char *monkey   = NULL;
   static char *monkey_s = NULL;
@@ -1096,7 +1054,6 @@ TEST t_libbeaufort(void){
   PASS();
 }
 
-
 TEST t_murmurhash(void){
   uint32_t   seed = 0;
   const char *key = "kinkajou";
@@ -1109,7 +1066,6 @@ TEST t_murmurhash(void){
 
   PASS();
 }
-
 
 TEST t_forever(void){
   void         *context = NULL;
@@ -1127,7 +1083,6 @@ TEST t_forever(void){
 
   PASS();
 }
-
 
 TEST t_eventemitter(void){
   struct EventEmitter *event_emitter = eventemitter_new();
@@ -1151,14 +1106,12 @@ TEST t_eventemitter(void){
   PASS();
 } /* t_eventemitter */
 
-
 TEST t_dmt_summary(void){
   size_t used = do_dmt_summary();
 
   ASSERT_EQ(used, 0);
   PASS();
 }
-
 
 TEST t_dmt(void){
   char *a = dmt_malloc(16);
@@ -1178,7 +1131,6 @@ TEST t_dmt(void){
   printf("done\n");
   PASS();
 }
-
 
 TEST t_microtar_read(void){
   //DO_WORK
@@ -1208,7 +1160,6 @@ TEST t_microtar_read(void){
   PASS();
 }
 
-
 TEST t_microtar_write(void){
   mtar_t     tar;
   const char *str1 = "Hello world";
@@ -1230,7 +1181,6 @@ TEST t_microtar_write(void){
   mtar_close(&tar);
   PASS();
 }
-
 
 TEST t_workqueue(void){
   printf("Library Examples:\n");
@@ -1264,11 +1214,9 @@ TEST t_workqueue(void){
   PASS();
 }
 
-
 void H(size_t I, void *HANDLED_ITEM){
   printf(" Handled Item: #%lu> %s\n", I, (char *)HANDLED_ITEM);
 }
-
 
 TEST t_vector(void){
   struct Vector *vector = vector_new();
@@ -1320,12 +1268,10 @@ TEST t_vector(void){
   vector_push(V, "v1");
   vector_push(V, "v2");
 
-
   // when we are done with the vector, we release it
   vector_release(vector);
   PASS();
 } /* test_vector */
-
 
 TEST t_occurrences(void){
   int qty;
@@ -1341,14 +1287,12 @@ TEST t_occurrences(void){
   PASS();
 }
 
-
 TEST t_read_json_file(void){
   DEBUG_PRINT(JSON_TESTS_FILE, .colorscheme    = FORE_BLUE BACK_BLACK, .filestream = stdout);
   JSON_TESTS_CONTENT                           = fsio_read_text_file(JSON_TESTS_FILE);
   DEBUG_PRINT(JSON_TESTS_CONTENT, .colorscheme = FORE_BLUE BACK_BLACK, .filestream = stdout);
   PASS();
 }
-
 
 TEST t_ansi_utils(void){
   const unsigned char buf[]        = "\e[1m\e[38;2;255;128;255mPINK\e[0m";
@@ -1358,7 +1302,6 @@ TEST t_ansi_utils(void){
   printf("escaped: '%s'\n", escaped_buf);
   PASS();
 }
-
 
 TEST t_vtparse_csi(void){
   const unsigned char buf[]   = "\e[1m\e[38;2;255;128;255mPINK\e[0m";
@@ -1427,7 +1370,6 @@ TEST t_vtparse_csi(void){
   PASS();
 } /* t_vtparse_csi */
 
-
 TEST t_vtparse_simple(void){
   const unsigned char buf[]   = "Hello World";
   const size_t        buf_len = sizeof(buf) - 1U;
@@ -1448,10 +1390,8 @@ TEST t_vtparse_simple(void){
   ASSERT_EQ(0U, vtparse_parse(&parser, NULL, 0U));
   ASSERT_EQ(vtparse_has_event(&parser), false);
 
-
   PASS();
 }
-
 
 TEST t_generic_print(){
   int  x[]     = { 1, 2, 3 };
@@ -1461,7 +1401,6 @@ TEST t_generic_print(){
   PASS();
 }
 
-
 TEST t_str_replace(){
   char *replaced = str_replace("hello world", "hello", "goodbye");
 
@@ -1469,7 +1408,6 @@ TEST t_str_replace(){
   free(replaced);
   PASS();
 }
-
 
 TEST t_md5(void){
   md5_ctx       ctx;
@@ -1486,7 +1424,6 @@ TEST t_md5(void){
   PASS();
 }
 
-
 TEST t_truncate(void){
   char *str = str_truncate("really long sentence", 2);
 
@@ -1494,7 +1431,6 @@ TEST t_truncate(void){
 
   PASS();
 }
-
 
 TEST t_catpath(void){
   char *some_path = NULL; // You must init the first path with NULL!
@@ -1506,7 +1442,6 @@ TEST t_catpath(void){
   PASS();
 }
 
-
 static void child_main2(libforks_ServerConn conn, int socket_fd) {
   (void)conn;
   while (true) {
@@ -1516,7 +1451,6 @@ static void child_main2(libforks_ServerConn conn, int socket_fd) {
     assert(write(socket_fd, &c, 1) == 1);
   }
 }
-
 
 int do_libforks_test2() {
   libforks_ServerConn conn;
@@ -1553,33 +1487,80 @@ int do_libforks_test2() {
   return(0);
 }
 
-
 static void child_main1(libforks_ServerConn conn, int socket_fd) {
   assert(libforks_free_conn(conn) == libforks_OK);
-  assert(socket_fd == -1);
-  puts("child process started");
-  sleep(1);
-  puts("child process exited");
+  assert(socket_fd > 0);
+
+  puts(AC_BLUE "\tChild> socket_fd available"AC_RESETALL);
+  while (true) {
+    char c;
+    puts(AC_BLUE "\tChild> reading fd"AC_RESETALL);
+    int  read_res = read(socket_fd, &c, 1);
+    printf(AC_BLUE "\tChild> read fd char: %c\n"AC_RESETALL, c);
+    if (read_res == 0) {
+      printf(AC_BLUE "\tChild> Exiting.....\n"AC_RESETALL);
+      break;
+    }
+    assert(read_res == 1);
+
+    c = toupper(c);
+    printf(AC_BLUE "\tChild> Writing to fd\n"AC_RESETALL);
+    assert(write(socket_fd, &c, 1) == 1);
+    printf(AC_BLUE "\tChild> Wrote to fd\n"AC_RESETALL);
+  }
+  puts(AC_BLUE "\tChild> process exiting"AC_RESETALL);
 }
 
-
 int do_libforks_test1() {
+  libforks_ExitEvent  ee;
   libforks_ServerConn conn;
+  int                 socket_fd;
+  int                 exit_fd;
+  pid_t               pid;
 
   assert(libforks_start(&conn) == libforks_OK);
+  pid_t fork_server_pid = libforks_get_server_pid(conn);
+
+  assert(fork_server_pid > 0);
+  printf(AC_YELLOW "Parent> Fork server with pid %d created\n"AC_RESETALL, fork_server_pid);
 
   assert(libforks_fork(
            conn,
-           NULL,
-           NULL,
-           NULL,
+           &pid,
+           &socket_fd,
+           &exit_fd,
            child_main1
            ) == libforks_OK);
-  assert(libforks_stop(conn) == libforks_OK);
-  puts("main process exited");
-  return(0);
-}
+  assert(pid > 0);
+  printf(AC_YELLOW "Parent> Created child with pid %d\n"AC_RESETALL, pid);
+  char c;
+  int  qty       = 0;
+  int  qty_limit = 3;
 
+  while (qty < qty_limit) {
+    c = 'x';
+    printf(AC_YELLOW "Parent> #%d, Writing '%c' to fd\n"AC_RESETALL, qty, c);
+    assert(write(socket_fd, &c, 1) == 1);
+    printf("Parent> Wrote to fd\n");
+    printf("Parent> Reading from fd\n");
+    assert(read(socket_fd, &c, 1) == 1);
+    printf("Parent> Read from fd: '%c'\n", c);
+    qty++;
+  }
+  puts(AC_YELLOW "Parent>closing child fd"AC_RESETALL);
+  assert(shutdown(socket_fd, SHUT_WR) == 0);
+  assert(close(socket_fd) == 0);
+  puts(AC_YELLOW "Parent> closed child fd"AC_RESETALL);
+
+  puts(AC_YELLOW "Parent> ensuring child has exited"AC_RESETALL);
+  assert(read(exit_fd, &ee, sizeof ee) == sizeof ee);
+  printf(AC_YELLOW "Parent> child with pid %d has exited with code %d\n"AC_RESETALL, ee.pid, ee.wait_status);
+
+  printf(AC_YELLOW "Parent> stopping fork server\n"AC_RESETALL);
+  assert(libforks_stop(conn) == libforks_OK);
+  printf(AC_YELLOW "Parent> stoped fork server\n"AC_RESETALL);
+  return(0);
+} /* do_libforks_test1 */
 
 TEST t_libforks1(void){
   int res = do_libforks_test1();
@@ -1587,7 +1568,6 @@ TEST t_libforks1(void){
   ASSERT_EQ(res, 0);
   PASS();
 }
-
 
 TEST t_hidapi(void){
   int           res;
@@ -1619,7 +1599,6 @@ TEST t_hidapi(void){
   PASS();
 }
 
-
 static void print_devs(libusb_device **devs){
   libusb_device *dev;
   int           i = 0, j = 0;
@@ -1648,7 +1627,6 @@ static void print_devs(libusb_device **devs){
   }
 }
 
-
 TEST t_libusb1(void){
   libusb_device **devs;
   int           r;
@@ -1672,9 +1650,7 @@ TEST t_libusb1(void){
   PASS();
 }
 
-
 int verbose = 0;
-
 
 static void print_endpoint_comp(const struct libusb_ss_endpoint_companion_descriptor *ep_comp){
   printf("      USB 3.0 Endpoint Companion:\n");
@@ -1682,7 +1658,6 @@ static void print_endpoint_comp(const struct libusb_ss_endpoint_companion_descri
   printf("        bmAttributes:        %02xh\n", ep_comp->bmAttributes);
   printf("        wBytesPerInterval:   %u\n", ep_comp->wBytesPerInterval);
 }
-
 
 static void print_endpoint(const struct libusb_endpoint_descriptor *endpoint){
   int i, ret;
@@ -1713,7 +1688,6 @@ static void print_endpoint(const struct libusb_endpoint_descriptor *endpoint){
   }
 }
 
-
 static void print_altsetting(const struct libusb_interface_descriptor *interface){
   uint8_t i;
 
@@ -1731,13 +1705,11 @@ static void print_altsetting(const struct libusb_interface_descriptor *interface
   }
 }
 
-
 static void print_2_0_ext_cap(struct libusb_usb_2_0_extension_descriptor *usb_2_0_ext_cap){
   printf("    USB 2.0 Extension Capabilities:\n");
   printf("      bDevCapabilityType:    %u\n", usb_2_0_ext_cap->bDevCapabilityType);
   printf("      bmAttributes:          %08xh\n", usb_2_0_ext_cap->bmAttributes);
 }
-
 
 static void print_ss_usb_cap(struct libusb_ss_usb_device_capability_descriptor *ss_usb_cap){
   printf("    USB 3.0 Capabilities:\n");
@@ -1748,7 +1720,6 @@ static void print_ss_usb_cap(struct libusb_ss_usb_device_capability_descriptor *
   printf("      bU1devExitLat:         %u\n", ss_usb_cap->bU1DevExitLat);
   printf("      bU2devExitLat:         %u\n", ss_usb_cap->bU2DevExitLat);
 }
-
 
 static void print_bos(libusb_device_handle *handle){
   struct libusb_bos_descriptor *bos;
@@ -1793,7 +1764,6 @@ static void print_bos(libusb_device_handle *handle){
   libusb_free_bos_descriptor(bos);
 } /* print_bos */
 
-
 static void print_interface(const struct libusb_interface *interface){
   int i;
 
@@ -1801,7 +1771,6 @@ static void print_interface(const struct libusb_interface *interface){
     print_altsetting(&interface->altsetting[i]);
   }
 }
-
 
 static void print_configuration(struct libusb_config_descriptor *config){
   uint8_t i;
@@ -1818,7 +1787,6 @@ static void print_configuration(struct libusb_config_descriptor *config){
     print_interface(&config->interface[i]);
   }
 }
-
 
 static void print_device(libusb_device *dev, libusb_device_handle *handle){
   struct libusb_device_descriptor desc;
@@ -1898,7 +1866,6 @@ static void print_device(libusb_device *dev, libusb_device_handle *handle){
   }
 } /* print_device */
 
-
 static int test_wrapped_device(const char *device_name){
   libusb_device_handle *handle;
   int                  r, fd;
@@ -1918,7 +1885,6 @@ static int test_wrapped_device(const char *device_name){
   close(fd);
   return(0);
 }
-
 
 TEST t_libusb2(void){
   int           verbose      = 1;
@@ -1952,7 +1918,6 @@ TEST t_libusb2(void){
   PASS();
 }
 
-
 void record_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount){
   ma_encoder *pEncoder = (ma_encoder *)pDevice->pUserData;
 
@@ -1960,7 +1925,6 @@ void record_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_u
   ma_encoder_write_pcm_frames(pEncoder, pInput, frameCount, NULL);
   (void)pOutput;
 }
-
 
 void play_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount){
   ma_decoder *pDecoder = (ma_decoder *)pDevice->pUserData;
@@ -1974,7 +1938,6 @@ void play_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uin
   (void)pInput;
 }
 
-
 static char *get_self_path(void){
   char     *dir = calloc(1, PATH_MAX);
   uint32_t size = sizeof dir;
@@ -1982,7 +1945,6 @@ static char *get_self_path(void){
   _NSGetExecutablePath(dir, &size);
   return(dir);
 }
-
 
 int do_miniaudio_record_file(char *record_file){
   ma_result         result;
@@ -2026,7 +1988,6 @@ int do_miniaudio_record_file(char *record_file){
   return(0);
 } /* do_miniaudio_record_file */
 
-
 int do_miniaudio_play_file(char *wav_file){
   ma_result result;
   ma_engine engine;
@@ -2036,7 +1997,6 @@ int do_miniaudio_play_file(char *wav_file){
     printf("Failed to initialize audio engine.");
     return(-1);
   }
-
 
   float len = 0;
 
@@ -2052,18 +2012,15 @@ int do_miniaudio_play_file(char *wav_file){
 
 //ma_sound_set_stop_time_in_pcm_frames(&sound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 2));
 
-
   ma_sound_start(&sound);
 
   //ma_engine_play_sound(&engine, wav_file, NULL);
 
   usleep(1000 * 1000);
 
-
   ma_engine_uninit(&engine);
   return(0);
 }
-
 
 TEST t_miniaudio_play_file(void *PLAY_FILE){
   int res;
@@ -2074,7 +2031,6 @@ TEST t_miniaudio_play_file(void *PLAY_FILE){
   PASS();
 }
 
-
 TEST t_miniaudio_record_file(void *RECORD_FILE){
   int res;
 
@@ -2084,7 +2040,6 @@ TEST t_miniaudio_record_file(void *RECORD_FILE){
   PASS();
 }
 
-
 TEST t_tempdir(void){
   char *temp_dir = gettempdir();
 
@@ -2092,14 +2047,12 @@ TEST t_tempdir(void){
   PASS();
 }
 
-
 TEST t_libforks2(void){
   int res = do_libforks_test2();
 
   ASSERT_EQ(res, 0);
   PASS();
 }
-
 
 TEST t_regex(void){
   int        match_length;
@@ -2113,7 +2066,6 @@ TEST t_regex(void){
   }
   PASS();
 }
-
 
 TEST t_c89atomic(void){
   c89atomic_flag a0 = 0;
@@ -2132,7 +2084,6 @@ TEST t_c89atomic(void){
 
   PASS();
 }
-
 
 TEST t_libtinyfiledialogs(void){
   char const    *lTmp;
@@ -2278,10 +2229,8 @@ TEST t_libtinyfiledialogs(void){
   tinyfd_messageBox("The selected hexcolor is",
                     lTheHexColor, "ok", "info", 1);
 
-
   PASS();
 } /* t_libtinyfiledialogs */
-
 
 TEST t_ok_file_format_wav(void){
   char *wav_file = malloc(1024);
@@ -2299,7 +2248,6 @@ TEST t_ok_file_format_wav(void){
   PASS();
 }
 
-
 struct my_struct {
   int            id;           /* key */
   char           name[21];
@@ -2307,7 +2255,6 @@ struct my_struct {
 };
 
 struct my_struct *users = NULL;
-
 
 void add_user(int user_id, const char *name){
   struct my_struct *s;
@@ -2328,12 +2275,10 @@ struct my_struct *find_user(int user_id){
   return(s);
 }
 
-
 void delete_user(struct my_struct *user){
   HASH_DEL(users, user);    /* user: pointer to deletee */
   free(user);
 }
-
 
 void delete_all(){
   struct my_struct *current_user;
@@ -2345,7 +2290,6 @@ void delete_all(){
   }
 }
 
-
 void print_users(){
   struct my_struct *s;
 
@@ -2354,16 +2298,13 @@ void print_users(){
   }
 }
 
-
 int by_name(const struct my_struct *a, const struct my_struct *b){
   return(strcmp(a->name, b->name));
 }
 
-
 int by_id(const struct my_struct *a, const struct my_struct *b){
   return(a->id - b->id);
 }
-
 
 const char *getl(const char *prompt){
   static char buf[21];
@@ -2378,7 +2319,6 @@ const char *getl(const char *prompt){
   *p = '\0';
   return(buf);
 }
-
 
 TEST t_bitfield(void){
   bitfield_t *bf = bitfield_new(100);
@@ -2395,13 +2335,11 @@ TEST t_bitfield(void){
   PASS();
 }
 
-
 TEST t_bench(void){
   FILE *file;
 
   file = fopen("/etc/passwd", "r");
   fclose(file);
-
 
   FILE *file1;
 
@@ -2411,7 +2349,6 @@ TEST t_bench(void){
   PASS();
 }
 
-
 TEST t_minmax(void){
   int val;
 
@@ -2420,9 +2357,7 @@ TEST t_minmax(void){
   PASS();
 }
 
-
 INCBIN(char *, MesonBuildTyped, "meson.build");
-
 
 TEST t_incbin(void){
   printf("gMesonBuildTypedData:%s\n", gMesonBuildTypedData[0]);
@@ -2433,14 +2368,12 @@ TEST t_incbin(void){
 static volatile size_t svr_recv_msgs = 0;
 static volatile size_t cl_recv_msgs  = 0;
 
-
 void msg_update_server(msg_Conn *conn, msg_Event event, msg_Data data) {
   if (event == msg_request) {
     msg_send(conn, data);
     svr_recv_msgs++;
   }
 }
-
 
 void msg_update_client(msg_Conn *conn, msg_Event event, msg_Data data) {
   if (event == msg_connection_ready) {
@@ -2454,7 +2387,6 @@ void msg_update_client(msg_Conn *conn, msg_Event event, msg_Data data) {
   }
 }
 
-
 TEST t_msgbox_tcp_client(void){
   msg_connect("tcp://127.0.0.1:2101", msg_update_client, msg_no_context);
   while (cl_recv_msgs < 1) {
@@ -2465,7 +2397,6 @@ TEST t_msgbox_tcp_client(void){
   asprintf(&msg, "Receieved %lu messages on client", cl_recv_msgs);
   PASSm(msg);
 }
-
 
 TEST t_msgbox_udp_client(void){
   msg_connect("udp://127.0.0.1:2100", msg_update_client, msg_no_context);
@@ -2478,7 +2409,6 @@ TEST t_msgbox_udp_client(void){
   PASSm(msg);
 }
 
-
 TEST t_msgbox_tcp_server(void){
   msg_listen("tcp://*:2101", msg_update_server);
   while (svr_recv_msgs < 2) {
@@ -2489,7 +2419,6 @@ TEST t_msgbox_tcp_server(void){
   asprintf(&msg, "Receieved %lu messages on server", svr_recv_msgs);
   PASSm(msg);
 }
-
 
 TEST t_msgbox_udp_server(void){
   msg_listen("udp://*:2100", msg_update_server);
@@ -2502,11 +2431,9 @@ TEST t_msgbox_udp_server(void){
   PASSm(msg);
 }
 
-
 TEST t_msgbox(void){
   PASS();
 }
-
 
 TEST t_termbox2(void){
   struct tb_event ev;
@@ -2532,7 +2459,6 @@ TEST t_termbox2(void){
   PASS();
 }
 
-
 TEST t_httpserver(void){
   int i = httpserver_main();
 
@@ -2545,7 +2471,6 @@ struct parsed_data {
   int  size;
 };
 
-
 void querystring_parser(void *data, char *fst, char *snd) {
   struct parsed_data *parsed_data = (struct parsed_data *)data;
 
@@ -2557,7 +2482,6 @@ void querystring_parser(void *data, char *fst, char *snd) {
     parsed_data->age = atoi(snd);
   }
 }
-
 
 TEST t_kitty_send_text(void){
   char *ok = kitty_send_text("pwd");
@@ -2572,7 +2496,6 @@ TEST t_kitty_send_text(void){
   PASS();
 }
 
-
 TEST t_kitty_get_colors(void){
   char *text = kitty_get_colors();
 
@@ -2582,7 +2505,6 @@ TEST t_kitty_get_colors(void){
          );
   PASS();
 }
-
 
 TEST t_kitty_list_fonts(void){
   char *text = kitty_list_fonts();
@@ -2594,7 +2516,6 @@ TEST t_kitty_list_fonts(void){
   PASS();
 }
 
-
 TEST t_kitty_query_terminal(void){
   char *text = kitty_query_terminal();
 
@@ -2604,7 +2525,6 @@ TEST t_kitty_query_terminal(void){
          );
   PASS();
 }
-
 
 TEST t_kitty_ls_kittens(void){
   char *text = kitty_ls_kittens();
@@ -2616,7 +2536,6 @@ TEST t_kitty_ls_kittens(void){
   PASS();
 }
 
-
 TEST t_kitty_get_text(void){
   char *text = kitty_get_text();
 
@@ -2626,7 +2545,6 @@ TEST t_kitty_get_text(void){
          );
   PASS();
 }
-
 
 TEST t_kitty_set_window_title(void){
   char *title;
@@ -2638,7 +2556,6 @@ TEST t_kitty_set_window_title(void){
   PASS();
 }
 
-
 TEST t_kitty_set_tab_title(void){
   char *title;
 
@@ -2648,7 +2565,6 @@ TEST t_kitty_set_tab_title(void){
   ASSERT_EQ(ok, true);
   PASS();
 }
-
 
 TEST t_kitty_ls(void){
   char *ls = kitty_get_ls();
@@ -2660,7 +2576,6 @@ TEST t_kitty_ls(void){
   PASS();
 }
 
-
 TEST t_kitty_set_layout_vertical(void){
   bool ok = kitty_set_layout("vertical");
 
@@ -2668,7 +2583,6 @@ TEST t_kitty_set_layout_vertical(void){
 
   PASS();
 }
-
 
 TEST t_kitty_reset_tab_color(void){
   bool ok = kitty_set_tab_color("active_fg", "NONE");
@@ -2683,7 +2597,6 @@ TEST t_kitty_reset_tab_color(void){
   PASS();
 }
 
-
 TEST t_kitty_set_tab_color(void){
   bool ok = kitty_set_tab_color("active_fg", "green");
 
@@ -2697,7 +2610,6 @@ TEST t_kitty_set_tab_color(void){
   PASS();
 }
 
-
 TEST t_kitty_set_layout_stack(void){
   bool ok = kitty_set_layout("stack");
 
@@ -2706,7 +2618,6 @@ TEST t_kitty_set_layout_stack(void){
   PASS();
 }
 
-
 TEST t_kitty_set_font_size(void){
   bool ok = kitty_set_font_size(30);
 
@@ -2714,14 +2625,12 @@ TEST t_kitty_set_font_size(void){
   PASS();
 }
 
-
 TEST t_kitty_image(void){
   bool ok = kitty_draw_image();
 
   ASSERT_EQ(ok, true);
   PASS();
 }
-
 
 TEST t_kitty(void){
   bool ok = kitty_clear_screen();
@@ -2731,13 +2640,11 @@ TEST t_kitty(void){
   PASS();
 }
 
-
 TEST t_my_cwd(void){
   char *d = get_my_cwd();
 
   PASS();
 }
-
 
 TEST t_jinja2_cli(void){
   struct jinja2_render_template_t *CFG = jinja2_init_config();
@@ -2762,13 +2669,11 @@ typedef struct {
   int  cash;
 } account_t;
 
-
 void deposit(int *current_balance, int change){
   account_t *acc = container_of(current_balance, account_t, cash);
 
   printf("Increased %s's account by %d\n", acc->name, change);
 }
-
 
 TEST t_path_normalize(void){
   char *path = NULL;
@@ -2794,7 +2699,6 @@ TEST t_path_normalize(void){
   PASS();
 }
 
-
 TEST t_hashmap_h_4(){
   struct hashmap_s hashmap;
   int              x = 42;
@@ -2805,7 +2709,6 @@ TEST t_hashmap_h_4(){
   hashmap_destroy(&hashmap);
   PASS();
 }
-
 
 TEST t_hashmap_h_3(){
   const char *const key = "foo&bar";
@@ -2825,7 +2728,6 @@ TEST t_hashmap_h_3(){
   PASS();
 }
 
-
 TEST t_hashmap_h_2(){
   struct hashmap_s hashmap;
   int              x = 42;
@@ -2840,7 +2742,6 @@ TEST t_hashmap_h_2(){
   PASS();
 }
 
-
 TEST t_flingfd_client(){
   int fd = fileno(stdout);
 
@@ -2848,7 +2749,6 @@ TEST t_flingfd_client(){
   printf("fd sent\n");
   PASS();
 }
-
 
 TEST t_flingfd_server(){
   int fd = flingfd_simple_recv("/tmp/some_unique_path");
@@ -2859,11 +2759,9 @@ TEST t_flingfd_server(){
 }
 subhook_t foo_hook1;
 
-
 void foo1(int x) {
   printf("real foo1(%d) called\n", x);
 }
-
 
 void my_foo1(int x) {
   subhook_remove(foo_hook1);
@@ -2871,7 +2769,6 @@ void my_foo1(int x) {
   foo1(x);
   subhook_install(foo_hook1);
 }
-
 
 TEST t_subhook1(){
   foo_hook1 = subhook_new((void *)foo1, (void *)my_foo1, 0);
@@ -2881,7 +2778,6 @@ TEST t_subhook1(){
   subhook_free(foo_hook1);
   PASS();
 }
-
 
 int cb_validate_bookmark(cfg_t *cfg, cfg_opt_t *opt){
   /* only validate the last bookmark */
@@ -2898,7 +2794,6 @@ int cb_validate_bookmark(cfg_t *cfg, cfg_opt_t *opt){
   return(0);
 }
 
-
 TEST t_block0(){
   int  x = 10;
 
@@ -2907,7 +2802,6 @@ TEST t_block0(){
   vv();
   PASS();
 }
-
 
 TEST t_variation_ui(){
   struct vn_init vn;  /* FIRST OF ALL DEFINE WINDOW NAME */
@@ -2941,17 +2835,14 @@ TEST t_variation_ui(){
   vn_progress(vn.pos_x, vn.pos_y, 30, 1, fg.color, bg.color, 5);
   vn_progress(vn.pos_x, vn.pos_y + 1, 30, 1, fg.color, bg.color, 15);
 
-
   vn_end(vn);
   PASS();
 }
-
 
 TEST t_posix_tree(){
   tree_demo();
   PASS();
 }
-
 
 TEST t_seethe(){
   debug("debug log");
@@ -2974,7 +2865,6 @@ TEST t_seethe(){
   PASS();
 }
 
-
 TEST t_color_boxes(){
   char *boxes = get_color_boxes();
 
@@ -2982,7 +2872,6 @@ TEST t_color_boxes(){
   ASSERT_GTE(strlen(boxes), 100);
   PASS();
 }
-
 
 TEST t_sense_c(){
   int lang = get_lang("../");
@@ -2994,7 +2883,6 @@ TEST t_sense_c(){
 
   lang = get_lang("./confirm1");
   printf("./confirm1 lang: %s\n", get_lang_name(lang));
-
 
   int git = has_git("./");
 
@@ -3014,7 +2902,6 @@ TEST t_sense_c(){
 
   PASS();
 }
-
 
 TEST t_tai64n(){
   size_t ts = tai64ts();
@@ -3037,7 +2924,6 @@ TEST t_tai64n(){
   PASSm(msg);
 }
 
-
 TEST t_tty_copy(){
   char *s;
 
@@ -3049,7 +2935,6 @@ TEST t_tty_copy(){
   asprintf(&msg, "Wrote %lu chars", wrote_chars);
   PASSm(msg);
 }
-
 
 TEST t_libconfuse(){
   char *cfg_s      = "\
@@ -3083,16 +2968,15 @@ bookmark baz {\n\
   static char       *username = NULL;
   static long int   debug     = 1;
 
-
-  size_t    i;
-  cfg_opt_t proxy_opts[] = {
+  size_t            i;
+  cfg_opt_t         proxy_opts[] = {
     CFG_INT("type",         0,                        CFGF_NONE),
     CFG_STR("host",         NULL,                     CFGF_NONE),
     CFG_STR_LIST("exclude", "{localhost, .localnet}", CFGF_NONE),
     CFG_INT("port",         21,                       CFGF_NONE),
     CFG_END()
   };
-  cfg_opt_t bookmark_opts[] = {
+  cfg_opt_t         bookmark_opts[] = {
     CFG_STR("machine",       NULL,       CFGF_NONE),
     CFG_INT("port",          21,         CFGF_NONE),
     CFG_STR("login",         NULL,       CFGF_NONE),
@@ -3102,7 +2986,7 @@ bookmark baz {\n\
     CFG_SEC("proxy",         proxy_opts, CFGF_NONE),
     CFG_END()
   };
-  cfg_opt_t opts[] = {
+  cfg_opt_t         opts[] = {
     CFG_SIMPLE_BOOL("verbose", &verbose),
     CFG_SIMPLE_STR("server",   &server),
     CFG_SIMPLE_STR("user",     &username),
@@ -3114,7 +2998,7 @@ bookmark baz {\n\
     CFG_FUNC("include",        &cfg_include),
     CFG_END(),
   };
-  cfg_t     *cfg;
+  cfg_t             *cfg;
 
   cfg = cfg_init(opts, CFGF_NONE);
   if (cfg_parse(cfg, "/tmp/simple.conf") == CFG_PARSE_ERROR) {
@@ -3146,7 +3030,6 @@ bookmark baz {\n\
   PASS();
 } /* t_libconfuse */
 
-
 TEST t_dotenv(){
   fsio_write_text_file("/tmp/.env",
                        "EXTRA_VAR=\"xxxxxxxxx\""
@@ -3165,7 +3048,6 @@ TEST t_dotenv(){
   PASS();
 }
 
-
 TEST t_chfreq(){
   char     *str = "110aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz102";
   uint32_t **f  = chfreq(str);
@@ -3180,7 +3062,6 @@ TEST t_chfreq(){
   PASS();
 }
 
-
 TEST t_uptime(){
   unsigned long long u = getUptime();
 
@@ -3188,7 +3069,6 @@ TEST t_uptime(){
   ASSERT_GTE(u, 0);
   PASS();
 }
-
 
 TEST t_semver(){
   char     current[] = "1.5.10";
@@ -3221,7 +3101,6 @@ TEST t_semver(){
   PASS();
 }
 
-
 TEST t_path_module(){
   char        *pathname = "/projects/path_module/path.c";
   struct Path path      = path_parse(pathname);
@@ -3239,7 +3118,6 @@ TEST t_path_module(){
   PASS();
 }
 
-
 TEST t_pidfile(){
   char *pid_file_name = "/tmp/pid.txt";
   FILE *fp            = fopen(pid_file_name, "wt");
@@ -3253,7 +3131,6 @@ TEST t_pidfile(){
   fclose(fp);
   PASS();
 }
-
 
 TEST t_str_flatten(){
   char *arr[] = {
@@ -3273,11 +3150,9 @@ TEST t_str_flatten(){
   PASS();
 }
 
-
 TEST t_hashmap_h_0(){
   PASS();
 }
-
 
 TEST t_hashmap_h_1(){
   struct hashmap_s hashmap;
@@ -3289,7 +3164,6 @@ TEST t_hashmap_h_1(){
   hashmap_destroy(&hashmap);
   PASS();
 }
-
 
 TEST t_url_router(){
   char             *str1 = "hello world1";
@@ -3334,7 +3208,6 @@ TEST t_url_router(){
   PASS();
 } /* t_url_router */
 
-
 TEST t_c_timestamp(void){
   timestamp_t ts;
 
@@ -3369,10 +3242,8 @@ TEST t_c_timestamp(void){
   dbg(timestamp_to_tm_utc(&ts, &tm1.tm_hour), %d);
   dbg(timestamp_to_tm_utc(&ts, &tm1.tm_sec), %d);
 
-
   PASS();
 }
-
 
 TEST t_genpassword_c(void){
   int passed = true;
@@ -3413,7 +3284,6 @@ TEST t_genpassword_c(void){
   PASS();
 }
 
-
 TEST t_list_iterate_reverse(void){
   list_t          *langs = list_new();
 
@@ -3432,7 +3302,6 @@ TEST t_list_iterate_reverse(void){
   list_destroy(langs);
   PASS();
 }
-
 
 TEST t_list_iterate(void){
   list_t          *langs = list_new();
@@ -3453,7 +3322,6 @@ TEST t_list_iterate(void){
   PASS();
 }
 
-
 TEST t_list_find(void){
   list_t      *langs = list_new();
   list_node_t *js    = list_rpush(langs, list_node_new("js"));
@@ -3467,7 +3335,6 @@ TEST t_list_find(void){
 
   PASS();
 }
-
 
 TEST t_list_indexed(void){
   list_t      *list = list_new();
@@ -3493,7 +3360,6 @@ TEST t_list_indexed(void){
   PASS();
 }
 
-
 TEST t_list_push(void){
   list_t      *list = list_new();
   list_node_t *a    = list_node_new("a");
@@ -3518,7 +3384,6 @@ TEST t_list_push(void){
   PASS();
 }
 
-
 TEST t_list_node(void){
   char        *val  = "some value";
   list_node_t *node = list_node_new(val);
@@ -3528,7 +3393,6 @@ TEST t_list_node(void){
   PASS();
 }
 
-
 TEST t_extname_c(void){
   assert(strcmp(extname("some/extension.ext"), ".ext") == 0);
   assert(strcmp(extname(".derp"), ".derp") == 0);
@@ -3536,7 +3400,6 @@ TEST t_extname_c(void){
   assert(strcmp(extname("nothing"), "") == 0);
   PASS();
 }
-
 
 TEST t_container_of(void){
   account_t *acc = calloc(1, sizeof(account_t));
@@ -3546,11 +3409,9 @@ TEST t_container_of(void){
   PASS();
 }
 
-
 TEST t_wildcardcmp(void){
   PASS();
 }
-
 
 TEST t_is_number(void){
   const char *str = "1.0";
@@ -3567,7 +3428,6 @@ TEST t_is_number(void){
   PASS();
 }
 
-
 TEST t_url_h(void){
   char       *gh_url = "git://git@github.com:jwerle/url.h.git";
   char       *url    = "http://user:pass@subdomain.host.com:8080/p/a/t/h?query=string#hash";
@@ -3583,7 +3443,6 @@ TEST t_url_h(void){
   PASS();
 }
 
-
 TEST t_levenshtein(void){
   char *w1 = "aaaaaaaaaa";
   char *w2 = "aaaaaaaaaa";
@@ -3594,7 +3453,6 @@ TEST t_levenshtein(void){
   printf("%s:%s -> %zu\n", w1, w2, levenshtein(w1, w2));
   PASS();
 }
-
 
 TEST t_libterminput(void){
   struct libterminput_state ctx;
@@ -3781,7 +3639,6 @@ was_highlight:
   PASS();
 } /* t_libterminput */
 
-
 TEST t_querystring(void){
   char               *qs;
   struct parsed_data data = {
@@ -3797,7 +3654,6 @@ TEST t_querystring(void){
   printf("name: %s, age: %d, size: %d\n", data.name, data.age, data.size);
   PASS();
 }
-
 
 TEST t_libtrycatch(void){
   try {
@@ -3821,7 +3677,6 @@ TEST t_libtrycatch(void){
   PASS();
 }
 
-
 TEST t_emojis(void){
   size_t        id              = 0;
   struct Vector *emojis_names_v = get_emojis_names_v();
@@ -3840,7 +3695,6 @@ TEST t_emojis(void){
   PASS();
 }
 
-
 TEST t_ok_file_format_jpg(void){
   char *jpg_file = malloc(1024);
 
@@ -3855,7 +3709,6 @@ TEST t_ok_file_format_jpg(void){
   }
   PASS();
 }
-
 
 TEST t_ok_file_format_png(void){
   char *png_file = malloc(1024);
@@ -3967,7 +3820,6 @@ SUITE(s_wildcardcmp) {
   RUN_TEST(t_wildcardcmp);
 }
 
-
 SUITE(s_is_number) {
   RUN_TEST(t_is_number);
 }
@@ -3975,7 +3827,6 @@ SUITE(s_is_number) {
 SUITE(s_url_h) {
   RUN_TEST(t_url_h);
 }
-
 
 SUITE(s_ok_file_formats) {
   RUN_TEST(t_ok_file_format_wav);
@@ -4037,11 +3888,6 @@ SUITE(s_libusb) {
 }
 SUITE(s_tempdir) {
   RUN_TEST(t_tempdir);
-}
-SUITE(s_libforks) {
-  RUN_TEST(t_libforks1);
-  RUN_TEST(t_libforks2);
-  PASS();
 }
 SUITE(s_truncate) {
   RUN_TEST(t_truncate);
@@ -4232,7 +4078,6 @@ SUITE(s_string) {
 
 GREATEST_MAIN_DEFS();
 
-
 int main(int argc, char **argv) {
   char EXECUTABLE_PATH[PATH_MAX + 1] = { 0 };
 
@@ -4243,7 +4088,6 @@ int main(int argc, char **argv) {
     if (getenv("HTTPSERVER") != NULL) {
       RUN_SUITE(s_httpserver);
     }
-    RUN_SUITE(s_libforks);
     RUN_SUITE(s_termbox2);
     if (getenv("TINYFILEDIALOGS") != NULL) {
       RUN_SUITE(s_libtinyfiledialogs);
@@ -4256,7 +4100,9 @@ int main(int argc, char **argv) {
     if (getenv("LIBTERMINPUT") != NULL) {
       RUN_SUITE(s_libterminput);
     }
+    RUN_TEST(t_libforks2);
   }
+  RUN_TEST(t_libforks1);
   RUN_SUITE(s_json);
   RUN_SUITE(s_string);
   RUN_SUITE(s_debug);

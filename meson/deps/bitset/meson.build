@@ -15,7 +15,7 @@ bitset_deps = [
 
 ]
 
-bitset_lib = both_libraries('bitset',
+bitset_lib = library('bitset',
   bitset_srcs,
   install: false,
   dependencies: bitset_deps,

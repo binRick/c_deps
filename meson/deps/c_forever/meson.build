@@ -4,7 +4,7 @@ c_forever_inc = [
   '../../../submodules/c_forever',
   inc,
 ]
-c_forever_lib = static_library('c_forever', 
+c_forever_lib = library('c_forever', 
   '../../../submodules/c_forever/src/forever.c',
   install: false, 
   dependencies: [

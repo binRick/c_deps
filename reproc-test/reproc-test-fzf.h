@@ -23,6 +23,7 @@
 #include "which/src/which.h"
 //////////////////////////////////////////////
 int execute_fzf_process();
+
 static void setup_fzf_exec(void);
 
 static void __attribute__((destructor)) __test_fzf_subprocess_destructor();
@@ -46,4 +47,3 @@ struct fzf_exec_t {
   reproc_t               *proc;
   reproc_options         reproc_options;
 };
-

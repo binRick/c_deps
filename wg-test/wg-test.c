@@ -26,7 +26,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
 int main(int argc, char **argv) {
   (void)argc; (void)argv;
   char *interfaces = ipc_list_devices(), *interface;
@@ -56,4 +55,3 @@ int main(int argc, char **argv) {
 
   return(0);
 }
-

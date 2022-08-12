@@ -10,7 +10,7 @@ dbg_deps = [
     asprintf_dep,
 ]
 
-#dbg_lib = both_libraries('dbg', 
+#dbg_lib = library('dbg', 
 #  dbg_srcs,
 #  install: false, 
 #  dependencies: dbg_deps,

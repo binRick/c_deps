@@ -26,7 +26,6 @@
 
 struct fzf_exec_t *fzf_exec;
 
-
 static void setup_fzf_exec(void){
   fzf_exec                = malloc(sizeof(struct fzf_exec_t));
   fzf_exec->header        = "my header 123";
@@ -36,7 +35,6 @@ static void setup_fzf_exec(void){
   vector_push(fzf_exec->input_options, "option 3");
   vector_push(fzf_exec->input_options, "option 4");
 }
-
 
 int execute_fzf_process(){
   if (fzf_exec->selected_options == NULL) {
@@ -97,7 +95,6 @@ finish:
   reproc_destroy(fzf_exec->proc);
   log_info("destroyed");
 
-
   if (fzf_exec->proc_result < 0) {
     fprintf(stderr, "Error: %s\n", reproc_strerror(fzf_exec->proc_result));
   }else{
@@ -128,7 +125,6 @@ finish:
   }
   return(EXIT_SUCCESS);
 } /* execute_fwded_process */
-
 
 static void __attribute__((constructor)) __test_fzf_subprocess_constructor(){
   setup_fzf_exec();

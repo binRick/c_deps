@@ -27,6 +27,7 @@
 #define NUM_CHILDREN    10
 //////////////////////////////////////////////
 static int execute_processes();
+
 static inline void millisleep(long ms);
 
 static void __attribute__((destructor)) __test_subprocess_destructor();
@@ -36,14 +37,12 @@ static void __attribute__((constructor)) __test_subprocess_constructor();
 //////////////////////////////////////////////
 extern struct fzf_exec_t *fzf_exec;
 
-
 TEST t_reproc_fzf_process(void){
   int res = execute_fzf_process();
 
   ASSERT_EQm("fzf process OK", res, 0);
   PASS();
 }
-
 
 TEST t_reproc_0(void){
   int res = execute_processes();
@@ -54,7 +53,6 @@ TEST t_reproc_0(void){
 
 GREATEST_MAIN_DEFS();
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   RUN_TEST(t_reproc_0);
@@ -64,7 +62,6 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_END();
   return(0);
 }
-
 
 static int execute_processes(){
   reproc_event_source children[NUM_CHILDREN] = { { 0 } };
@@ -122,10 +119,8 @@ finish:
     log_error("%s", reproc_strerror(r));
   }
 
-
   return(abs(r));
 } /* execute_processes */
-
 
 static inline void millisleep(long ms){
   struct timespec ts = {

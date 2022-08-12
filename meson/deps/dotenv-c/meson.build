@@ -12,7 +12,7 @@ dotenv_c_deps = [
 
 ]
 
-dotenv_c_lib = both_libraries('dotenv-c',
+dotenv_c_lib = library('dotenv-c',
   dotenv_c_srcs,
   install: false,
   dependencies: dotenv_c_deps,

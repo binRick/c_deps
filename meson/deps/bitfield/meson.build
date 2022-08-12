@@ -12,7 +12,7 @@ bitfield_deps = [
 
 ]
 
-bitfield_lib = both_libraries('bitfield',
+bitfield_lib = library('bitfield',
   bitfield_srcs,
   install: false,
   dependencies: bitfield_deps,

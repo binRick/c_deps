@@ -46,24 +46,25 @@ struct PARSER_OP_s {
   PARSER_OP_b op;
   char        *regex_pattern;
   bool        *regex_match;
-  int      regex_match_start;
-  int      regex_match_length;
+  int         regex_match_start;
+  int         regex_match_length;
   char        *wc_pattern;
   char        *regex_extracted_chars;
   bool        wc_match;
 };
 struct PARSER_OP_s parser_ops[] = {
   [PARSER_TYPE_1] =    {
-    .op                = ^ int (int a, int b){ return(a - b);    },
-    .wc_pattern        = "ello*",
-    .regex_pattern     = "[Hh]ello\\s.*[Ww]orld",
-    .regex_match_start = 0,            .regex_match_length = 0,
+    .op                    = ^ int (int a,            int b){ return(a - b);               },
+    .wc_pattern            = "ello*",
+    .regex_pattern         = "[Hh]ello\\s.*[Ww]orld",
+    .regex_match_start     = 0,                       .regex_match_length = 0,
     .regex_extracted_chars = NULL,
   },
-  [PARSER_TYPES_QTY] = { 0                                       },
+  [PARSER_TYPES_QTY] = { 0                                           },
 };
-char *search_strings[] = {
+char               *search_strings[] = {
   "Hello world",
+  "''hello world",
   "''hello world",
   "ahem.. 'hello\t\nWorld !' ..",
   ".... 'Hello world ..........",
@@ -78,10 +79,10 @@ TEST t_blocks_test_parser_ops(void){
 
     printf("["AC_BLUE "%s" AC_RESETALL "]\n", strdup_escaped(search_string));
     for (size_t i = 0; i < PARSER_TYPES_QTY; i++) {
-      parser_ops[i].wc_match          = wildcardcmp(parser_ops[i].wc_pattern, search_string);
-      parser_ops[i].regex_match_start = re_match(parser_ops[i].regex_pattern, search_string, &parser_ops[i].regex_match_length);
-      parser_ops[i].regex_extracted_chars = (parser_ops[i].regex_match_start > 0) 
-        ? stringfn_substring(search_string,parser_ops[i].regex_match_start,parser_ops[i].regex_match_length)
+      parser_ops[i].wc_match              = wildcardcmp(parser_ops[i].wc_pattern, search_string);
+      parser_ops[i].regex_match_start     = re_match(parser_ops[i].regex_pattern, search_string, &parser_ops[i].regex_match_length);
+      parser_ops[i].regex_extracted_chars = (parser_ops[i].regex_match_start > 0)
+        ? stringfn_substring(search_string, parser_ops[i].regex_match_start, parser_ops[i].regex_match_length)
         : NULL;
 
       printf(AC_YELLOW "\tParser #%lu> Wildcard: %s%s\n" AC_RESETALL,
@@ -91,12 +92,12 @@ TEST t_blocks_test_parser_ops(void){
              );
       printf(AC_MAGENTA "\tParser #%lu> Regex: %s(%s) %s :: (chars %d-%d): " AC_RESETALL AC_CYAN "%s" AC_RESETALL "\n" AC_RESETALL,
              i,
-             (parser_ops[i].regex_match_start>0) ? AC_GREEN : AC_RED,
+             (parser_ops[i].regex_match_start > 0) ? AC_GREEN : AC_RED,
              parser_ops[i].regex_pattern,
              (parser_ops[i].regex_match_start > 0) ? "Yes" : "No",
              (parser_ops[i].regex_match_start > 0) ? (parser_ops[i].regex_match_start) : 0,
              (parser_ops[i].regex_match_start > 0) ? (parser_ops[i].regex_match_length) : 0,
-             (parser_ops[i].regex_match_start > 0) 
+             (parser_ops[i].regex_match_start > 0)
               ? (strdup_escaped(parser_ops[i].regex_extracted_chars))
               : ""
              );

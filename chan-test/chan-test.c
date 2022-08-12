@@ -61,7 +61,6 @@ worker_t     *workers;
 volatile int processed_jobs_qty = 0, processed_qtys[1024];
 chan_t       *JOBS_CHANNEL, *DONE_CHANNEL;
 
-
 void *worker(void *WID){
   void   *job;
   int    processed_qty = 0;
@@ -99,11 +98,9 @@ void *worker(void *WID){
   return(NULL);
 }
 
-
 void init_workers(size_t WORKERS_QTY){
   workers = malloc(sizeof(worker_t) * WORKERS_QTY);
 }
-
 
 TEST t_free_workers(){
   if (workers) {
@@ -115,14 +112,12 @@ TEST t_free_workers(){
   PASS();
 }
 
-
 TEST t_init_workers(void *workers_qty){
   init_workers((size_t)workers_qty);
   ASSERT_NEQ(workers, NULL);
 
   PASS();
 }
-
 
 TEST t_chan_jobs_worker(void *buffer_qty,
                         void *workers_qty,
@@ -201,7 +196,6 @@ TEST t_chan_jobs_worker(void *buffer_qty,
 CREATE_JOBS_SUITES()
 GREATEST_MAIN_DEFS();
 
-
 int main(int argc, char **argv) {
   //ct_set_unit(ct_MILLISECONDS);
   GREATEST_MAIN_BEGIN();
@@ -209,4 +203,3 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_END();
   return(0);
 }
-

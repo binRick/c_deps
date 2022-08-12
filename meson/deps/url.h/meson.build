@@ -11,7 +11,7 @@ url_h_deps = [
 
 ]
 
-url_h_lib = both_libraries('url-h',
+url_h_lib = library('url-h',
   url_h_drcs,
   install: false,
   dependencies: url_h_deps,

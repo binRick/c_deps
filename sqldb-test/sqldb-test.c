@@ -10,7 +10,6 @@
                                      ASSERT_EQ(rc, SQLDBAL_STATUS_OK); \
                                    } while (0); }
 
-
 ////////////////////////////////////////////////////////
 TEST t_sqldb(void){
   int64_t                  ts = -1, qty = -1, rowid = -1, ins_id = -1, ins_item_id = -1, created_ts = -1;
@@ -143,7 +142,6 @@ CREATE TABLE IF NOT EXISTS test_items(\
   rc = sqldbal_stmt_close(stmt);
   ASSERT_SQLDB_RESULT();
 
-
   rc = sqldbal_stmt_prepare(db,
                             "DELETE from test where _id = ?",
                             -1,
@@ -171,7 +169,6 @@ CREATE TABLE IF NOT EXISTS test_items(\
   }
   rc = sqldbal_stmt_close(stmt);
   ASSERT_SQLDB_RESULT();
-
 
   rc = sqldbal_stmt_prepare(db,
                             "SELECT\
@@ -205,7 +202,6 @@ CREATE TABLE IF NOT EXISTS test_items(\
   rc = sqldbal_stmt_close(stmt);
   ASSERT_SQLDB_RESULT();
 
-
   rc = sqldbal_close(db);
   ASSERT_SQLDB_RESULT();
   PASS();
@@ -218,11 +214,9 @@ SUITE(s_sqldb){
 
 GREATEST_MAIN_DEFS();
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   RUN_SUITE(s_sqldb);
   GREATEST_MAIN_END();
   return(0);
 }
-

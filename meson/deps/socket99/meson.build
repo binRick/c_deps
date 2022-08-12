@@ -12,7 +12,7 @@ socket99_deps = [
 
 ]
 
-socket99_lib = both_libraries('socket99',
+socket99_lib = library('socket99',
   socket99_srcs,
   install: false,
   dependencies: socket99_deps,

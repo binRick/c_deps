@@ -1,4 +1,4 @@
-tmt_lib = both_libraries('tmt',
+tmt_lib = library('tmt',
   '../../../submodules/libtmt/tmt.c',
   install: false, 
   dependencies: [

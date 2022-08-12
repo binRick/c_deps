@@ -9,8 +9,6 @@
 #include <wchar.h>
 
 //////////////////////////////////////////////
-
-
 TEST t_fort_beautiful(void){
   ft_table_t *table = ft_create_table();
 
@@ -66,7 +64,6 @@ TEST t_fort_beautiful(void){
   PASS();
 } /* t_fort_beautiful */
 
-
 TEST t_fort1(void){
   ft_table_t *table = ft_create_table();
 
@@ -102,7 +99,6 @@ TEST t_fort1(void){
   PASS();
 }
 
-
 TEST t_fort3(void){
   ft_table_t *table = ft_create_table();
 
@@ -132,7 +128,6 @@ TEST t_fort3(void){
   PASS();
 }
 
-
 TEST t_fort4(void){
   ft_table_t *table = ft_create_table();
 
@@ -155,7 +150,6 @@ TEST t_fort4(void){
   PASS();
 }
 
-
 TEST t_fort2(void){
   ft_table_t *table = ft_create_table();
 
@@ -173,7 +167,6 @@ TEST t_fort2(void){
   ft_destroy_table(table);
   PASS();
 }
-
 
 TEST t_fort(void){
   ft_table_t *table = ft_create_table();
@@ -202,7 +195,6 @@ SUITE(s_fort){
   PASS();
 }
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
@@ -211,4 +203,3 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_END();
   return(0);
 }
-

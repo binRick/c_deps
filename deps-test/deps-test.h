@@ -11,12 +11,10 @@
 //////////////////////////////////////
 #define MKCREFLECT_IMPL
 
-
 typedef struct {
   int p1;
   int p2;
 } BaseStruct;
-
 
 enum ExampleEvents {
   EVENT_START  = 100,
@@ -27,4 +25,3 @@ enum ExampleEvents {
 struct FnArgs {
   int counter;
 };
-

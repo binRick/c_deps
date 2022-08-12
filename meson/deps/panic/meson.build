@@ -12,7 +12,7 @@ panic_deps = [
 
 ]
 
-panic_lib = both_libraries('panic',
+panic_lib = library('panic',
   panic_srcs,
   install: false,
   dependencies: panic_deps,

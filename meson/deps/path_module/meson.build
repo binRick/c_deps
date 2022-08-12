@@ -12,7 +12,7 @@ path_module_deps = [
 
 ]
 
-path_module_lib = both_libraries('path_module',
+path_module_lib = library('path_module',
   path_module_srcs,
   install: false,
   dependencies: path_module_deps,

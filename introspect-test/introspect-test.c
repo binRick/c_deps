@@ -17,10 +17,7 @@
 //////////////////////////////////////////////
 extern char *execute_processes();
 
-
 //////////////////////////////////////////////
-
-
 void on_shared_library_target_json_value(void *arg) {
   JSON_Value  *V    = (JSON_Value *)arg;
   JSON_Object *O    = json_value_get_object(V);
@@ -29,7 +26,6 @@ void on_shared_library_target_json_value(void *arg) {
 
   fprintf(stderr, "%s%s" AC_RESETALL ", ", AC_YELLOW, name);
 }
-
 
 void on_static_library_target_json_value(void *arg) {
   JSON_Value  *V    = (JSON_Value *)arg;
@@ -40,7 +36,6 @@ void on_static_library_target_json_value(void *arg) {
   fprintf(stderr, "%s%s" AC_RESETALL ", ", AC_BLUE, name);
 }
 
-
 void on_executable_target_json_value(void *arg) {
   JSON_Value  *V    = (JSON_Value *)arg;
   JSON_Object *O    = json_value_get_object(V);
@@ -49,7 +44,6 @@ void on_executable_target_json_value(void *arg) {
 
   fprintf(stderr, "%s%s" AC_RESETALL ", ", AC_GREEN AC_UNDERLINE, name);
 }
-
 
 TEST t_introspect_iterate(void *MESON_FILE_PATH){
   char *OUTPUT = execute_processes((char *)MESON_FILE_PATH);
@@ -72,7 +66,6 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
   PASS();
 }
 
-
 TEST t_introspect_parse_execution(void *MESON_FILE_PATH){
   char *OUTPUT = execute_processes((char *)MESON_FILE_PATH);
 
@@ -85,7 +78,6 @@ TEST t_introspect_parse_execution(void *MESON_FILE_PATH){
   PASS();
 }
 
-
 TEST t_introspect_ansi(void){
   char meson_build_file[] = "../c_ansi/meson.build";
 
@@ -94,7 +86,6 @@ TEST t_introspect_ansi(void){
   free(OUTPUT);
   PASS();
 }
-
 
 TEST t_introspect_db(void){
   char meson_build_file[] = "../c_db/meson.build";
@@ -105,7 +96,6 @@ TEST t_introspect_db(void){
   PASS();
 }
 
-
 TEST t_introspect_palettes(void){
   char meson_build_file[] = "./../c_palettes/meson.build";
 
@@ -114,7 +104,6 @@ TEST t_introspect_palettes(void){
   free(OUTPUT);
   PASS();
 }
-
 
 TEST t_introspect_c_deps(void){
   char meson_build_file[] = "./meson.build";
@@ -149,7 +138,6 @@ SUITE(s_iterate){
 
 GREATEST_MAIN_DEFS();
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   (void)argc; (void)argv;
@@ -161,4 +149,3 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_END();
   return(0);
 }
-

@@ -16,9 +16,8 @@
 #include "subprocess-test.h"
 #define FIND_PATH                      "."
 #define FZF_STDOUT_READ_BUFFER_SIZE    1024 * 16
+
 //////////////////////////////////////////////
-
-
 char *subprocess_fzf_test_0(void){
   char                *READ_STDOUT;
   int                 exited, result;
@@ -68,7 +67,6 @@ char *subprocess_fzf_test_0(void){
   return(0);
 } /* subprocess_fzf_test_0 */
 
-
 TEST t_subprocess_0(void *CMD){
   subprocess_test_main((char *)CMD);
   PASS();
@@ -88,13 +86,11 @@ SUITE(s_subprocess_fzf){
   PASSm("FZF Tests OK");
 }
 
-
 SUITE(s_subprocess_basic){
   RUN_TESTp(t_subprocess_0, "ls");
   RUN_TESTp(t_subprocess_0, "pwd");
   PASS();
 }
-
 
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
@@ -105,8 +101,6 @@ int main(int argc, char **argv) {
     RUN_SUITE(s_subprocess_fzf);
   }
 
-
   GREATEST_MAIN_END();
   return(0);
 }
-

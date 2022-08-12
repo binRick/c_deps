@@ -7,6 +7,10 @@ blocks_test_include_dirs = [
   inc,
 ]
 blocks_test_deps = [
+  wildcardcmp_dep,
+  tiny_regex_c_dep,
+  tinydir_dep,
+  ansi_utils_dep,
   c_greatest_dep,
   c_vector_dep,
   c_fsio_dep,

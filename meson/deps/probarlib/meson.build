@@ -15,7 +15,7 @@ probarlib_deps = [
 
 ]
 
-probarlib_lib = both_libraries('probarlib',
+probarlib_lib = library('probarlib',
   probarlib_srcs,
   install: false,
   dependencies: probarlib_deps,

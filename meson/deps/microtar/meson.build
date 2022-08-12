@@ -3,7 +3,7 @@ microtar_inc = [
   '../../../submodules/microtar',
   inc,
 ]
-microtar_lib = both_libraries('microtar', 
+microtar_lib = library('microtar', 
   '../../../submodules/microtar/src/microtar.c',
   install: false, 
   dependencies: [

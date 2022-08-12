@@ -1,4 +1,6 @@
-project('c_deps',['c','cpp'],default_options:['warning_level=0','c_std=gnu99'],version: '0.0.1',
+project('c_deps',['c','cpp'],
+  default_options:['warning_level=0','c_std=gnu99','default_library=static'],
+  version: '0.0.1',
   subproject_dir: 'subprojects',
   )
 #############################################################

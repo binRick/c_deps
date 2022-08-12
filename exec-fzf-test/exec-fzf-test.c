@@ -29,7 +29,6 @@ static void __attribute__((destructor)) __exec_fzf_test_destructor();
 
 static void __attribute__((constructor)) __exec_fzf_test_constructor();
 
-
 //////////////////////////////////////////////
 TEST t_fzf_keybind_change_preview(void){
   struct fzf_exec_t *fe = exec_fzf_setup();
@@ -79,7 +78,6 @@ TEST t_fzf_keybind_change_preview(void){
   PASS();
 } /* t_fzf_keybind */
 
-
 TEST t_fzf_keybind_change_prompt(void){
   struct fzf_exec_t *fe = exec_fzf_setup();
 
@@ -126,7 +124,6 @@ TEST t_fzf_keybind_change_prompt(void){
 
   PASS();
 } /* t_fzf_keybind_change_prompt */
-
 
 TEST t_fzf_keybind_preview(void){
   struct fzf_exec_t *fe = exec_fzf_setup();
@@ -176,7 +173,6 @@ TEST t_fzf_keybind_preview(void){
   PASS();
 } /* t_fzf_keybind */
 
-
 TEST t_fzf_preview(void){
   int               res = -1;
 
@@ -202,7 +198,6 @@ TEST t_fzf_preview(void){
 
   PASS();
 }
-
 
 TEST t_fzf_multiple(void){
   int               res = -1;
@@ -234,7 +229,6 @@ TEST t_fzf_multiple(void){
   PASS();
 }
 
-
 TEST t_fzf_short(void){
   int               res = -1;
 
@@ -261,10 +255,8 @@ TEST t_fzf_short(void){
   //log_info("Selected %lu/%lu options", vector_size(fe->selected_options), vector_size(fe->input_options));
   exec_fzf_release(fe);
 
-
   PASS();
 }
-
 
 TEST t_fzf_single(void){
   int               res = -1;
@@ -288,7 +280,6 @@ TEST t_fzf_single(void){
   log_info("Selected %lu/%lu options", vector_size(fe->selected_options), vector_size(fe->input_options));
   exec_fzf_release(fe);
 
-
   PASS();
 }
 
@@ -304,7 +295,6 @@ SUITE(s_fzf_basic){
 
 GREATEST_MAIN_DEFS();
 
-
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   if (isatty(STDOUT_FILENO)) {
@@ -313,7 +303,6 @@ int main(int argc, char **argv) {
   GREATEST_MAIN_END();
   return(0);
 }
-
 
 static void __attribute__((constructor)) __exec_fzf_test_constructor(){
 }

@@ -10,7 +10,7 @@ b64_dirs = [
 b64_cargs = [
   '-Wno-pointer-sign',
   ]
-b64_lib = static_library('b64', b64_srcs,
+b64_lib = library('b64', b64_srcs,
   install: false, dependencies: [
   ], 
   include_directories: b64_dirs,

@@ -23,7 +23,7 @@ hidapi_deps = [
 
 ]
 
-hidapi_lib = both_libraries('hidapi',
+hidapi_lib = library('hidapi',
   hidapi_srcs,
   install: false,
   dependencies: hidapi_deps,

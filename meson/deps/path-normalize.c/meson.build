@@ -13,7 +13,7 @@ path_normalize_c_deps = [
 
 ]
 
-path_normalize_c_lib = both_libraries('path-normalize.c',
+path_normalize_c_lib = library('path-normalize.c',
   path_normalize_c_srcs,
   install: false,
   dependencies: path_normalize_c_deps,

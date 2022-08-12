@@ -20,9 +20,8 @@ struct Vector *MESON_PATHS;
 struct Vector *INTROSPECTED_PATHS;
 const char    *BASE_PATH   = "../",
               *PATH_FILTER = "^c_\\w+$|^c_deps$";
+
 //////////////////////////////////////////////
-
-
 void on_shared_library_target_json_value(void *arg) {
   JSON_Value  *V    = (JSON_Value *)arg;
   JSON_Object *O    = json_value_get_object(V);
@@ -32,7 +31,6 @@ void on_shared_library_target_json_value(void *arg) {
   //dbg(name, %s);
   //dbg(type, %s);
 }
-
 
 void on_static_library_target_json_value(void *arg) {
   JSON_Value  *V    = (JSON_Value *)arg;
@@ -44,7 +42,6 @@ void on_static_library_target_json_value(void *arg) {
   //dbg(type, %s);
 }
 
-
 void on_executable_target_json_value(void *arg) {
   JSON_Value  *V    = (JSON_Value *)arg;
   JSON_Object *O    = json_value_get_object(V);
@@ -54,7 +51,6 @@ void on_executable_target_json_value(void *arg) {
   //dbg(name, %s);
   //dbg(type, %s);
 }
-
 
 TEST t_introspect_iterate(void *MESON_FILE_PATH){
   char *OUTPUT = execute_processes((char *)MESON_FILE_PATH);
@@ -77,19 +73,16 @@ TEST t_introspect_iterate(void *MESON_FILE_PATH){
   PASS();
 }
 
-
 TEST t_parse_results(){
   iterate_parse_results(INTROSPECTED_PATHS);
   ASSERT_GTE(vector_size(INTROSPECTED_PATHS), 0);
   PASS();
 }
 
-
 TEST t_introspect_paths(){
   INTROSPECTED_PATHS = execute_meson_introspects(MESON_PATHS);
   PASS();
 }
-
 
 TEST t_get_paths(){
   MESON_PATHS = get_meson_paths(BASE_PATH, PATH_FILTER, MESON_PROJECTS_LIMIT);
@@ -116,9 +109,7 @@ SUITE(s_paths){
   RUN_TEST(t_parse_results);
 }
 
-
 GREATEST_MAIN_DEFS();
-
 
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
@@ -128,4 +119,3 @@ int main(int argc, char **argv) {
 #endif
   GREATEST_MAIN_END();
 }
-

@@ -34,4 +34,3 @@
 #define FLAGS          DEBUG_FLAGS
 #define INSERT_QTY     3
 #define LOCATION       "sqldb-test.sqlite"
-
