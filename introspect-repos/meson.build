@@ -45,7 +45,7 @@ introspect_repos_cargs = [
   '-Wno-macro-redefined',
   ]
 
-introspect_repos_lib = static_library('introspect-repos',
+introspect_repos_lib = both_libraries('introspect-repos',
   introspect_repos_srcs,
   install: true,
   dependencies: introspect_repos_deps,

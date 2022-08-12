@@ -5,7 +5,7 @@ bashful-pre:
 	@$(ANSI) --save-palette
 	@$(KFC) -p vscode
 	@$(ANSI) --hide-cursor
-	@clear
+	@$(CLEAR)
 
 bashful-extract-untracked-files:
 
@@ -33,6 +33,12 @@ bashful-bat-git-status-logs:
 	@$(BAT) /tmp/meson-repos-git-status-*.log 2>/dev/null||true
 bashful-rm-git-status-logs:
 	@$(RM) /tmp/meson-repos-git-status-*.log 2>/dev/null||true
+bashful-rm-scc-logs:
+	@$(RM) /tmp/meson-repos-scc-*.log 2>/dev/null||true
+
+bashful-scc: bashful-rm-scc-logs
+	@$(BASHFUL_RUN) --tags scc etc/meson-repos-info.yaml
+	@$(BAT) --style=plain /tmp/meson-repos-scc-*.log
 
 do-bashful-clean:
 	@$(BASHFUL_RUN) --tags clean etc/meson-repos.yaml
@@ -57,7 +63,7 @@ do-bashful-git-diff:
 	@$(MAKE) -B do-bashful-view-git-diff
 
 bashful-view-repo-files:
-	@~/repos/c_deps/scripts/view-repo-files.sh|bat --style=plain
+	@~/repos/c_deps/scripts/view-repo-files.sh|$(BAT) --style=plain
 
 do-bashful-view-git-diff:
 	@$(PASSH) $(BAT) --style=full /tmp/meson-repos-git-diff-*.log
@@ -66,4 +72,4 @@ do-bashful-view-modified-files:
 do-bashful-view-git-status:
 	@$(PASSH) $(BAT) --style=full /tmp/meson-repos-git-status-*.log
 
-bashful: bashful-pre do-bashful-tidy do-bashful-clean do-bashful-build do-bashful-test bashful-post
+bashful: bashful-pre do-bashful-tidy do-bashful-clean do-bashful-build do-bashful-test bashful-git-status bashful-post

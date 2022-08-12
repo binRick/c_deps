@@ -13,7 +13,7 @@ font_deps = [
 
 ]
 
-font_lib = static_library('font',
+font_lib = both_libraries('font',
   font_srcs,
   install: false,
   dependencies: font_deps,

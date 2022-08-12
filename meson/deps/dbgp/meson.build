@@ -1,4 +1,4 @@
-dbgp_lib = static_library('dbgp', 
+dbgp_lib = both_libraries('dbgp', 
   c_deps_dir+'/submodules/SDL_DBGP/SDL_DBGP.c',
   install: false, dependencies: [
     sdl2_dep,

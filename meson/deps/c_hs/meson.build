@@ -64,7 +64,7 @@ c_hs_deps = [
   c_fsio_dep,
 ]
 
-c_hs_lib = static_library('c_hs',
+c_hs_lib = both_libraries('c_hs',
   c_hs_srcs,
   install: false,
   dependencies: c_hs_deps,

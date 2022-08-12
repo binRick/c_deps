@@ -21,7 +21,7 @@ introspect_deps = [
 ]
 
 
-introspect_lib = static_library('introspect',
+introspect_lib = both_libraries('introspect',
   introspect_srcs,
   install: false,
   dependencies: introspect_deps,

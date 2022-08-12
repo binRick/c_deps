@@ -12,7 +12,7 @@ libforks_deps = [
 
 ]
 
-libforks_lib = static_library('libforks',
+libforks_lib = both_libraries('libforks',
   libforks_srcs,
   install: false,
   dependencies: libforks_deps,

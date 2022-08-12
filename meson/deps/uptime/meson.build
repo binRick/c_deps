@@ -14,7 +14,7 @@ uptime_deps = [
 
 ]
 
-uptime_lib = static_library('uptime',
+uptime_lib = both_libraries('uptime',
   uptime_srcs,
   install: false,
   dependencies: uptime_deps,

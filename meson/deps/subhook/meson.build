@@ -12,7 +12,7 @@ subhook_deps = [
 
 ]
 
-subhook_lib = static_library('subhook',
+subhook_lib = both_libraries('subhook',
   subhook_srcs,
   install: false,
   dependencies: subhook_deps,

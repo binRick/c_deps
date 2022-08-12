@@ -1,4 +1,4 @@
-str_replace_lib = static_library('str-replace', 
+str_replace_lib = both_libraries('str-replace', 
   '../../../submodules/str-replace.c/src/str-replace.c',
   install: false, 
   dependencies: [

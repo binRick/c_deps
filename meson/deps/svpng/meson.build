@@ -1,4 +1,4 @@
-svpng_lib = static_library('svpng', 
+svpng_lib = both_libraries('svpng', 
 '../../../submodules/svpng/svpng.c',
 install: false, dependencies: [], 
   include_directories: [

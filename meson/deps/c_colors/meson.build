@@ -1,4 +1,4 @@
-c_colors_lib = static_library('c_colors', 
+c_colors_lib = both_libraries('c_colors', 
 '../../../submodules/c_colors/src/colors.c',
 install: false, dependencies: [
     c_string_buffer_dep,

@@ -12,7 +12,7 @@ bestline_deps = [
 
 ]
 
-bestline_lib = static_library('bestline',
+bestline_lib = both_libraries('bestline',
   bestline_srcs,
   install: false,
   dependencies: bestline_deps,

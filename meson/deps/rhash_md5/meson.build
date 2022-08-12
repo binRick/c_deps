@@ -2,7 +2,7 @@ rhash_md5_inc = [
   '../../../submodules/rhash_md5.c',
   inc,
 ]
-rhash_md5_lib = static_library('rhash_md5', 
+rhash_md5_lib = both_libraries('rhash_md5', 
   '../../../submodules/rhash_md5.c/md5.c',
   install: false, 
   dependencies: [

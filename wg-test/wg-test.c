@@ -43,12 +43,12 @@ int main(int argc, char **argv) {
       fprintf(stderr, "Unable to access interface %s: %s\n", interface, strerror(errno));
       continue;
     }
-    dbg((char *)device->name, % s);
-    dbg((int)device->ifindex, % d);
-    dbg((char *)device->private_key, % s);
-    dbg((char *)device->public_key, % s);
-    dbg((int)device->listen_port, % d);
-    dbg((int)device->flags, % d);
+    dbg((char *)device->name, %s);
+    dbg((int)device->ifindex, %d);
+    dbg((char *)device->private_key, %s);
+    dbg((char *)device->public_key, %s);
+    dbg((int)device->listen_port, %d);
+    dbg((int)device->flags, %d);
     printf("\n");
     free_wgdevice(device);
   }

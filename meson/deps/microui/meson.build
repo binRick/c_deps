@@ -3,7 +3,7 @@ microui_inc = [
   '../../../submodules/microui',
   inc,
 ]
-microui_lib = static_library('microui', 
+microui_lib = both_libraries('microui', 
   '../../../submodules/microui/src/microui.c',
   install: false, 
   dependencies: [

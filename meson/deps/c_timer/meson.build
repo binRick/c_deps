@@ -1,4 +1,4 @@
-c_timer_lib = static_library('c_timer', 
+c_timer_lib = both_libraries('c_timer', 
   c_deps_dir + '/submodules/c_timer/src/c_timer.c',
   install: false, 
   dependencies: [

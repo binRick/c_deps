@@ -21,7 +21,7 @@ libconfuse_deps = [
 
 ]
 
-#libconfuse_lib = static_library('libconfuse',
+#libconfuse_lib = both_libraries('libconfuse',
 #  libconfuse_srcs,
 #  install: false,
 #  dependencies: libconfuse_deps,

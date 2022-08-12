@@ -15,7 +15,7 @@ siphash_deps = [
 
 ]
 
-siphash_lib = static_library('siphash',
+siphash_lib = both_libraries('siphash',
   siphash_srcs,
   install: false,
   dependencies: siphash_deps,

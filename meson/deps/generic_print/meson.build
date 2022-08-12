@@ -7,7 +7,7 @@ generic_print_inc = [
   inc,
 ]
 
-#generic_print_lib = static_library('generic_print', 
+#generic_print_lib = both_libraries('generic_print', 
 #  generic_print_srcs,
 #  install: false, 
 #  dependencies: [

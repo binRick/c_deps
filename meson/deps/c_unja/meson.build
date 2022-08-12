@@ -19,7 +19,7 @@ c_unja_deps = [
 
 ]
 
-c_unja_lib = static_library('unja',
+c_unja_lib = both_libraries('unja',
   c_unja_srcs,
   install: false,
   dependencies: c_unja_deps,

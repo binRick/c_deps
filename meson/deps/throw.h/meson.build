@@ -10,7 +10,7 @@ throw_h_deps = [
 
 ]
 
-#throw_h_lib = static_library('throw.h',
+#throw_h_lib = both_libraries('throw.h',
 #  throw_h_srcs,
 #  install: false,
 #  dependencies: throw_h_deps,

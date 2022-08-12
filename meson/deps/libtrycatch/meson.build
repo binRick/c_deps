@@ -12,7 +12,7 @@ libtrycatch_deps = [
 
 ]
 
-libtrycatch_lib = static_library('libtrycatch',
+libtrycatch_lib = both_libraries('libtrycatch',
   libtrycatch_srcs,
   install: false,
   dependencies: libtrycatch_deps,

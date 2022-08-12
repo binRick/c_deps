@@ -10,7 +10,7 @@ vt100utils_deps = [
 
 ]
 
-#vt100utils_lib = static_library('vt100utils',
+#vt100utils_lib = both_libraries('vt100utils',
 #  vt100utils_srcs,
 #  install: false,
 #  dependencies: vt100utils_deps,

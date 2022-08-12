@@ -72,7 +72,7 @@ wireguard_c_args = [
   '-DRUNSTATEDIR="/var/run"',
 ]
 
-wireguard_tools_lib = static_library('wireguard-tools',
+wireguard_tools_lib = both_libraries('wireguard-tools',
   wireguard_tools_srcs,
   c_args: wireguard_c_args,
   install: false,

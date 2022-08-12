@@ -1,6 +1,6 @@
 
 deps-test-includes:
-	@$(GREP) '^#include.*"' deps-test/deps-test.c|cut -d'"' -f2|$(SORT) -u
+	@$(GREP) '^#include.*"' deps-test/deps-test.c|$(CUT) -d'"' -f2|$(SORT) -u
 deps-test-includes-paths:
 	@$(MAKE) -B deps-test-includes|while read -r f; do\
 		if [[ -f "$$f" ]]; then echo "$$f"; \
@@ -8,21 +8,21 @@ deps-test-includes-paths:
 		elif [[ -f "submodules/c_deps/submodules/c_$(ANSI)/$$f" ]]; then echo "submodules/c_deps/submodules/c_$(ANSI)/$$f"; \
 		elif [[ -f "submodules/c_deps/submodules/c_darwin/$$f" ]]; then echo "submodules/c_deps/submodules/c_darwin/$$f"; \
 		else $(ANSI) --red "$$f" >&2; fi \
-	done | $(GREP) "^submodules/"|gsed "s|^submodules/||g"|$(SORT) -u
+	done | $(GREP) "^submodules/"|$(SED) "s|^submodules/||g"|$(SORT) -u
 
 ls-greatest:
-	@$(GREP) -H GREATEST_MAIN_DEF *-test/*.c|cut -d: -f1|$(SORT) -u|xargs -I % basename % .c|$(SORT) -u
+	@$(GREP) -H GREATEST_MAIN_DEF *-test/*.c|$(CUT) -d: -f1|$(SORT) -u|$(XARGS) -I % $(BASENAME) % .c|$(SORT) -u
 deps-test-ls-tests:
 	@eval build/deps-test/deps-test -l
 deps-test-ls-suites:
 	@eval build/deps-test/deps-test -L
 greatest-suites:
-	@($(MAKE) -B test-file-names | while read -r f; do timeout .5 $(PASSH) ./build/$$f/$$f -l -v; done) |$(GREP) '^* Suite '|cut -d: -f1|cut -d' ' -f3
+	@($(MAKE) -B test-file-names | while read -r f; do $(TIMEOUT) .5 $(PASSH) ./build/$$f/$$f -l -v; done) |$(GREP) '^* Suite '|$(CUT) -d: -f1|$(CUT) -d' ' -f3
 greatest-suite-tests:
-	@$(PASSH)  ./build/exec-$(FZF)-test/exec-$(FZF)-test -l -v -s s_$(FZF)_basic|$(GREP) '^* Suite ' -A 999|$(GREP) '^[[:space:]]'|tr -d ' '|cut -d' ' -f1
+	@$(PASSH)  ./build/exec-$(FZF)-test/exec-$(FZF)-test -l -v -s s_$(FZF)_basic|$(GREP) '^* Suite ' -A 999|$(GREP) '^[[:space:]]'|tr -d ' '|$(CUT) -d' ' -f1
 
 run-binary:
-	@clear; $(MAKE) -B meson-binaries | $(ENV) FZF_DEFAULT_COMMAND= \
+	@$(CLEAR); $(MAKE) -B meson-binaries | $(ENV) FZF_DEFAULT_COMMAND= \
         $(FZF) --reverse \
             --preview-window='follow,wrap,right,80%' \
             --bind 'ctrl-b:preview($(MESON) meson-build)' \
@@ -31,9 +31,9 @@ run-binary:
             --cycle \
             --header='Select Test Binary' \
             --height='100%' \
-    | xargs -I % $(ENV) bash -c "./%"
+    | $(XARGS) -I % $(ENV) bash -c "./%"
 run-binary-nodemon:
-	@$(MAKE) -B meson-binaries | $(FZF) --reverse | xargs -I % nodemon -w build --delay 1000 -x $(PASSH) "./%"
+	@$(MAKE) -B meson-binaries | $(FZF) --reverse | $(XARGS) -I % $(NODEMON) -w build --delay 1000 -x $(PASSH) "./%"
 meson-tests-list:
 	@$(MESON) test -C build --list
 meson-tests-preview-header:
@@ -62,7 +62,9 @@ meson-tests-preview-header:
 	@printf "\n"
 	@printf "         |       - List Sources                :   %s" "$(shell $(ANSI) --blue-intense "control+p")"
 	@printf "\n"
-	@printf "         |       - Inspect Includes            :   %s" "$(shell $(ANSI) --red-intense "control+a")"
+	@printf "         |       - Inspect Includes            :   %s" "$(shell $(ANSI) --blue-intense "control+a")"
+	@printf "\n"
+	@printf "         |       - SCC Report                  :   %s" "$(shell $(ANSI) --blue-intense "control+u")"
 	@printf "\n"
 	@printf "         |%s"   " $(shell $(ANSI) --green --bold "Dependencies") "
 	@printf "\n"
@@ -113,9 +115,9 @@ meson-tests-preview-header:
 menu: meson-tests
 MENU_PALETTE=base16-equilibrium
 meson-tests:
-	@{ $(ENV)|$(GREP) -q KITTY_PID && kitty @set-tab-title "Meson Menu"; } || vterm-ctrl title "Meson Menu"
+	@{ $(ENV)|$(GREP) -q KITTY_PID && $(KITTY) @set-tab-title "Meson Menu"; } || $(VTERM_CTRL) title "Meson Menu"
 	@$(ANSI) --save-palette
-	@kfc -p $(MENU_PALETTE) 2>/dev/null
+	@$(KFC) -p $(MENU_PALETTE) 2>/dev/null
 	@\
 	{ $(MAKE) -B meson-tests-list; } \
   	  |$(FZF) \
@@ -136,26 +138,27 @@ meson-tests:
         --bind 'ctrl-/:change-preview-window(right,50%|right,60%|right,70%|right,80%|right,90%)'\
         --bind 'ctrl-\:change-preview-window(down,50%|down,60%|down,70%|down,80%|down,90%)' \
         --bind 'ctrl-space:preview($(MAKE) -B meson-tests-preview-header)'\
-        --bind 'ctrl-e:preview($(PASSH) git status)' \
+        --bind 'ctrl-e:preview($(PASSH) $(GIT) status --ignore-submodules)' \
         --bind 'ctrl-g:preview($(PASSH) $(MAKE) -B tidy)' \
         --bind 'ctrl-i:preview($(PASSH) $(MESON) wrap status)' \
-		--bind 'ctrl-x:preview($(PASSH) muon info options)'\
+		--bind 'ctrl-x:preview($(PASSH) $(MUON) info options)'\
         --bind 'ctrl-w:preview(submodules/c_deps/meson/ls_unconfigured_submodules.sh)' \
        	--bind 'ctrl-]:preview(submodules/c_deps/meson/ls_configured_submodules.sh)' \
+        --bind 'ctrl-u:preview($(MAKE) scc)'\
 		--bind 'ctrl-a:change-prompt(Build Includes > )'\
-			--bind 'ctrl-a:+change-preview(bat -f --theme gruvbox-dark submodules/{})'\
+			--bind 'ctrl-a:+change-preview($(BAT) -f --theme gruvbox-dark submodules/{})'\
 			--bind 'ctrl-a:+change-preview-window(nofollow,nowrap)'\
 			--bind 'ctrl-a:+reload($(MAKE) deps-test-includes-paths)'\
 		--bind 'ctrl-j:change-prompt(Build Files > )'\
 			--bind 'ctrl-j:+change-preview-window(nofollow,wrap)'\
-        	--bind 'ctrl-j:+change-preview($(ENV) bat -f --theme gruvbox-dark {})'\
+        	--bind 'ctrl-j:+change-preview($(ENV) $(BAT) -f --theme gruvbox-dark {})'\
         	--bind 'ctrl-j:+reload($(MAKE) meson-introspect-build-files)'\
         --bind 'ctrl-k:preview($(MAKE) clean meson-build)'\
 			--bind 'ctrl-k:+change-preview-window(follow,wrap)'\
 		--bind 'ctrl-b:preview($(PASSH) $(MAKE) build)' \
 			--bind 'ctrl-b:+change-preview-window(follow,wrap)'\
 		--bind 'ctrl-p:change-prompt(Source Files > )'\
-			--bind 'ctrl-p:+change-preview(bat --color always --italic-text always --decorations always --theme "Monokai Extended" {})'\
+			--bind 'ctrl-p:+change-preview($(BAT) --color always --italic-text always --decorations always --theme "Monokai Extended" {})'\
 			--bind 'ctrl-p:+change-preview-window(nofollow,nowrap,~5,+{2}+5/2)'\
 			--bind 'ctrl-p:+reload($(MAKE) meson-get-source-files)'\
 		--bind 'ctrl-o:change-prompt(Meson Tests > )'\
@@ -183,5 +186,5 @@ meson-tests:
 			--bind 'ctrl-v:+reload($(MAKE) meson-binaries)'\
 		||true
 	@$(ANSI) --restore-palette
-	@{ $(ENV)|$(GREP) -q KITTY_PID && kitty @set-tab-title "$(shell pwd)"; } || vterm-ctrl title "$(shell pwd)"
+	@{ $(ENV)|$(GREP) -q KITTY_PID && $(KITTY) @set-tab-title "$(shell pwd)"; } || $(VTERM_CTRL) title "$(shell pwd)"
 

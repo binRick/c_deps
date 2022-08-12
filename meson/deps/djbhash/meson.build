@@ -13,7 +13,7 @@ djbhash_cargs = [
 djbhash_inc = [
   inc,
 ]
-djbhash_lib = static_library('djbhash', djbhash_srcs,
+djbhash_lib = both_libraries('djbhash', djbhash_srcs,
   install: false, 
   c_args: djbhash_cargs,
   dependencies: [

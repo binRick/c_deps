@@ -8,7 +8,7 @@ reproc_dirs = [
     '../../../submodules/reproc',
   inc,
 ]
-reproc_lib = static_library('reproc',
+reproc_lib = both_libraries('reproc',
   '../../../submodules/reproc/reproc/src/clock.posix.c',
   '../../../submodules/reproc/reproc/src/drain.c',
   '../../../submodules/reproc/reproc/src/error.posix.c',

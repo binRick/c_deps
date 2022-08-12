@@ -1,4 +1,4 @@
-tmt_lib = static_library('tmt',
+tmt_lib = both_libraries('tmt',
   '../../../submodules/libtmt/tmt.c',
   install: false, 
   dependencies: [

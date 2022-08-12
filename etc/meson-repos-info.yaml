@@ -28,7 +28,15 @@ tasks:
       - name: Print Meson Repo Git Status %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && git status > /tmp/meson-repos-git-status-%.log"
+        cmd: env bash -c "cd ~/repos/%/. && git status --ignore-submodules > /tmp/meson-repos-git-status-%.log"
+
+  - name: Generate Meson Repos Scc Report
+    tags: [scc]
+    parallel-tasks:
+      - name: Generate Meson Repo % Scc Report
+        for-each: *meson-dirs
+        ignore-failure: false
+        cmd: env bash -c "cd ~/repos/%/. && { ansi --green % && make scc 2>/dev/null; } > /tmp/meson-repos-scc-%.log"
 
   - name: Print Meson Repos Git Diff
     tags: [git-diff]
@@ -36,7 +44,7 @@ tasks:
       - name: Print Meson Repo Git diff %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && git diff > /tmp/meson-repos-git-diff-%.log"
+        cmd: env bash -c "cd ~/repos/%/. && git diff --ignore-submodules > /tmp/meson-repos-git-diff-%.log"
 
   - name: Print Meson Repos Build Commands
     tags: [build-commands]

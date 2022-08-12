@@ -24,7 +24,7 @@ libyaml_src_files = [
 foreach s : libyaml_src_files
   libyaml_srcs += libyaml_dir + '/src/' + s
 endforeach
-libyaml_lib = static_library('libyaml', 
+libyaml_lib = both_libraries('libyaml', 
   libyaml_srcs,
   install: false, 
   dependencies: [],

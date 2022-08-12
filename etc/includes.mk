@@ -13,3 +13,4 @@ include submodules/c_deps/etc/git.mk
 include submodules/c_deps/etc/nodemon.mk
 include submodules/c_deps/etc/setup.mk
 include submodules/c_deps/etc/python.mk
+include submodules/c_deps/etc/scc.mk

@@ -9,7 +9,7 @@ libbeaufort_inc = [
   '../../../submodules/libbeaufort',
   inc,
 ]
-libbeaufort_lib = static_library('libbeaufort', 
+libbeaufort_lib = both_libraries('libbeaufort', 
   libbeaufort_srcs,
   install: false, 
   dependencies: [

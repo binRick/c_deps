@@ -1,6 +1,6 @@
 cflag_dir = '../../../submodules/cflag'
 
-cflag_lib = static_library('cflag', 
+cflag_lib = both_libraries('cflag', 
   cflag_dir + '/cflag.c',
 install: false, dependencies: [], 
   include_directories: [

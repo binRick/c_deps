@@ -12,7 +12,7 @@ miniaudio_deps = [
 
 ]
 
-miniaudio_lib = static_library('miniaudio',
+miniaudio_lib = both_libraries('miniaudio',
   miniaudio_srcs,
   install: false,
   dependencies: miniaudio_deps,
