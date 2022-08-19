@@ -15,7 +15,7 @@ sqlite_incs = [
   '../../../vendor/sqlite',
 ]
 
-#sqlite_lib = library('sqlite3',
+#sqlite_lib = static_library('sqlite3',
 #                             sqlite,
 #                             c_args: sqlite_cflags + ['-DBOYDEMDB_INTERNAL'],
 #                             include_directories: sqlite_incs

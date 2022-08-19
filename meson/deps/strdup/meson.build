@@ -2,7 +2,7 @@
 strdup_dirs = [
   inc,
   ]
-strdup_lib = library('strdup', 
+strdup_lib = static_library('strdup', 
   c_deps_dir + '/submodules/strdup/strdup.c',
   install: false, 
   dependencies: [

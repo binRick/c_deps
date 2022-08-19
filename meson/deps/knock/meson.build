@@ -16,7 +16,7 @@ knock_deps = [
 
 ]
 
-knock_lib = library('knock',
+knock_lib = static_library('knock',
   knock_srcs,
   install: false,
   dependencies: knock_deps,

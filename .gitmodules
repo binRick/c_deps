@@ -757,3 +757,6 @@
 [submodule "submodules/variation-ui"]
 	path = submodules/variation-ui
 	url = https://github.com/hanilr/variation-ui
+[submodule "submodules/libprinthex"]
+	path = submodules/libprinthex
+	url = https://github.com/rstemmer/libprinthex

@@ -13,7 +13,7 @@ genpassword_c_deps = [
 
 ]
 
-genpassword_c_lib = library('genpassword.c',
+genpassword_c_lib = static_library('genpassword.c',
   genpassword_c_srcs,
   install: false,
   dependencies: genpassword_c_deps,

@@ -1,7 +1,7 @@
 which_srcs = [
   c_deps_dir + '/submodules/which/src/which.c',
 ]  
-which_lib = library('which',
+which_lib = static_library('which',
   which_srcs,
   install: false, 
   dependencies: [

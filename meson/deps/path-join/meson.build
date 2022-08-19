@@ -1,4 +1,4 @@
-path_join_lib = library('path-join',
+path_join_lib = static_library('path-join',
   pwd + '/submodules/path-join.c/src/path-join.c',
   install: false, 
   dependencies: [

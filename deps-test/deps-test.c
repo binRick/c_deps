@@ -1,4 +1,3 @@
-#define MKCREFLECT_IMPL
 #define LAY_IMPLEMENTATION
 #define MINIAUDIO_IMPLEMENTATION
 #define TB_IMPL
@@ -12,7 +11,6 @@
 ////////////////////////////////////////////
 #include <stdio.h>
 ////////////////////////////////////////////
-////////////////////////////////////////////
 #include <assert.h>
 #include <err.h>
 #include <errno.h>
@@ -22,22 +20,18 @@
 #include <locale.h>
 #include <math.h>
 #include <poll.h>
-#include <poll.h>
 #include <signal.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdlib.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <termios.h>
 #include <unistd.h>
-#include <unistd.h>
 #include <wchar.h>
 ////////////////////////////////////////////
 #ifdef DEBUG_MEMORY
-#include "debug-memory/debug_memory.h"
+//#include "debug-memory/debug_memory.h"
 #endif
 ////////////////////////////////////////////
 #include "deps-test/deps-test.h"
@@ -61,15 +55,13 @@
 #include "c_ansi/ansi-codes/ansi-codes.h"
 #include "c_ansi/ansi-utils/ansi-utils.h"
 #include "c_bench/bench.h"
+#include "c_dbg/dbg.h"
 #include "c_forever/include/forever.h"
-#include "c_fsio/include/fsio.h"
 #include "c_fsio/include/fsio.h"
 #include "c_greatest/greatest/greatest.h"
 #include "c_ini/include/ini.h"
 #include "c_posix-tree/posix-tree.h"
 #include "c_string_buffer/include/stringbuffer.h"
-#include "c_string_buffer/include/stringbuffer.h"
-#include "c_stringfn/include/stringfn.h"
 #include "c_stringfn/include/stringfn.h"
 #include "c_timer/include/c_timer.h"
 #include "c_vector/include/vector.h"
@@ -98,7 +90,6 @@
 #include "ctable/src/table.h"
 #include "ctable/src/vector.h"
 #include "date.c/date.h"
-#include "dbg.h/dbg.h"
 #include "debug-memory/debug_memory.h"
 #include "debug_print_h/include/debug_print.h"
 #include "dmt/src/dmt.h"
@@ -111,13 +102,14 @@
 #include "flingfd/src/flingfd.h"
 #include "font/font.h"
 #include "fs.c/fs.h"
+//#include "function_overload/function-overload.h"
 #include "generic-print/print.h"
 #include "genpassword.c/src/genpassword.h"
 #include "hashmap.h/hashmap.h"
 #include "hexify.c/hexify.h"
 #include "hidapi/hidapi/hidapi.h"
 #include "hidapi/mac/hidapi_darwin.h"
-#include "hsluv-c/src/hsluv.h"
+//#include "hsluv-c/src/hsluv.h"
 #include "http-get.c/src/http-get.h"
 #include "http-parser/http_parser.h"
 #include "httpserver.h/httpserver.h"
@@ -129,12 +121,12 @@
 #include "kitty/kitty.h"
 #include "layout/layout.h"
 #include "levenshtein.c/levenshtein.h"
-#include "libansilove/include/ansilove.h"
+//#include "libansilove/include/ansilove.h"
 #include "libbeaufort/include/beaufort.h"
 #include "libconfuse/src/confuse.h"
 #include "libforks/libforks.h"
 #include "libmutotp/base32codec.h"
-#include "libmutotp/base32codec.h"
+//#include "libprinthex/printhex.h"
 #include "libspinner/spinner.h"
 #include "libspng/spng/spng.h"
 #include "libterminput/libterminput.h"
@@ -154,7 +146,7 @@
 #include "microui/src/microui.h"
 #include "miniaudio/miniaudio.h"
 #include "minmax/include/minmax.h"
-#include "mkcreflect/lib/include/mkcreflect.h"
+//#include "mkcreflect/lib/include/mkcreflect.h"
 #include "module/def.h"
 #include "module/module.h"
 #include "module/require.h"
@@ -165,7 +157,6 @@
 #include "ok-file-formats/ok_jpg.h"
 #include "ok-file-formats/ok_png.h"
 #include "ok-file-formats/ok_wav.h"
-#include "parson/parson.h"
 #include "parson/parson.h"
 #include "path-basename.c/src/path-basename.h"
 #include "path-normalize.c/src/path-normalize.h"
@@ -203,23 +194,14 @@
 #include "ctable/src/table.h"
 #include "libmutotp/base32codec.h"
 #include "libmutotp/sha1.h"
-#include "libmutotp/sha1.h"
 #include "libmutotp/totp.h"
-#include "libmutotp/totp.h"
-#include "libspinner/spinner.h"
 #include "libspinner/spinner.h"
 #include "parson/parson.h"
 #include "progressbar/include/progressbar/progressbar.h"
-#include "progressbar/include/progressbar/progressbar.h"
-#include "progressbar/include/progressbar/statusbar.h"
 #include "progressbar/include/progressbar/statusbar.h"
 #include "slug.c/deps/case.h"
-#include "slug.c/deps/case.h"
-#include "slug.c/deps/trim.h"
 #include "slug.c/deps/trim.h"
 #include "slug.c/src/slug.h"
-#include "slug.c/src/slug.h"
-#include "spin/spin.h"
 #include "spin/spin.h"
 #include "tempdir.c/tempdir.h"
 #include "termbox2/termbox.h"
@@ -234,7 +216,6 @@
 #include "vt100utils/vt100utils.h"
 #include "vtparse/vtparse/vtparse.h"
 #include "which/src/which.h"
-#include "which/src/which.h"
 #include "wildcardcmp/wildcardcmp.h"
 #include "wsServer/extra/toyws/toyws.h"
 #include "wsServer/include/base64.h"
@@ -247,16 +228,20 @@
 #include "seethe/seethe.h"
 ////////////////////////////////////////////
 void __attribute__((constructor)) premain(){
-  char *s = malloc(1024);
-
-  sprintf(s, "%s", "test");
-  char *s0 = strdup(s);
+  /*
+   * char *s = malloc(1024);
+   *
+   * sprintf(s, "%s", "test");
+   * char *s0 = strdup(s);
+   */
 }
 void __attribute__((destructor)) postmain(){
-#ifdef DEBUG_MEMORY
-  printf("\nChecking for memory leak\n");
-  print_allocated_memory();
-#endif
+  /*
+   #ifdef DEBUG_MEMORY
+   * printf("\nChecking for memory leak\n");
+   * print_allocated_memory();
+   #endif
+   */
 }
 
 static int do_get_google();
@@ -2794,6 +2779,61 @@ int cb_validate_bookmark(cfg_t *cfg, cfg_opt_t *opt){
   return(0);
 }
 
+void realCreate(int x, int y){
+  printf("(%d, %d)\n", x, y);
+}
+/*
+ #define CREATE_2(x, y)    realCreate(x, y)
+ #define CREATE_1(x)       CREATE_2(x, 0)
+ #define CREATE_0()        CREATE_1(0)
+ #define create(...)       MACRO_CHOOSER(__VA_ARGS__)(__VA_ARGS__)
+ *
+ * TEST t_function_overload(){
+ * create();
+ * create(10);
+ * create(20, 20);
+ * PASS();
+ * }
+ */
+
+TEST t_libprinthex(){
+  /*
+   * unsigned char *bitmap =
+   * "\x42\x4D\x3A\x00" "\x00\x00\x00\x00"  "\x00\x00\x36\x00" "\x00\x00\x28\x00"
+   * "\x00\x00\x01\x00" "\x00\x00\x01\x00"  "\x00\x00\x01\x00" "\x18\x00\x00\x00"
+   * "\x00\x00\x04\x00" "\x00\x00\xC4\x0E"  "\x00\x00\xC4\x0E" "\x00\x00\x00\x00"
+   * "\x00\x00\x00\x00" "\x00\x00\xFF\xFF"  "\xFF\x00"
+   * ;
+   *
+   * printhex(bitmap, 0x3A, 16,
+   *       0, "\e[1;35m",           // Magic Number
+   *       2, "\e[1;36m",           // BMP size
+   *       6, "\e[1;30m",           // reserved section
+   *       10, "\e[1;34m",          // Offset of image data
+   *       14, "\e[1;36m",          // Info block size
+   *       18, "\e[1;34m",          // Size of Image in Px
+   *       26, "\e[1;30m",          // Irrelevant for BMP
+   *       28, "\e[1;34m",          // Bits per pixel
+   *       30, "\e[0;34m",          // Compression mode
+   *       34, "\e[1;30m",          // Pixels per meter
+   *       46, "\e[0;34m",          // Color table related
+   *       54, "\e[1;37m\e[44m",    // Blue Value of first Pixel
+   *       55, "\e[1;37m\e[42m",    // Green Value of first Pixel
+   *       56, "\e[1;37m\e[41m",    // Red Value of first Pixel
+   *       57, "\e[0;31m",          // Padding byte
+   *       -1);                     // (no further color changes)
+   * printf("\n\n\n");
+   *
+   * char *helloworld = "Hello World";
+   *
+   * printhex(helloworld, strlen(helloworld), 16,
+   *       6, "\e[1;32m", // Green World
+   *       -1);           // (end of offset/color list)
+   * printf("\n");
+   */
+  PASS();
+}
+
 TEST t_block0(){
   int  x = 10;
 
@@ -2936,7 +2976,79 @@ TEST t_tty_copy(){
   PASSm(msg);
 }
 
-TEST t_libconfuse(){
+int conf_validate_bookmark1(cfg_t *cfg, cfg_opt_t *opt){
+  cfg_t *bookmark = cfg_opt_getnsec(opt, cfg_opt_size(opt) - 1);
+
+  if (cfg_size(bookmark, "host") == 0) {
+    cfg_error(cfg, "missing required option 'host' in bookmark");
+    return(-1);
+  }
+  return(0);
+}
+
+TEST t_libconfuse1(){
+  char *cfg_s = "\n\
+verbose=true\n\
+server=server1\n\
+bookmark gnu {\n\
+    login = \"anonymous\"\n\
+    password = ${ANONPASS:-secret}\n\
+    directory = \"/pub/gnu\"\n\
+    host = \"ftp.gnu.org\"\n\
+}\n\
+\n\
+bookmark kernel {\n\
+    host = \"ftp.kernel.org\"\n\
+    directory = \"/pub/linux/kernel/v2.6\"\n\
+    port = 8021\n\
+}\n\
+\n";
+
+  fsio_write_text_file("/tmp/simple1.conf", cfg_s);
+  static cfg_bool_t verbose = cfg_false;
+  size_t            i;
+
+  static cfg_opt_t  bookmark_opts[] = {
+    CFG_STR("host",      NULL,         CFGF_NODEFAULT),
+    CFG_INT("port",      21,           CFGF_NONE),
+    CFG_STR("login",     "anonymous",  CFGF_NONE),
+    CFG_STR("password",  "anonymous@", CFGF_NONE),
+    CFG_STR("directory", NULL,         CFGF_NONE),
+    CFG_END()
+  };
+  cfg_opt_t         opts[] = {
+    CFG_SIMPLE_BOOL("verbose", &verbose),
+    CFG_SIMPLE_STR("server",   &server),
+    CFG_SEC("bookmark",        bookmark_opts,CFGF_MULTI | CFGF_TITLE),
+    CFG_END(),
+  };
+  cfg_t             *cfg;
+
+  cfg = cfg_init(opts, CFGF_NONE);
+  if (cfg_parse(cfg, "/tmp/simple1.conf") == CFG_PARSE_ERROR) {
+    return(1);
+  }
+  cfg_set_validate_func(cfg, "bookmark", conf_validate_bookmark1);
+  cfg_print_indent(cfg, stdout, 1);
+
+  printf("=============================\n");
+  printf("verbose: %s\n", verbose ? "true" : "false");
+  printf("number of bookmarks: %d\n", cfg_size(cfg, "bookmark"));
+  for (int i = 0; i < cfg_size(cfg, "bookmark"); i++) {
+    cfg_t *bookmark = cfg_getnsec(cfg, "bookmark", i);
+
+    printf("  bookmark #%d: %s:%s@%s:%ld%s\n", i + 1,
+           cfg_getstr(bookmark, "login"),
+           cfg_getstr(bookmark, "password"),
+           cfg_getstr(bookmark, "host"), cfg_getint(bookmark, "port"), cfg_getstr(bookmark, "directory"));
+  }
+  printf("=============================\n");
+
+  cfg_free(cfg);
+  PASS();
+} /* t_libconfuse1 */
+
+TEST t_libconfuse0(){
   char *cfg_s      = "\
 \n\
 \# this is a comment\n\
@@ -2954,9 +3066,13 @@ env {\n\
 include(/tmp/simple-inc.conf)\n\
 \n";
   char *cfg_inc0_s = "\n\
-bookmark baz {\n\
+bookmark baz0 {\n\
  machine = \"ssh://localhost\"\n\
  login = baz\n\
+}\n\
+bookmark baz1 {\n\
+ machine = \"ssh://host\"\n\
+ login = bar\n\
 }\n\
 \n";
 
@@ -3724,11 +3840,20 @@ TEST t_ok_file_format_png(void){
   }
   PASS();
 }
+SUITE(s_libforks) {
+  RUN_TEST(t_libforks1);
+}
 SUITE(s_flingfd_client) {
   RUN_TEST(t_flingfd_client);
 }
 SUITE(s_flingfd_server) {
   RUN_TEST(t_flingfd_server);
+}
+//SUITE(s_function_overload) {
+//  RUN_TEST(t_function_overload);
+//}
+SUITE(s_libprinthex) {
+  RUN_TEST(t_libprinthex);
 }
 SUITE(s_blocks) {
   RUN_TEST(t_block0);
@@ -3764,7 +3889,8 @@ SUITE(s_tty_copy) {
   RUN_TEST(t_tty_copy);
 }
 SUITE(s_libconfuse) {
-  RUN_TEST(t_libconfuse);
+  RUN_TEST(t_libconfuse0);
+  RUN_TEST(t_libconfuse1);
 }
 SUITE(s_subhook) {
   RUN_TEST(t_subhook1);
@@ -3891,23 +4017,18 @@ SUITE(s_tempdir) {
 }
 SUITE(s_truncate) {
   RUN_TEST(t_truncate);
-  PASS();
 }
 SUITE(s_catpath) {
   RUN_TEST(t_catpath);
-  PASS();
 }
 SUITE(s_regex) {
   RUN_TEST(t_regex);
-  PASS();
 }
 SUITE(s_md5) {
   RUN_TEST(t_md5);
-  PASS();
 }
 SUITE(s_generic_print) {
   RUN_TEST(t_generic_print);
-  PASS();
 }
 
 SUITE(s_libterminput) {
@@ -3916,43 +4037,34 @@ SUITE(s_libterminput) {
 SUITE(s_json) {
   RUN_TEST(t_read_json_file);
   RUN_TEST(t_process_json_lines);
-  PASS();
 }
 SUITE(s_eventemitter){
   RUN_TEST(t_eventemitter);
-  PASS();
 }
 SUITE(s_forever){
   RUN_TEST(t_forever);
-  PASS();
 }
 SUITE(s_socket99_tcp){
   pthread_t th;
 
   pthread_create(&th, NULL, do_socket99_tcp_server, (void *)12311);
   RUN_TEST(t_socket99_tcp_client);
-  PASS();
 }
 SUITE(s_layout){
   RUN_TEST(t_layout);
-  PASS();
 }
 SUITE(s_libbeaufort){
   RUN_TEST(t_libbeaufort);
-  PASS();
 }
 SUITE(s_murmurhash){
   RUN_TEST(t_murmurhash);
-  PASS();
 }
 SUITE(s_dmt){
   RUN_TEST(t_dmt);
   RUN_TEST(t_dmt_summary);
-  PASS();
 }
 SUITE(s_httpserver){
   RUN_TEST(t_httpserver);
-  PASS();
 }
 SUITE(s_kitty){
   RUN_TEST(t_kitty);
@@ -3971,109 +4083,84 @@ SUITE(s_kitty){
   RUN_TEST(t_kitty_query_terminal);
   RUN_TEST(t_kitty_list_fonts);
   RUN_TEST(t_kitty_send_text);
-  PASS();
 }
 SUITE(s_my_cwd){
   RUN_TEST(t_my_cwd);
-  PASS();
 }
 SUITE(s_jinja2_cli){
   RUN_TEST(t_jinja2_cli);
-  PASS();
 }
 SUITE(s_levenshtein){
   RUN_TEST(t_levenshtein);
-  PASS();
 }
 SUITE(s_querystring){
   RUN_TEST(t_querystring);
-  PASS();
 }
 SUITE(s_libtrycatch){
   RUN_TEST(t_libtrycatch);
-  PASS();
 }
 SUITE(s_emojis){
   RUN_TEST(t_emojis);
-  PASS();
 }
 
 SUITE(s_dmt_summary){
   RUN_TEST(t_dmt_summary);
-  PASS();
 }
 
 SUITE(s_cansid){
   RUN_TEST(t_cansid);
-  PASS();
 }
 
 SUITE(s_ansi_utils){
   RUN_TEST(t_ansi_utils);
-  PASS();
 }
 SUITE(s_vtparse){
   RUN_TEST(t_vtparse_simple);
   RUN_TEST(t_vtparse_csi);
-  PASS();
 }
 SUITE(s_microtar){
   RUN_TEST(t_microtar_write);
   RUN_TEST(t_microtar_read);
-  PASS();
 }
 SUITE(s_workqueue){
   RUN_TEST(t_workqueue);
-  PASS();
 }
 SUITE(s_vector){
   RUN_TEST(t_vector);
-  PASS();
 }
 SUITE(s_occurrences){
   RUN_TEST(t_occurrences);
-  PASS();
 }
 SUITE(s_str_replace){
   RUN_TEST(t_str_replace);
-  PASS();
 }
 SUITE(s_time) {
   RUN_TEST(t_timestamp);
-  PASS();
 }
 SUITE(s_spinner) {
 //  RUN_TEST(t_libspinner);
   RUN_TEST(t_spin);
-  PASS();
 }
 SUITE(s_totp) {
   RUN_TEST(t_totp);
-  PASS();
 }
 SUITE(s_qrcode) {
   RUN_TEST(t_qrcode);
-  PASS();
 }
 SUITE(s_status) {
   RUN_TEST(t_statusbar);
-  PASS();
 }
 SUITE(s_progress) {
   RUN_TEST(t_progressbar);
-  PASS();
 }
-SUITE(s_path) {
+SUITE(s_which) {
   RUN_TEST(t_which);
-  PASS();
 }
 SUITE(s_debug) {
   RUN_TEST(t_debug_print);
-  PASS();
 }
 SUITE(s_string) {
   RUN_TEST(t_slug);
-  PASS();
 }
 
 GREATEST_MAIN_DEFS();
@@ -4084,104 +4171,119 @@ int main(int argc, char **argv) {
   realpath(argv[0], EXECUTABLE_PATH);
   EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
   GREATEST_MAIN_BEGIN();
+  /*
+   */
+  /*
+   * if (isatty(STDOUT_FILENO)) {
+   * if (getenv("HTTPSERVER") != NULL) {
+   *  RUN_SUITE(s_httpserver);
+   * }
+   * if (getenv("TINYFILEDIALOGS") != NULL) {
+   *  RUN_SUITE(s_libtinyfiledialogs);
+   * }
+   * RUN_SUITE(s_msgbox);
+   * RUN_SUITE(s_msgbox_server);
+   * RUN_SUITE(s_msgbox_client);
+   * RUN_SUITE(s_flingfd_client);
+   * RUN_SUITE(s_flingfd_server);
+   * if (getenv("LIBTERMINPUT") != NULL) {
+   *  RUN_SUITE(s_libterminput);
+   * }
+   * // RUN_TEST(t_libforks2);
+   * }
+   * if (getenv("TERMBOX2") != NULL) {
+   * RUN_SUITE(s_termbox2);
+   * }
+   * if (getenv("LIBFORKS") != NULL) {
+   * }
+   * RUN_SUITE(s_time);
+   */
+  /*
+   * //RUN_SUITE(s_json);
+   * RUN_SUITE(s_vector);
+   * RUN_SUITE(s_workqueue);
+   * RUN_SUITE(s_microtar);
+   * RUN_SUITE(s_dmt);
+   * RUN_SUITE(s_dmt_summary);
+   * RUN_SUITE(s_md5);
+   * RUN_SUITE(s_vtparse);
+   * RUN_SUITE(s_cansid);
+   * RUN_SUITE(s_ansi_utils);
+   * RUN_SUITE(s_generic_print);
+   * RUN_SUITE(s_murmurhash);
+   * RUN_SUITE(s_libbeaufort);
+   * RUN_SUITE(s_layout);
+   * RUN_SUITE(s_socket99_tcp);
+   * RUN_SUITE(s_tempdir);
+   * RUN_SUITE(s_hidapi);
+   * RUN_SUITE(s_libusb);
+   * RUN_SUITE(s_miniaudio);
+   * RUN_SUITE(s_c89atomic);
+   * RUN_SUITE(s_ok_file_formats);
+   * RUN_SUITE(s_minmax);
+   * RUN_SUITE(s_bench);
+   * RUN_SUITE(s_bitfield);
+   * RUN_SUITE(s_incbin);
+   * RUN_SUITE(s_emojis);
+   * RUN_SUITE(s_libtrycatch);
+   * RUN_SUITE(s_querystring);
+   * RUN_SUITE(s_levenshtein);
+   * RUN_SUITE(s_my_cwd);
+   * RUN_SUITE(s_kitty);
+   * RUN_SUITE(s_url_h);
+   * RUN_SUITE(s_is_number);
+   * RUN_SUITE(s_wildcardcmp);
+   * RUN_SUITE(s_container_of);
+   * RUN_SUITE(s_path_normalize);
+   * RUN_SUITE(s_extname_c);
+   * RUN_SUITE(s_genpassword_c);
+   * RUN_SUITE(s_c_timestamp);
+   * RUN_SUITE(s_url_router);
+   * RUN_SUITE(s_hashmap_h);
+   * RUN_SUITE(s_str_flatten);
+   * RUN_SUITE(s_pidfile);
+   * RUN_SUITE(s_path_module);
+   * RUN_SUITE(s_semver);
+   * RUN_SUITE(s_uptime);
+   * RUN_SUITE(s_dotenv);
+   * RUN_SUITE(s_subhook);
+   * RUN_SUITE(s_tty_copy);
+   * RUN_SUITE(s_tai64n);
+   * RUN_SUITE(s_sense_c);
+   * RUN_SUITE(s_color_boxes);
+   * RUN_SUITE(s_posix_tree);
+   * RUN_SUITE(s_variation_ui);
+   * RUN_SUITE(s_blocks);
+   * RUN_SUITE(s_libprinthex);
+   * RUN_SUITE(s_function_overload);
+   */
   if (isatty(STDOUT_FILENO)) {
-    if (getenv("HTTPSERVER") != NULL) {
-      RUN_SUITE(s_httpserver);
-    }
-    RUN_SUITE(s_termbox2);
-    if (getenv("TINYFILEDIALOGS") != NULL) {
-      RUN_SUITE(s_libtinyfiledialogs);
-    }
-    RUN_SUITE(s_msgbox);
-    RUN_SUITE(s_msgbox_server);
-    RUN_SUITE(s_msgbox_client);
-    RUN_SUITE(s_flingfd_client);
-    RUN_SUITE(s_flingfd_server);
-    if (getenv("LIBTERMINPUT") != NULL) {
-      RUN_SUITE(s_libterminput);
-    }
-    RUN_TEST(t_libforks2);
+    RUN_SUITE(s_libforks);
   }
-  RUN_TEST(t_libforks1);
-  RUN_SUITE(s_json);
-  RUN_SUITE(s_string);
-  RUN_SUITE(s_debug);
-  RUN_SUITE(s_time);
-  RUN_SUITE(s_path);
-  RUN_SUITE(s_progress);
-  RUN_SUITE(s_qrcode);
-  RUN_SUITE(s_totp);
+  RUN_SUITE(s_libconfuse);
+  RUN_SUITE(s_chfreq);
+  //RUN_SUITE(s_string);
+//  RUN_SUITE(s_debug);
+  //RUN_SUITE(s_which);
+//  RUN_SUITE(s_progress);
+// RUN_SUITE(s_qrcode);
+//  RUN_SUITE(s_totp);
   RUN_SUITE(s_spinner);
-  RUN_SUITE(s_occurrences);
-  RUN_SUITE(s_str_replace);
-  RUN_SUITE(s_vector);
-  RUN_SUITE(s_workqueue);
-  RUN_SUITE(s_microtar);
-  RUN_SUITE(s_dmt);
+//  RUN_SUITE(s_occurrences);
+//  RUN_SUITE(s_str_replace);
+  RUN_SUITE(s_seethe);
+  RUN_SUITE(s_jinja2_cli);
+  RUN_SUITE(s_list);
   RUN_SUITE(s_forever);
   RUN_SUITE(s_eventemitter);
   RUN_SUITE(s_regex);
   RUN_SUITE(s_catpath);
   RUN_SUITE(s_truncate);
-  RUN_SUITE(s_dmt_summary);
-  RUN_SUITE(s_md5);
-  RUN_SUITE(s_vtparse);
-  RUN_SUITE(s_cansid);
-  RUN_SUITE(s_ansi_utils);
-  RUN_SUITE(s_generic_print);
-  RUN_SUITE(s_murmurhash);
-  RUN_SUITE(s_libbeaufort);
-  RUN_SUITE(s_layout);
-  RUN_SUITE(s_socket99_tcp);
-  RUN_SUITE(s_tempdir);
-  RUN_SUITE(s_hidapi);
-  RUN_SUITE(s_libusb);
-  RUN_SUITE(s_miniaudio);
-  RUN_SUITE(s_c89atomic);
-  RUN_SUITE(s_ok_file_formats);
-  RUN_SUITE(s_minmax);
-  RUN_SUITE(s_bench);
-  RUN_SUITE(s_bitfield);
-  RUN_SUITE(s_incbin);
-  RUN_SUITE(s_emojis);
-  RUN_SUITE(s_libtrycatch);
-  RUN_SUITE(s_querystring);
-  RUN_SUITE(s_levenshtein);
-  RUN_SUITE(s_jinja2_cli);
-  RUN_SUITE(s_my_cwd);
-  RUN_SUITE(s_kitty);
-  RUN_SUITE(s_url_h);
-  RUN_SUITE(s_is_number);
-  RUN_SUITE(s_wildcardcmp);
-  RUN_SUITE(s_container_of);
-  RUN_SUITE(s_path_normalize);
-  RUN_SUITE(s_extname_c);
-  RUN_SUITE(s_genpassword_c);
-  RUN_SUITE(s_c_timestamp);
-  RUN_SUITE(s_url_router);
-  RUN_SUITE(s_hashmap_h);
-  RUN_SUITE(s_str_flatten);
-  RUN_SUITE(s_pidfile);
-  RUN_SUITE(s_path_module);
-  RUN_SUITE(s_semver);
-  RUN_SUITE(s_uptime);
-  RUN_SUITE(s_chfreq);
-  RUN_SUITE(s_dotenv);
-  RUN_SUITE(s_subhook);
-  RUN_SUITE(s_libconfuse);
-  RUN_SUITE(s_tty_copy);
-  RUN_SUITE(s_tai64n);
-  RUN_SUITE(s_sense_c);
-  RUN_SUITE(s_list);
-  RUN_SUITE(s_color_boxes);
-  RUN_SUITE(s_seethe);
-  RUN_SUITE(s_posix_tree);
-  RUN_SUITE(s_variation_ui);
-  RUN_SUITE(s_blocks);
   GREATEST_MAIN_END();
-
-  size_t used = do_dmt_summary();
-
-  dbg(used, %u);
-  assert(used == 0);
+/*
+ * size_t used = do_dmt_summary();
+ *
+ * dbg(used, %u);
+ * assert(used == 0);
+ */
 } /* main */

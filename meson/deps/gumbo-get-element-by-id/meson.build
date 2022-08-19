@@ -1,4 +1,4 @@
-gumbo_id_lib = library('gumbo-id',
+gumbo_id_lib = static_library('gumbo-id',
   pwd + '/submodules/gumbo-get-element-by-id.c/src/get-element-by-id.c',
   install: false, 
   dependencies: [

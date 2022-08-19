@@ -13,7 +13,7 @@ semver_c_deps = [
 
 ]
 
-semver_c_lib = library('semver.c',
+semver_c_lib = static_library('semver.c',
   semver_c_srcs,
   install: false,
   dependencies: semver_c_deps,

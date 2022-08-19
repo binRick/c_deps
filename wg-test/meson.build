@@ -7,6 +7,7 @@ wg_test_inc = [
 ]
 wg_test_deps = [
  wireguard_tools_dep,
+ c_dbg_dep,
  c_greatest_dep,
  wg_dep,
 ]

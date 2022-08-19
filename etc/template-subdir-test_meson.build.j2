@@ -1,0 +1,33 @@
+{{SUBDIR_NAME_SLUG}}_srcs = [
+  '{{SUBDIR_NAME}}.c',
+]
+inc = get_variable('inc', join_paths(meson.current_source_dir(),'..'))
+{{SUBDIR_NAME_SLUG}}_include_dirs = [
+  '.',
+  inc,
+]
+{{SUBDIR_NAME_SLUG}}_deps = [
+{% for dep in DEPENDENCIES.split(' ') %}  {{dep}},
+{%endfor-%}
+]
+{{SUBDIR_NAME_SLUG}}_c_args = [
+]
+{{SUBDIR_NAME_SLUG}}_link_args = [
+]
+
+{{SUBDIR_NAME_SLUG}}_test_dir = join_paths(meson.current_source_dir(), '..')
+
+if get_option('enable-binaries')
+  {{SUBDIR_NAME_SLUG}}_exec = executable('{{SUBDIR_NAME}}',
+     {{SUBDIR_NAME_SLUG}}_srcs,
+     dependencies: {{SUBDIR_NAME_SLUG}}_deps,
+     include_directories: {{SUBDIR_NAME_SLUG}}_include_dirs,
+     link_args: {{SUBDIR_NAME_SLUG}}_link_args,
+     c_args: {{SUBDIR_NAME_SLUG}}_c_args,
+     install: {{SUBDIR_TEST_INSTALL|lower}},
+  )
+  {% if not SUBDIR_TEST_ENABLED %}#{%endif%}test('{{SUBDIR_NAME}}', 
+  {% if not SUBDIR_TEST_ENABLED %}#{%endif%}  {{SUBDIR_NAME_SLUG}}_exec, args: ['-v','-a'],
+  {% if not SUBDIR_TEST_ENABLED %}#{%endif%}  workdir: {{SUBDIR_NAME_SLUG}}_test_dir,
+  {% if not SUBDIR_TEST_ENABLED %}#{%endif%})
+endif

@@ -12,7 +12,7 @@ querystring_c_deps = [
 
 ]
 
-querystring_c_lib = library('querystring.c',
+querystring_c_lib = static_library('querystring.c',
   querystring_c_srcs,
   install: false,
   dependencies: querystring_c_deps,

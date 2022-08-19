@@ -31,7 +31,7 @@ libucl_deps = [
 
 ]
 
-libucl_lib = library('libucl',
+libucl_lib = static_library('libucl',
   libucl_srcs,
   install: false,
   dependencies: libucl_deps,

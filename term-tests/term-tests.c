@@ -348,7 +348,7 @@ static int term_init(void) {
   event_current->next   = NULL;
   event_current->string = NULL;
 
-  integration = termpaintx_full_integration_setup_terminal_fullscreen("+kbdsigint +kbdsigtstp", event_callback, NULL, &terminal);
+  integration = termpaint_full_integration_setup_terminal_fullscreen("+kbdsigint +kbdsigtstp", event_callback, NULL, &terminal);
   surface     = termpaint_terminal_get_surface(terminal);
 
 //  bool ok = termpaint_surface_resize_mustcheck(surface, 50, 10);
@@ -389,10 +389,12 @@ static void cleanup(void) {
 static event *key_wait(void) {
   while (!event_current->next) {
     redraw_bottom_msg();
-    if (!termpaintx_full_integration_do_iteration(integration)) {
-      cleanup();
-      exit(1);
-    }
+    /*
+     * if (!termpaint_full_integration_do_iteration(integration)) {
+     * cleanup();
+     * exit(1);
+     * }
+     */
   }
 
   free((void *)event_current->string);

@@ -3,7 +3,7 @@ $include: etc/config.yaml
 
 config:
   <<: *config
-  max-parallel-commands: 7
+  max-parallel-commands: 4
   update-interval: 5000
 
 tasks:

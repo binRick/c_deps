@@ -11,7 +11,7 @@ sha256_c_deps = [
 
 ]
 
-sha256_c_lib = library('sha256-c',
+sha256_c_lib = static_library('sha256-c',
   sha256_c_srcs,
   install: false,
   dependencies: sha256_c_deps,

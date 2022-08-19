@@ -1,7 +1,7 @@
 smaz_srcs = [
   c_deps_dir + '/submodules/smaz/smaz.c',
 ]  
-smaz_lib = library('smaz', 
+smaz_lib = static_library('smaz', 
   smaz_srcs,
   install: false, 
   dependencies: [], 

@@ -40,7 +40,7 @@ gifsicle_deps = [
 
 ]
 
-gifsicle_lib = library('gifsicle',
+gifsicle_lib = static_library('gifsicle',
   gifsicle_srcs,
   install: false,
   dependencies: gifsicle_deps,

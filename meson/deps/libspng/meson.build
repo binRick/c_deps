@@ -2,7 +2,7 @@ spng_dep = dependency('spng',
   fallback:['libspng', 'spng_dep'],
   #  //include_directories: include_directories('include'),
   )
-#libspng_lib = library('libspng',
+#libspng_lib = static_library('libspng',
 #  c_deps_dir+'/submodules/libspng/spng/spng.c',
 #  c_deps_dir+'/submodules/libspng/spng/spng.h',
 #  install: false, 

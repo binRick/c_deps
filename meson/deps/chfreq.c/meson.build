@@ -11,7 +11,7 @@ chfreq_c_deps = [
 
 ]
 
-chfreq_c_lib = library('chfreq-c',
+chfreq_c_lib = static_library('chfreq-c',
   chfreq_c_srcs,
   install: false,
   dependencies: chfreq_c_deps,

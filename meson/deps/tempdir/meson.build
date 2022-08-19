@@ -1,7 +1,7 @@
 tempdir_dirs = [
   inc,
   ]
-tempdir_lib = library('tempdir', 
+tempdir_lib = static_library('tempdir', 
   c_deps_dir + '/submodules/tempdir.c/tempdir.c',
   install: false, 
   dependencies: [],

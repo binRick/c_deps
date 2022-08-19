@@ -23,7 +23,7 @@ libcyaml_deps = [
 
 ]
 
-libcyaml_lib = library('libcyaml',
+libcyaml_lib = static_library('libcyaml',
   libcyaml_srcs,
   install: false,
   dependencies: libcyaml_deps,

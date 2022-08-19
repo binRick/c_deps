@@ -18,7 +18,7 @@ libansilove_srcs = [
   '../../../submodules/libansilove/compat/reallocarray.c',
 ]
 
-libansilove_lib = library('libansilove', 
+libansilove_lib = static_library('libansilove', 
   libansilove_srcs,
   dependencies: [
     gd_dep,

@@ -11,7 +11,7 @@ http_parser_deps = [
 
 ]
 
-http_parser_lib = library('http-parser',
+http_parser_lib = static_library('http-parser',
   http_parser_srcs,
   install: false,
   dependencies: http_parser_deps,

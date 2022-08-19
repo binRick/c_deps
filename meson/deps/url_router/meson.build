@@ -16,7 +16,7 @@ url_router_deps = [
 
 ]
 
-url_router_lib = library('url_router',
+url_router_lib = static_library('url_router',
   url_router_srcs,
   install: false,
   dependencies: url_router_deps,

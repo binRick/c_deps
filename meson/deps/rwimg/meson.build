@@ -20,7 +20,7 @@ rwimg_deps = [
 
 ]
 
-rwimg_lib = library('rwimg',
+rwimg_lib = static_library('rwimg',
   rwimg_srcs,
   install: false,
   dependencies: rwimg_deps,

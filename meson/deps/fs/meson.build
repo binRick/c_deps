@@ -1,4 +1,4 @@
-fs_lib = library('fs', 
+fs_lib = static_library('fs', 
   '../../../submodules/fs.c/fs.c',
   install: false, 
   dependencies: [], 

@@ -1,6 +1,6 @@
 
 fmt-scripts:
-	@$(SHFMT) -w scripts/*.sh
+	@$(SHFMT) -w scripts/*.sh 2>/dev/null||true
 
 uncrustify:
 	@$(ANSI) --green Uncrustify

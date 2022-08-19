@@ -11,7 +11,7 @@ cute_png_deps = [
 
 ]
 
-cute_png_lib = library('cute-png',
+cute_png_lib = static_library('cute-png',
   cute_png_srcs,
   install: false,
   dependencies: cute_png_deps,

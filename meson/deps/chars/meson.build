@@ -18,7 +18,7 @@ chars_deps = [
 
 ]
 
-chars_lib = library('chars',
+chars_lib = static_library('chars',
   chars_srcs,
   install: false,
   dependencies: chars_deps,

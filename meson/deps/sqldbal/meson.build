@@ -19,7 +19,7 @@ sqldbal_c_args = [
     '-DSQLDBAL_SQLITE',
 ]
 
-sqldbal_lib = library('sqldbal',
+sqldbal_lib = static_library('sqldbal',
   sqldbal_srcs,
   install: false,
   dependencies: sqldbal_deps,

@@ -12,7 +12,7 @@ readkey_deps = [
 
 ]
 
-readkey_lib = library('readkey',
+readkey_lib = static_library('readkey',
   readkey_srcs,
   install: false,
   dependencies: readkey_deps,

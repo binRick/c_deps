@@ -2,7 +2,7 @@ catpath_inc = [
   '../../../submodules/catpath',
   inc,
 ]
-catpath_lib = library('catpath', 
+catpath_lib = static_library('catpath', 
   '../../../submodules/catpath/catpath.c',
   install: false, 
   dependencies: [

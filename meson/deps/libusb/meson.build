@@ -32,7 +32,7 @@ libusb_deps = [
 
 ]
 
-libusb_lib = library('libusb',
+libusb_lib = static_library('libusb',
   libusb_srcs,
   install: false,
   dependencies: libusb_deps,

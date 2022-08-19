@@ -2,7 +2,7 @@ tiny_regex_c_inc = [
   '../../../submodules/tiny-regex-c',
   inc,
 ]
-tiny_regex_c_lib = library('tiny-regex-c', 
+tiny_regex_c_lib = static_library('tiny-regex-c', 
   '../../../submodules/tiny-regex-c/re.c',
   install: false, 
   dependencies: [

@@ -51,7 +51,7 @@ deps_test_deps = [
   logh_dep,
   c_forever_dep,
   layout_dep,
-  dbg_dep,
+  c_dbg_dep,
   c_eventemitter_dep,
   c_workqueue_dep,
   microtar_dep,
@@ -96,11 +96,14 @@ deps_test_deps = [
   chfreq_c_dep,
   msgbox_dep,
   dotenv_c_dep,
+#  libprinthex_dep,
+  function_overload_dep,
   flingfd_dep,
 ]
 deps_c_args = [
   '-DINCBIN_SILENCE_BITCODE_WARNING',
   '-Wno-macro-redefined',
+  '-Wno-unknown-escape-sequence',
 ]
 deps_link_args = [
 ]
@@ -124,10 +127,10 @@ if get_option('enable-binaries')
     #  workdir: meson.current_source_dir(),
     #)
   endif
-    test('jinja2-cli', 
-      deps_test_exec, args: ['-v','-a','-e','-s','s_jinja2_cli'],
-      workdir: deps_cur_dir,
-      )
+    #test('jinja2-cli', 
+    #  deps_test_exec, args: ['-v','-a','-e','-s','s_jinja2_cli'],
+    #  workdir: deps_cur_dir,
+    #  )
   if get_option('enable-deps-test')
     test('deps-test', 
       deps_test_exec, args: ['-v','-a'],

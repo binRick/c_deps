@@ -13,6 +13,6 @@ asprintf_dirs = [
 
 
 #####################################################################################
-asprintf_lib = library(asprintf_name,asprintf_srcs, c_args: asprintf_cflags,include_directories: asprintf_dirs, )
+asprintf_lib = static_library(asprintf_name,asprintf_srcs, c_args: asprintf_cflags,include_directories: asprintf_dirs, )
 asprintf_dep = declare_dependency(link_with: asprintf_lib,include_directories: asprintf_dirs)
 #####################################################################################

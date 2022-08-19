@@ -2,7 +2,7 @@ cansid_srcs = [
   c_deps_dir + '/submodules/cansid/cansid.c',
 ]
 
-cansid_lib = library('cansid',
+cansid_lib = static_library('cansid',
   cansid_srcs,
   install: false, 
   dependencies: [

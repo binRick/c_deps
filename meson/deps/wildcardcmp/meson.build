@@ -1,4 +1,4 @@
-wildcardcmp_lib = library('wildcardcmp',
+wildcardcmp_lib = static_library('wildcardcmp',
   c_deps_dir + '/submodules/wildcardcmp/wildcardcmp.c',
   install: false, 
   dependencies: [

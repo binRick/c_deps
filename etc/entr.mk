@@ -8,12 +8,13 @@ CMD ?= sleep 0
 MODE ?= $(ENTR_MAKE_MODE)
 WATCH ?= $(MAKE) entr-files
 ###########################################
-ENTR_RAW_CMD=env SHELL=bash entr $(ENTR_RAW_CMD_ARGS) '$(MAKE) $(MODE) && $(CMD)'
+ENTR_RAW_CMD=env SHELL=bash entr $(ENTR_RAW_CMD_ARGS) '$(MAKE) -B $(MODE) && $(CMD)'
 ENTR_CMD=env bash +e -xc "while :; do $(ENTR_RAW_CMD) < <($(WATCH)); sleep 1; done"
 ###########################################
 ENTR_FIND_MAX_DEPTH=3
 ENTR_FIND_DIRS = . \
-									 ~/repos/c_vt100utils
+									 ~/repos/c_vt100utils \
+									 ~/repos/c_ansi
 ENTR_FIND_NAMES = \
 									"*.mk" \
 									"Makefile" \

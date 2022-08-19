@@ -1,4 +1,4 @@
-occurrences_lib = library('occurrences',
+occurrences_lib = static_library('occurrences',
   '../../../submodules/occurrences/occurrences.c',
   install: false, 
   dependencies: [

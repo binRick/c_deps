@@ -1,4 +1,4 @@
-c_kat_lib = library('c_kat', 
+c_kat_lib = static_library('c_kat', 
   '../../../submodules/c_kat/hashtable.c',
   '../../../submodules/c_kat/highlight.c',
   install: false, 

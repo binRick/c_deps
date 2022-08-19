@@ -1,3 +1,4 @@
+#subdir('termpaint')
 subdir('c_ansi/tai64n')
 subdir('c_ansi/ansi-codes')
 subdir('c_ansi/ansi-utils')

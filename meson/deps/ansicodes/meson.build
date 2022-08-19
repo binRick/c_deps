@@ -1,4 +1,4 @@
-ansicodes_lib = library('ansicodes', 
+ansicodes_lib = static_library('ansicodes', 
   c_deps_dir+'/submodules/c_ansi/ansi-codes/ansi-codes.c',
   install: false, 
   dependencies: [
