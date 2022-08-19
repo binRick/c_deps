@@ -94,7 +94,7 @@ struct branch {
 	struct token token;
 	/* if condition is null it means it is an else branch */
 	struct expression *condition;
-	struct vector *subblocks;
+	struct roscha_vector *subblocks;
 	/* elif or else */
 	struct branch *next;
 };
@@ -110,14 +110,14 @@ struct loop {
 	struct token token;
 	struct ident item;
 	struct expression *seq;
-	struct vector *subblocks;
+	struct roscha_vector *subblocks;
 };
 
 /* template block {% block ... %} */
 struct tblock {
 	struct token token;
 	struct ident name;
-	struct vector *subblocks;
+	struct roscha_vector *subblocks;
 };
 
 /* {% extends ... %} */
@@ -189,7 +189,7 @@ struct template {
 	 */
 	struct template *child;
 	/* vector of blocks */
-	struct vector *blocks;
+	struct roscha_vector *blocks;
 };
 
 /* Concatenate to an SDS string a human friendly representation of the node */

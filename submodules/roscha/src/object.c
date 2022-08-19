@@ -30,7 +30,7 @@ bool_string(bool val, sds str)
 }
 
 static inline sds
-vector_string(struct vector *vec, sds str)
+vector_string(struct roscha_vector *vec, sds str)
 {
 	size_t i;
 	struct roscha_object *obj;
@@ -114,7 +114,7 @@ roscha_object_new_string(sds str)
 }
 
 struct roscha_object *
-roscha_object_new_vector(struct vector *vec)
+roscha_object_new_vector(struct roscha_vector *vec)
 {
 	struct roscha_object *obj = malloc(sizeof(*obj));
 	obj->type = ROSCHA_VECTOR;

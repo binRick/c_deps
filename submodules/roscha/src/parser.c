@@ -328,7 +328,7 @@ parser_parse_loop(struct parser *parser, struct block *blk)
 	if (!parser_expect_peek(parser, TOKEN_RBRACE)) return false;
 
 	parser_next_token(parser);
-	blk->tag.loop.subblocks = vector_new();
+	blk->tag.loop.subblocks = roscha_vector_new();
 	while (!parser_cur_token_is(parser, TOKEN_EOF)) {
 		struct block *subblk = parser_parse_block(parser, blk);
 		if (subblk == NULL) {
@@ -359,7 +359,7 @@ parser_parse_branch(struct parser *parser, struct block *opening)
 	if (!parser_expect_peek(parser, TOKEN_RBRACE)) return false;
 
 	parser_next_token(parser);
-	brnch->subblocks = vector_new();
+	brnch->subblocks = roscha_vector_new();
 	while (!parser_cur_token_is(parser, TOKEN_EOF)) {
 		struct block *subblk = parser_parse_block(parser, opening);
 		if (subblk == NULL) {
@@ -442,7 +442,7 @@ parser_parse_tblock(struct parser *parser, struct block *blk)
 	if (!parser_expect_peek(parser, TOKEN_RBRACE)) return false;
 
 	parser_next_token(parser);
-	blk->tag.tblock.subblocks = vector_new();
+	blk->tag.tblock.subblocks = roscha_vector_new();
 	while (!parser_cur_token_is(parser, TOKEN_EOF)) {
 		struct block *subblk = parser_parse_block(parser, blk);
 		if (subblk == NULL) {
@@ -594,7 +594,7 @@ parser_new(char *name, char *input)
 	struct lexer *lex = lexer_new(input);
 	parser->lexer = lex;
 
-	parser->errors = vector_new();
+	parser->errors = roscha_vector_new();
 
 	parser_next_token(parser);
 	parser_next_token(parser);
@@ -610,7 +610,7 @@ parser_parse_template(struct parser *parser)
 	tmpl->source = (char *)parser->lexer->input;
 	parser->tblocks = hmap_new();
 	tmpl->child = NULL;
-	tmpl->blocks = vector_new();
+	tmpl->blocks = roscha_vector_new();
 
 	while (!parser_cur_token_is(parser, TOKEN_EOF)) {
 		struct block *blk = parser_parse_block(parser, NULL);

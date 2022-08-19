@@ -6,7 +6,7 @@
 #include <string.h>
 
 static inline sds
-subblocks_string(struct vector *subblocks, sds str)
+subblocks_string(struct roscha_vector *subblocks, sds str)
 {
 	size_t i;
 	struct block *subblk;
@@ -253,7 +253,7 @@ expression_destroy(struct expression *expr)
 }
 
 static inline void
-subblocks_destroy(struct vector *subblks)
+subblocks_destroy(struct roscha_vector *subblks)
 {
 	size_t i;
 	struct block *blk;

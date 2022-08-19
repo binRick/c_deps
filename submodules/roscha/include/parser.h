@@ -25,7 +25,7 @@ struct parser {
 	 */
 	struct hmap *tblocks;
 	/* vector of sds */
-	struct vector *errors;
+	struct roscha_vector *errors;
 };
 
 typedef struct expression *(*prefix_parse_f)(struct parser *);

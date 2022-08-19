@@ -307,7 +307,7 @@ eval_variable(struct roscha_env *env, sds r, struct variable *var)
 }
 
 static inline sds eval_subblocks(struct roscha_env *, sds r,
-		struct vector *blks);
+		struct roscha_vector *blks);
 
 static inline sds
 eval_branch(struct roscha_env *env, sds r, struct branch *br)
@@ -457,7 +457,7 @@ eval_block(struct roscha_env *env, sds r, struct block *blk)
 }
 
 static inline sds
-eval_subblocks(struct roscha_env *env, sds r, struct vector *blks)
+eval_subblocks(struct roscha_env *env, sds r, struct roscha_vector *blks)
 {
 	size_t i;
 	struct block *blk;
@@ -519,7 +519,7 @@ roscha_env_new(void)
 	env->internal = calloc(1, sizeof(*env->internal));
 	env->vars = roscha_object_new(hmap_new());
 	env->internal->templates = hmap_new();
-	env->errors = vector_new();
+	env->errors = roscha_vector_new();
 
 	return env;
 }
@@ -609,7 +609,7 @@ roscha_env_render(struct roscha_env *env, const char *name)
 	return eval_template(env, &sname, NULL);
 }
 
-struct vector *
+struct roscha_vector *
 roscha_env_check_errors(struct roscha_env *env)
 {
 	if (env->errors->len > 0) return env->errors;

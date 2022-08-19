@@ -48,7 +48,7 @@ struct roscha_object {
 		/* String slice */
 		struct slice slice;
 		/* vector of roscha_objects */
-		struct vector *vector;
+		struct roscha_vector *vector;
 		/* hashmap of roscha_objects */
 		struct hmap *hmap;
 	};
@@ -64,7 +64,7 @@ inline const char *roscha_type_print(enum roscha_type);
 struct roscha_object *roscha_object_new_int(int64_t val);
 struct roscha_object *roscha_object_new_string(sds str);
 struct roscha_object *roscha_object_new_slice(struct slice);
-struct roscha_object *roscha_object_new_vector(struct vector *);
+struct roscha_object *roscha_object_new_vector(struct roscha_vector *);
 struct roscha_object *roscha_object_new_hmap(struct hmap *);
 
 #define roscha_object_new(v) _Generic((v), \
@@ -72,7 +72,7 @@ struct roscha_object *roscha_object_new_hmap(struct hmap *);
 		int64_t: roscha_object_new_int, \
 		sds: roscha_object_new_string, \
 		struct slice: roscha_object_new_slice, \
-		struct vector *: roscha_object_new_vector, \
+		struct roscha_vector *: roscha_object_new_vector, \
 		struct hmap *: roscha_object_new_hmap \
 		)(v)
 

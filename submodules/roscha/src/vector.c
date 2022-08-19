@@ -1,17 +1,17 @@
 #include "vector.h"
 
 static inline bool
-vector_grow(struct vector *vec)
+vector_grow(struct roscha_vector *vec)
 {
 	vec->cap *= 2;
 	vec->values = realloc(vec->values, sizeof(vec->values) * vec->cap);
 	return vec->values != NULL;
 }
 
-struct vector *
+struct roscha_vector *
 vector_new_with_cap(size_t cap)
 {
-	struct vector *vec = malloc(sizeof(*vec));
+	struct roscha_vector *vec = malloc(sizeof(*vec));
 	if (!vec) return NULL;
 	vec->values = malloc(sizeof(vec->values) * cap);
 	if (!vec->values) {
@@ -25,7 +25,7 @@ vector_new_with_cap(size_t cap)
 }
 
 ssize_t
-vector_push(struct vector *vec, void *val)
+vector_push(struct roscha_vector *vec, void *val)
 {
 	if (vec->len >= vec->cap && !vector_grow(vec)) return -1;
 	vec->values[vec->len] = val;
@@ -35,14 +35,14 @@ vector_push(struct vector *vec, void *val)
 }
 
 void *
-vector_pop(struct vector *vec)
+vector_pop(struct roscha_vector *vec)
 {
 	if (vec->len == 0) return NULL;
 	return vec->values[--vec->len];
 }
 
 void
-vector_free(struct vector *vec)
+vector_free(struct roscha_vector *vec)
 {
 	free(vec->values);
 	free(vec);

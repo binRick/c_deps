@@ -7,21 +7,21 @@
 
 #define VEC_CAP 32
 
-struct vector {
+struct roscha_vector {
 	size_t cap;
 	size_t len;
 	void **values;
 };
 
-struct vector *vector_new_with_cap(size_t cap);
+struct roscha_vector *vector_new_with_cap(size_t cap);
 
-#define vector_new() vector_new_with_cap(VEC_CAP)
+#define roscha_vector_new() vector_new_with_cap(VEC_CAP)
 
-ssize_t vector_push(struct vector *, void *val);
+ssize_t vector_push(struct roscha_vector *, void *val);
 
-void *vector_pop(struct vector *);
+void *vector_pop(struct roscha_vector *);
 
-void vector_free(struct vector *);
+void vector_free(struct roscha_vector *);
 
 #define vector_foreach(vec, i, val) \
 	for (i = 0, val = vec->values[i]; i < vec->len; i++, val = vec->values[i])

@@ -55,7 +55,7 @@ static void test_eval_variable(void){
   roscha_hmap_set_new(item, "age", 123);
   roscha_hmap_set(env->vars, "item", item);
 
-  struct roscha_object *item_objects = roscha_object_new_vector(vector_new());
+  struct roscha_object *item_objects = roscha_object_new_vector(roscha_vector_new());
 
   struct roscha_object *i0 = roscha_object_new(hmap_new());
   roscha_hmap_set_new(i0, "name", "i0");
@@ -67,7 +67,7 @@ static void test_eval_variable(void){
 
   roscha_hmap_set(env->vars, "item_objects", item_objects);
 
-  struct roscha_object *items = roscha_object_new(vector_new());
+  struct roscha_object *items = roscha_object_new(roscha_vector_new());
   roscha_vector_push_new(items, (slice_whole("item0")));
   roscha_vector_push_new(items, (slice_whole("item1")));
   roscha_hmap_set(env->vars, "items", items);

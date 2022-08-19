@@ -8,7 +8,7 @@ struct roscha_env {
 	/* Template variables; reference counted hmap of roscha objects */
 	struct roscha_object *vars;
 	/* vector of sds with error messages */
-	struct vector *errors;
+	struct roscha_vector *errors;
 	/* internal */
 	struct roscha_ *internal;
 };
@@ -43,7 +43,7 @@ bool roscha_env_load_dir(struct roscha_env *, const char *path);
 /* Render/evaluate the template */
 sds roscha_env_render(struct roscha_env *, const char *name);
 
-struct vector *roscha_env_check_errors(struct roscha_env *env);
+struct roscha_vector *roscha_env_check_errors(struct roscha_env *env);
 
 /*
  * Free all memory associated with the environment, including parsed templates,
