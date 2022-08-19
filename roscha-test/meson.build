@@ -10,7 +10,7 @@ roscha_test_deps = [
   c_greatest_dep,
   c_fsio_dep,
   c_stringfn_dep,
-  #  c_vector_dep,
+  c_vector_dep,
   ansi_codes_dep,
   debug_memory_dep,
   roscha_dep,

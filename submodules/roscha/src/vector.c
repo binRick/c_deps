@@ -25,7 +25,7 @@ vector_new_with_cap(size_t cap)
 }
 
 ssize_t
-vector_push(struct roscha_vector *vec, void *val)
+roscha_vector_push(struct roscha_vector *vec, void *val)
 {
 	if (vec->len >= vec->cap && !vector_grow(vec)) return -1;
 	vec->values[vec->len] = val;
@@ -35,7 +35,7 @@ vector_push(struct roscha_vector *vec, void *val)
 }
 
 void *
-vector_pop(struct roscha_vector *vec)
+roscha_vector_pop(struct roscha_vector *vec)
 {
 	if (vec->len == 0) return NULL;
 	return vec->values[--vec->len];

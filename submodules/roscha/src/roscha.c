@@ -58,7 +58,7 @@ roscha_env_destroy_templates_cb(const struct slice *key, void *val)
 #define eval_error(e, t, fmt, ...) \
 	sds err = sdscatfmt(sdsempty(), "%s:%U:%U: "fmt, \
 			e->internal->eval_tmpl->name, t.line, t.column, __VA_ARGS__); \
-	vector_push(e->errors, err)
+	roscha_vector_push(e->errors, err)
 
 #define THERES_ERRORS env->errors->len > 0
 
@@ -479,7 +479,7 @@ eval_template(struct roscha_env *env, const struct slice *name,
 		sds errmsg = sdscat(sdsempty(), "template \"");
 		errmsg = slice_string(name, errmsg);
 		errmsg = sdscat(errmsg, "\" not found");
-		vector_push(env->errors, errmsg);
+		roscha_vector_push(env->errors, errmsg);
 		return NULL;
 	}
 
@@ -531,8 +531,8 @@ roscha_env_add_template(struct roscha_env *env, char *name, char *body)
 	struct template *tmpl = parser_parse_template(parser);
 	if (parser->errors->len > 0) {
 		sds errmsg = NULL;
-		while ((errmsg = vector_pop(parser->errors)) != NULL) {
-			vector_push(env->errors, errmsg);
+		while ((errmsg = roscha_vector_pop(parser->errors)) != NULL) {
+			roscha_vector_push(env->errors, errmsg);
 		}
 		parser_destroy(parser);
 		template_destroy(tmpl);
@@ -550,7 +550,7 @@ roscha_env_load_dir(struct roscha_env *env, const char *path)
 	if (!dir) {
 		sds errmsg = sdscatfmt(sdsempty(), "unable to open dir %s, error %s",
 				path, strerror(errno));
-		vector_push(env->errors, errmsg);
+		roscha_vector_push(env->errors, errmsg);
 		return false;
 	}
 	struct dirent *ent;
@@ -564,7 +564,7 @@ roscha_env_load_dir(struct roscha_env *env, const char *path)
 		if (stat(fpath, &fstats)) {
 			sds errmsg = sdscatfmt(sdsempty(),
 					"unable to stat file %s, error %s", fpath, strerror(errno));
-			vector_push(env->errors, errmsg);
+			roscha_vector_push(env->errors, errmsg);
 			closedir(dir);
 			return false;
 		}
@@ -585,7 +585,7 @@ roscha_env_load_dir(struct roscha_env *env, const char *path)
 		if (nread < 0) {
 			sds errmsg = sdscatfmt(sdsempty(),
 					"unable to read file %s, error %s", fpath, strerror(errno));
-			vector_push(env->errors, errmsg);
+			roscha_vector_push(env->errors, errmsg);
 			goto fileerr;
 		}
 		if (!roscha_env_add_template(env, name, body)) {

@@ -17,9 +17,9 @@ struct roscha_vector *vector_new_with_cap(size_t cap);
 
 #define roscha_vector_new() vector_new_with_cap(VEC_CAP)
 
-ssize_t vector_push(struct roscha_vector *, void *val);
+ssize_t roscha_vector_push(struct roscha_vector *, void *val);
 
-void *vector_pop(struct roscha_vector *);
+void *roscha_vector_pop(struct roscha_vector *);
 
 void vector_free(struct roscha_vector *);
 

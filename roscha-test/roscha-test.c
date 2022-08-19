@@ -8,7 +8,7 @@
 ////////////////////////////////////////////
 #include "ansi-codes/ansi-codes.h"
 #include "c_fsio/include/fsio.h"
-//#include "c_vector/include/vector.h"
+#include "c_vector/include/vector.h"
 #include "c_greatest/greatest/greatest.h"
 #include "c_stringfn/include/stringfn.h"
 ////////////////////////////////////////////
@@ -59,11 +59,11 @@ static void test_eval_variable(void){
 
   struct roscha_object *i0 = roscha_object_new(hmap_new());
   roscha_hmap_set_new(i0, "name", "i0");
-  roscha_vector_push(item_objects, i0);
+  roscha_vector_push_object(item_objects, i0);
 
   struct roscha_object *i1 = roscha_object_new(hmap_new());
   roscha_hmap_set_new(i1, "name", "i1");
-  roscha_vector_push(item_objects, i1);
+  roscha_vector_push_object(item_objects, i1);
 
   roscha_hmap_set(env->vars, "item_objects", item_objects);
 

@@ -107,7 +107,7 @@ parser_cur_precedence(struct parser *parser)
 #define parser_error(p, t, fmt, ...) \
 	sds err = sdscatfmt(sdsempty(), "%s:%U:%U: "fmt, parser->name, \
 			t.line, t.column, __VA_ARGS__); \
-	vector_push(p->errors, err)
+	roscha_vector_push(p->errors, err)
 
 static inline void
 parser_peek_error(struct parser *parser, enum token_type t)
@@ -334,7 +334,7 @@ parser_parse_loop(struct parser *parser, struct block *blk)
 		if (subblk == NULL) {
 			return false;
 		}
-		vector_push(blk->tag.loop.subblocks, subblk);
+		roscha_vector_push(blk->tag.loop.subblocks, subblk);
 		parser_next_token(parser);
 		if (subblk->type == BLOCK_TAG && subblk->tag.type == TAG_CLOSE) {
 			break;
@@ -371,7 +371,7 @@ parser_parse_branch(struct parser *parser, struct block *opening)
 			free(subblk);
 			break;
 		}
-		vector_push(brnch->subblocks, subblk);
+		roscha_vector_push(brnch->subblocks, subblk);
 		parser_next_token(parser);
 		if (subblk->type == BLOCK_TAG && subblk->tag.type == TAG_CLOSE) {
 			break;
@@ -448,7 +448,7 @@ parser_parse_tblock(struct parser *parser, struct block *blk)
 		if (subblk == NULL) {
 			return false;
 		}
-		vector_push(blk->tag.tblock.subblocks, subblk);
+		roscha_vector_push(blk->tag.tblock.subblocks, subblk);
 		parser_next_token(parser);
 		if (subblk->type == BLOCK_TAG && subblk->tag.type == TAG_CLOSE) {
 			break;
@@ -617,7 +617,7 @@ parser_parse_template(struct parser *parser)
 		if (blk == NULL) {
 			break;
 		}
-		vector_push(tmpl->blocks, blk);
+		roscha_vector_push(tmpl->blocks, blk);
 
 		parser_next_token(parser);
 	}

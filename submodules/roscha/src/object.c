@@ -174,16 +174,16 @@ roscha_object_unref(struct roscha_object *obj)
 }
 
 void
-roscha_vector_push(struct roscha_object *vec, struct roscha_object *val)
+roscha_vector_push_object(struct roscha_object *vec, struct roscha_object *val)
 {
 	roscha_object_ref(val);
-	vector_push(vec->vector, val);
+	roscha_vector_push(vec->vector, val);
 }
 
 struct roscha_object *
-roscha_vector_pop(struct roscha_object *vec)
+roscha_vector_pop_object(struct roscha_object *vec)
 {
-	return (struct roscha_object *)vector_pop(vec->vector);
+	return (struct roscha_object *)roscha_vector_pop(vec->vector);
 }
 
 struct roscha_object *
