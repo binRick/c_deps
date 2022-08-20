@@ -44,15 +44,17 @@ TEST t_fzf_keybind_change_preview(void){
     fe->header          = "Preview Test- |ctrl+q: quit|";
   }
   {
-    kb1->key  = "n";
+    kb1->key  = "ctrl-n";
     kb1->type = "change-preview";
     kb1->cmd  = "echo n preview {}";
+    kb1->desc = "preview test 1";
     vector_push(fe->fzf_keybinds_v, kb1);
   }
   {
-    kb2->key  = "p";
+    kb2->key  = "ctrl-p";
     kb2->type = "change-preview";
     kb2->cmd  = "echo p preview {}";
+    kb1->desc = "preview test 2";
     vector_push(fe->fzf_keybinds_v, kb1);
     vector_push(fe->fzf_keybinds_v, kb2);
   }
@@ -92,15 +94,17 @@ TEST t_fzf_keybind_change_prompt(void){
     fe->header          = "Keybind Test- |ctrl+q: quit|";
   }
   {
-    kb1->key  = "n";
+    kb1->key  = "ctrl-n";
     kb1->type = "change-prompt";
     kb1->cmd  = "n prompt";
+    kb1->desc = "preview test 1";
     vector_push(fe->fzf_keybinds_v, kb1);
   }
   {
-    kb2->key  = "p";
+    kb2->key  = "ctrl-p";
     kb2->type = "change-prompt";
     kb2->cmd  = "p prompt";
+    kb2->desc = "preview test 2";
     vector_push(fe->fzf_keybinds_v, kb2);
   }
 
@@ -139,15 +143,17 @@ TEST t_fzf_keybind_preview(void){
     fe->header          = "Preview Test- |ctrl+q: quit|";
   }
   {
-    kb1->key  = "n";
+    kb1->key  = "ctrl-n";
     kb1->type = "preview";
     kb1->cmd  = "echo n preview {}";
+    kb1->desc = "preview test 1";
     vector_push(fe->fzf_keybinds_v, kb1);
   }
   {
-    kb2->key  = "p";
+    kb2->key  = "ctrl-p";
     kb2->type = "preview";
     kb2->cmd  = "echo p preview {}";
+    kb2->desc = "preview test 2";
     vector_push(fe->fzf_keybinds_v, kb1);
     vector_push(fe->fzf_keybinds_v, kb2);
   }

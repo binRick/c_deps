@@ -8,9 +8,9 @@
 ////////////////////////////////////////////
 #include "ansi-codes/ansi-codes.h"
 #include "c_fsio/include/fsio.h"
-#include "c_vector/include/vector.h"
 #include "c_greatest/greatest/greatest.h"
 #include "c_stringfn/include/stringfn.h"
+#include "c_vector/include/vector.h"
 ////////////////////////////////////////////
 #include "roscha/include/hmap.h"
 #include "roscha/include/object.h"

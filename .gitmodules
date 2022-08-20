@@ -760,3 +760,12 @@
 [submodule "submodules/libprinthex"]
 	path = submodules/libprinthex
 	url = https://github.com/rstemmer/libprinthex
+[submodule "submodules/iowow"]
+	path = submodules/iowow
+	url = https://github.com/Softmotions/iowow
+[submodule "submodules/nsync"]
+	path = submodules/nsync
+	url = https://github.com/google/nsync
+[submodule "submodules/nbc"]
+	path = submodules/nbc
+	url = https://github.com/chiayolin/nbc

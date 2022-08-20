@@ -26,7 +26,9 @@ static void __attribute__((destructor)) __exec_fzf_destructor();
 
 static void __attribute__((constructor)) __exec_fzf_constructor();
 
-struct fzf_keybind_t { char *key; char *cmd; char *type; };
+struct fzf_keybind_t {
+  char *key, *cmd, *type, *desc;
+};
 struct fzf_exec_t {
   struct Vector          *input_options;
   struct Vector          *selected_options;
@@ -66,7 +68,8 @@ struct fzf_exec_t {
   char                   *fzf_header_lines_s;
   reproc_t               *proc;
   reproc_options         reproc_options;
-  bool                   debug_mode, select_multiple, fzf_reverse, header_first;
+  bool                   debug_mode, select_multiple, fzf_reverse, header_first, cycle, border, ansi;
+  size_t                 header_lines;
 };
 
 struct fzf_exec_t *exec_fzf_setup(void);

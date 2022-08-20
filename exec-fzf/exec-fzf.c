@@ -53,8 +53,6 @@ void exec_fzf_release(struct fzf_exec_t *fe){
     if (fe->fzf_keybinds_v) {
       for (size_t i = 0; i < vector_size(fe->fzf_keybinds_v); i++) {
         struct fzf_keybind_t *kb = vector_get(fe->fzf_keybinds_v, i);
-//        if(kb)
-//            free(kb);
       }
       vector_release(fe->fzf_keybinds_v);
     }
@@ -65,7 +63,7 @@ void exec_fzf_release(struct fzf_exec_t *fe){
       vector_release(fe->input_options);
     }
     if (fe->fzf_keybinds_sb) {
-      // stringbuffer_release(fe->fzf_keybinds_sb);
+      stringbuffer_release(fe->fzf_keybinds_sb);
     }
     free(fe);
   }
@@ -86,6 +84,9 @@ struct fzf_exec_t *exec_fzf_setup(void){
 
   e->fzf_reverse         = true;
   e->header_first        = true;
+  e->border              = true;
+  e->cycle               = true;
+  e->ansi                = true;
   e->query_s             = "";
   e->fzf_prompt          = ">";
   e->fzf_default_opts    = "";
@@ -93,6 +94,7 @@ struct fzf_exec_t *exec_fzf_setup(void){
   e->fzf_info            = "inline";
   e->fzf_history_file    = "/dev/null";
   e->height              = 100;
+  e->header_lines        = 0;
   e->top_margin          = 0;
   e->right_margin        = 0;
   e->left_margin         = 0;
@@ -142,7 +144,7 @@ int exec_fzf(struct fzf_exec_t *fe){
     char                 *buf;
     struct fzf_keybind_t *kb = vector_get(fe->fzf_keybinds_v, i);
     stringbuffer_append_string(fe->fzf_keybinds_sb, " ");
-    asprintf(&buf, "--bind 'ctrl-%s:%s(%s)'",
+    asprintf(&buf, "--bind '%s:%s(%s)'",
              kb->key,
              kb->type,
              kb->cmd
@@ -174,50 +176,51 @@ int exec_fzf(struct fzf_exec_t *fe){
            stringfn_mut_trim(fe->input_lines_s)
            );
   fsio_write_text_file(fe->options_file, fe->options_file_content_s);
-  //log_debug("wrote %s", fe->options_file);
   asprintf(&fe->fzf_default_opts,
-           "%s"
-           "%s"
-           "%s"
+           " --color='bg:#0c0c0c,bg+:#3F3F3F,info:#BDBB72,border:#6B6B6B,spinner:#98BC99'"
+           " --color='hl:#719872,fg:#D9D9D9,header:#719872,fg+:#D9D9D9'"
+           " --color='pointer:#E12672,marker:#E17899,prompt:#98BEDE,hl+:#98BC99'"
            " --header-lines='%lu'"
+           " --height='%d'"
            " --header='%s'"
            " --query='%s'"
-           " --margin='%d,%d,%d,%d'"
-           " --padding='%d,%d,%d,%d'"
            " --preview='%s'"
-           " --preview-window='%s,%s,%s,%d%%'"
-           " --height='%d'"
            " --info='%s'"
            " --history='%s'"
            " --pointer='%s'"
            " --marker='%s'"
            " --prompt='%s'"
-           " --ansi"
-           " --reverse"
-           " --border"
-           " --ansi"
-           " --color='bg:#0c0c0c,bg+:#3F3F3F,info:#BDBB72,border:#6B6B6B,spinner:#98BC99'"
-           " --color='hl:#719872,fg:#D9D9D9,header:#719872,fg+:#D9D9D9'"
-           " --color='pointer:#E12672,marker:#E17899,prompt:#98BEDE,hl+:#98BC99'"
+           " --margin='%d,%d,%d,%d'"
+           " --padding='%d,%d,%d,%d'"
+           " --preview-window='%s,%s,%s,%d%%'"
+           " --%sreverse"
+           " --%smulti"
+           " --%sheader-first"
+           " --%scycle"
+           " --%sborder"
+           " --%sansi"
            " %s",
-           (fe->fzf_reverse == true) ?     " --reverse" : "",
-           (fe->select_multiple == true) ? " --multi" :   "",
-           (fe->header_first == true) ? " --header-first" :   "",
-           (size_t)0,
+           (size_t)fe->header_lines,
+           fe->height,
            fe->header,
            fe->query_s,
-           fe->top_margin, fe->right_margin, fe->bottom_margin, fe->left_margin,
-           fe->top_padding, fe->right_padding, fe->bottom_padding, fe->left_padding,
            (fe->preview_cmd != NULL && strlen(fe->preview_cmd) > 0)
                ? fe->preview_cmd
                : "echo {}",
-           "nofollow", "nowrap", fe->preview_type, fe->preview_size,
-           fe->height,
            fe->fzf_info,
            fe->fzf_history_file,
            fe->fzf_pointer,
            fe->fzf_marker,
            fe->fzf_prompt,
+           fe->top_margin, fe->right_margin, fe->bottom_margin, fe->left_margin,
+           fe->top_padding, fe->right_padding, fe->bottom_padding, fe->left_padding,
+           "nofollow", "nowrap", fe->preview_type, fe->preview_size,
+           (fe->fzf_reverse == true) ?     "" : "no-",
+           (fe->select_multiple == true) ? "" :   "no-",
+           (fe->header_first == true) ? "" :   "no-",
+           (fe->cycle == true) ? "" :   "no-",
+           (fe->border == true) ? "" :   "no-",
+           (fe->ansi == true) ? "" :   "no-",
            (fe->fzf_keybinds_s != NULL && strlen(fe->fzf_keybinds_s) > 10)
                ? fe->fzf_keybinds_s
                : ""
@@ -249,8 +252,7 @@ int exec_fzf(struct fzf_exec_t *fe){
 //  bool ok = encode_preview_cmd(fe);
 
   const char *exec_cmd[] = {
-    fe->env_path, fe->sh_path, "--norc", "--noprofile", "-c",
-    fe->fzf_cmd,
+    fe->env_path, fe->sh_path, "--norc", "--noprofile", "-c", fe->fzf_cmd,
     NULL
   };
 

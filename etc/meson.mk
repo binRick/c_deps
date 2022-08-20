@@ -1,5 +1,5 @@
 MESON_BUILD_DIR=build
-MESON_PARALLEL_JOBS=20
+MESON_PARALLEL_JOBS=5
 ######################################################################################################################################
 meson-setup:
 	@[[ -d $(MESON_BUILD_DIR) ]] && $(MESON) setup $(MESON_BUILD_DIR) --reconfigure || $(MESON) setup $(MESON_BUILD_DIR)
