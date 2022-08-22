@@ -769,3 +769,33 @@
 [submodule "submodules/nbc"]
 	path = submodules/nbc
 	url = https://github.com/chiayolin/nbc
+[submodule "submodules/icns"]
+	path = submodules/icns
+	url = https://github.com/pdinc-oss/icns
+[submodule "submodules/cglwindow"]
+	path = submodules/cglwindow
+	url = https://github.com/koekeishiya/cglwindow
+[submodule "submodules/yb"]
+	path = submodules/yb
+	url = https://github.com/koekeishiya/yb
+[submodule "submodules/limelight"]
+	path = submodules/limelight
+	url = https://github.com/koekeishiya/limelight
+[submodule "submodules/krp"]
+	path = submodules/krp
+	url = https://github.com/koekeishiya/krp
+[submodule "submodules/hotloader"]
+	path = submodules/hotloader
+	url = https://github.com/koekeishiya/hotloader
+[submodule "submodules/yabai"]
+	path = submodules/yabai
+	url = https://github.com/koekeishiya/yabai
+[submodule "submodules/mac_load"]
+	path = submodules/mac_load
+	url = https://github.com/hidefromkgb/mac_load
+[submodule "submodules/Objectively"]
+	path = submodules/Objectively
+	url = https://github.com/jdolan/Objectively
+[submodule "submodules/c_img"]
+	path = submodules/c_img
+	url = git@github.com:binRick/c_img.git

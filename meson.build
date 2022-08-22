@@ -63,6 +63,14 @@ inc = [
   include_directories('submodules/c_ansi'),
   include_directories('submodules/c_pick'),
   include_directories('submodules/sqxclib/sqxc'),
+  include_directories(
+    'submodules/c_deps/submodules/iowow/src',
+  'submodules/c_deps/submodules/iowow/src/kv',
+  'submodules/c_deps/submodules/iowow/src/fs',
+  'submodules/c_deps/submodules/iowow/src/log',
+  'submodules/c_deps/submodules/iowow/src/json',
+  'submodules/c_deps/submodules/iowow/src/platform',
+  'submodules/c_deps/submodules/iowow'),
 ]  
 ###########################################
 install_subdir('etc/sounds', install_dir: meson.current_build_dir(), install_tag:'build')
@@ -102,7 +110,7 @@ subdir('deps-test')
 #subdir('term-tests-test')
 subdir('tinydir-test')
 subdir('cgif-test')
-subdir('dbgp-test')
+#subdir('dbgp-test')
 subdir('ee-test')
 subdir('chan-test')
 subdir('reproc-test')
@@ -119,11 +127,10 @@ subdir('kgflags-test')
 ###########################################
 subdir('c-meson-utils-test')
 subdir('exec-fzf-test')
-subdir('richard-100-test')
 subdir('blocks-test')
-subdir('richard-wow-test')
 subdir('new-case-test')
 subdir('new-case1-test')
-subdir('richard-wow1-test')
 subdir('roscha-test')
 subdir('filecopy-test')
+subdir('iowow-test')
+subdir('passh-test')

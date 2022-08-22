@@ -1,8 +1,27 @@
+############################################
 MESON_BUILD_DIR=build
-MESON_PARALLEL_JOBS=5
-######################################################################################################################################
+MESON_DEFAULT_BUILD_TYPE=minsize
+MESON_DEFAULT_BUILD_TYPE=debug
+############################################
+BUILD_TYPE ?=$(MESON_DEFAULT_BUILD_TYPE)
+BUILD_JOBS ?=10
+MESON_DEFAULT_LIBRARY ?=static
+WARN_LEVEL ?=2
+############################################
+MESON_PARALLEL_JOBS=$(BUILD_JOBS)
+MESON_BUILD_TYPE=$(BUILD_TYPE)
+
+MESON_SETUP_ARGS=\
+								 --buildtype $(MESON_BUILD_TYPE) \
+								 --strip \
+								 --default-library $(MESON_DEFAULT_LIBRARY) \
+								 --prefer-static \
+								 --warnlevel $(WARN_LEVEL) \
+								 --backend ninja \
+								 --errorlogs
+
 meson-setup:
-	@[[ -d $(MESON_BUILD_DIR) ]] && $(MESON) setup $(MESON_BUILD_DIR) --reconfigure || $(MESON) setup $(MESON_BUILD_DIR)
+	@[[ -d $(MESON_BUILD_DIR) ]] && $(MESON) setup $(MESON_SETUP_ARGS) --reconfigure $(MESON_BUILD_DIR) || $(MESON) setup $(MESON_SETUP_ARGS) $(MESON_BUILD_DIR)
 
 meson-build: meson-setup
 	@$(MESON) compile -C $(MESON_BUILD_DIR) -j $(MESON_PARALLEL_JOBS)

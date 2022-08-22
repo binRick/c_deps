@@ -1,2 +1,2 @@
-cgif_dep = dependency('cgif',fallback:['cgif', 'libcgif_dep'])
+cgif_dep = dependency('cgif',fallback:['cgif', 'cgif_dep'])
 

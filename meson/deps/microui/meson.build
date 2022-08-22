@@ -7,9 +7,11 @@ microui_lib = static_library('microui',
   '../../../submodules/microui/src/microui.c',
   install: false, 
   dependencies: [
+    sdl2_dep,
+    sdl2_ttf_dep,
   ], 
   include_directories: microui_inc,
-  c_args: [], #//'-L/usr/local/lib','-lSDL2'],
+  c_args: [],
 )
 microui_dep = declare_dependency(
   include_directories: microui_inc,

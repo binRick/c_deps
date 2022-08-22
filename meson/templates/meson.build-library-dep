@@ -11,7 +11,7 @@ __NAME___deps = [
 __DEPS__
 ]
 
-__NAME___lib = both_libraries('__NAME__',
+__NAME___lib = static_library('__NAME__',
   __NAME___srcs,
   install: __INSTALL__,
   dependencies: __NAME___deps,

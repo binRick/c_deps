@@ -1,37 +1,37 @@
 #pragma once
 /////////////////////////////////////
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include <string.h>
 /////////////////////////////////////
-#include "c_vector/include/vector.h"
-#include "c_stringfn/include/stringfn.h"
-#include "c_string_buffer/include/stringbuffer.h"
 #include "c_fsio/include/fsio.h"
+#include "c_string_buffer/include/stringbuffer.h"
+#include "c_stringfn/include/stringfn.h"
+#include "c_vector/include/vector.h"
 #include "jinja2-cli/jinja2-cli.h"
 /////////////////////////////////////
 struct c_meson_module_dep_t {        //    meson/deps/xxxxx/meson.build
-    char *dep_name;
-    char *rendered_template_meson_build;
+  char *dep_name;
+  char *rendered_template_meson_build;
 };
 struct c_meson_test_suite_t {     //     test suite
-    char *test_suite_name;
-    char *rendered_test_suite;
+  char *test_suite_name;
+  char *rendered_test_suite;
 };
 struct c_meson_test_case_t {    //       test case
-    char *test_case_name;
-    char *rendered_test_case;
+  char *test_case_name;
+  char *rendered_test_case;
 };
 struct c_meson_module_t {              // ./xxxxx/xxxxx.c,  ./xxxxx/xxxxx.h, xxxxx/meson.build
-    char *name, *path;
-    char *rendered_c, *rendered_h, *rendered_meson_build;
+  char *name, *path;
+  char *rendered_c, *rendered_h, *rendered_meson_build;
 };
 struct c_meson_module_test_t {        //    xxxxx-test/xxxxx-test.h, xxxx-test/xxxx-test.c, xxxxxx-test/meson.build
-    char *name, *path;
-    struct Vector *c_meson_module_suites_v, *c_meson_module_test_cases_v;
-    char *rendered_c, *rendered_h, *rendered_meson_build;
+  char          *name, *path;
+  struct Vector *c_meson_module_suites_v, *c_meson_module_test_cases_v;
+  char          *rendered_c, *rendered_h, *rendered_meson_build;
 };
 //////////////////////////////////////////
 char *c_meson_new_test_case(const char *MODULE_NAME);
@@ -41,9 +41,9 @@ char *c_meson_new_module(const char *MODULE_NAME);
 char *c_meson_new_module_test(const char *MODULE_NAME);
 //////////////////////////////////////////
 //////////////////////////////////////////
-//            Embedded INCBIN Python Binaries 
+//            Embedded INCBIN Python Binaries
 //////////////////////////////////////////
-static const char c_meson_bash_script_template[] = "\n\
+static const char c_meson_bash_script_template[]            = "\n\
 #!/usr/bin/env bash\n\
 set -eou pipefail\n\
 cd \"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)\"\n";
@@ -102,15 +102,15 @@ static const char c_meson_module_h_template[] = "\
 #include <stdbool.h>\n\
 #include <string.h>\n\
 //////////////////////////////////////\n\
-\n";      
+\n";
 //////////////////////////////////////////
-const char c_meson_module_c_template[] = "\
+const char        c_meson_module_c_template[] = "\
 //////////////////////////////////////\n\
 #include \"{{MODULE_NAME}}/{{MODULE_NAME}}.h\"\n\
 //////////////////////////////////////\
-\n";      
+\n";
 //////////////////////////////////////////
-const char c_meson_module_test_h_template[] = "\
+const char        c_meson_module_test_h_template[] = "\
 #pragma once\n\
 //////////////////////////////////////\n\
 #include \"{{MODULE_NAME}}/{{MODULE_NAME}}.c\n\"\
@@ -121,7 +121,7 @@ const char c_meson_module_test_h_template[] = "\
 #include <stdbool.h>\n\
 #include <string.h>\n\
 //////////////////////////////////////\n\
-";                               
+";
 //////////////////////////////////////////
 //            MODULE
 //////////////////////////////////////////
@@ -181,7 +181,7 @@ c_{{MODULE_NAME}}_dep = declare_dependency(\n\
   include_directories: c_{{MODULE_NAME}}_dirs,\n\
   link_with: c_{{MODULE_NAME}}_lib,\n\
 )\n";
-static const char c_meson_jinja2_template_test_executable_c[] = "\
+static const char c_meson_jinja2_template_test_executable_c[]           = "\
 //////////////////////////////////////\n\
 #include \"{{MODULE_NAME}}-test/{{MODULE_NAME}}.h\"\n\
 #include \"{{MODULE_NAME}}-test/{{MODULE_NAME}}-test.h\"\n\
@@ -200,7 +200,7 @@ int main(int argc, char **argv) {\n\
   GREATEST_MAIN_BEGIN();\n\
   RUN_SUITE(s_{{MODULE_NAME}}_0);    \n\
 }\n";
-static const char c_meson_jinja2_template_test_executable_h[] = "\
+static const char c_meson_jinja2_template_test_executable_h[]           = "\
 #pragma once\n\
 //////////////////////////////////////\n\
 #include \"{{MODULE_NAME}}/{{MODULE_NAME}}.h\n\"\
@@ -245,7 +245,7 @@ c_{{MODULE_NAME}}_dep = declare_dependency(\n\
   include_directories: c_{{MODULE_NAME}}_dirs,\n\
   link_with: c_{{MODULE_NAME}}_lib,\n\
 )\n";
-static const char c_meson_jinja2_template_executable_c[] = "\
+static const char c_meson_jinja2_template_executable_c[]           = "\
 //////////////////////////////////////\n\
 #include <stdlib.h>\n\
 #include <stdio.h>\n\
@@ -258,7 +258,7 @@ static const char c_meson_jinja2_template_executable_c[] = "\
 int main(int argc, char **argv) {\n\
     return(EXIT_SUCESS);\n\
 }\n";
-static const char c_meson_jinja2_template_executable_h[] = "\
+static const char c_meson_jinja2_template_executable_h[]           = "\
 #pragma once\n\
 //////////////////////////////////////\n\
 #include <stdlib.h>\n\
@@ -302,7 +302,7 @@ c_{{MODULE_NAME}}_dep = declare_dependency(\n\
   include_directories: c_{{MODULE_NAME}}_dirs,\n\
   link_with: c_{{MODULE_NAME}}_lib,\n\
 )\n";
-static const char c_meson_jinja2_template_library_c[] = "\
+static const char c_meson_jinja2_template_library_c[]           = "\
 //////////////////////////////////////\n\
 #include <stdlib.h>\n\
 #include <stdio.h>\n\

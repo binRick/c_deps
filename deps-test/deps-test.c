@@ -299,7 +299,7 @@ void handle_request(struct http_request_s *request) {
   http_string_t url = http_request_target(request);
 
   {
-    dbg(url.buf, %s);
+    dbg(url.buf, % s);
     char                   *U             = stringfn_substring(url.buf, 0, url.len);
     struct StringFNStrings lines          = stringfn_split_lines_and_trim(url.buf);
     char                   *req_data      = lines.strings[lines.count - 1];
@@ -315,7 +315,7 @@ void handle_request(struct http_request_s *request) {
       }
     }
     char                   *normalized_url = stringbuffer_to_string(url_sb);
-    dbg(normalized_url, %s);
+    dbg(normalized_url, % s);
     struct StringFNStrings normalized_url_strings = stringfn_split(normalized_url, '/');
 
     int                    p;
@@ -324,7 +324,7 @@ void handle_request(struct http_request_s *request) {
     char                   *parts[3];
     char                   *url_string;
     asprintf(&url_string, "http://localhost:%d%s?%s", HTTPSERVER_LISTEN_PORT, normalized_url, req_data);
-    dbg(url_string, %s);
+    dbg(url_string, % s);
 
     if (-1 == yuarel_parse(&yurl, url_string)) {
       fprintf(stderr, "Could not parse url!\n");
@@ -335,10 +335,10 @@ void handle_request(struct http_request_s *request) {
       printf("scheme:\t%s\n", yurl.scheme);
       printf("host:\t%s\n", yurl.host);
     }
-    dbg(params_strings.count, %d);
-    dbg(req_data, %s);
-    dbg(lines.count, %d);
-    dbg(normalized_url_strings.count, %d);
+    dbg(params_strings.count, % d);
+    dbg(req_data, % s);
+    dbg(lines.count, % d);
+    dbg(normalized_url_strings.count, % d);
     printf("port:\t%d\n", yurl.port);
     printf("path:\t%s\n", yurl.path);
     printf("query:\t%s\n", yurl.query);
@@ -367,8 +367,8 @@ void handle_request(struct http_request_s *request) {
     char *u;
     asprintf(&u, "\n\turl:%s\n\tlen:%d\n", url.buf, url.len);
     if (false) {
-      dbg(uri_decoded, %s);
-      dbg(uri_encoded, %s);
+      dbg(uri_decoded, % s);
+      dbg(uri_encoded, % s);
       printf("%s", u);
     }
   }
@@ -773,7 +773,7 @@ void demo_ansi_qrcode(){
 }
 
 void do_forever_my_program(void *context){
-  dbg("t_forever_my_program", %s);
+  dbg("t_forever_my_program", % s);
   if (context != NULL) {
     // do something with the context
   }
@@ -786,12 +786,12 @@ int do_forever_callback(void *context, const unsigned char started, int stat_loc
   if (context != NULL) {
     // do something with the context
   }
-  dbg(stat_loc, %d);
-  dbg(started, %c);
+  dbg(stat_loc, % d);
+  dbg(started, % c);
   if (stat_loc == 0 || !started) {
     return(-1); // no more retries
   }
-  dbg("do_forever_callback", %s);
+  dbg("do_forever_callback", % s);
   return(500); // wait 500 millies before next invocation, 0 for no wait.
 }
 
@@ -1028,12 +1028,12 @@ TEST t_libbeaufort(void){
   groove   = beaufort_encrypt(groove_s, "groove", NULL);
   assert(groove);
   assert(0 == strcmp(groove, "3n1Cs lg y7l 9ko!F :b"));
-  dbg(monkey, %s);
-  dbg(monkey_s, %s);
-  dbg(goodman, %s);
-  dbg(goodman_s, %s);
-  dbg(groove, %s);
-  dbg(groove_s, %s);
+  dbg(monkey, % s);
+  dbg(monkey_s, % s);
+  dbg(goodman, % s);
+  dbg(goodman_s, % s);
+  dbg(groove, % s);
+  dbg(groove_s, % s);
 
   // BENCHMARK_SUMMARY(benchmark_name);
   PASS();
@@ -1044,8 +1044,8 @@ TEST t_murmurhash(void){
   const char *key = "kinkajou";
   uint32_t   hash = murmurhash(key, (uint32_t)strlen(key), seed);
 
-  dbg(key, %s);
-  dbg(seed, %d);
+  dbg(key, % s);
+  dbg(seed, % d);
   printf("%" PRIu32 "\n", hash);
   printf("%d" PRIu32 "\n", hash);
 
@@ -2221,7 +2221,7 @@ TEST t_ok_file_format_wav(void){
   char *wav_file = malloc(1024);
 
   sprintf(wav_file, "%s/../sounds/key_space_down.wav", EXECUTABLE_PATH_DIRNAME);
-  dbg(wav_file, %s);
+  dbg(wav_file, % s);
   FILE   *file = fopen(wav_file, "rb");
   ok_wav audio = ok_wav_read(file, OK_WAV_DEFAULT_DECODE_FLAGS);
 
@@ -3330,21 +3330,21 @@ TEST t_c_timestamp(void){
   ts.sec    = 0;
   ts.offset = 0;
   ts.nsec   = -1;
-  dbg(timestamp_valid(&ts), %d);
+  dbg(timestamp_valid(&ts), % d);
 
   ts.nsec = 1000000000;
-  dbg(!timestamp_valid(&ts), %d);
+  dbg(!timestamp_valid(&ts), % d);
 
   ts.nsec   = 0;
   ts.offset = -23 * 60 - 60;
-  dbg(!timestamp_valid(&ts), %d);
+  dbg(!timestamp_valid(&ts), % d);
 
   ts.offset = +23 * 60 + 60;
-  dbg(!timestamp_valid(&ts), %d);
+  dbg(!timestamp_valid(&ts), % d);
 
   ts.offset = 0;
   ts.sec    = INT64_C(-62135596801);
-  dbg(!timestamp_valid(&ts), %d);
+  dbg(!timestamp_valid(&ts), % d);
   ts.sec = INT64_C(253402387140);
   timestamp_t ts1;
   struct tm   tm1;
@@ -3353,10 +3353,10 @@ TEST t_c_timestamp(void){
   ts.nsec   = 0;
   ts.offset = 0;
   memset(&tm1, 0, sizeof(tm1));
-  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_year), %d);
-  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_mon), %d);
-  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_hour), %d);
-  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_sec), %d);
+  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_year), % d);
+  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_mon), % d);
+  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_hour), % d);
+  dbg(timestamp_to_tm_utc(&ts, &tm1.tm_sec), % d);
 
   PASS();
 }

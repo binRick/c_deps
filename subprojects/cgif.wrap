@@ -2,3 +2,7 @@
 directory=cgif
 url=https://github.com/dloebl/cgif
 revision=head
+
+
+[provide]
+cgif = cgif_dep

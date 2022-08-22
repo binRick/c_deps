@@ -14,6 +14,7 @@ bashful-post:
 	@$(ANSI) --restore-palette
 
 bashful-clean: bashful-pre do-bashful-clean bashful-post
+bashful-clean-build: bashful-clean bashful-build
 bashful-tidy: bashful-pre do-bashful-tidy bashful-post
 bashful-build: bashful-pre do-bashful-build bashful-post
 bashful-muon-build: bashful-pre do-bashful-muon-build bashful-post

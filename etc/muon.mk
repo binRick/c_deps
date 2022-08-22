@@ -1,12 +1,21 @@
 MUON_BUILD_DIR=build-muon
-MUON_PARALLEL_COMMANDS=5
+MUON_PARALLEL_COMMANDS=10
 muon-setup:
-	@$(MUON) setup $(MUON_BUILD_DIR)
+	@$(MUON) setup \
+		-b \
+		-D buildtype=debug \
+		-D default_library=static \
+		-D strip=true \
+		-D warning_level=0 \
+		-D debug=false \
+			$(MUON_BUILD_DIR)
 muon-build:
-	@$(MUON) samu -C $(MUON_BUILD_DIR) -j $(MUON_PARALLEL_COMMANDS)
+	@$(MUON) samu -C $(MUON_BUILD_DIR) -j $(MUON_PARALLEL_COMMANDS) -k 1
 muon-install:
 	@cd $(MUON_BUILD_DIR) && $(MUON) install
 muon-test:
 	@cd $(MUON_BUILD_DIR) && $(MUON) test
+muon-test-verbose:
+	@cd $(MUON_BUILD_DIR) && $(MUON) test -v -f -d bar -w 5
 muon: 
 	@make -B muon-setup muon-build

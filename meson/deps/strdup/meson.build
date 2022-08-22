@@ -1,6 +1,10 @@
 
 strdup_dirs = [
   inc,
+  include_directories(
+    '../../../submodules',
+    '../../../submodules/strdup',
+    ),
   ]
 strdup_lib = static_library('strdup', 
   c_deps_dir + '/submodules/strdup/strdup.c',
@@ -10,6 +14,6 @@ strdup_lib = static_library('strdup',
   include_directories: strdup_dirs,
 )
 strdup_dep = declare_dependency(
-  include_directories: inc,
   link_with: strdup_lib,
+  include_directories: strdup_dirs,
 )
