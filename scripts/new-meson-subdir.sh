@@ -78,7 +78,7 @@ if [[ "$DRY_RUN_MODE" == 1 || "$DEBUG_MODE" == 1 ]]; then
 fi
 ############################################################################################################
 DEPENDENCIES="c_greatest_dep c_vector_dep c_fsio_dep c_stringfn_dep ansi_codes_dep debug_memory_dep"
-INCLUDED_HEADERS="c_greatest/greatest/greatest.h c_fsio/include/fsio.h c_vector/include/vector.h ansi-codes/ansi-codes.h c_stringfn/include/stringfn.h"
+INCLUDED_HEADERS="c_greatest/greatest/greatest.h c_fsio/include/fsio.h c_vector/vector/vector.h ansi-codes/ansi-codes.h c_stringfn/include/stringfn.h"
 ############################################################################################################
 if [[ "$SUBDIR_TEST_DEPENDENCIES" != "none" ]]; then
 	DEPENDENCIES+=" $SUBDIR_TEST_DEPENDENCIES"

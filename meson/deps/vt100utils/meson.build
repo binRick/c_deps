@@ -10,8 +10,7 @@ vt100utils_dirs = [
 ]
 
 vt100utils_cargs = [
-  '-Wno-bugprone-sizeof-expression',
-
+  '-Wno-unused-parameter',
 ]
 vt100utils_deps = [
 

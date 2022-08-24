@@ -16,7 +16,7 @@ TEST t_sqldb(void){
   enum sqldbal_status_code rc;
   struct sqldbal_db        *db;
   struct sqldbal_stmt      *stmt;
-  const char               *text, *created, *_created;
+  const char               *text, *_created;
   char                     ts_s[1024];
 
   rc = sqldbal_open(SQLDBAL_DRIVER_SQLITE, LOCATION, NULL, NULL, NULL, NULL, FLAGS, NULL, 0, &db);

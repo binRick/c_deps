@@ -12,7 +12,6 @@ c_meson_utils_deps = [
   c_fsio_dep,
   c_string_buffer_dep,
   c_stringfn_dep,
-  jinja2_cli_dep,
   c_fsio_dep,
   tempdir_dep,
 ]

@@ -15,7 +15,7 @@
 #include "submodules/c_ansi/ansi-utils/ansi-utils.h"
 #include "submodules/c_eventemitter/include/eventemitter.h"
 #include "submodules/c_forever/include/forever.h"
-#include "submodules/c_vector/include/vector.h"
+#include "submodules/c_vector/vector/vector.h"
 #include "submodules/c_workqueue/include/workqueue.h"
 #include "submodules/catpath/catpath.h"
 #include "submodules/dmt/src/dmt.h"

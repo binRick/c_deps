@@ -18,7 +18,7 @@
 #include "submodules/c_forever/include/forever.h"
 #include "submodules/c_string_buffer/include/stringbuffer.h"
 #include "submodules/c_stringfn/include/stringfn.h"
-#include "submodules/c_vector/include/vector.h"
+#include "submodules/c_vector/vector/vector.h"
 #include "submodules/catpath/catpath.h"
 #include "submodules/dbg.h/dbg.h"
 #include "submodules/dmt/src/dmt.h"

@@ -42,7 +42,7 @@ void *get_struct_field_name(void *STRUCT, const char *FIELD_NAME){
     FIELD_DATA_TYPE_ID = (int)F->data_type;
     IS_SIGNED          = F->is_signed;
     if (strcmp(FIELD_NAME, F->field_name) == 0) {
-      dbg(F->field_type, % s);
+      dbg(F->field_type, %s);
       switch (F->data_type) {
       case MKCREFLECT_TYPES_INTEGER:
         FIELD = calloc(1, F->size);
@@ -73,7 +73,7 @@ void *get_struct_field_name(void *STRUCT, const char *FIELD_NAME){
   case MKCREFLECT_TYPES_INTEGER:
     if (FIELD_LEN > 0) {
       VALID_FIELD = true;
-      dbg((long long)FIELD, % ld);
+      dbg((long long)FIELD, %ld);
       PRINT("valid integer field!- ", (char *)FIELD_NAME, "len:", FIELD_LEN);
     }
     break;
@@ -107,9 +107,9 @@ TEST t_mkcreflect(void){
     }
   }
   if (false) {
-    dbg(S_NAME(Address), % s);
-    dbg(S_NAME(TestStruct), % s);
-    dbg(_S_INFO("TestStruct"), % s);
+    dbg(S_NAME(Address), %s);
+    dbg(S_NAME(TestStruct), %s);
+    dbg(_S_INFO("TestStruct"), %s);
     dbg(S_SIZE(Address), %u);
     dbg(S_SIZE(TestStruct), %u);
     dbg(S_PACKED_SIZE(TestStruct), %u);

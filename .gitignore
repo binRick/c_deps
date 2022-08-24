@@ -34,3 +34,5 @@ loc.sh
 */.venv-*
 .xmake
 richard-100*
+.meson.build*.log
+.meson-build*.log

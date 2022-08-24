@@ -28,8 +28,7 @@ void on_shared_library_target_json_value(void *arg) {
   char        *name = json_object_get_string(O, "name");
   char        *type = json_object_get_string(O, "type");
 
-  //dbg(name, %s);
-  //dbg(type, %s);
+  printf("%s/%s\n", name, type);
 }
 
 void on_static_library_target_json_value(void *arg) {
@@ -38,8 +37,7 @@ void on_static_library_target_json_value(void *arg) {
   char        *name = json_object_get_string(O, "name");
   char        *type = json_object_get_string(O, "type");
 
-  //dbg(name, %s);
-  //dbg(type, %s);
+  printf("%s/%s\n", name, type);
 }
 
 void on_executable_target_json_value(void *arg) {
@@ -48,11 +46,10 @@ void on_executable_target_json_value(void *arg) {
   char        *name = json_object_get_string(O, "name");
   char        *type = json_object_get_string(O, "type");
 
-  //dbg(name, %s);
-  //dbg(type, %s);
+  printf("%s/%s\n", name, type);
 }
 
-TEST t_introspect_iterate(void *MESON_FILE_PATH){
+__attribute__((unused)) TEST t_introspect_iterate(void *MESON_FILE_PATH){
   char *OUTPUT = execute_processes((char *)MESON_FILE_PATH);
 
   ASSERT_GTE(strlen(OUTPUT), 1);

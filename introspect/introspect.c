@@ -21,12 +21,11 @@
 void iterate_targets(ee_t *ee, JSON_Array *A){
   JSON_Value  *V = json_value_init_object();
   JSON_Object *O = json_value_init_object();
-  char        *name, *type;
+  char        *type;
 
   for (size_t i = 0; i < json_array_get_count(A); i++) {
     V = json_array_get_value(A, i);
     O = json_array_get_object(A, i);
-    size_t props_qty = json_object_get_count(O);
     assert(json_value_get_type(V) == JSONObject);
     type = json_object_get_string(O, "type");
     if (ee_listener_count(ee, type) > 0) {

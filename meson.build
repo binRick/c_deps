@@ -44,7 +44,10 @@ pwd = c_deps_dir
 inc = [
   include_directories('.'),
   include_directories('submodules'),
+  include_directories('submodules/reproc'),
+  include_directories('submodules/reproc/reproc'),
   include_directories('submodules/reproc/reproc/include'),
+  include_directories('submodules/reproc/reproc/src'),
   include_directories('submodules/progress.c'),
   include_directories('submodules/list/src'),
   include_directories('submodules/c_ansi/ansi-codes'),
@@ -98,8 +101,8 @@ subdir('introspect-repos')
 subdir('meson/deps/wireguard-tools')
 subdir('wg')
 subdir('hs')
-subdir('c-meson-utils')
-subdir('c-meson-utils-cli')
+#subdir('c-meson-utils')
+#subdir('c-meson-utils-cli')
 ###########################################
 subdir('tmt-test')
 subdir('list-test')
@@ -125,7 +128,7 @@ subdir('wg-test')
 subdir('hs-test')
 subdir('kgflags-test')
 ###########################################
-subdir('c-meson-utils-test')
+#subdir('c-meson-utils-test')
 subdir('exec-fzf-test')
 subdir('blocks-test')
 subdir('new-case-test')

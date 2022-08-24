@@ -92,7 +92,6 @@ deps_test_deps = [
   libyuarel_dep,
   levenshtein_dep,
   libut_dep,
-  jinja2_cli_dep,
   chfreq_c_dep,
   msgbox_dep,
   dotenv_c_dep,
@@ -121,16 +120,6 @@ if get_option('enable-binaries')
      c_args: deps_c_args,
      install: true,
   )
-  if get_option('enable-greatest-tests')
-    #    test('deps-test|List Test Cases',sh_program,
-    #  args: ['-c',deps_ls_tests_script],
-    #  workdir: meson.current_source_dir(),
-    #)
-  endif
-    #test('jinja2-cli', 
-    #  deps_test_exec, args: ['-v','-a','-e','-s','s_jinja2_cli'],
-    #  workdir: deps_cur_dir,
-    #  )
   if get_option('enable-deps-test')
     test('deps-test', 
       deps_test_exec, args: ['-v','-a'],

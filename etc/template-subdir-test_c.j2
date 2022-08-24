@@ -1,8 +1,5 @@
 ////////////////////////////////////////////
 {%if SUBDIR_TEST_DEBUG_MEMORY_ENABLED%}#define DEBUG_MEMORY{%endif%}
-#ifdef DEBUG_MEMORY
-#include "debug-memory/debug_memory.h"
-#endif
 ////////////////////////////////////////////
 #include "{{SUBDIR_NAME}}/{{SUBDIR_NAME}}.h"
 ////////////////////////////////////////////
@@ -10,61 +7,19 @@
 #include "{{i}}"
 {%endfor%}
 ////////////////////////////////////////////
-static char EXECUTABLE_PATH[PATH_MAX + 1] = { 0 };
-static char *EXECUTABLE;
-static char *EXECUTABLE_PATH_DIRNAME;
-static bool DEBUG_MODE_ENABLED = {%if SUBDIR_TEST_DEBUG_MODE%}true{%else%}false{%endif%};
-void __attribute__((constructor)) __constructor__{{SUBDIR_NAME_SLUG}}();
-void __attribute__((destructor)) __destructor__{{SUBDIR_NAME_SLUG}}();
-void __{{SUBDIR_NAME_SLUG}}__setup_executable_path(const char **argv);
-
-TEST t_{{SUBDIR_NAME_SLUG}}(void *PARAMETER){
-  char *msg = NULL;
-  int tested_value = -1;
-  tested_value = 1;
-  ASSERT_EQm("Test Value should equal One", tested_value, 1);
-  asprintf(&msg,"Test {{SUBDIR_NAME}} OK\n\t(%s) @ (%s)\n\tValidated tested_value: %d",
-    EXECUTABLE,
-    EXECUTABLE_PATH_DIRNAME,
-    tested_value
-  );
-  PASSm(msg);
+TEST t_{{SUBDIR_NAME_SLUG}}(){
+  PASS();
 }
 
 SUITE(s_{{SUBDIR_NAME_SLUG}}) {
-  void *TEST_PARAM = 0;  
-  RUN_TESTp(t_{{SUBDIR_NAME_SLUG}}, (void*)TEST_PARAM);
+  RUN_TEST(t_{{SUBDIR_NAME_SLUG}});
 }
 
 GREATEST_MAIN_DEFS();
 
 int main(const int argc, const char **argv) {
-  __{{SUBDIR_NAME_SLUG}}__setup_executable_path(argv);
   GREATEST_MAIN_BEGIN();
-  if (isatty(STDOUT_FILENO)) {}
   RUN_SUITE(s_{{SUBDIR_NAME_SLUG}});
   GREATEST_MAIN_END();
 }
 
-
-void __{{SUBDIR_NAME_SLUG}}__setup_executable_path(const char **argv){
-  realpath(argv[0], EXECUTABLE_PATH);
-  EXECUTABLE = basename(EXECUTABLE_PATH);
-  EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
-  if(DEBUG_MODE_ENABLED)
-      fprintf(stderr,"{{SUBDIR_NAME}} Initialized @ %s/%s\n", EXECUTABLE_PATH_DIRNAME,EXECUTABLE_PATH);
-}
-
-void __attribute__((constructor)) __constructor__{{SUBDIR_NAME_SLUG}}(){
-    DEBUG_MODE_ENABLED = (getenv("DEBUG")) ? true 
-      : (getenv("DEBUG_MODE")) ? true 
-        : (getenv("DEBUGMODE")) ? true 
-          : false;
-}
-
-void __attribute__((destructor)) __destructor__{{SUBDIR_NAME_SLUG}}(){
-#ifdef DEBUG_MEMORY
-  fprintf(stderr,"\nChecking {{SUBDIR_NAME}} memory leaks\n");
-  print_allocated_memory();
-#endif
-}

@@ -25,6 +25,8 @@ meson-setup:
 
 meson-build: meson-setup
 	@$(MESON) compile -C $(MESON_BUILD_DIR) -j $(MESON_PARALLEL_JOBS)
+	#| tee .meson-build.log
+	#@$(GREP) 'warning:' .meson-build.log |egrep -v 'submodules|unused parameter' | tee .meson-build-warnings.log
 
 do-build: meson-build muon-build
 

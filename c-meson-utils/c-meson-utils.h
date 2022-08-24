@@ -9,8 +9,7 @@
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
-#include "c_vector/include/vector.h"
-#include "jinja2-cli/jinja2-cli.h"
+#include "c_vector/vector/vector.h"
 /////////////////////////////////////
 struct c_meson_module_dep_t {        //    meson/deps/xxxxx/meson.build
   char *dep_name;

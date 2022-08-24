@@ -21,7 +21,7 @@
 #include "submodules/b64.c/b64.h"
 #include "submodules/bytes/bytes.h"
 #include "submodules/c_greatest/greatest/greatest.h"
-#include "submodules/c_vector/include/vector.h"
+#include "submodules/c_vector/vector/vector.h"
 #include "submodules/ee.c/src/ee.h"
 #include "submodules/log.h/log.h"
 #include "submodules/ms/ms.h"

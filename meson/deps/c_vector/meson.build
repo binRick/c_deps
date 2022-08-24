@@ -1,11 +1,10 @@
 c_vector_inc = [
-  '../../../submodules/c_vector/include',
-  '../../../submodules/c_vector/src',
+  '../../../submodules/c_vector/vector',
   '../../../submodules/c_vector',
   inc,
 ]
 c_vector_lib = static_library('c_vector', 
-  '../../../submodules/c_vector/src/vector.c',
+  '../../../submodules/c_vector/vector/vector.c',
   install: false, 
   dependencies: [
   ], 

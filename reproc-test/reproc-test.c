@@ -17,7 +17,7 @@
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
-#include "c_vector/include/vector.h"
+#include "c_vector/vector/vector.h"
 #include "reproc-test.h"
 #include "submodules/log.h/log.h"
 #include "tempdir.c/tempdir.h"
@@ -28,10 +28,7 @@
 //////////////////////////////////////////////
 static int execute_processes();
 
-static inline void millisleep(long ms);
-
 static void __attribute__((destructor)) __test_subprocess_destructor();
-
 static void __attribute__((constructor)) __test_subprocess_constructor();
 
 //////////////////////////////////////////////
@@ -122,14 +119,6 @@ finish:
   return(abs(r));
 } /* execute_processes */
 
-static inline void millisleep(long ms){
-  struct timespec ts = {
-    .tv_sec  = (ms) / 1000,
-    .tv_nsec = ((ms) % 1000L) * 1000000,
-  };
-
-  nanosleep(&ts, NULL);
-}
 static void __attribute__((constructor)) __test_subprocess_constructor(){
 }
 static void __attribute__((destructor)) __test_subprocess_destructor(){

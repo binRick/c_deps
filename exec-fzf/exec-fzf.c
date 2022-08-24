@@ -17,7 +17,7 @@
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
-#include "c_vector/include/vector.h"
+#include "c_vector/vector/vector.h"
 #include "exec-fzf/exec-fzf.h"
 #include "submodules/log.h/log.h"
 #include "tempdir.c/tempdir.h"
@@ -52,7 +52,7 @@ void exec_fzf_release(struct fzf_exec_t *fe){
   if (fe) {
     if (fe->fzf_keybinds_v) {
       for (size_t i = 0; i < vector_size(fe->fzf_keybinds_v); i++) {
-        struct fzf_keybind_t *kb = vector_get(fe->fzf_keybinds_v, i);
+        __attribute__((unused)) struct fzf_keybind_t *kb = vector_get(fe->fzf_keybinds_v, i);
       }
       vector_release(fe->fzf_keybinds_v);
     }
@@ -309,9 +309,9 @@ finish:
       if (FZF_DEBUG_MODE) {
         log_info("out file lines: %d", fe->output_lines.count);
       }
-      for (size_t i = 0; i < fe->output_lines.count; i++) {
+      for (int i = 0; i < fe->output_lines.count; i++) {
         if (FZF_DEBUG_MODE) {
-          log_info("line #%lu- %s", i, fe->output_lines.strings[i]);
+          log_info("line #%d- %s", i, fe->output_lines.strings[i]);
         }
         if (strlen(fe->output_lines.strings[i]) > 0) {
           vector_push(fe->selected_options, fe->output_lines.strings[i]);

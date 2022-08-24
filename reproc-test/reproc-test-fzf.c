@@ -16,7 +16,7 @@
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
-#include "c_vector/include/vector.h"
+#include "c_vector/vector/vector.h"
 #include "reproc-test.h"
 #include "submodules/log.h/log.h"
 #include "tempdir.c/tempdir.h"
@@ -104,8 +104,8 @@ finish:
       fzf_exec->output_lines = stringfn_split_lines_and_trim(output);
       log_info("out file lines: %d", fzf_exec->output_lines.count);
       fsio_remove(fzf_exec->output_file);
-      for (size_t i = 0; i < fzf_exec->output_lines.count; i++) {
-        log_info("line #%lu- %s", i, fzf_exec->output_lines.strings[i]);
+      for (int i = 0; i < fzf_exec->output_lines.count; i++) {
+        log_info("line #%d- %s", i, fzf_exec->output_lines.strings[i]);
         vector_push(fzf_exec->selected_options, fzf_exec->output_lines.strings[i]);
       }
     }

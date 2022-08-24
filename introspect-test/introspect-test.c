@@ -133,7 +133,6 @@ SUITE(s_iterate){
   RUN_TESTp(t_introspect_iterate, "../c_mui/meson.build");
   RUN_TESTp(t_introspect_iterate, "../c_sdl/meson.build");
   RUN_TESTp(t_introspect_iterate, "../c_hl/meson.build");
-//  RUN_TESTp(t_introspect_iterate, "../c_deps/meson.build");
 }
 
 GREATEST_MAIN_DEFS();

@@ -1,11 +1,9 @@
 #include "chan-test.h"
 #include <assert.h>
 #include <ctype.h>
-#include <ctype.h>
 #include <pthread.h>
 #include <stdarg.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -160,15 +158,12 @@ TEST t_chan_jobs_worker(void *buffer_qty,
   pthread_create(&worker_threads[2], NULL, worker, (void *)5);
 
   ct_start(NULL);
-  char *send_dur;
 
   for (size_t i = 1; i <= JOBS_QTY; i++) {
     usleep(SEND_JOBS_DELAY_MS * 1000);
     chan_send(JOBS_CHANNEL, (void *)i);
   }
 
-  free(send_dur);
-  //ct_set_unit(ct_MILLISECONDS);
   char *sent_dur = ct_stop("");
 
   chan_close(JOBS_CHANNEL);
@@ -177,12 +172,12 @@ TEST t_chan_jobs_worker(void *buffer_qty,
     sent_dur
     );
 
-  for (int i = 0; i < WORKERS_QTY; i++) {
+  for (size_t i = 0; i < WORKERS_QTY; i++) {
     chan_recv(DONE_CHANNEL, NULL);
   }
 
   I("done signals received.....waiting on threads to exit....");
-  for (int i = 0; i < WORKERS_QTY; i++) {
+  for (size_t i = 0; i < WORKERS_QTY; i++) {
     pthread_join(&worker_threads[i], NULL);
   }
 

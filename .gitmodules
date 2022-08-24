@@ -799,3 +799,18 @@
 [submodule "submodules/c_img"]
 	path = submodules/c_img
 	url = git@github.com:binRick/c_img.git
+[submodule "submodules/qoi"]
+	path = submodules/qoi
+	url = https://github.com/phoboslab/qoi
+[submodule "submodules/interface99"]
+	path = submodules/interface99
+	url = https://github.com/Hirrolot/interface99
+[submodule "submodules/metalang99"]
+	path = submodules/metalang99
+	url = https://github.com/Hirrolot/metalang99
+[submodule "submodules/restic"]
+	path = submodules/restic
+	url = https://github.com/restic/restic
+[submodule "submodules/utf8.h"]
+	path = submodules/utf8.h
+	url = https://github.com/sheredom/utf8.h

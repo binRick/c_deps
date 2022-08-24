@@ -15,7 +15,7 @@
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
-#include "c_vector/include/vector.h"
+#include "c_vector/vector/vector.h"
 #include "reproc/reproc.h"
 #include "submodules/log.h/log.h"
 #include "tempdir.c/tempdir.h"

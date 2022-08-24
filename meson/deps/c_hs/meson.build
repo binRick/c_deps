@@ -48,8 +48,8 @@ c_hs_srcs = [files(
 )]
 
 c_hs_dirs = [
-  '../../../submodules/c_vector/include',
-  '../../../submodules/c_vector/src',
+  '../../../submodules/c_vector/vector',
+  '../../../submodules/c_vector/vector',
   '../../../submodules/c_vector',
   '../../../submodules/c_fsio/include',
   '../../../submodules/c_hs',
