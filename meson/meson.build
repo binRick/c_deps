@@ -179,5 +179,6 @@ subdir('deps/libusb')
 subdir('deps/levenshtein')
 subdir('deps/uri.c')
 subdir('deps/libyuarel')
+subdir('deps/CommonC')
 
 ####################################

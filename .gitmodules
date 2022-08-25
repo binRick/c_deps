@@ -814,3 +814,9 @@
 [submodule "submodules/utf8.h"]
 	path = submodules/utf8.h
 	url = https://github.com/sheredom/utf8.h
+[submodule "submodules/Simplified-QOI-Codec"]
+	path = submodules/Simplified-QOI-Codec
+	url = https://github.com/Aftersol/Simplified-QOI-Codec
+[submodule "submodules/CommonC"]
+	path = submodules/CommonC
+	url = https://github.com/ScrimpyCat/CommonC

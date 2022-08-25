@@ -5,6 +5,7 @@ import "C"
 import (
 	"fmt"
 	"strings"
+
 	survey "github.com/AlecAivazis/survey/v2"
 )
 

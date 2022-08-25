@@ -15,24 +15,6 @@
 #include "tempdir.c/tempdir.h"
 
 //////////////////////////////////////////////
-char *RENDER_TEMPLATE_VARS(char *TEMPLATE_s, char *VARS_s, char *COLOR){
-  struct jinja2_render_template_t *c = jinja2_init_config();
-
-  c->template_s        = TEMPLATE_s;
-  c->input_json_string = VARS_s;
-  c->template_file     = NULL;
-  c->output_file       = NULL;
-  c->debug_mode        = (DEBUG_MODE == true) || (getenv("DEBUG_MODE") != NULL);
-  assert(c->template_s != NULL && strlen(c->template_s) > 0);
-  assert(c->input_json_string != NULL && strlen(c->input_json_string) > 3);
-
-  assert(jinja2_render_template(c) == 0);
-  assert(c->success == true);
-  assert(c->output_s != NULL && strlen(c->output_s) > 8);
-  fprintf(stderr, AC_RESETALL "%s%s" AC_RESETALL, COLOR, c->output_s);
-  return(c->output_s);
-}
-
 #define RENDER_TEST_CASE(TEST_CASE_NAME, TEST_CASE_TEMPLATE, TEST_CASE_VARS, COLOR) \
   TEST TEST_CASE_NAME(void){                                                        \
     RENDER_TEMPLATE_VARS(TEST_CASE_TEMPLATE, TEST_CASE_VARS, COLOR);                \
@@ -58,10 +40,10 @@ char *RENDER_TEMPLATE_VARS(char *TEMPLATE_s, char *VARS_s, char *COLOR){
 #define ENCODED_VARS_BASH_SCRIPT                    "{\"x\":123}"
 //////////////////////////////////////////////
 #define COLOR_TEST_INCBIN_PYTHON_BINARIES           AC_YELLOW
-#define ENCODED_VARS_TEST_INCBIN_PYTHON_BINARIES                            \
-  "{\"binaries\":["                                                         \
-  "{\"name\":\"meson\",\"dir\":\"submodules/c_ansi/jinja2-cli/bin\"}"       \
-  ",{\"name\":\"jinja2-cli\",\"dir\":\"submodules/c_ansi/jinja2-cli/bin\"}" \
+#define ENCODED_VARS_TEST_INCBIN_PYTHON_BINARIES       \
+  "{\"binaries\":["                                    \
+  "{\"name\":\"meson\",\"dir\":\"submodules/c_ansi\"}" \
+  ",{\"name\":\"\",\"dir\":\"submodules/c_ansi\"}"     \
   "],\"inc_embedded_python_binaries_struct\":\"struct python_binary_t { char *name, char *dir, };\"}"
 
 //////////////////////////////////////////////

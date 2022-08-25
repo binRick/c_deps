@@ -13,7 +13,6 @@ type Meal struct {
 	Comment string
 }
 
-
 //export DoSelect
 func DoSelect() {
 	var meals = []Meal{
