@@ -17,7 +17,7 @@ MB=$DEPS_BASE/$NAME/meson.build
 submodule_files() {
 	{
 		find ../submodules/$NAME -type f -name "*.c"
-		find ../submodules/$NAME -type f -name "*.h"
+#		find ../submodules/$NAME -type f -name "*.h"
 	} | sort -u
 }
 
@@ -85,12 +85,20 @@ render_template() {
 		eval "echo -e \"$(\cat "$tf")\""
 	)
 }
-F="$(render_template)"
 
-{
-	echo -e ""
-	ansi --blue --bold --italic "$F"
-	echo -e ""
-} >&2
+if [[ ! -f "$MB" ]]; then
+  render_template > $MB
+  ansi --green --bold "$MB created"
 
-echo -e "$F"
+else
+  F="$(render_template)"
+
+  {
+    echo -e ""
+    ansi --blue --bold --italic "$F"
+    echo -e ""
+  } >&2
+
+  echo -e "$F"
+
+fi

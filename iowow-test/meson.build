@@ -31,8 +31,8 @@ if get_option('enable-binaries')
      c_args: iowow_test_c_args,
      install: false,
   )
-  #test('iowow-test', 
-  #  iowow_test_exec, args: ['-v','-a'],
-  #  workdir: iowow_test_test_dir,
-  #)
+  test('iowow-test', 
+    iowow_test_exec, args: ['-v','-a'],
+    workdir: iowow_test_test_dir,
+  )
 endif

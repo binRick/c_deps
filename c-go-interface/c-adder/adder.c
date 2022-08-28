@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "go_adder/libadder.h"
+#include "libadder.h"
 
 void go_string(void);
 

@@ -34,8 +34,8 @@ if get_option('enable-binaries')
      c_args: blocks_test_c_args,
      install: false,
   )
-  #test('blocks-test', 
-  #  blocks_test_exec, args: ['-v','-a'],
-  #  workdir: blocks_test_test_dir,
-  #)
+  test('blocks-test', 
+    blocks_test_exec, args: ['-v','-a'],
+    workdir: blocks_test_test_dir,
+  )
 endif

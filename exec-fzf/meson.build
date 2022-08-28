@@ -4,6 +4,10 @@ exec_fzf_srcs = [
 exec_fzf_inc = [
  inc,
  '../exec-fzf',
+ '../submodules/reproc/reproc/include',
+ '../submodules/reproc/reproc/include/reproc',
+ '../submodules/reproc/reproc',
+ '../submodules/reproc',
 ]
 exec_fzf_deps = [
  reproc_dep,

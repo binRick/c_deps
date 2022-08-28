@@ -8,12 +8,8 @@ filecopy_test_include_dirs = [
 ]
 filecopy_test_deps = [
   c_greatest_dep,
-  c_vector_dep,
   c_fsio_dep,
-  c_stringfn_dep,
   filecopy_dep,
-  ansi_codes_dep,
-  debug_memory_dep,
 ]
 filecopy_test_c_args = [
 ]

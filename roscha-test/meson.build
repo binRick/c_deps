@@ -31,8 +31,8 @@ if get_option('enable-binaries')
      c_args: roscha_test_c_args,
      install: false,
   )
-  #test('roscha-test', 
-  #  roscha_test_exec, args: ['-v','-a'],
-  #  workdir: roscha_test_test_dir,
-  #)
+  test('roscha-test', 
+    roscha_test_exec, args: ['-v','-a'],
+    workdir: roscha_test_test_dir,
+  )
 endif

@@ -1,0 +1,12 @@
+c_hello
+c_adder
+go_hello/libhello.a
+go_adder/libadder.a
+go_adder/go.mod
+go_hello/go.mod
+go_hello/libhello.h
+go_adder/libadder.h
+bin
+*/*.h
+*/*.a
+*/go.mod

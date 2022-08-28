@@ -820,3 +820,54 @@
 [submodule "submodules/CommonC"]
 	path = submodules/CommonC
 	url = https://github.com/ScrimpyCat/CommonC
+[submodule "submodules/hash"]
+	path = submodules/hash
+	url = https://github.com/clibs/hash
+[submodule "submodules/optparse99"]
+	path = submodules/optparse99
+	url = https://github.com/hippie68/optparse99
+[submodule "submodules/rrdtool"]
+	path = submodules/rrdtool
+	url = https://github.com/oetiker/rrdtool-1.x
+[submodule "submodules/logy"]
+	path = submodules/logy
+	url = https://github.com/cfnptr/logy
+[submodule "submodules/OTPClient"]
+	path = submodules/OTPClient
+	url = https://github.com/paolostivanin/OTPClient.git
+[submodule "submodules/libgcrypt"]
+	path = submodules/libgcrypt
+	url = https://github.com/gpg/libgcrypt
+[submodule "submodules/fancy-progress"]
+	path = submodules/fancy-progress
+	url = https://github.com/vlastavesely/fancy-progress
+[submodule "submodules/get_next_line"]
+	path = submodules/get_next_line
+	url = https://github.com/AnthonyLedru/get_next_line
+[submodule "submodules/alloc_or_die"]
+	path = submodules/alloc_or_die
+	url = https://github.com/donmccaughey/alloc_or_die
+[submodule "submodules/librnd"]
+	path = submodules/librnd
+	url = https://github.com/donmccaughey/librnd
+[submodule "submodules/Base64"]
+	path = submodules/Base64
+	url = https://github.com/elzoughby/Base64
+[submodule "submodules/base64"]
+	path = submodules/base64
+	url = https://github.com/elzoughby/Base64
+[submodule "submodules/libcpuid"]
+	path = submodules/libcpuid
+	url = https://github.com/anrieff/libcpuid
+[submodule "submodules/curses-speedtest"]
+	path = submodules/curses-speedtest
+	url = https://github.com/jonbirge/curses-speedtest
+[submodule "submodules/curses_speedtest"]
+	path = submodules/curses_speedtest
+	url = https://github.com/jonbirge/curses-speedtest
+[submodule "submodules/libnms"]
+	path = submodules/libnms
+	url = https://github.com/bartobri/libnms
+[submodule "submodules/movewin"]
+	path = submodules/movewin
+	url = https://github.com/andrewgho/movewin

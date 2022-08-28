@@ -32,8 +32,8 @@ if get_option('enable-binaries')
      c_args: passh_test_c_args,
      install: false,
   )
-  #test('passh-test', 
-  #  passh_test_exec, args: ['-v','-a'],
-  #  workdir: passh_test_test_dir,
-  #)
+  test('passh-test', 
+    passh_test_exec, args: ['-v','-a'],
+    workdir: passh_test_test_dir,
+  )
 endif

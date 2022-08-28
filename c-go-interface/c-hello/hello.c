@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "go_hello/libhello.h"
+#include "libhello.h"
 
 void go_string(void);
 

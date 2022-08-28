@@ -77,8 +77,8 @@ if [[ "$DRY_RUN_MODE" == 1 || "$DEBUG_MODE" == 1 ]]; then
 	echo -e "SUBDIR_TEST_DEBUG_MEMORY_ENABLED=$SUBDIR_TEST_DEBUG_MEMORY_ENABLED"
 fi
 ############################################################################################################
-DEPENDENCIES="c_greatest_dep c_vector_dep c_fsio_dep c_stringfn_dep ansi_codes_dep debug_memory_dep"
-INCLUDED_HEADERS="c_greatest/greatest/greatest.h c_fsio/include/fsio.h c_vector/vector/vector.h ansi-codes/ansi-codes.h c_stringfn/include/stringfn.h"
+DEPENDENCIES="c_greatest_dep c_vector_dep c_fsio_dep c_stringfn_dep ansi_codes_dep logh_dep timestamp_dep"
+INCLUDED_HEADERS="c_greatest/greatest/greatest.h c_fsio/include/fsio.h c_vector/vector/vector.h ansi-codes/ansi-codes.h c_stringfn/include/stringfn.h timestamp/timestamp.h log.h/log.h"
 ############################################################################################################
 if [[ "$SUBDIR_TEST_DEPENDENCIES" != "none" ]]; then
 	DEPENDENCIES+=" $SUBDIR_TEST_DEPENDENCIES"

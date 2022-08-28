@@ -1,0 +1,7 @@
+[wrap-git]
+directory=CommonC
+url=https://github.com/binRick/CommonC
+revision=head
+
+[provide]
+commonc = commonc_dep
