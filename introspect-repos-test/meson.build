@@ -28,11 +28,9 @@ if get_option('enable-binaries')
      introspect_repos_test_srcs,
      dependencies: introspect_repos_test_deps,
      include_directories: introspect_repos_test_inc,
-     #,
      install: true,
-     #install_dir: '/usr/local/bin',
   )
   if get_option('enable-binary-tests')
-    test('introspect-repos-test', passh_program, args: [introspect_repos_test_exec,'-v'])
+    test('introspect-repos-test', passh_program, args: [introspect_repos_test_exec,'-v','-a'])
   endif
 endif

@@ -5,6 +5,7 @@ MESON_DEFAULT_BUILD_TYPE=debug
 ############################################
 BUILD_TYPE ?=$(MESON_DEFAULT_BUILD_TYPE)
 BUILD_JOBS ?=10
+TEST_JOBS ?=10
 MESON_DEFAULT_LIBRARY ?=static
 WARN_LEVEL ?=2
 ############################################
@@ -39,9 +40,9 @@ meson-install: do-meson
 install: meson-install
 
 meson-test-verbose:
-	@$(PASSH) $(MESON) test -C $(MESON_BUILD_DIR) --print-errorlogs -v
+	@env MESON_TESTTHREADS=$(TEST_JOBS) $(PASSH) $(MESON) test -C $(MESON_BUILD_DIR) --print-errorlogs -v
 meson-test:
-	@$(PASSH) $(MESON) test -C $(MESON_BUILD_DIR) --print-errorlogs	
+	@env MESON_TESTTHREADS=$(TEST_JOBS) $(PASSH) $(MESON) test -C $(MESON_BUILD_DIR) --print-errorlogs	
 test: meson-test muon-test
 test-verbose: meson-test-verbose
 

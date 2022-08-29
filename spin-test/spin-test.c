@@ -10,13 +10,13 @@
 #include "c_vector/vector/vector.h"
 #include "spin/spin.h"
 #include "timestamp/timestamp.h"
+int big_number = 1000000000;
 
 ////////////////////////////////////////////
 TEST t_spin_test(){
-  const int big_number = 1000000000;
-  spinner   *s         = spin_new(utf8_pat1, "Working", UTF8_CHAR_WIDTH);
-  int       x          = 0;
-  int       working    = 1;
+  spinner *s      = spin_new(utf8_pat1, "Working", UTF8_CHAR_WIDTH);
+  int     x       = 0;
+  int     working = 1;
 
   while (working) {
     if (x == (big_number * .25)) {
@@ -46,6 +46,9 @@ SUITE(s_spin_test) {
 GREATEST_MAIN_DEFS();
 
 int main(const int argc, const char **argv) {
+  if (!isatty(STDOUT_FILENO)) {
+    big_number = big_number / 1000 / 10;
+  }
   GREATEST_MAIN_BEGIN();
   RUN_SUITE(s_spin_test);
   GREATEST_MAIN_END();

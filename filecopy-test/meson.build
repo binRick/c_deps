@@ -27,8 +27,8 @@ if get_option('enable-binaries')
      c_args: filecopy_test_c_args,
      install: false,
   )
-  #test('filecopy-test', 
-  #  filecopy_test_exec, args: ['-v','-a'],
-  #  workdir: filecopy_test_test_dir,
-  #)
+  test('filecopy-test', 
+    filecopy_test_exec, args: ['-v','-a'],
+    workdir: filecopy_test_test_dir,
+  )
 endif

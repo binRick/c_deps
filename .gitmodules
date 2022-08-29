@@ -871,3 +871,57 @@
 [submodule "submodules/movewin"]
 	path = submodules/movewin
 	url = https://github.com/andrewgho/movewin
+[submodule "submodules/closefrom"]
+	path = submodules/closefrom
+	url = https://github.com/msantos/closefrom
+[submodule "submodules/base64-simple"]
+	path = submodules/base64-simple
+	url = https://github.com/bartobri/base64-simple
+[submodule "submodules/base64_simple"]
+	path = submodules/base64_simple
+	url = https://github.com/bartobri/base64-simple
+[submodule "submodules/hmac-sha256"]
+	path = submodules/hmac-sha256
+	url = https://github.com/aperezdc/hmac-sha256
+[submodule "submodules/hmac_sha256"]
+	path = submodules/hmac_sha256
+	url = https://github.com/aperezdc/hmac-sha256
+[submodule "submodules/libutf8"]
+	path = submodules/libutf8
+	url = https://github.com/jwerle/libutf8
+[submodule "submodules/stp_print"]
+	path = submodules/stp_print
+	url = https://github.com/jtfrom9/stp_print
+[submodule "submodules/rotate_bits"]
+	path = submodules/rotate_bits
+	url = https://github.com/jb55/rotate-bits.h
+[submodule "submodules/libmonitors"]
+	path = submodules/libmonitors
+	url = https://github.com/Shirakumo/libmonitors
+[submodule "submodules/rotate-bits"]
+	path = submodules/rotate-bits
+	url = https://github.com/jb55/rotate-bits.h
+[submodule "submodules/c_iterators"]
+	path = submodules/c_iterators
+	url = https://github.com/TotallyNotChase/c-iterators
+[submodule "submodules/osxautomation"]
+	path = submodules/osxautomation
+	url = https://github.com/joseph/osxautomation
+[submodule "submodules/sigstr"]
+	path = submodules/sigstr
+	url = https://github.com/adzierzanowski/sigstr
+[submodule "submodules/go_libproc"]
+	path = submodules/go_libproc
+	url = https://github.com/tejasmanohar/go-libproc
+[submodule "submodules/libproc"]
+	path = submodules/libproc
+	url = https://github.com/PolySat/libproc
+[submodule "submodules/wcwidth"]
+	path = submodules/wcwidth
+	url = https://github.com/mattn/wcwidth.c
+[submodule "submodules/libdefer"]
+	path = submodules/libdefer
+	url = https://github.com/trws/libdefer
+[submodule "submodules/expboff"]
+	path = submodules/expboff
+	url = https://github.com/willemt/expboff

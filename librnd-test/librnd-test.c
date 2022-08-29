@@ -9,10 +9,14 @@
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/vector/vector.h"
 #include "librnd/rnd.h"
+#include "log.h/log.h"
 
 ////////////////////////////////////////////
 TEST t_librnd_test(){
-  struct rnd *rnd = rnd_alloc();
+  struct rnd *rnd   = rnd_alloc();
+  uint32_t   number = rnd_next_uniform_value_in_range(rnd, 1, 100);
+
+  log_info("%u", number);
 
   rnd_free(rnd);
 

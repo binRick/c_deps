@@ -12,6 +12,7 @@
 #include <unistd.h>
 #define ROUNDS           150
 #define STRINGS_COUNT    10
+int               SLEEP_MS = 50;
 ////////////////////////////////////////////
 static const char *strings[] = {
   "Lorem ipsum dolor sit amet",
@@ -37,10 +38,10 @@ TEST t_fancy_progress_test(){
     r = rand() % STRINGS_COUNT;
     fprintf(stdout, "%s...\n", strings[r]);
     fancy_progress_step(((float)i / ROUNDS) * 100);
-    usleep(50 * 1000);
+    usleep(SLEEP_MS * 1000);
   }
 
-  sleep(1);       // for effect
+  usleep(500 * 1000);
 
   fancy_progress_stop();
 

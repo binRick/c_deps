@@ -2,20 +2,20 @@ x-reference-data:
   log-path: &log-path /tmp/meson-repos-build.log
   meson-base-dir: &meson-base-dir ~/repos
   meson-dirs: &meson-dirs
+    - c_deps
+    - c_darwin
+    - c_ansi
+    - c_mui
+    - c_sdl
     - c_vector
     - c_footswitch
     - c_pick
-    - c_deps
-    - c_palettes
-    - c_ansi
+    - c_kfc
     - c_bars
-    - c_darwin
     - c_db
     - c_embed
     - c_hl
     - c_macfsmon
-    - c_mui
-    - c_sdl
-    - c_colors
-    - c_kfc
     - c_greatest
+      #    - c_palettes
+      #    - c_colors

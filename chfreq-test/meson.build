@@ -8,13 +8,7 @@ chfreq_test_include_dirs = [
 ]
 chfreq_test_deps = [
   c_greatest_dep,
-  c_vector_dep,
-  c_fsio_dep,
   chfreq_c_dep,
-  c_stringfn_dep,
-  ansi_codes_dep,
-  logh_dep,
-  timestamp_dep,
 ]
 chfreq_test_c_args = [
 ]

@@ -4,11 +4,12 @@ sha256_c_srcs = [files(
 
 sha256_c_dirs = [
   '../../../submodules/sha256.c',
+  '../../../submodules',
   inc,
 ]
 
 sha256_c_deps = [
-
+  rotate_bits_dep,
 ]
 
 sha256_c_lib = static_library('sha256-c',
