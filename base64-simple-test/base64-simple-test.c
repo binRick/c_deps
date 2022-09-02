@@ -11,39 +11,43 @@
 #include "c_vector/vector/vector.h"
 #include "log.h/log.h"
 #include "timestamp/timestamp.h"
+const char *STRING = "This is a decoded string.";
 
 ////////////////////////////////////////////
 TEST t_base64_simple_test(){
-  char   *decoded, *encoded;
-  size_t i, size, r_size;
+  size_t r_size;
+  char   *ENCODED_STRING = base64simple_encode(STRING, strlen(STRING));
+  char   *DECODED_STRING = base64simple_decode(ENCODED_STRING, strlen(ENCODED_STRING), &r_size);
 
-  // Encoding
+  log_info("String:         %s", STRING);
+  log_info("Encoded String: %s", ENCODED_STRING);
+  log_info("Decoded String: %s", DECODED_STRING);
 
-  decoded = "This is a decoded string.";
-  size    = strlen(decoded);
-  encoded = base64simple_encode(decoded, size);
-  if (encoded == NULL) {
-    printf("Insufficient Memory!\n");
-  } else {
-    printf("Encoded: %s\n", encoded);
-  }
-
-  // Decoding
-
-  size    = strlen(encoded);
-  decoded = base64simple_decode(encoded, size, &r_size);
-  if (decoded == NULL) {
-    printf("Improperly Encoded String or Insufficient Memory!\n");
-  } else {
-    for (i = 0; i < r_size; ++i) {
-      // Do something with decoded[i] here
-    }
-  }
-
-  // Freeing
-
-  free(encoded);
-  free(decoded);
+/*
+ * decoded = "This is a decoded string.";
+ * size    = strlen(decoded);
+ * encoded = base64simple_encode(decoded, size);
+ * if (encoded == NULL) {
+ *  printf("Insufficient Memory!\n");
+ * } else {
+ *  printf("Encoded: %s\n", encoded);
+ * }
+ *
+ * size    = strlen(encoded);
+ * decoded = base64simple_decode(encoded, size, &r_size);
+ * if (decoded == NULL) {
+ *  printf("Improperly Encoded String or Insufficient Memory!\n");
+ * } else {
+ *  for (i = 0; i < r_size; ++i) {
+ *    // Do something with decoded[i] here
+ *  }
+ * }
+ *
+ * // Freeing
+ *
+ * free(encoded);
+ * free(decoded);
+ */
   PASS();
 }
 
