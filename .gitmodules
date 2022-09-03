@@ -925,3 +925,18 @@
 [submodule "submodules/expboff"]
 	path = submodules/expboff
 	url = https://github.com/willemt/expboff
+[submodule "submodules/rhonabwy"]
+	path = submodules/rhonabwy
+	url = https://github.com/babelouest/rhonabwy
+[submodule "submodules/jansson"]
+	path = submodules/jansson
+	url = https://github.com/akheron/jansson
+[submodule "submodules/orcania"]
+	path = submodules/orcania
+	url = https://github.com/babelouest/orcania
+[submodule "submodules/yder"]
+	path = submodules/yder
+	url = https://github.com/babelouest/yder
+[submodule "submodules/nettle"]
+	path = submodules/nettle
+	url = https://github.com/gnutls/nettle

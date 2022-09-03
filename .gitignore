@@ -36,3 +36,4 @@ loc.sh
 richard-100*
 .meson.build*.log
 .meson-build*.log
+.iowow.db

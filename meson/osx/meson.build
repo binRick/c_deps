@@ -44,6 +44,6 @@ add_global_link_arguments(osx_audit_flags, language : ['c'])
 add_global_link_arguments(osx_wg_flags, language : ['c'])
 add_global_link_arguments(osx_img_flags, language : ['c'])
 
-
+osx_link_args = osx_ldflags
 
 
