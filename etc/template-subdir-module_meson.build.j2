@@ -1,0 +1,36 @@
+{{SUBDIR_NAME_SLUG}}_srcs = [
+  '{{SUBDIR_NAME}}.c',
+]
+
+inc = get_variable('inc', join_paths(meson.current_source_dir(),'..'))
+
+{{SUBDIR_NAME_SLUG}}_include_dirs = [
+  '.',
+  inc,
+]
+
+{{SUBDIR_NAME_SLUG}}_deps = [
+  module_dep,
+{% for dep in DEPENDENCIES.split(' ') %}  {{dep}},
+{%endfor-%}
+]
+
+{{SUBDIR_NAME_SLUG}}_c_args = [
+]
+
+{{SUBDIR_NAME_SLUG}}_link_args = [
+]
+
+{{SUBDIR_NAME_SLUG}}_lib = static_library('{{SUBDIR_NAME}}',
+  {{SUBDIR_NAME_SLUG}}_srcs,
+  install: false,
+  dependencies: {{SUBDIR_NAME_SLUG}}_deps,
+  c_args: {{SUBDIR_NAME_SLUG}}_c_args,
+  include_directories: {{SUBDIR_NAME_SLUG}}_include_dirs
+)
+
+{{SUBDIR_NAME_SLUG}}_dep = declare_dependency(
+  include_directories: {{SUBDIR_NAME_SLUG}}_include_dirs,
+  link_with: {{SUBDIR_NAME_SLUG}}_lib,
+  link_args: {{SUBDIR_NAME_SLUG}}_link_args,
+)

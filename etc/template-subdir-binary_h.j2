@@ -1,14 +1,20 @@
 #pragma once
 #ifndef {{SUBDIR_NAME|upper|replace('-','_')}}_H
 #define {{SUBDIR_NAME|upper|replace('-','_')}}_H
+{%if SUBDIR_TEST_DEBUG_MEMORY_ENABLED%}#define DEBUG_MEMORY{%endif%}
 //////////////////////////////////////
 #include <ctype.h>
 #include <stdio.h>
+#include <assert.h>
+#include <err.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <inttypes.h>
 //////////////////////////////////////
-
+#include "optparse99/optparse99.h"
+{%for i in INCLUDED_HEADERS.split(' ') -%}
+#include "{{i}}"
+{%endfor%}
 #endif

@@ -37,3 +37,11 @@ richard-100*
 .meson.build*.log
 .meson-build*.log
 .iowow.db
+*.cast.bz2
+*.ttyrec.bz2
+tmp*
+.bestline-*history.txt
+example1.db
+commits.json
+*/.attic*
+select_description1/survey

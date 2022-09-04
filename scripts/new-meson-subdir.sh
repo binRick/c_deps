@@ -5,9 +5,13 @@
 #
 # Options :
 #
-# % name
+# % subdir
 # desc="Subdir Name"
-# short="t" type="option" variable="SUBDIR_NAME" default=none
+# short="s" type="option" variable="SUBDIR_NAME" default=none
+#
+# % type
+# desc="$(ansi  --green --bold "Subdir Type")> $(ansi -n --underline --magenta "test") or $(ansi --underline -n --cyan "binary") or $(ansi --underline -n --yellow "library") or $(ansi --underline -n --red module)"
+# short="t" type="option" variable="SUBDIR_TYPE" default=test
 #
 # % dependencies
 # desc="Subdir Dependencies."
@@ -38,7 +42,7 @@
 # short="M" type="flag" variable="SUBDIR_TEST_DEBUG_MEMORY_ENABLED" value=true default=false
 #
 # % overwrite
-# desc="Overwrite Subdir"
+# desc="`ansi -n --red Overwrite Subdir`"
 # short="O" type="flag" variable="OVERWRITE_SUBDIR_TEST" value=true default=false
 #
 # % enable-subdir-debug-mode
@@ -46,7 +50,7 @@
 # short="D" type="flag" variable="SUBDIR_TEST_DEBUG_MODE" value=true default=false
 #
 # % dry-run
-# desc="Dry Run Mode"
+# desc="`ansi --yellow -n Dry Run Mode`"
 # short="n" type="flag" variable="DRY_RUN_MODE" value=1 default=0
 #
 # % debug-mode
@@ -72,13 +76,33 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ "$DRY_RUN_MODE" == 1 || "$DEBUG_MODE" == 1 ]]; then
 	echo -e "REPO_DIR=$REPO_DIR"
 	echo -e "SUBDIR_NAME=$SUBDIR_NAME"
+	echo -e "SUBDIR_TYPE=$SUBDIR_TYPE"
 	echo -e "SUBDIR_TEST_DEBUG_MODE=$SUBDIR_TEST_DEBUG_MODE"
 	echo -e "SUBDIR_TEST_DEPENDENCIES=$SUBDIR_TEST_DEPENDENCIES"
 	echo -e "SUBDIR_TEST_DEBUG_MEMORY_ENABLED=$SUBDIR_TEST_DEBUG_MEMORY_ENABLED"
 fi
 ############################################################################################################
-DEPENDENCIES="c_greatest_dep c_vector_dep c_fsio_dep c_stringfn_dep ansi_codes_dep logh_dep timestamp_dep ms_dep bytes_dep"
-INCLUDED_HEADERS="c_greatest/greatest/greatest.h c_fsio/include/fsio.h c_vector/vector/vector.h ansi-codes/ansi-codes.h c_stringfn/include/stringfn.h timestamp/timestamp.h log.h/log.h ms/ms.h bytes/bytes.h"
+DEPENDENCIES="\
+ansi_codes_dep\
+ c_vector_dep\
+ c_fsio_dep\
+ c_stringfn_dep\
+ c_string_buffer_dep\
+ timestamp_dep\
+ logh_dep\
+ ms_dep\
+ bytes_dep\
+"
+INCLUDED_HEADERS="\
+ansi-codes/ansi-codes.h\
+ c_vector/vector/vector.h\
+ c_fsio/include/fsio.h\
+ c_stringfn/include/stringfn.h\
+ c_string_buffer/include/stringbuffer.h\
+ timestamp/timestamp.h\
+ log.h/log.h ms/ms.h\
+ bytes/bytes.h\
+"
 ############################################################################################################
 if [[ "$SUBDIR_TEST_DEPENDENCIES" != "none" ]]; then
 	DEPENDENCIES+=" $SUBDIR_TEST_DEPENDENCIES"
@@ -111,7 +135,11 @@ UNCRUSTIFY_BIN="$(command -v uncrustify)"
 J2_ARGS="--strict --format json"
 TEMPLATE_VARS_FILE=$(mktemp)
 J2_CMDS="$JQ_BIN -Mrc < $TEMPLATE_VARS_FILE >/dev/null"
-SUBDIR_NAME="${SUBDIR_NAME}-test"
+if [[ "$SUBDIR_TYPE" == test ]]; then
+  SUBDIR_NAME="${SUBDIR_NAME}-${SUBDIR_TYPE}"
+else
+  SUBDIR_NAME="${SUBDIR_NAME}"
+fi
 SUBDIR_TEST_RENDERED_C_FILE=$(mktemp)
 SUBDIR_TEST_RENDERED_H_FILE=$(mktemp)
 SUBDIR_TEST_RENDERED_MESON_BUILD_FILE=$(mktemp)
@@ -132,9 +160,9 @@ if [[ -d "$SUBDIR_TEST_DIR" && "$OVERWRITE_SUBDIR_TEST" != true ]]; then
 fi
 
 UNCRUSTIFY_CFG="$ETC_DIR/uncrustify.cfg"
-TEMPLATE_MESON_BUILD="$TEMPLATES_DIR/template-subdir-test_meson.build.j2"
-TEMPLATE_H="$TEMPLATES_DIR/template-subdir-test_h.j2"
-TEMPLATE_C="$TEMPLATES_DIR/template-subdir-test_c.j2"
+TEMPLATE_MESON_BUILD="$TEMPLATES_DIR/template-subdir-${SUBDIR_TYPE}_meson.build.j2"
+TEMPLATE_H="$TEMPLATES_DIR/template-subdir-${SUBDIR_TYPE}_h.j2"
+TEMPLATE_C="$TEMPLATES_DIR/template-subdir-${SUBDIR_TYPE}_c.j2"
 MESON_ADD_SUBDIR_CMD="grep -q \"^subdir('$SUBDIR_NAME')$\" $REPO_DIR/meson.build || echo -e \"subdir('$SUBDIR_NAME')\" >> $REPO_DIR/meson.build"
 MESON_CMDS=" && ( cd $REPO_DIR && $MESON_ADD_SUBDIR_CMD && meson setup --reconfigure $MESON_BUILD_DIR && meson compile -j 10 -C $MESON_BUILD_DIR $SUBDIR_NAME && meson test --print-errorlogs -v -C $MESON_BUILD_DIR $SUBDIR_NAME )"
 J2_POST_CMDS="$UNCRUSTIFY_BIN --no-backup -l c -q -c $UNCRUSTIFY_CFG $SUBDIR_TEST_RENDERED_C_FILE $SUBDIR_TEST_RENDERED_H_FILE && muon check $SUBDIR_TEST_RENDERED_MESON_BUILD_FILE && { [[ -d "$SUBDIR_TEST_DIR" ]] || mkdir $SUBDIR_TEST_DIR; } && cp $SUBDIR_TEST_RENDERED_C_FILE $SUBDIR_TEST_DIR/$SUBDIR_NAME.c && cp $SUBDIR_TEST_RENDERED_H_FILE $SUBDIR_TEST_DIR/$SUBDIR_NAME.h && cp $SUBDIR_TEST_RENDERED_MESON_BUILD_FILE $SUBDIR_TEST_DIR/meson.build $MESON_CMDS"
@@ -142,6 +170,7 @@ J2_POST_CMDS="$UNCRUSTIFY_BIN --no-backup -l c -q -c $UNCRUSTIFY_CFG $SUBDIR_TES
 prepare_vars_file() {
 	rm $JO_ARGS_FILE
 	echo -ne " \"SUBDIR_NAME\"=\"$SUBDIR_NAME\"" >>$JO_ARGS_FILE
+	echo -ne " \"SUBDIR_TYPE\"=\"$SUBDIR_TYPE\"" >>$JO_ARGS_FILE
 	echo -ne " \"SUBDIR_NAME_SLUG\"=\"$SUBDIR_NAME_SLUG\"" >>$JO_ARGS_FILE
 	echo -ne " \"SUBDIR_TEST_ENABLED\"=$SUBDIR_TEST_ENABLED" >>$JO_ARGS_FILE
 	echo -ne " \"SUBDIR_TEST_DEBUG_MODE\"=$SUBDIR_TEST_DEBUG_MODE" >>$JO_ARGS_FILE
@@ -174,7 +203,7 @@ new_j2_cmd $SUBDIR_TEST_RENDERED_H_FILE "$TEMPLATE_H" "$EXTRA_TEMPLATE_VARS"
 new_j2_cmd $SUBDIR_TEST_RENDERED_C_FILE "$TEMPLATE_C" "$EXTRA_TEMPLATE_VARS"
 
 if [[ "$DRY_RUN_MODE" == 1 || "$DEBUG_MODE" == 1 ]]; then
-	msg="Generating Subdir test files '$(ansi -n --green "$SUBDIR_NAME")' @ '$(ansi -n --cyan "$SUBDIR_TEST_DIR")' using \n\t$(ansi -n --magenta "$TEMPLATE_MESON_BUILD, $TEMPLATE_H, $TEMPLATE_C")\nWith Commands\n\t'$(ansi -n --red "$J2_CMDS")'"
+	msg="Generating Subdir files '$(ansi -n --green "$SUBDIR_NAME")' @ '$(ansi -n --cyan "$SUBDIR_TEST_DIR")' using \n\t$(ansi -n --magenta "$TEMPLATE_MESON_BUILD, $TEMPLATE_H, $TEMPLATE_C")\nWith Commands\n\t'$(ansi -n --red "$J2_CMDS")'"
 	echo -e "$msg"
 	eval $JQ_BIN -rC <$TEMPLATE_VARS_FILE
 	ansi --yellow --italic "$J2_CMDS && $J2_POST_CMDS"

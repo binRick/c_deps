@@ -1,0 +1,55 @@
+{%set MODULE_NAME = SUBDIR_NAME|lower|replace('-','_') -%}
+#pragma once
+#ifndef {{SUBDIR_NAME|upper|replace('-','_')}}_C
+#define {{SUBDIR_NAME|upper|replace('-','_')}}_C
+////////////////////////////////////////////
+{%if SUBDIR_TEST_DEBUG_MEMORY_ENABLED%}#define DEBUG_MEMORY{%endif%}
+////////////////////////////////////////////
+#include "{{SUBDIR_NAME}}/{{SUBDIR_NAME}}.h"
+////////////////////////////////////////////
+{%for i in INCLUDED_HEADERS.split(' ') -%}
+#include "{{i}}"
+{%endfor%}
+////////////////////////////////////////////
+static inline void  {{MODULE_NAME}}_info(char *message);
+static inline void  {{MODULE_NAME}}_error(char *message);
+static inline void  {{MODULE_NAME}}_debug(char *message);
+static inline int   {{MODULE_NAME}}_GetPID();
+////////////////////////////////////////////
+int {{MODULE_NAME}}_init(module({{MODULE_NAME}}) *exports) {
+  clib_module_init({{MODULE_NAME}}, exports);
+  exports->pid      = getpid();
+  exports->log_mode = {{MODULE_NAME|upper}}_LOG_MODE_NONE;
+  exports->info     = {{MODULE_NAME}}_info;
+  exports->error    = {{MODULE_NAME}}_error;
+  exports->debug    = {{MODULE_NAME}}_debug;
+  return(EXIT_SUCCESS);
+}
+
+void {{MODULE_NAME}}_deinit(module({{MODULE_NAME}}) *exports) {
+  clib_module_deinit({{MODULE_NAME}});
+}
+////////////////////////////////////////////
+static inline int {{MODULE_NAME}}_GetPID(){
+  return(require({{MODULE_NAME}})->pid);
+}
+
+static inline void {{MODULE_NAME}}_info(char *message) {
+  if (require({{MODULE_NAME}})->log_mode >= {{MODULE_NAME|upper}}_LOG_MODE_INFO) {
+    fprintf(stdout, " info: %s\n", message);
+  }
+}
+
+static inline void {{MODULE_NAME}}_error(char *message) {
+  if (require({{MODULE_NAME}})->log_mode >= {{MODULE_NAME|upper}}_LOG_MODE_ERROR) {
+    fprintf(stderr, "error: %s\n", message);
+  }
+}
+
+static inline void {{MODULE_NAME}}_debug(char *message) {
+  if (require({{MODULE_NAME}})->log_mode >= {{MODULE_NAME|upper}}_LOG_MODE_DEBUG) {
+    fprintf(stderr, "debug: %s\n", message);
+  }
+}
+////////////////////////////////////////////
+#endif

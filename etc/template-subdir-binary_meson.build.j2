@@ -1,18 +1,23 @@
 {{SUBDIR_NAME_SLUG}}_srcs = [
   '{{SUBDIR_NAME}}.c',
 ]
+
 inc = get_variable('inc', join_paths(meson.current_source_dir(),'..'))
+
 {{SUBDIR_NAME_SLUG}}_include_dirs = [
   '.',
   inc,
 ]
+
 {{SUBDIR_NAME_SLUG}}_deps = [
-  c_greatest_dep,
+  optparse99_dep,
 {% for dep in DEPENDENCIES.split(' ') %}  {{dep}},
 {%endfor-%}
 ]
+
 {{SUBDIR_NAME_SLUG}}_c_args = [
 ]
+
 {{SUBDIR_NAME_SLUG}}_link_args = [
 ]
 
@@ -28,7 +33,7 @@ if get_option('enable-binaries')
      install: {{SUBDIR_TEST_INSTALL|lower}},
   )
   {% if not SUBDIR_TEST_ENABLED %}#{%endif%}test('{{SUBDIR_NAME}}', 
-  {% if not SUBDIR_TEST_ENABLED %}#{%endif%}  {{SUBDIR_NAME_SLUG}}_exec, args: ['-v','-a'],
+  {% if not SUBDIR_TEST_ENABLED %}#{%endif%}  {{SUBDIR_NAME_SLUG}}_exec, args: ['--help'],
   {% if not SUBDIR_TEST_ENABLED %}#{%endif%}  workdir: {{SUBDIR_NAME_SLUG}}_test_dir,
   {% if not SUBDIR_TEST_ENABLED %}#{%endif%})
 endif

@@ -1,6 +1,7 @@
 ////////////////////////////////////////////
 {%if SUBDIR_TEST_DEBUG_MEMORY_ENABLED%}#define DEBUG_MEMORY{%endif%}
 ////////////////////////////////////////////
+#include "c_greatest/greatest/greatest.h"
 #include "{{SUBDIR_NAME}}/{{SUBDIR_NAME}}.h"
 ////////////////////////////////////////////
 {%for i in INCLUDED_HEADERS.split(' ') -%}

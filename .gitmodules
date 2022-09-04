@@ -940,3 +940,9 @@
 [submodule "submodules/nettle"]
 	path = submodules/nettle
 	url = https://github.com/gnutls/nettle
+[submodule "submodules/msgpack_c"]
+	path = submodules/msgpack_c
+	url = https://github.com/msgpack/msgpack-c.git
+[submodule "submodules/hexify_c"]
+	path = submodules/hexify_c
+	url = https://github.com/pepaslabs/hexify.c
