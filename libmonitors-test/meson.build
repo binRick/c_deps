@@ -13,7 +13,7 @@ libmonitors_test_deps = [
   c_stringfn_dep,
   libmonitors_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 libmonitors_test_c_args = [

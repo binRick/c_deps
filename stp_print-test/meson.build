@@ -13,7 +13,7 @@ stp_print_test_deps = [
   c_stringfn_dep,
   stp_print_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 stp_print_test_c_args = [

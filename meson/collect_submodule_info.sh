@@ -3,7 +3,9 @@ set -eou pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 [[ -d .cache ]] || mkdir .cache
 GIT_API_ENABLED=1
-MAX_QTY=15
+GITHUB_API_RATE_EXCEEDED=0
+RATE_LIMIT_EXCEEDED_SLEEP=60
+MAX_QTY=999
 
 ls_submodules(){
     ./ls_submodules.sh|sort -u
@@ -29,8 +31,17 @@ main(){
 
                     if [[ "$GIT_API_ENABLED" == 1 ]]; then
                         if [[ ! -f "$git_hash" ]]; then
+                          local ok=0
+                          while [[ "$ok" == 0 ]]; do
                             curl -s "$git_url" > $git_hash
-                            CUR_QTY=$(($CUR_QTY+1))
+                            if grep -q 'API rate limit exceeded' $git_hash; then
+                              ansi --red "Github rate limit exceeded. Sleeping for $RATE_LIMIT_EXCEEDED_SLEEP sec"
+                              sleep $RATE_LIMIT_EXCEEDED_SLEEP
+                            else
+                              ok=1
+                              CUR_QTY=$(($CUR_QTY+1))
+                            fi
+                          done
                         fi
                     fi 
                     ansi -n --yellow " $gc  "
@@ -40,7 +51,7 @@ main(){
                     if [[ -f "$git_hash" ]]; then
                         if grep -q 'API rate limit exceeded' $git_hash; then
                             unlink $git_hash
-                            GIT_API_ENABLED=0
+                            #GIT_API_ENABLED=0
                         elif grep -q description $git_hash; then
                             git_desc="$(cat $git_hash|jq '.items[0].description' -Mrc)"
                             echo

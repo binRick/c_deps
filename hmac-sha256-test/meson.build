@@ -13,7 +13,7 @@ hmac_sha256_test_deps = [
   c_stringfn_dep,
   ansi_codes_dep,
   hmac_sha256_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 hmac_sha256_test_c_args = [

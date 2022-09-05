@@ -14,7 +14,7 @@ c_meson_utils_cli_deps = [
  c_stringfn_dep,
  c_string_buffer_dep,
  ansi_codes_dep,
- logh_dep,
+ log_dep,
 ]
 
 if get_option('enable-binaries')

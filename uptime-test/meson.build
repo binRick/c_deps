@@ -12,7 +12,7 @@ uptime_test_deps = [
   c_fsio_dep,
   c_stringfn_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   uptime_dep,
   timestamp_dep,
 ]

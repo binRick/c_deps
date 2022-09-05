@@ -13,7 +13,7 @@ go_libproc_test_deps = [
   go_libproc_dep,
   c_stringfn_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 go_libproc_test_c_args = [

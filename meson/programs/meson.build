@@ -1,0 +1,8 @@
+unlink_program = find_program('unlink', required : true)
+passh_program = find_program('passh', required : true)
+sqlite3_program = find_program('sqlite3', required : true)
+sh_program = find_program('sh', required : true)
+passh_program = find_program('passh', required : true)
+timeout_bin = find_program('timeout', required : true)
+sudo_bin = find_program('sudo', required : true)
+git = find_program('git', required: true)

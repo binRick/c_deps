@@ -16,7 +16,7 @@ c_meson_utils_test_deps = [
  c_string_buffer_dep,
  c_greatest_dep,
  ansi_codes_dep,
- logh_dep,
+ log_dep,
 ]
 
 if get_option('enable-binaries')

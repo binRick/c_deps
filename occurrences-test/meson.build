@@ -13,7 +13,7 @@ occurrences_test_deps = [
   c_stringfn_dep,
   occurrences_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 occurrences_test_c_args = [

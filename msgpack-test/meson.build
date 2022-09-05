@@ -13,7 +13,7 @@ msgpack_test_deps = [
   c_stringfn_dep,
   ansi_codes_dep,
   msgpack_c_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
   ms_dep,
   bytes_dep,

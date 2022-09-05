@@ -17,7 +17,7 @@ introspect_repos_deps = [
  assertf_dep,
  dbg_dep,
  c_greatest_dep,
- logh_dep,
+ log_dep,
  ee_dep,
  parson_dep,
  debug_memory_dep,

@@ -31,6 +31,6 @@
 #include "slug.c/deps/case.h"
 #include "slug.c/deps/trim.h"
 #include "slug.c/src/slug.h"
-#include "spin/spin.h"
+//#include "spin/spin.h"
 #include "which/src/which.h"
 //////////////////////////////////////////////////////

@@ -14,7 +14,7 @@ introspect_deps = [
  c_string_buffer_dep,
  c_greatest_dep,
  ansi_codes_dep,
- logh_dep,
+ log_dep,
  ee_dep,
  parson_dep,
  debug_memory_dep,

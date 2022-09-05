@@ -14,7 +14,7 @@ md5_test_deps = [
   b64_dep,
   c_stringfn_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 md5_test_c_args = [

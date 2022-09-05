@@ -13,7 +13,7 @@ parson_test_deps = [
   c_stringfn_dep,
   parson_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 parson_test_c_args = [

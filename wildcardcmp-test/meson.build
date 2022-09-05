@@ -13,7 +13,7 @@ wildcardcmp_test_deps = [
   c_stringfn_dep,
   ansi_codes_dep,
   wildcardcmp_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 wildcardcmp_test_c_args = [

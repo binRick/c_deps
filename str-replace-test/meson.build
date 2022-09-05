@@ -13,7 +13,7 @@ str_replace_test_deps = [
   str_replace_dep,
   c_stringfn_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 str_replace_test_c_args = [

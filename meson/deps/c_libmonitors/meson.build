@@ -1,12 +1,11 @@
 libmonitors_srcs = [files(
-  '../../../submodules/libmonitors/src/monitors-darwin.c',
-  '../../../submodules/libmonitors/src/monitors-internal.c',
-  '../../../submodules/libmonitors/src/monitors-linux.c',
+  '../../../submodules/c_libmonitors/src/monitors-darwin.c',
+  '../../../submodules/c_libmonitors/src/monitors-internal.c',
 )]
 
 libmonitors_dirs = [
-  '../../../submodules/libmonitors',
-  '../../../submodules/libmonitors/src',
+  '../../../submodules/c_libmonitors',
+  '../../../submodules/c_libmonitors/src',
   inc,
 ]
 

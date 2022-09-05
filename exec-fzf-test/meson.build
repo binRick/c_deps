@@ -20,7 +20,7 @@ exec_fzf_test_deps = [
  debug_memory_dep,
  c_string_buffer_dep,
  c_greatest_dep,
- logh_dep,
+ log_dep,
 ]
 
 if get_option('enable-binaries')

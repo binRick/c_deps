@@ -13,7 +13,7 @@ base64_simple_test_deps = [
   base64_simple_dep,
   c_stringfn_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 base64_simple_test_c_args = [

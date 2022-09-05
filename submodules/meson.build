@@ -9,6 +9,10 @@ subdir('c_sdl/sdl-app-fonts')
 subdir('c_sdl/sdl-app')
 
 
+subdir('c_darwin/app')
+subdir('c_darwin/systemprofiler')
+subdir('c_darwin/frameworks')
+subdir('c_darwin/font-utils')
 subdir('c_darwin/app-utils')
 subdir('c_darwin/image-utils')
 subdir('c_darwin/display-utils')

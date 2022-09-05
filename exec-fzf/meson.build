@@ -21,7 +21,7 @@ exec_fzf_deps = [
  ansi_utils_dep,
  #debug_memory_dep,
  c_string_buffer_dep,
- logh_dep,
+ log_dep,
 ]
 
 

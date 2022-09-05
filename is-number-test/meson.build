@@ -13,7 +13,7 @@ is_number_test_deps = [
   c_stringfn_dep,
   is_number_c_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 is_number_test_c_args = [

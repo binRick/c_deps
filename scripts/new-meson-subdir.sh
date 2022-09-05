@@ -31,7 +31,7 @@
 #
 # % repo-dir
 # desc="Meson Repository Directory"
-# short="r" type="option" variable="REPO_DIR" default=~/repos/c_deps
+# short="r" type="option" variable="REPO_DIR" default=$(pwd)
 #
 # % tab-completion
 # desc="Register Tab Completion."
@@ -89,7 +89,7 @@ ansi_codes_dep\
  c_stringfn_dep\
  c_string_buffer_dep\
  timestamp_dep\
- logh_dep\
+ log_dep\
  ms_dep\
  bytes_dep\
 "
@@ -100,7 +100,7 @@ ansi-codes/ansi-codes.h\
  c_stringfn/include/stringfn.h\
  c_string_buffer/include/stringbuffer.h\
  timestamp/timestamp.h\
- log.h/log.h ms/ms.h\
+ log/log.h ms/ms.h\
  bytes/bytes.h\
 "
 ############################################################################################################
@@ -136,9 +136,9 @@ J2_ARGS="--strict --format json"
 TEMPLATE_VARS_FILE=$(mktemp)
 J2_CMDS="$JQ_BIN -Mrc < $TEMPLATE_VARS_FILE >/dev/null"
 if [[ "$SUBDIR_TYPE" == test ]]; then
-  SUBDIR_NAME="${SUBDIR_NAME}-${SUBDIR_TYPE}"
+	SUBDIR_NAME="${SUBDIR_NAME}-${SUBDIR_TYPE}"
 else
-  SUBDIR_NAME="${SUBDIR_NAME}"
+	SUBDIR_NAME="${SUBDIR_NAME}"
 fi
 SUBDIR_TEST_RENDERED_C_FILE=$(mktemp)
 SUBDIR_TEST_RENDERED_H_FILE=$(mktemp)

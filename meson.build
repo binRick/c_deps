@@ -1,24 +1,12 @@
 project('c_deps',['c','cpp'],
-  default_options:['warning_level=0','c_std=gnu99','default_library=static'],
+  default_options:['warning_level=2','c_std=gnu99','default_library=static'],
   version: '0.0.1',
   subproject_dir: 'subprojects',
   )
 #############################################################
-go_program = find_program('go', required : true)
-gofmt_program = find_program('gofmt', required : true)
-goimports_program = find_program('goimports', required : true)
-unlink_program = find_program('unlink', required : true)
-passh_program = find_program('passh', required : true)
-sqlite3_program = find_program('sqlite3', required : true)
-sh_program = find_program('sh', required : true)
-wg_program = find_program('wg', required : true)
-passh_program = find_program('passh', required : true)
-timeout_bin = find_program('timeout', required : true)
-sudo_bin = find_program('sudo', required : true)
-git = find_program('git', required: true)
-#############################################################
+subdir('meson/programs')
+subdir('meson/programs/go')
 fs = import('fs')
-#swift = meson.get_compiler('swift', native: true)
 cc = meson.get_compiler('c', native: true)
 cpp = meson.get_compiler('cpp', native: true)
 c_deps_dir = meson.current_source_dir()
@@ -69,12 +57,13 @@ inc = [
   include_directories('submodules/sqxclib/sqxc'),
   include_directories(
     'submodules/c_deps/submodules/iowow/src',
-  'submodules/c_deps/submodules/iowow/src/kv',
-  'submodules/c_deps/submodules/iowow/src/fs',
-  'submodules/c_deps/submodules/iowow/src/log',
-  'submodules/c_deps/submodules/iowow/src/json',
-  'submodules/c_deps/submodules/iowow/src/platform',
-  'submodules/c_deps/submodules/iowow'),
+    'submodules/c_deps/submodules/iowow/src/kv',
+    'submodules/c_deps/submodules/iowow/src/fs',
+    'submodules/c_deps/submodules/iowow/src/log',
+    'submodules/c_deps/submodules/iowow/src/json',
+    'submodules/c_deps/submodules/iowow/src/platform',
+    'submodules/c_deps/submodules/iowow'
+  ),
 ]  
 ###########################################
 install_subdir('etc/sounds', install_dir: meson.current_build_dir(), install_tag:'build')
@@ -82,7 +71,6 @@ install_subdir('etc/images', install_dir: meson.current_build_dir(), install_tag
 ###########################################
 subdir('meson')
 subdir('submodules')
-#subdir('meson/deps/libtermkey')
 ###########################################
 subdir('deps')
 subdir('ctable')
@@ -90,57 +78,38 @@ subdir('exec-fzf')
 subdir('tests-table')
 subdir('introspect')
 subdir('introspect-repos')
-#subdir('meson/deps/json-c')
-#subdir('meson/deps/sqxclib')
 subdir('meson/deps/wireguard-tools')
 subdir('wg')
 subdir('hs')
-#subdir('c-meson-utils')
-#subdir('c-meson-utils-cli')
-###########################################
 subdir('tmt-test')
 subdir('list-test')
 subdir('fort-test')
-#//subdir('gumbo-test')
-#subdir('term-tests')
-#subdir('deps-test')
-#subdir('term-tests-test')
 subdir('tinydir-test')
 subdir('cgif-test')
-#subdir('dbgp-test')
 subdir('ee-test')
 subdir('chan-test')
 subdir('reproc-test')
 subdir('introspect-test')
 subdir('subprocess-test')
 subdir('introspect-repos-test')
-#subdir('sqxc-test')
-#subdir('reflect-test')
 subdir('sqldb-test')
 subdir('submodules/c_sdl/sdl-app-test')
 subdir('wg-test')
-subdir('hs-test')
 subdir('kgflags-test')
-###########################################
-#subdir('c-meson-utils-test')
 subdir('exec-fzf-test')
 subdir('blocks-test')
 subdir('roscha-test')
 subdir('filecopy-test')
 subdir('iowow-test')
 subdir('passh-test')
-###########################################
 subdir('multiselect-long1')
-#subdir('select_description1')
 subdir('multi_select')
 subdir('multi_select0')
 subdir('multi_select1')
-#subdir('multiselect-long0')
 subdir('confirm1')
 subdir('c-go-interface')
 subdir('hash-test')
 subdir('rrdtool-test')
-#subdir('logy-test')
 subdir('get-next-line-test')
 subdir('alloc-or-die-test')
 subdir('librnd-test')
@@ -148,9 +117,7 @@ subdir('base64-test')
 subdir('smaz-test')
 subdir('uptime-test')
 subdir('font-test')
-#subdir('csplit-test')
 subdir('spin-test')
-#subdir('ctable-test')
 subdir('movewin-test')
 subdir('layout-test')
 subdir('socket99-test')
@@ -187,7 +154,6 @@ subdir('closefrom-test')
 subdir('panic-test')
 subdir('uuid4-test')
 subdir('base64-simple-test')
-#subdir('hmac-sha256-test')
 subdir('parson-test')
 subdir('clamp-test')
 subdir('libutf8-test')
@@ -195,18 +161,16 @@ subdir('stp_print-test')
 subdir('libspinner-test')
 subdir('sha256-test')
 subdir('libmonitors-test')
-#subdir('sigstr-test')
 subdir('totp-test')
 subdir('go-libproc-test')
 subdir('wcwidth-test')
 subdir('libdefer-test')
 subdir('expboff-test')
 subdir('eventemitter-test')
-#subdir('rhonabwy-test')
 subdir('msgbox-test')
 subdir('msgpack-test')
 subdir('hexify-test')
 subdir('confuse-test')
 subdir('bestline-test')
-#//////////////////////
-subdir('xmodule1')
+subdir('httpserver-test')
+subdir('log-test')

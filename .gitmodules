@@ -946,3 +946,18 @@
 [submodule "submodules/hexify_c"]
 	path = submodules/hexify_c
 	url = https://github.com/pepaslabs/hexify.c
+[submodule "submodules/log"]
+	path = submodules/log
+	url = git@github.com:binRick/c_log.git
+[submodule "submodules/w2ui"]
+	path = submodules/w2ui
+	url = https://github.com/vitmalina/w2ui
+[submodule "submodules/ttyd"]
+	path = submodules/ttyd
+	url = https://github.com/tsl0922/ttyd
+[submodule "submodules/libwebsockets"]
+	path = submodules/libwebsockets
+	url = https://github.com/warmcat/libwebsockets
+[submodule "submodules/c_libmonitors"]
+	path = submodules/c_libmonitors
+	url = git@github.com:binRick/c_libmonitors.git

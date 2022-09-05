@@ -3,10 +3,10 @@ MUON_PARALLEL_COMMANDS=10
 muon-setup:
 	@$(MUON) setup \
 		-b \
-		-D buildtype=debug \
+		-D buildtype=minsize \
 		-D default_library=static \
 		-D strip=true \
-		-D warning_level=0 \
+		-D warning_level=2 \
 		-D debug=false \
 			$(MUON_BUILD_DIR)
 muon-build:

@@ -13,7 +13,7 @@ url_router_test_deps = [
   url_router_dep,
   c_stringfn_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 url_router_test_c_args = [

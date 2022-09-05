@@ -48,7 +48,7 @@ deps_test_deps = [
   libforks_dep,
   colorwheel_dep,
   siphash_dep,
-  logh_dep,
+  log_dep,
   c_forever_dep,
   layout_dep,
   c_dbg_dep,

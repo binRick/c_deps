@@ -1,7 +1,7 @@
 ############################################
 MESON_BUILD_DIR=build
-MESON_DEFAULT_BUILD_TYPE=minsize
 MESON_DEFAULT_BUILD_TYPE=debug
+MESON_DEFAULT_BUILD_TYPE=minsize
 ############################################
 BUILD_TYPE ?=$(MESON_DEFAULT_BUILD_TYPE)
 BUILD_JOBS ?=10
@@ -26,8 +26,6 @@ meson-setup:
 
 meson-build: meson-setup
 	@$(MESON) compile -C $(MESON_BUILD_DIR) -j $(MESON_PARALLEL_JOBS)
-	#| tee .meson-build.log
-	#@$(GREP) 'warning:' .meson-build.log |egrep -v 'submodules|unused parameter' | tee .meson-build-warnings.log
 
 do-build: meson-build muon-build
 

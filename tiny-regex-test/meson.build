@@ -13,7 +13,7 @@ tiny_regex_test_deps = [
   c_stringfn_dep,
   tiny_regex_c_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 tiny_regex_test_c_args = [

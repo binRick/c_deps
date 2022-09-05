@@ -1,4 +1,5 @@
 font_srcs = [files(
+  '../../../submodules/font/font.c',
 )]
 
 font_dirs = [
@@ -10,8 +11,14 @@ font_deps = [
 
 ]
 
+font_lib = static_library('font',
+  font_srcs,
+  install: false,
+  dependencies: font_deps,
+  include_directories: font_dirs,
+)
 
 font_dep = declare_dependency(
   include_directories: font_dirs,
-  link_with: [],
+  link_with: font_lib,
 )

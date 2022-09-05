@@ -13,7 +13,7 @@ bitfield_test_deps = [
   bitfield_dep,
   c_stringfn_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 bitfield_test_c_args = [

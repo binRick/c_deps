@@ -13,7 +13,7 @@ smaz_test_deps = [
   smaz_dep,
   c_stringfn_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 smaz_test_c_args = [

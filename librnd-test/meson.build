@@ -11,7 +11,7 @@ librnd_test_deps = [
   c_vector_dep,
   c_fsio_dep,
   c_stringfn_dep,
-  logh_dep,
+  log_dep,
   ansi_codes_dep,
   debug_memory_dep,
   librnd_dep,

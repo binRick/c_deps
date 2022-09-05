@@ -10,7 +10,7 @@ rrdtool_test_deps = [
   c_greatest_dep,
   c_vector_dep,
   timestamp_dep, 
-  logh_dep, 
+  log_dep, 
   rrdtool_dep,
   c_fsio_dep,
   c_stringfn_dep,
@@ -33,8 +33,8 @@ if get_option('enable-binaries')
      c_args: rrdtool_test_c_args,
      install: false,
   )
-  test('rrdtool-test', 
-    rrdtool_test_exec, args: ['-v','-a'],
-    workdir: rrdtool_test_test_dir,
-  )
+  #  test('rrdtool-test', 
+  #  rrdtool_test_exec, args: ['-v','-a'],
+  #  workdir: rrdtool_test_test_dir,
+  #)
 endif

@@ -13,7 +13,7 @@ introspect_test_deps = [
  c_string_buffer_dep,
  c_greatest_dep,
  ansi_codes_dep,
- logh_dep,
+ log_dep,
  introspect_dep,
  parson_dep,
  ee_dep,

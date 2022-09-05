@@ -16,7 +16,7 @@ sqldb_test_sqldb = [
   c_stringfn_dep,
   c_fsio_dep,
   c_string_buffer_dep,
-  logh_dep,
+  log_dep,
   sqldbal_dep,
   sqlite3_dep,
   c_forever_dep,

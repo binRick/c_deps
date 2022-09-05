@@ -15,7 +15,7 @@ rhonabwy_test_deps = [
   rhonabwy_dep,
   zlib_dep,
   nettle_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
   ms_dep,
   bytes_dep,

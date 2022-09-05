@@ -13,7 +13,7 @@ totp_test_deps = [
   c_stringfn_dep,
   ansi_codes_dep,
   libmutotp_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 totp_test_c_args = [

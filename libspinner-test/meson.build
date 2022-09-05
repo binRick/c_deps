@@ -13,7 +13,7 @@ libspinner_test_deps = [
   libspinner_dep,
   c_stringfn_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 libspinner_test_c_args = [

@@ -6,7 +6,7 @@ reflect_include_dirs = [
 ]
 reflect_test_reflect = [
   
-  logh_dep,
+  log_dep,
   dbg_dep,
   dmt_dep,
   ansi_utils_dep,

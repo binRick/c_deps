@@ -13,7 +13,7 @@ microtar_test_deps = [
   c_stringfn_dep,
   ansi_codes_dep,
   microtar_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 microtar_test_c_args = [

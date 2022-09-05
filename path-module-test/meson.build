@@ -13,7 +13,7 @@ path_module_test_deps = [
   c_stringfn_dep,
   path_module_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 path_module_test_c_args = [

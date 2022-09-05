@@ -13,7 +13,7 @@ closefrom_test_deps = [
   c_stringfn_dep,
   ansi_codes_dep,
   closefrom_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 closefrom_test_c_args = [

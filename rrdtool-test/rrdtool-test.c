@@ -56,7 +56,7 @@ TEST t_rrdtool_test(){
     FAIL();
   }
   for (size_t i = 0; i < updates_qty; i++) {
-    const time_t process_time = time_start + (pdp_step * i) + 1;
+    const time_t process_time = (time_start + (pdp_step * i) + 10) + 1000;
 
     if (asprintf(&val, "%ld:%lu", process_time, i) < 0) {
       log_error("ERROR: Could not create string 'val'.");

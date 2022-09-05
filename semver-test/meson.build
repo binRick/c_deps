@@ -13,7 +13,7 @@ semver_test_deps = [
   c_stringfn_dep,
   semver_c_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 semver_test_c_args = [

@@ -13,7 +13,7 @@ sha256_test_deps = [
   c_stringfn_dep,
   sha256_c_dep,
   ansi_codes_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 sha256_test_c_args = [

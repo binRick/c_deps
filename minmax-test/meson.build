@@ -13,7 +13,7 @@ minmax_test_deps = [
   c_stringfn_dep,
   ansi_codes_dep,
   minmax_dep,
-  logh_dep,
+  log_dep,
   timestamp_dep,
 ]
 minmax_test_c_args = [

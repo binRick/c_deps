@@ -13,7 +13,7 @@ tmt_test_deps = [
  c_stringfn_dep,
  c_string_buffer_dep,
  c_greatest_dep,
- logh_dep,
+ log_dep,
  tmt_dep,
 ]
 
