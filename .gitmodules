@@ -961,3 +961,12 @@
 [submodule "submodules/c_libmonitors"]
 	path = submodules/c_libmonitors
 	url = git@github.com:binRick/c_libmonitors.git
+[submodule "submodules/memory_leak_detector"]
+	path = submodules/memory_leak_detector
+	url = https://github.com/namantam1/memory-leak-detector
+[submodule "submodules/xterm_js"]
+	path = submodules/xterm_js
+	url = https://github.com/xtermjs/xterm.js
+[submodule "submodules/c_liamloads"]
+	path = submodules/c_liamloads
+	url = https://github.com/liamloads/c-liamloads

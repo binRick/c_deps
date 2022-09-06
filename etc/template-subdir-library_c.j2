@@ -4,27 +4,25 @@
 #ifndef {{UPPER_LIBRARY_NAME}}_C
 #define {{UPPER_LIBRARY_NAME}}_C
 ////////////////////////////////////////////
-{%if SUBDIR_TEST_DEBUG_MEMORY_ENABLED%}#define DEBUG_MEMORY{%endif%}
-////////////////////////////////////////////
 #include "{{SUBDIR_NAME}}/{{SUBDIR_NAME}}.h"
 ////////////////////////////////////////////
 {%for i in INCLUDED_HEADERS.split(' ') -%}
 #include "{{i}}"
 {%endfor%}
 ////////////////////////////////////////////
-static bool {{LIBRARY_NAME}}_DEBUG_MODE = false;
+static bool {{UPPER_LIBRARY_NAME}}_DEBUG_MODE = false;
 ///////////////////////////////////////////////////////////////////////
 static void __attribute__((constructor)) __constructor__{{LIBRARY_NAME}}(void){
   if (getenv("DEBUG") != NULL || getenv("DEBUG_{{LIBRARY_NAME}}") != NULL) {
     log_debug("Enabling {{SUBDIR_NAME}} Debug Mode");
-    {{LIBRARY_NAME}}_DEBUG_MODE = true;
+    {{UPPER_LIBRARY_NAME}}_DEBUG_MODE = true;
   }
 }
 static void {{LIBRARY_NAME}}_internal_fxn1(void);
 ////////////////////////////////////////////
 static void {{LIBRARY_NAME}}_internal_fxn1(void){
   log_info("Called function {{LIBRARY_NAME}}_internal_fxn1");
-  if({{LIBRARY_NAME}}_DEBUG_MODE == true){
+  if({{UPPER_LIBRARY_NAME}}_DEBUG_MODE == true){
     log_info("Debug Mode Enabled");
   }
 }
@@ -32,7 +30,7 @@ static void {{LIBRARY_NAME}}_internal_fxn1(void){
 void {{LIBRARY_NAME}}_fxn1(void){
   {{LIBRARY_NAME}}_internal_fxn1();
   log_info("Called function {{LIBRARY_NAME}}_fxn1");
-  if({{LIBRARY_NAME}}_DEBUG_MODE == true){
+  if({{UPPER_LIBRARY_NAME}}_DEBUG_MODE == true){
     log_info("Debug Mode Enabled");
   }
 }

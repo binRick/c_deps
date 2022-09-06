@@ -2,13 +2,8 @@ sqxc_test_srcs = [
   'sqxc-test.c',
 ]
 sqxc_test_inc = [
- '/usr/local/include/sqxc',
- '../submodules/sqxclib',
- '../submodules/sqxclib/sqxc',
- '../submodules/sqxclib/sqxcapp',
- '../submodules/sqxclib/sqxcsupport',
- inc,
  '.',
+ inc,
 ]
 sqxc_test_deps = [
  sqxclib_dep,
@@ -23,7 +18,7 @@ if get_option('enable-binaries')
      include_directories: sqxc_test_inc,
   )
   if get_option('enable-binary-tests')
-    test('sqxc-test', sqxc_test_exec, args: [])
-    test('view-schema', sh_program, args: ['-c', 'sqlite3 .sqxc-test.sqlite <<< ".schema"'])
+    #   test('sqxc-test', sqxc_test_exec, args: [])
+ #   test('view-schema', sh_program, args: ['-c', 'sqlite3 .sqxc-test.sqlite <<< ".schema"'])
   endif
 endif

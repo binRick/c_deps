@@ -55,25 +55,27 @@ TEST t_rrdtool_test(){
     log_error("rrdtool plugin: rrd_create_r (%s) failed: %s", filename, rrd_get_error());
     FAIL();
   }
-  for (size_t i = 0; i < updates_qty; i++) {
-    const time_t process_time = (time_start + (pdp_step * i) + 10) + 1000;
+  if (false) {
+    for (size_t i = 0; i < updates_qty; i++) {
+      const time_t process_time = (time_start + (pdp_step * i) + 10) + 1000;
 
-    if (asprintf(&val, "%ld:%lu", process_time, i) < 0) {
-      log_error("ERROR: Could not create string 'val'.");
-      FAIL();
+      if (asprintf(&val, "%ld:%lu", process_time, i) < 0) {
+        log_error("ERROR: Could not create string 'val'.");
+        FAIL();
+      }
+      const char *argv_update[] = { val };
+
+      rrd_update_r(filename, NULL, 1, argv_update);
+
+      if (rrd_test_error()) {
+        log_error("ERROR: RRD_update (%s): %s", filename, rrd_get_error());
+        FAIL();
+      }
+      log_debug("#%lu/%lu> Updated rrd %s with value %s", i + 1, updates_qty, filename, val);
     }
-    const char *argv_update[] = { val };
-
-    rrd_update_r(filename, NULL, 1, argv_update);
-
-    if (rrd_test_error()) {
-      log_error("ERROR: RRD_update (%s): %s", filename, rrd_get_error());
-      FAIL();
+    if (val) {
+      free(val);
     }
-    log_debug("#%lu/%lu> Updated rrd %s with value %s", i + 1, updates_qty, filename, val);
-  }
-  if (val) {
-    free(val);
   }
 
   rrd_info_t *i = rrd_info_r(filename);

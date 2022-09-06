@@ -102,3 +102,9 @@ else
   echo -e "$F"
 
 fi
+
+MESON_BUILD_SUBDIR_LINE="subdir('deps/$NAME')"
+
+if ! grep -q "$MESON_BUILD_SUBDIR_LINE" meson.build; then
+  printf "%s\n" "$MESON_BUILD_SUBDIR_LINE" >> meson.build
+fi

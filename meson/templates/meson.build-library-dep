@@ -1,6 +1,6 @@
-__NAME___srcs = [files(
+__NAME___srcs = [
 __SRCS__
-)]
+]
 
 __NAME___dirs = [
 __DIRS__
@@ -10,15 +10,20 @@ __DIRS__
 __NAME___deps = [
 __DEPS__
 ]
+if c_liamloads_srcs.length() > 0
 
-__NAME___lib = static_library('__NAME__',
-  __NAME___srcs,
-  install: __INSTALL__,
-  dependencies: __NAME___deps,
-  include_directories: __NAME___dirs,
-)
+  __NAME___lib = static_library('__NAME__',
+    files(__NAME___srcs),
+    install: __INSTALL__,
+    dependencies: __NAME___deps,
+    include_directories: __NAME___dirs,
+  )
+  __NAME___links = [__NAME___lib]
+else
+  __NAME___links = []
+endif
 
 __NAME___dep = declare_dependency(
   include_directories: __NAME___dirs,
-  link_with: __NAME___lib,
+  link_with: __NAME___links,
 )

@@ -1,0 +1,14 @@
+#pragma once
+#ifndef MEMORY_LEAK_DETECTOR_TEST_H
+#define MEMORY_LEAK_DETECTOR_TEST_H
+//////////////////////////////////////
+#include <ctype.h>
+#include <errno.h>
+#include <inttypes.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+//////////////////////////////////////
+
+#endif

@@ -54,7 +54,6 @@ inc = [
   include_directories('submodules/c_darwin/window-utils'),
   include_directories('submodules/c_ansi'),
   include_directories('submodules/c_pick'),
-  include_directories('submodules/sqxclib/sqxc'),
   include_directories(
     'submodules/c_deps/submodules/iowow/src',
     'submodules/c_deps/submodules/iowow/src/kv',
@@ -175,3 +174,6 @@ subdir('bestline-test')
 subdir('httpserver-test')
 subdir('log-test')
 subdir('siphash-test')
+subdir('memory-leak-detector-test')
+subdir('iowow-compound-test')
+#subdir('sqxc-test')
