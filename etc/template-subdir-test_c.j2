@@ -1,19 +1,23 @@
-////////////////////////////////////////////
 {%if SUBDIR_TEST_DEBUG_MEMORY_ENABLED%}#define DEBUG_MEMORY{%endif%}
-////////////////////////////////////////////
 #include "c_greatest/greatest/greatest.h"
 #include "{{SUBDIR_NAME}}/{{SUBDIR_NAME}}.h"
-////////////////////////////////////////////
 {%for i in INCLUDED_HEADERS.split(' ') -%}
 #include "{{i}}"
 {%endfor%}
-////////////////////////////////////////////
-TEST t_{{SUBDIR_NAME_SLUG}}(){
+
+TEST t_{{SUBDIR_NAME_SLUG}}2(){
+  PASS();
+}
+
+TEST t_{{SUBDIR_NAME_SLUG}}1(){
   PASS();
 }
 
 SUITE(s_{{SUBDIR_NAME_SLUG}}) {
-  RUN_TEST(t_{{SUBDIR_NAME_SLUG}});
+  RUN_TEST(t_{{SUBDIR_NAME_SLUG}}1);
+  if(isatty(STDOUT_FILENO)){
+    RUN_TEST(t_{{SUBDIR_NAME_SLUG}}2);
+  }
 }
 
 GREATEST_MAIN_DEFS();

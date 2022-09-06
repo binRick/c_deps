@@ -1,6 +1,8 @@
+{%-set LIBRARY_NAME = SUBDIR_NAME|lower|replace('-','_')-%}
+{%-set UPPER_LIBRARY_NAME = LIBRARY_NAME|upper-%}
 #pragma once
-#ifndef {{SUBDIR_NAME|upper|replace('-','_')}}_H
-#define {{SUBDIR_NAME|upper|replace('-','_')}}_H
+#ifndef {{UPPER_LIBRARY_NAME}}_H
+#define {{UPPER_LIBRARY_NAME}}_H
 //////////////////////////////////////
 #include <ctype.h>
 #include <stdio.h>
@@ -12,5 +14,5 @@
 #include <unistd.h>
 #include <inttypes.h>
 //////////////////////////////////////
-void {{SUBDIR_NAME}}_fxn1(void);
+void {{LIBRARY_NAME}}_fxn1(void);
 #endif

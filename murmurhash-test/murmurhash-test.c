@@ -15,12 +15,13 @@
 ////////////////////////////////////////////
 TEST t_murmurhash_test(){
   uint32_t   seed = 666;
-  const char *key = "hello123";
+  const char *key = "hello1234";
   uint32_t   hash = murmurhash(key, (uint32_t)strlen(key), seed);
 
-  printf("key: %s", key);
-  printf("seed: %d", seed);
-  printf("hash: %" PRIu32 "", hash);
+  printf("key: %s\n", key);
+  printf("seed: %d\n", seed);
+  printf("hash: %" PRIu32 "\n", hash);
+  printf("hash: %lu\n", (size_t)hash);
   PASS();
 }
 

@@ -11,6 +11,8 @@ subdir('c_sdl/sdl-app')
 
 subdir('c_darwin/app')
 subdir('c_darwin/systemprofiler')
+subdir('c_darwin/icon-utils')
+subdir('c_darwin/cache-utils')
 subdir('c_darwin/frameworks')
 subdir('c_darwin/font-utils')
 subdir('c_darwin/app-utils')

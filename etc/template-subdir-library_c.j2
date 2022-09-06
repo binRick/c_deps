@@ -1,6 +1,8 @@
+{%-set LIBRARY_NAME = SUBDIR_NAME|lower|replace('-','_')-%}
+{%-set UPPER_LIBRARY_NAME = LIBRARY_NAME|upper-%}
 #pragma once
-#ifndef {{SUBDIR_NAME|upper|replace('-','_')}}_C
-#define {{SUBDIR_NAME|upper|replace('-','_')}}_C
+#ifndef {{UPPER_LIBRARY_NAME}}_C
+#define {{UPPER_LIBRARY_NAME}}_C
 ////////////////////////////////////////////
 {%if SUBDIR_TEST_DEBUG_MEMORY_ENABLED%}#define DEBUG_MEMORY{%endif%}
 ////////////////////////////////////////////
@@ -10,27 +12,27 @@
 #include "{{i}}"
 {%endfor%}
 ////////////////////////////////////////////
-static bool {{SUBDIR_NAME|upper|replace('-','_')}}_DEBUG_MODE = false;
+static bool {{LIBRARY_NAME}}_DEBUG_MODE = false;
 ///////////////////////////////////////////////////////////////////////
-static void __attribute__((constructor)) __constructor__{{SUBDIR_NAME|lower|replace('-','_')}}(void){
-  if (getenv("DEBUG") != NULL || getenv("DEBUG_{{SUBDIR_NAME|upper|replace('-','_')}}") != NULL) {
+static void __attribute__((constructor)) __constructor__{{LIBRARY_NAME}}(void){
+  if (getenv("DEBUG") != NULL || getenv("DEBUG_{{LIBRARY_NAME}}") != NULL) {
     log_debug("Enabling {{SUBDIR_NAME}} Debug Mode");
-    {{SUBDIR_NAME|upper|replace('-','_')}}_DEBUG_MODE = true;
+    {{LIBRARY_NAME}}_DEBUG_MODE = true;
   }
 }
-static void {{SUBDIR_NAME}}_internal_fxn1(void);
+static void {{LIBRARY_NAME}}_internal_fxn1(void);
 ////////////////////////////////////////////
-static void {{SUBDIR_NAME}}_internal_fxn1(void){
-  log_info("Called function {{SUBDIR_NAME}}_internal_fxn1");
-  if({{SUBDIR_NAME|upper|replace('-','_')}}_DEBUG_MODE == true){
+static void {{LIBRARY_NAME}}_internal_fxn1(void){
+  log_info("Called function {{LIBRARY_NAME}}_internal_fxn1");
+  if({{LIBRARY_NAME}}_DEBUG_MODE == true){
     log_info("Debug Mode Enabled");
   }
 }
 ////////////////////////////////////////////
-void {{SUBDIR_NAME}}_fxn1(void){
-  {{SUBDIR_NAME}}_internal_fxn1();
-  log_info("Called function {{SUBDIR_NAME}}_fxn1");
-  if({{SUBDIR_NAME|upper|replace('-','_')}}_DEBUG_MODE == true){
+void {{LIBRARY_NAME}}_fxn1(void){
+  {{LIBRARY_NAME}}_internal_fxn1();
+  log_info("Called function {{LIBRARY_NAME}}_fxn1");
+  if({{LIBRARY_NAME}}_DEBUG_MODE == true){
     log_info("Debug Mode Enabled");
   }
 }

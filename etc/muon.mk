@@ -1,5 +1,5 @@
 MUON_BUILD_DIR=build-muon
-MUON_PARALLEL_COMMANDS=10
+MUON_PARALLEL_COMMANDS=20
 muon-setup:
 	@$(MUON) setup \
 		-b \

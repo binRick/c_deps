@@ -1,4 +1,5 @@
 PASSH=$(shell command -v passh)
+ENTR=$(shell command -v entr)
 DATE=$(shell command -v date)
 ANSI=$(shell command -v ansi)
 KFC=$(shell command -v kfc)
