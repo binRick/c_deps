@@ -1,3 +1,0 @@
-# Hashes of file build rules.
-021b0b091830e8d655725ce27008fef3 man/CMakeFiles/man
-bf9ceb98b9948af2b4f5259ee0df0cb8 man/timg.1
