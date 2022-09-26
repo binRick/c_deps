@@ -19,7 +19,7 @@ msgpack_c_deps = [
 
 ]
 
-msgpack_c_lib = static_library('msgpack_c',
+msgpack_c_lib =library('msgpack_c',
   msgpack_c_srcs,
   install: false,
   dependencies: msgpack_c_deps,

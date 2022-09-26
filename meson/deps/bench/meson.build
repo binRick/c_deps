@@ -13,7 +13,7 @@ bench_deps = [
 
 ]
 
-bench_lib = static_library('bench',
+bench_lib =library('bench',
   bench_srcs,
   install: false,
   dependencies: bench_deps,

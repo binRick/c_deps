@@ -1,4 +1,4 @@
-path_normalize_lib = static_library('path-normalize', 
+path_normalize_lib =library('path-normalize', 
   '../../../submodules/path-normalize.c/src/path-normalize.c',
   install: false, 
   dependencies: [

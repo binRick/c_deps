@@ -45,7 +45,7 @@ c_dt_deps = [
 
 ]
 
-c_dt_lib = static_library('c-dt',
+c_dt_lib =library('c-dt',
   c_dt_srcs,
   install: false,
   dependencies: c_dt_deps,

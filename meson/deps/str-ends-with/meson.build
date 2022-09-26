@@ -1,4 +1,4 @@
-str_ends_with_lib = static_library('str-ends-with',
+str_ends_with_lib =library('str-ends-with',
   pwd + '/submodules/str-ends-with/src/str-ends-with.c',
   install: false, 
   dependencies: [

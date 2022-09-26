@@ -18,7 +18,7 @@ msgbox_deps = [
 
 ]
 
-msgbox_lib = static_library('msgbox',
+msgbox_lib =library('msgbox',
   msgbox_srcs,
   install: false,
   dependencies: msgbox_deps,

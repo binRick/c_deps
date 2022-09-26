@@ -17,5 +17,5 @@ x-reference-data:
     - c_hl
     - c_macfsmon
     - c_greatest
-      #    - c_palettes
-      #    - c_colors
+    - c_palettes
+    - c_colors

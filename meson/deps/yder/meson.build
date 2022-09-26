@@ -17,7 +17,7 @@ yder_deps = [
   orcania_dep,
 ]
 
-yder_lib = static_library('yder',
+yder_lib =library('yder',
   yder_srcs,
   install: false,
   dependencies: yder_deps,

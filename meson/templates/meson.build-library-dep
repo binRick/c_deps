@@ -1,3 +1,9 @@
+__NAME___system_headers = [
+__SYSTEM_HEADERS__
+]
+__NAME___local_headers = [
+__LOCAL_HEADERS__
+]
 __NAME___srcs = [
 __SRCS__
 ]
@@ -7,16 +13,20 @@ __DIRS__
   inc,
 ]
 
+__NAME___c_args = [
+]
+
 __NAME___deps = [
 __DEPS__
 ]
-if c_liamloads_srcs.length() > 0
 
-  __NAME___lib = static_library('__NAME__',
+if __NAME___srcs.length() > 0
+  __NAME___lib = library('__NAME__',
     files(__NAME___srcs),
     install: __INSTALL__,
     dependencies: __NAME___deps,
     include_directories: __NAME___dirs,
+    c_args: __NAME___c_args,
   )
   __NAME___links = [__NAME___lib]
 else

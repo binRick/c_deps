@@ -12,7 +12,7 @@ libdefer_deps = [
 
 ]
 
-libdefer_lib = static_library('libdefer',
+libdefer_lib =library('libdefer',
   libdefer_srcs,
   install: false,
   dependencies: libdefer_deps,

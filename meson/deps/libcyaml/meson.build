@@ -1,15 +1,20 @@
-libcyaml_srcs = [files(
-  '../../../submodules/libcyaml/include/cyaml/cyaml.h',
+libcyaml_system_headers = [
+
+]
+libcyaml_local_headers = [
+  'libcyaml/src/data.h',
+  'libcyaml/src/mem.h',
+  'libcyaml/src/utf8.h',
+  'libcyaml/src/util.h',
+]
+libcyaml_srcs = [
   '../../../submodules/libcyaml/src/free.c',
   '../../../submodules/libcyaml/src/load.c',
   '../../../submodules/libcyaml/src/mem.c',
-  '../../../submodules/libcyaml/src/mem.h',
   '../../../submodules/libcyaml/src/save.c',
   '../../../submodules/libcyaml/src/utf8.c',
-  '../../../submodules/libcyaml/src/utf8.h',
   '../../../submodules/libcyaml/src/util.c',
-  '../../../submodules/libcyaml/src/util.h',
-)]
+]
 
 libcyaml_dirs = [
   '../../../submodules/libcyaml',
@@ -19,18 +24,48 @@ libcyaml_dirs = [
   inc,
 ]
 
+libcyaml_c_args = [
+  '-DVERSION_MAJOR=1',
+  '-DVERSION_MINOR=3',
+  '-DVERSION_PATCH=1',
+  '-DVERSION_DEVEL=1',
+  '-MP',
+  '-std=c11',
+  '-Wall',
+  '-Wextra',
+  '-pedantic',
+  '-Wconversion',
+  '-Wwrite-strings',
+  '-Wcast-align',
+  '-Wpointer-arith',
+  '-Winit-self',
+  '-Wshadow',
+  '-Wstrict-prototypes',
+  '-Wmissing-prototypes',
+  '-Wredundant-decls',
+  '-Wundef',
+  '-Wvla',
+  '-Wdeclaration-after-statement',
+  '-O0',
+]
 libcyaml_deps = [
-
+  yaml_dep,
 ]
 
-libcyaml_lib = static_library('libcyaml',
-  libcyaml_srcs,
-  install: false,
-  dependencies: libcyaml_deps,
-  include_directories: libcyaml_dirs,
-)
+if libcyaml_srcs.length() > 0
+  libcyaml_lib = shared_library('libcyaml',
+    files(libcyaml_srcs),
+    install: false,
+    dependencies: libcyaml_deps,
+    include_directories: libcyaml_dirs,
+    c_args: libcyaml_c_args,
+  )
+  libcyaml_links = [libcyaml_lib]
+else
+  libcyaml_links = []
+endif
 
 libcyaml_dep = declare_dependency(
   include_directories: libcyaml_dirs,
-  link_with: libcyaml_lib,
+  link_with: libcyaml_links,
 )

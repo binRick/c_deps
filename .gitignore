@@ -47,3 +47,8 @@ commits.json
 select_description1/survey
 google.html
 .wraps
+*.db
+c-go-interface/lipgloss
+*/.DS_Store
+.DS_Store
+.*sqlite-journal

@@ -11,7 +11,7 @@ base64_deps = [
 
 ]
 
-base64_lib = static_library('base64',
+base64_lib =library('base64',
   base64_srcs,
   install: false,
   dependencies: base64_deps,

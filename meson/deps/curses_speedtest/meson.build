@@ -11,7 +11,7 @@ curses_speedtest_deps = [
 
 ]
 
-curses_speedtest_lib = static_library('curses_speedtest',
+curses_speedtest_lib =library('curses_speedtest',
   curses_speedtest_srcs,
   install: false,
   dependencies: curses_speedtest_deps,

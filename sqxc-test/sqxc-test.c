@@ -1,4 +1,5 @@
 #include "sqxc-test.h"
+#include <sqxclib.h>
 
 static const SqEntry *postEntryPointers[] = {
   &(SqEntry) { SQ_TYPE_STRING, "title", offsetof(Post, title), 0 },

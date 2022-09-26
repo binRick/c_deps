@@ -12,7 +12,7 @@ expboff_deps = [
 
 ]
 
-expboff_lib = static_library('expboff',
+expboff_lib =library('expboff',
   expboff_srcs,
   install: false,
   dependencies: expboff_deps,

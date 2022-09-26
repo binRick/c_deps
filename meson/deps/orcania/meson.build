@@ -15,7 +15,7 @@ orcania_dirs = [
 orcania_deps = [
 ]
 
-orcania_lib = static_library('orcania',
+orcania_lib =library('orcania',
   orcania_srcs,
   install: false,
   dependencies: orcania_deps,

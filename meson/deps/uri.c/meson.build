@@ -12,7 +12,7 @@ uri_c_deps = [
 
 ]
 
-uri_c_lib = static_library('uri.c',
+uri_c_lib =library('uri.c',
   uri_c_srcs,
   install: false,
   dependencies: uri_c_deps,

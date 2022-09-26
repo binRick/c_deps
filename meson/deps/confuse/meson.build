@@ -1,4 +1,4 @@
-confuse_lib = static_library('libconfuse',
+confuse_lib =library('libconfuse',
   '../../../submodules/libconfuse/src/confuse.c',
   install: false, 
   dependencies: [

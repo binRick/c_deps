@@ -1,4 +1,3 @@
-
 rrdtool_srcs = [files(
   '../../../submodules/rrdtool/src/hash_32.c',
   '../../../submodules/rrdtool/src/mutex.c',
@@ -54,14 +53,13 @@ rrdtool_c_args = [
   '-DLOCALSTATEDIR="/tmp"',
   ]
 
-cairo_dep = dependency('cairo',required:true)
-glib_dep = dependency('glib-2.0',required:true)
-pango_dep = dependency('pango',required:true)
+#cairo_dep = dependency('cairo',required:true)
+glib_dep = dependency('glib-2.0',method: 'pkg-config', required:true)
+#pango_dep = dependency('pango',required:true)
 pcre_dep = dependency('libpcre',required:true)
-png_dep = dependency('libpng',required:true)
-xml2_dep = dependency('libxml-2.0',required:true)
+#png_dep = dependency('libpng',required:true)
 harfbuzz_dep = dependency('harfbuzz',required:true)
-pangocairo_dep = dependency('pangocairo',required:true)
+#pangocairo_dep = dependency('pangocairo',required:true)
 gobject_dep = dependency('gobject-2.0',required:true)
 
 rrdtool_deps = [
@@ -72,11 +70,11 @@ rrdtool_deps = [
   pango_dep,
   glib_dep,
   pcre_dep,
-  png_dep,
+  libpng_dep,
   xml2_dep,
 ]
 
-rrdtool_lib = library('rrdtool',
+rrdtool_lib = static_library('rrdtool',
   rrdtool_srcs,
   install: false,
   dependencies: rrdtool_deps,

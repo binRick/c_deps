@@ -14,7 +14,7 @@ panic_deps = [
 
 ]
 
-panic_lib = static_library('panic',
+panic_lib =library('panic',
   panic_srcs,
   install: false,
   dependencies: panic_deps,

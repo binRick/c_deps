@@ -23,7 +23,7 @@ roscha_deps = [
 
 ]
 
-roscha_lib = static_library('roscha',
+roscha_lib =library('roscha',
   roscha_srcs,
   install: false,
   dependencies: roscha_deps,

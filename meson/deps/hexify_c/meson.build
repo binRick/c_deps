@@ -11,7 +11,7 @@ hexify_c_deps = [
 
 ]
 
-hexify_c_lib = static_library('hexify_c',
+hexify_c_lib =library('hexify_c',
   hexify_c_srcs,
   install: false,
   dependencies: hexify_c_deps,

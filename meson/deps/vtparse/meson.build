@@ -3,7 +3,7 @@ vtparse_inc = [
   '../../../submodules/vtparse/vtparse',
   inc,
 ]
-vtparse_lib = static_library('vtparse', 
+vtparse_lib =library('vtparse', 
   '../../../submodules/vtparse/vtparse/vtparse.c',
   '../../../submodules/vtparse/vtparse/vtparse_table.c',
   install: false, 

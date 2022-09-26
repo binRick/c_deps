@@ -52,7 +52,7 @@ OTPClient_deps = [
 
 ]
 
-OTPClient_lib = static_library('OTPClient',
+OTPClient_lib =library('OTPClient',
   OTPClient_srcs,
   install: false,
   dependencies: OTPClient_deps,

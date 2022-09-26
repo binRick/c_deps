@@ -1,0 +1,2 @@
+#libproc_dep = dependency('libproc',required:true)
+libproc_dep = cc.find_library('libproc', required: true)

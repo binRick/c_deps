@@ -11,7 +11,7 @@ c_passh_deps = [
 
 ]
 
-c_passh_lib = static_library('c_passh',
+c_passh_lib =library('c_passh',
   c_passh_srcs,
   install: false,
   dependencies: c_passh_deps,

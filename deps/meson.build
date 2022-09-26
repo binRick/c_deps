@@ -54,7 +54,7 @@ deps_deps = [
   libspinner_dep,
 ]
 
-deps_lib = static_library('deps',
+deps_lib = library('deps',
   deps_srcs,
   install: false,
   dependencies: deps_deps,

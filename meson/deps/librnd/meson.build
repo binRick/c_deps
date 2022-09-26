@@ -11,7 +11,7 @@ librnd_deps = [
 
 ]
 
-librnd_lib = static_library('librnd',
+librnd_lib =library('librnd',
   librnd_srcs,
   install: false,
   dependencies: librnd_deps,

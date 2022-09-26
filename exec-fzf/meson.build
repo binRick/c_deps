@@ -25,7 +25,7 @@ exec_fzf_deps = [
 ]
 
 
-exec_fzf_lib = static_library('exec-fzf',
+exec_fzf_lib = library('exec-fzf',
   exec_fzf_srcs,
   install: false,
   dependencies: exec_fzf_deps,

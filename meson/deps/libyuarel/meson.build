@@ -11,7 +11,7 @@ libyuarel_deps = [
 
 ]
 
-libyuarel_lib = static_library('libyuarel',
+libyuarel_lib =library('libyuarel',
   libyuarel_srcs,
   install: false,
   dependencies: libyuarel_deps,

@@ -11,7 +11,7 @@ stp_print_deps = [
 
 ]
 
-stp_print_lib = static_library('stp_print',
+stp_print_lib =library('stp_print',
   stp_print_srcs,
   install: false,
   dependencies: stp_print_deps,

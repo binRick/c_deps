@@ -8,21 +8,13 @@ libucl_srcs = [files(
   '../../../submodules/libucl/src/ucl_schema.c',
   '../../../submodules/libucl/src/ucl_sexp.c',
   '../../../submodules/libucl/src/ucl_util.c',
-  '../../../submodules/libucl/utils/chargen.c',
-  '../../../submodules/libucl/utils/objdump.c',
-  '../../../submodules/libucl/utils/ucl-tool.c',
 )]
 
 libucl_dirs = [
   '../../../submodules/libucl',
-  '../../../submodules/libucl/doc',
-  '../../../submodules/libucl/haskell',
   '../../../submodules/libucl/include',
-  '../../../submodules/libucl/klib',
-  '../../../submodules/libucl/lua',
-  '../../../submodules/libucl/python',
-  '../../../submodules/libucl/python/src',
   '../../../submodules/libucl/src',
+  '../../../submodules/libucl/utils',
   '../../../submodules/libucl/uthash',
   inc,
 ]
@@ -31,7 +23,7 @@ libucl_deps = [
 
 ]
 
-libucl_lib = static_library('libucl',
+libucl_lib =library('libucl',
   libucl_srcs,
   install: false,
   dependencies: libucl_deps,

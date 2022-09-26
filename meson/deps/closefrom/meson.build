@@ -13,7 +13,7 @@ closefrom_deps = [
 
 ]
 
-closefrom_lib = static_library('closefrom',
+closefrom_lib =library('closefrom',
   closefrom_srcs,
   install: false,
   dependencies: closefrom_deps,

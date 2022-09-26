@@ -10,3 +10,12 @@ meson-introspect-build-files:
 	@$(MESON) introspect --buildsystem-files build |$(JQ) -rM|grep '"'|$(CUT) -d'"' -f2|$(SORT) -u|$(SED) "s|$(shell pwd)/||g"|$(SORT) -u
 meson-get-source-files:
 	@$(MESON) introspect build --targets|$(JQ) '.[].target_sources[0].sources' -Mrc|$(CUT) -d'"' -f2|$(SORT) -u|$(SED)  "s|$(shell pwd)/||g"
+
+meson-get-source-dirs:
+	@$(MAKE) meson-introspect-build-files -B \
+			|egrep 'submodules|subprojects|meson/deps' -v|grep 'meson.build'\
+			|gsed 's|/meson.build$$||g'|grep '^[a-z].*'|sort -u\
+			|tr '\n' ' '
+
+meson-get-c-files:
+	@$(FIND) $(shell $(MAKE) meson-get-source-dirs -B) -type f -name "*.c" -or -name "*.h"|sort -u|egrep -v '/\.'

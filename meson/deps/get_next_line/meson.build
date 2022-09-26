@@ -86,7 +86,7 @@ get_next_line_deps = [
 
 ]
 
-get_next_line_lib = static_library('get_next_line',
+get_next_line_lib =library('get_next_line',
   get_next_line_srcs,
   install: false,
   dependencies: get_next_line_deps,

@@ -3,7 +3,7 @@ progressbar_srcs = [
   c_deps_dir + '/submodules/progressbar/lib/statusbar.c',
 ]
 
-progressbar_lib = static_library('progressbar',
+progressbar_lib =library('progressbar',
   progressbar_srcs,
   install: false, 
   dependencies: [

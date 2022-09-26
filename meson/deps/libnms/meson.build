@@ -12,7 +12,7 @@ libnms_deps = [
 
 ]
 
-libnms_lib = static_library('libnms',
+libnms_lib =library('libnms',
   libnms_srcs,
   install: false,
   dependencies: libnms_deps,

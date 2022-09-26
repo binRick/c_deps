@@ -11,7 +11,7 @@ stb_deps = [
 
 ]
 
-stb_lib = static_library('stb',
+stb_lib =library('stb',
   stb_srcs,
   install: false,
   dependencies: stb_deps,

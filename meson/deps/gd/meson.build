@@ -1,5 +1,1 @@
-#gd_dep = dependency('gdlib', method: 'pkg-config', required: true)
 gd_dep = dependency('gdlib', required: true)
-png_dep = dependency('libpng', required: true)
-#gd_dep = dependency('gd', required: true)
-#gd_dep = cc.find_library('gd', required: true)

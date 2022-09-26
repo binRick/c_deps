@@ -1,2 +1,1 @@
-curses_dep = dependency('curses',fallback:['curses', 'curses_dep'])
-
+curses_dep = dependency('curses',method: 'pkg-config', required : true)

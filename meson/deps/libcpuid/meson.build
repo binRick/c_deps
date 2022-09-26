@@ -27,7 +27,7 @@ libcpuid_deps = [
 
 ]
 
-libcpuid_lib = static_library('libcpuid',
+libcpuid_lib =library('libcpuid',
   libcpuid_srcs,
   install: false,
   dependencies: libcpuid_deps,

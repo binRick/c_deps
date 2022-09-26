@@ -11,7 +11,7 @@ movewin_deps = [
 
 ]
 
-movewin_lib = static_library('movewin',
+movewin_lib =library('movewin',
   movewin_srcs,
   install: false,
   dependencies: movewin_deps,

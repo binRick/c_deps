@@ -28,7 +28,7 @@ wg_dynamic_deps = [
 
 ]
 
-#wg_dynamic_lib = static_library('wg-dynamic',
+#wg_dynamic_lib =library('wg-dynamic',
 #  wg_dynamic_srcs,
 #  install: false,
 #  dependencies: wg_dynamic_deps,

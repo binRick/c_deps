@@ -29,7 +29,7 @@ jansson_deps = [
 
 ]
 
-jansson_lib = static_library('jansson',
+jansson_lib =library('jansson',
   jansson_srcs,
   install: false,
   dependencies: jansson_deps,

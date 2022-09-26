@@ -11,7 +11,7 @@ alloc_or_die_deps = [
 
 ]
 
-alloc_or_die_lib = static_library('alloc_or_die',
+alloc_or_die_lib =library('alloc_or_die',
   alloc_or_die_srcs,
   install: false,
   dependencies: alloc_or_die_deps,

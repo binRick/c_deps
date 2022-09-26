@@ -15,7 +15,7 @@ sense_c_deps = [
 
 ]
 
-sense_c_lib = static_library('sense-c',
+sense_c_lib =library('sense-c',
   sense_c_srcs,
   install: false,
   dependencies: sense_c_deps,

@@ -12,7 +12,7 @@ libutf8_deps = [
 
 ]
 
-libutf8_lib = static_library('libutf8',
+libutf8_lib =library('libutf8',
   libutf8_srcs,
   install: false,
   dependencies: libutf8_deps,

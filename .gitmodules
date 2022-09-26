@@ -970,3 +970,48 @@
 [submodule "submodules/c_liamloads"]
 	path = submodules/c_liamloads
 	url = https://github.com/liamloads/c-liamloads
+[submodule "submodules/jsplumb"]
+	path = submodules/jsplumb
+	url = https://github.com/jsplumb/jsplumb
+[submodule "submodules/smtp_client"]
+	path = submodules/smtp_client
+	url = https://github.com/somnisoft/smtp-client
+[submodule "submodules/reveal.js"]
+	path = submodules/reveal.js
+	url = https://github.com/hakimel/reveal.js
+[submodule "submodules/jQuery-contextmenu"]
+	path = submodules/jQuery-contextmenu
+	url = https://github.com/swisnl/jQuery-contextMenu
+[submodule "submodules/wslay"]
+	path = submodules/wslay
+	url = https://github.com/tatsuhiro-t/wslay
+[submodule "submodules/socket.io-client"]
+	path = submodules/socket.io-client
+	url = https://github.com/socketio/socket.io-client
+[submodule "submodules/pngquant"]
+	path = submodules/pngquant
+	url = https://github.com/kornelski/pngquant
+[submodule "submodules/libimagequant"]
+	path = submodules/libimagequant
+	url = https://github.com/ImageOptim/libimagequant
+[submodule "submodules/termrec"]
+	path = submodules/termrec
+	url = https://github.com/kilobyte/termrec
+[submodule "submodules/microhex"]
+	path = submodules/microhex
+	url = https://github.com/jonpalmisc/microhex
+[submodule "submodules/sqlcipher"]
+	path = submodules/sqlcipher
+	url = https://github.com/sqlcipher/sqlcipher
+[submodule "submodules/timg"]
+	path = submodules/timg
+	url = https://github.com/hzeller/timg
+[submodule "submodules/gifdec"]
+	path = submodules/gifdec
+	url = https://github.com/lecram/gifdec
+[submodule "submodules/qoi-ci"]
+	path = submodules/qoi-ci
+	url = https://github.com/pfusik/qoi-ci
+[submodule "submodules/qoi_ci"]
+	path = submodules/qoi_ci
+	url = https://github.com/pfusik/qoi-ci

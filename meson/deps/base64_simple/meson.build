@@ -11,7 +11,7 @@ base64_simple_deps = [
 
 ]
 
-base64_simple_lib = static_library('base64_simple',
+base64_simple_lib =library('base64_simple',
   base64_simple_srcs,
   install: false,
   dependencies: base64_simple_deps,

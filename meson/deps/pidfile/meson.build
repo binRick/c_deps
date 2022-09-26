@@ -12,7 +12,7 @@ pidfile_deps = [
 
 ]
 
-pidfile_lib = static_library('pidfile',
+pidfile_lib =library('pidfile',
   pidfile_srcs,
   install: false,
   dependencies: pidfile_deps,

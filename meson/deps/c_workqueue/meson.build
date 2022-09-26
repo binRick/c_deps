@@ -4,7 +4,7 @@ c_workqueue_inc = [
   '../../../submodules/c_workqueue',
   inc,
 ]
-c_workqueue_lib = static_library('c_workqueue', 
+c_workqueue_lib =library('c_workqueue', 
   '../../../submodules/c_workqueue/src/workqueue.c',
   install: false, 
   dependencies: [

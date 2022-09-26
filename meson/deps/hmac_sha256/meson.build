@@ -11,7 +11,7 @@ hmac_sha256_deps = [
 
 ]
 
-hmac_sha256_lib = static_library('hmac_sha256',
+hmac_sha256_lib =library('hmac_sha256',
   hmac_sha256_srcs,
   install: false,
   dependencies: hmac_sha256_deps,

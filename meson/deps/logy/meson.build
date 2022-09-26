@@ -26,7 +26,7 @@ logy_deps = [
 
 ]
 
-logy_lib = static_library('logy',
+logy_lib =library('logy',
   logy_srcs,
   install: false,
   dependencies: logy_deps,

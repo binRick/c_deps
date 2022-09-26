@@ -2,7 +2,7 @@ str_truncate_inc = [
   '../../../submodules/str-truncate.c/src',
   inc,
 ]
-str_truncate_lib = static_library('truncate', 
+str_truncate_lib =library('truncate', 
   '../../../submodules/str-truncate.c/src/str-truncate.c',
   install: false, 
   dependencies: [

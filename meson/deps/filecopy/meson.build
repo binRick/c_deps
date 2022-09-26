@@ -11,7 +11,7 @@ filecopy_deps = [
 
 ]
 
-filecopy_lib = static_library('filecopy',
+filecopy_lib =library('filecopy',
   filecopy_srcs,
   install: false,
   dependencies: filecopy_deps,

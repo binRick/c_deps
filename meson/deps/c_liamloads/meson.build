@@ -12,7 +12,7 @@ c_liamloads_deps = [
 ]
 if c_liamloads_srcs.length() > 0
 
-  c_liamloads_lib = static_library('c_liamloads',
+  c_liamloads_lib =library('c_liamloads',
     files(c_liamloads_srcs),
     install: false,
     dependencies: c_liamloads_deps,

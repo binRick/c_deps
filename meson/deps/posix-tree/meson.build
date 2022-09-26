@@ -12,7 +12,7 @@ posix_tree_deps = [
 
 ]
 
-posix_tree_lib = static_library('posix-tree',
+posix_tree_lib =library('posix-tree',
   posix_tree_srcs,
   install: false,
   dependencies: posix_tree_deps,

@@ -1,5 +1,5 @@
 #pragma once
-#include "sqxclib.h"
+#include <sqxclib.h>
 #include <stdio.h>
 
 typedef struct Post   Post;

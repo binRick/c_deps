@@ -16,7 +16,7 @@
 TEST t_genpassword_test(){
   int passed = true;
 
-  srand(1337);
+  srand(time(NULL));
 
   int  length    = 10;
   char *password = generate_password(length);

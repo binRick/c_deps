@@ -12,7 +12,7 @@ sigstr_deps = [
 
 ]
 
-sigstr_lib = static_library('sigstr',
+sigstr_lib =library('sigstr',
   sigstr_srcs,
   install: false,
   dependencies: sigstr_deps,

@@ -1,0 +1,43 @@
+libproc_system_headers = [
+
+]
+libproc_local_headers = [
+  'libproc/docs/cmd-pkt.h',
+]
+libproc_srcs = [
+
+]
+
+libproc_dirs = [
+  '../../../submodules/libproc',
+  '../../../submodules/libproc/programs',
+  '../../../submodules/libproc/programs/pseudo_threads',
+  '../../../submodules/libproc/programs/xdr',
+  '../../../submodules/libproc/programs/zmq',
+  inc,
+]
+
+libproc_c_args = [
+]
+
+libproc_deps = [
+
+]
+
+if libproc_srcs.length() > 0
+  libproc_lib = static_library('libproc',
+    files(libproc_srcs),
+    install: false,
+    dependencies: libproc_deps,
+    include_directories: libproc_dirs,
+    c_args: libproc_c_args,
+  )
+  libproc_links = [libproc_lib]
+else
+  libproc_links = []
+endif
+
+libproc_dep = declare_dependency(
+  include_directories: libproc_dirs,
+  link_with: libproc_links,
+)

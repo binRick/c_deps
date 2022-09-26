@@ -1,0 +1,87 @@
+[
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/timg.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/timg.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/timg.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/buffered-write-sequencer.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/buffered-write-sequencer.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/buffered-write-sequencer.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/framebuffer.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/framebuffer.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/framebuffer.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/image-source.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/image-source.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/image-source.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/iterm2-canvas.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/iterm2-canvas.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/iterm2-canvas.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/kitty-canvas.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/kitty-canvas.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/kitty-canvas.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/renderer.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/renderer.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/renderer.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/terminal-canvas.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/terminal-canvas.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/terminal-canvas.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/termutils.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/termutils.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/termutils.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/timg-png.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/timg-png.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/timg-png.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/unicode-block-canvas.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/unicode-block-canvas.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/unicode-block-canvas.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/term-query.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/term-query.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/term-query.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/image-display.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/image-display.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/image-display.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/jpeg-source.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/jpeg-source.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/jpeg-source.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/video-display.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/video-display.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/video-display.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/stb-image-source.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/stb-image-source.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/stb-image-source.cc"
+},
+{
+  "directory": "/Users/rick/repos/c_deps/submodules/timg/src",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DHAVE_AVDEVICE -DWITH_TIMG_GRPAPHICSMAGICK -DWITH_TIMG_JPEG -DWITH_TIMG_QOI -DWITH_TIMG_STB -DWITH_TIMG_TERMINAL_QUERY -DWITH_TIMG_VIDEO -I/Users/rick/repos/c_deps/submodules/timg/src -isystem /usr/local/Cellar/graphicsmagick/1.3.38_1/include/GraphicsMagick -isystem /usr/local/Cellar/jpeg-turbo/2.1.4/include -isystem /usr/local/Cellar/libexif/0.6.24/include -isystem /usr/local/Cellar/ffmpeg/5.1.1/include -W -Wall -Wextra -Wno-unused-parameter -O3  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -std=gnu++14 -o CMakeFiles/timg.dir/qoi-image-source.cc.o -c /Users/rick/repos/c_deps/submodules/timg/src/qoi-image-source.cc",
+  "file": "/Users/rick/repos/c_deps/submodules/timg/src/qoi-image-source.cc"
+}
+]

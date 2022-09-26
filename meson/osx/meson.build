@@ -24,6 +24,9 @@ osx_ldflags +=  ['-Wl,-framework,Foundation']
 osx_ldflags +=  ['-Wl,-framework,AppKit']
 osx_ldflags +=  ['-Wl,-framework,IOKit']
 osx_ldflags +=  ['-Wl,-framework,Security']
+osx_ldflags +=  ['-Wl,-framework,SkyLight']
+osx_ldflags +=  ['-Wl,-framework,QuickLook']
+osx_ldflags +=  ['-F/System/Library/PrivateFrameworks']
 
 osx_audit_flags +=  ['-lbsm']
 

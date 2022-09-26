@@ -12,7 +12,7 @@ c_img_deps = [
 
 ]
 
-c_img_lib = static_library('c_img',
+c_img_lib =library('c_img',
   c_img_srcs,
   install: false,
   dependencies: c_img_deps,

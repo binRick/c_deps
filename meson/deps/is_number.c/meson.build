@@ -11,7 +11,7 @@ is_number_c_deps = [
 
 ]
 
-is_number_c_lib = static_library('is_number.c',
+is_number_c_lib =library('is_number.c',
   is_number_c_srcs,
   install: false,
   dependencies: is_number_c_deps,

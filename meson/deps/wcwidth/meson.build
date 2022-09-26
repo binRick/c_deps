@@ -11,7 +11,7 @@ wcwidth_deps = [
 
 ]
 
-wcwidth_lib = static_library('wcwidth',
+wcwidth_lib =library('wcwidth',
   wcwidth_srcs,
   install: false,
   dependencies: wcwidth_deps,

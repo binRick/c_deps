@@ -11,7 +11,7 @@ osxautomation_deps = [
 
 ]
 osxautomation_link_args = ['-Wl,-framework,CoreFoundation','-Wl,-framework,Carbon','-Wl,-framework,Foundation', '-Wl,-framework,AppKit']
-osxautomation_lib = static_library('osxautomation',
+osxautomation_lib =library('osxautomation',
   osxautomation_srcs,
   install: false,
   dependencies: osxautomation_deps,

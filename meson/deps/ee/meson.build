@@ -1,4 +1,4 @@
-ee_lib = static_library('ee',
+ee_lib =library('ee',
   c_deps_dir+'/submodules/ee.c/src/ee.c',
   install: false, 
   dependencies: [

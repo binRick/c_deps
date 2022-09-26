@@ -13,7 +13,7 @@ hsluv_c_deps = [
 
 ]
 
-hsluv_c_lib = static_library('hsluv-c',
+hsluv_c_lib =library('hsluv-c',
   hsluv_c_srcs,
   install: false,
   dependencies: hsluv_c_deps,

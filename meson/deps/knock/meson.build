@@ -1,9 +1,5 @@
 knock_srcs = [files(
   '../../../submodules/knock/config.h',
-  '../../../submodules/knock/src/knock.c',
-  '../../../submodules/knock/src/knockd.c',
-  '../../../submodules/knock/src/list.c',
-  '../../../submodules/knock/src/list.h',
 )]
 
 knock_dirs = [
@@ -13,10 +9,11 @@ knock_dirs = [
 ]
 
 knock_deps = [
+  pcap_dep,
 
 ]
 
-knock_lib = static_library('knock',
+knock_lib =library('knock',
   knock_srcs,
   install: false,
   dependencies: knock_deps,

@@ -12,7 +12,7 @@ bitfield_deps = [
 
 ]
 
-bitfield_lib = static_library('bitfield',
+bitfield_lib =library('bitfield',
   bitfield_srcs,
   install: false,
   dependencies: bitfield_deps,

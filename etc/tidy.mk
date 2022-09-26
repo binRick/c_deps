@@ -1,11 +1,14 @@
-TIDIED_FILES ?=*/*.c */*.h
+TIDIED_FILES ?=*/*.c */*.h */*/*.c */*/*.h */*/test/*.h */*/test/*.c
+EXCLUDED_TIDIED_FILES = kfc-utils-colors.c|xxxxxxxxx.c
 
 get-tidied-files-lines-qty:
 	@wc -l < $(shell $(MAKE) -B get-tidied-files)|grep total|tail -n1|tr -s ' '|cut -d' ' -f2
 get-tidied-files-qty:
 	@$(MAKE) -B get-tidied-files|wc -l
 get-tidied-files:
-	@$(FIND) -L $(TIDIED_FILES) -type f -maxdepth 3| $(SORT) -u
+	@$(MAKE) -B meson-get-c-files|egrep -v 'meson/deps|submodules|subprojects'
+
+#$(FIND) -L $(TIDIED_FILES) -type f -maxdepth 3| $(SORT) -u
 
 fmt-scripts:
 	@$(SHFMT) -w scripts/*.sh 2>/dev/null||true
@@ -14,7 +17,7 @@ uncrustify:
 	@make -B get-tidied-files|$(XARGS) -P 10 -I {} $(UNCRUSTIFY) -c ~/repos/c_deps/etc/uncrustify.cfg --replace "{}" 2>/dev/null||true
 
 uncrustify-clean:
-	@$(FIND) -L . -type f -name "*unc-backup*" -maxdepth 3|$(XARGS) -I % $(REALPATH) % | $(SORT) -u|$(XARGS) -P 10 -I % $(UNLINK) % 2>/dev/null ||true
+	@$(FIND) -L . -type f -name "*unc-backup*" |$(GREP) -v 'submodules|subprojects'|$(XARGS) -I % $(REALPATH) % | $(SORT) -u|$(XARGS) -P 10 -I % $(UNLINK) % 2>/dev/null ||true
 
 fix-dbg:
 	@$(SED)   's|, %[[:space:]].*u);|, %u);|g'  -i $(TIDIED_FILES)

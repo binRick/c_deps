@@ -12,7 +12,7 @@ fancy_progress_deps = [
 
 ]
 
-fancy_progress_lib = static_library('fancy-progress',
+fancy_progress_lib =library('fancy-progress',
   fancy_progress_srcs,
   install: false,
   dependencies: fancy_progress_deps,

@@ -10,7 +10,7 @@ c_dbg_deps = [
     asprintf_dep,
 ]
 
-c_dbg_lib = static_library('dbg', 
+c_dbg_lib =library('dbg', 
   c_dbg_srcs,
   install: false, 
   dependencies: c_dbg_deps,

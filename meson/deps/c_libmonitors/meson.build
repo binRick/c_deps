@@ -13,7 +13,7 @@ libmonitors_deps = [
 
 ]
 
-libmonitors_lib = static_library('libmonitors',
+libmonitors_lib =library('libmonitors',
   libmonitors_srcs,
   install: false,
   dependencies: libmonitors_deps,

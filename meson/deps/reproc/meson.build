@@ -35,7 +35,7 @@ if reproc_dep_mode == 'system'
   reproc_dep = dependency('reproc', required: true)
 elif reproc_dep_mode == 'source'
     if reproc_source_mode == 'static'
-      reproc_lib = static_library('reproc',reproc_dep_srcs,
+      reproc_lib =library('reproc',reproc_dep_srcs,
         install: false, 
         dependencies: [reproc_dep_deps],
         include_directories: reproc_dep_dirs,

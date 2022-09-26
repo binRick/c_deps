@@ -1,8 +1,16 @@
-project('c_deps',['c','cpp'],
-  default_options:['warning_level=2','c_std=gnu99','default_library=static'],
+project('c_deps',['c', 'cpp', 'objc', 'objcpp'],
+  default_options:['warning_level=2','c_std=gnu99','cpp_std=c++11','default_library=static'],
   version: '0.0.1',
   subproject_dir: 'subprojects',
   )
+pkg = import('pkgconfig')
+host_system = host_machine.system()
+compilers = {'cpp': meson.get_compiler('cpp'), 'objc': meson.get_compiler('objc'), 'objcpp': meson.get_compiler('objcpp')}
+if compilers['objc'].get_id() != 'clang' or compilers['objcpp'].get_id() != 'clang' or compilers['cpp'].get_id() != 'clang'
+    error('This program must be built with Clang! ( export CC=clang OBJC=clang CXX=clang++ OBJCXX=clang++ )')
+endif
+
+cmake = import('cmake')
 #############################################################
 subdir('meson/programs')
 subdir('meson/programs/go')
@@ -47,11 +55,7 @@ inc = [
   include_directories('submodules/str-replace.c/src'),
   include_directories('submodules/dbg.h'),
   include_directories('submodules/SDL_DBGP'),
-  include_directories('submodules/c_darwin'),
-  include_directories('submodules/c_darwin/kitty'),
   include_directories('submodules/c_sdl/sdl-app-fonts'),
-  include_directories('submodules/c_darwin/app-utils', 'submodules/c_darwin/active-app'),
-  include_directories('submodules/c_darwin/window-utils'),
   include_directories('submodules/c_ansi'),
   include_directories('submodules/c_pick'),
   include_directories(
@@ -69,6 +73,7 @@ install_subdir('etc/sounds', install_dir: meson.current_build_dir(), install_tag
 install_subdir('etc/images', install_dir: meson.current_build_dir(), install_tag:'build')
 ###########################################
 subdir('meson')
+subdir('lodepng')
 subdir('submodules')
 ###########################################
 subdir('deps')
@@ -101,12 +106,12 @@ subdir('roscha-test')
 subdir('filecopy-test')
 subdir('iowow-test')
 subdir('passh-test')
-subdir('multiselect-long1')
-subdir('multi_select')
-subdir('multi_select0')
-subdir('multi_select1')
-subdir('confirm1')
-subdir('c-go-interface')
+#subdir('multiselect-long1')
+#subdir('multi_select')
+#subdir('multi_select0')
+#subdir('multi_select1')
+#subdir('confirm1')
+#subdir('c-go-interface')
 subdir('hash-test')
 subdir('rrdtool-test')
 subdir('get-next-line-test')
@@ -161,7 +166,7 @@ subdir('libspinner-test')
 subdir('sha256-test')
 subdir('libmonitors-test')
 subdir('totp-test')
-subdir('go-libproc-test')
+#subdir('go-libproc-test')
 subdir('wcwidth-test')
 subdir('libdefer-test')
 subdir('expboff-test')
@@ -177,3 +182,25 @@ subdir('siphash-test')
 subdir('memory-leak-detector-test')
 subdir('iowow-compound-test')
 #subdir('sqxc-test')
+#subdir('xorscura-test')
+subdir('extname-test')
+subdir('metaref-test')
+subdir('terminal-splitter-test')
+#subdir('ui-test')
+subdir('sqldbal-test')
+subdir('hashmap-test')
+subdir('libcyaml-test')
+subdir('wslay-test')
+subdir('imagequant-test')
+subdir('libtty-test')
+#subdir('microhex-test')
+subdir('workqueue-test')
+#subdir('sqlcipher-test')
+#subdir('sqxcapp-test')
+#subdir('timg-test')
+subdir('stb-truetype-test')
+#subdir('vips-test')
+#subdir('vips-from-buffer-test')
+#subdir('vips-progress-test')
+#subdir('vips-basics-test')
+subdir('qoi-ci-test')

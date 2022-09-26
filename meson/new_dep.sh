@@ -14,16 +14,22 @@ MB=$DEPS_BASE/$NAME/meson.build
 #[[ -f "$MB" ]] && exit 1
 [[ -d ../submodules/$NAME ]] || exit 1
 
+submodule_local_headers() {
+  find -L ../submodules/$NAME -type f -name "*.h"|sort -u|format_file|gsed 's|../../../submodules/||g'|egrep -v '/test\.'
+}
+submodule_system_headers() {
+  echo
+#  find ../submodules/$NAME -type f -name "*.h"|sort -u
+}
 submodule_files() {
 	{
-		find ../submodules/$NAME -type f -name "*.c"
-#		find ../submodules/$NAME -type f -name "*.h"
+		find -L ../submodules/$NAME -type f -name "*.c"
 	} | sort -u
 }
 
 inc_dirs() {
 	{
-		find ../submodules/$NAME -type d -maxdepth 2
+		find ../submodules/$NAME -type d
 		submodule_files | filter_files | xargs -I % dirname %
 		printf "../../../submodules/%s\n" "$NAME"
 	} | sort -u
@@ -71,6 +77,8 @@ submodule_src_files() {
 [[ -d "$(dirname "$MB")" ]] || mkdir -p "$(dirname "$MB")"
 tf=$(mktemp)
 cp $TEMPLATE $tf
+gsed -i "s|__LOCAL_HEADERS__|\$LOCAL_HEADERS|g" $tf
+gsed -i "s|__SYSTEM_HEADERS__|\$SYSTEM_HEADERS|g" $tf
 gsed -i "s|__NAME__|$NAME|g" $tf
 gsed -i "s|__TYPE__|$TYPE|g" $tf
 gsed -i "s|__SRCS__|\${__SRCS__}|g" $tf
@@ -82,6 +90,8 @@ render_template() {
 	(
 		export __DIRS__="$(submodule_inc_dirs)"
 		export __SRCS__="$(submodule_src_files)"
+		export SYSTEM_HEADERS="$(submodule_system_headers)"
+		export LOCAL_HEADERS="$(submodule_local_headers)"
 		eval "echo -e \"$(\cat "$tf")\""
 	)
 }

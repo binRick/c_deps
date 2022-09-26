@@ -1,5 +1,5 @@
 
-http_get_lib = static_library('http-get', 
+http_get_lib =library('http-get', 
   '../../../submodules/http-get.c/src/http-get.c',
   install: false, 
   dependencies: [curl_dep], 

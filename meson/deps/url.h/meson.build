@@ -7,14 +7,19 @@ url_h_dirs = [
   inc,
 ]
 
+url_h_c_args = [
+  '-DHAVE_STRDUP',
+
+]
 url_h_deps = [
 
 ]
 
-url_h_lib = static_library('url-h',
+url_h_lib =library('url-h',
   url_h_drcs,
   install: false,
   dependencies: url_h_deps,
+  c_args: url_h_c_args,
   include_directories: url_h_dirs,
 )
 

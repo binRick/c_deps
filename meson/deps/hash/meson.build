@@ -11,7 +11,7 @@ hash_deps = [
 
 ]
 
-hash_lib = static_library('hash',
+hash_lib =library('hash',
   hash_srcs,
   install: false,
   dependencies: hash_deps,

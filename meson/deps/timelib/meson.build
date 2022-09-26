@@ -21,7 +21,7 @@ timelib_deps = [
 
 ]
 
-timelib_lib = static_library('timelib',
+timelib_lib =library('timelib',
   timelib_srcs,
   install: false,
   dependencies: timelib_deps,

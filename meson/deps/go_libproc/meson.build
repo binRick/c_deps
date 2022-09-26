@@ -11,7 +11,7 @@ go_libproc_deps = [
 
 ]
 
-go_libproc_lib = static_library('go_libproc',
+go_libproc_lib =library('go_libproc',
   go_libproc_srcs,
   install: false,
   dependencies: go_libproc_deps,

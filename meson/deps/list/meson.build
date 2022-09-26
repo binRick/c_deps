@@ -3,7 +3,7 @@ list_dirs = [
    '../../../submodules/list',
     inc,
   ]
-list_lib = static_library('list',
+list_lib =library('list',
    '../../../submodules/list/src/list.c',
    '../../../submodules/list/src/list_iterator.c',
    '../../../submodules/list/src/list_node.c',

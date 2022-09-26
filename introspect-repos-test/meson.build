@@ -7,7 +7,7 @@ introspect_repos_test_inc = [
  inc,
 ]
 introspect_repos_test_deps = [
- reproc_dep,
+ reproc_dep,sqlite3_dep,c_vector_dep,
  list_dep,
  c_fsio_dep,
  c_stringfn_dep,

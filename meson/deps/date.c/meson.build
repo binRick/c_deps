@@ -11,7 +11,7 @@ date_c_deps = [
 
 ]
 
-date_c_lib = static_library('date-c',
+date_c_lib =library('date-c',
   date_c_srcs,
   install: false,
   dependencies: date_c_deps,

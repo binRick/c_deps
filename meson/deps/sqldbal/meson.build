@@ -1,7 +1,12 @@
-sqldbal_srcs = [files(
+sqldbal_system_headers = [
+
+]
+sqldbal_local_headers = [
+  'sqldbal/src/sqldbal.h',
+]
+sqldbal_srcs = [
   '../../../submodules/sqldbal/src/sqldbal.c',
-  '../../../submodules/sqldbal/src/sqldbal.h',
-)]
+]
 
 sqldbal_dirs = [
   '../../../submodules/sqldbal',
@@ -12,23 +17,20 @@ sqldbal_dirs = [
 sqldbal_deps = [
 
 ]
-sqldbal_link_args = [
-    '-lsqlite3',
-]
-sqldbal_c_args = [
-    '-DSQLDBAL_SQLITE',
-]
 
-sqldbal_lib = static_library('sqldbal',
-  sqldbal_srcs,
-  install: false,
-  dependencies: sqldbal_deps,
-  link_args: sqldbal_link_args,
-  c_args: sqldbal_c_args,
-  include_directories: sqldbal_dirs,
-)
+if sqldbal_srcs.length() > 0
+  sqldbal_lib =library('sqldbal',
+    files(sqldbal_srcs),
+    install: false,
+    dependencies: sqldbal_deps,
+    include_directories: sqldbal_dirs,
+  )
+  sqldbal_links = [sqldbal_lib]
+else
+  sqldbal_links = []
+endif
 
 sqldbal_dep = declare_dependency(
   include_directories: sqldbal_dirs,
-  link_with: sqldbal_lib,
+  link_with: sqldbal_links,
 )

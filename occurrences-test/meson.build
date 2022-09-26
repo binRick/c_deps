@@ -17,6 +17,7 @@ occurrences_test_deps = [
   timestamp_dep,
 ]
 occurrences_test_c_args = [
+  '-DGREATEST_USE_LONGJMP=0',
 ]
 occurrences_test_link_args = [
 ]

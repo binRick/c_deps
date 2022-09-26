@@ -20,5 +20,5 @@ double divide(const double dividend, const double divisor) {
 }
 
 int main(const int argc, const char **argv) {
-//    printf("%lf\r\n", divide(8, 0));
+  //   printf("%lf\r\n", divide(8, 0));
 }
