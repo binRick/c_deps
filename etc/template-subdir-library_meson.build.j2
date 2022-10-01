@@ -20,7 +20,7 @@ inc = get_variable('inc', join_paths(meson.current_source_dir(),'..'))
 {{SUBDIR_NAME_SLUG}}_link_args = [
 ]
 
-{{SUBDIR_NAME_SLUG}}_lib = static_library('{{SUBDIR_NAME}}',
+{{SUBDIR_NAME_SLUG}}_lib = library('{{SUBDIR_NAME}}',
   {{SUBDIR_NAME_SLUG}}_srcs,
   install: false,
   dependencies: {{SUBDIR_NAME_SLUG}}_deps,

@@ -13,7 +13,7 @@ endif
 cmake = import('cmake')
 #############################################################
 subdir('meson/programs')
-subdir('meson/programs/go')
+#subdir('meson/programs/go')
 fs = import('fs')
 cc = meson.get_compiler('c', native: true)
 cpp = meson.get_compiler('cpp', native: true)
@@ -25,16 +25,16 @@ if fs.is_dir('.git')
 else
     git_sha = ''
 endif
-go_version = run_command(go_program,'version', check:true).stdout().strip().split(' ')[2].replace('go','')
+#go_version = run_command(go_program,'version', check:true).stdout().strip().split(' ')[2].replace('go','')
 #############################################################
 version_info = configuration_data()
 version_info.set('version', meson.project_version())
-version_info.set('go_version', go_version)
+#version_info.set('go_version', go_version)
 version_info.set('vcs_tag', git_sha)
 #############################################################
 summary({'version': meson.project_version(),
         'vcs_tag': git_sha,
-        'go_version': go_version,
+        #'go_version': go_version,
         }, section: 'Options')
 pwd = c_deps_dir
 #############################################################

@@ -14,11 +14,11 @@
 #include "qoi_ci/transpiled/QOI.h"
 #include "timestamp/timestamp.h"
 #include <png.h>
-INCBIN(communist_goals,"assets/communist-goals.png");
-INCBIN(fedora_logo,"assets/fedora_logo.png");
-INCBIN(kitty_icon,"assets/kitty_icon.png");
-INCBIN(preview,"assets/preview.png");
-INCBIN(screenshot,"assets/screenshot.png");
+INCBIN(communist_goals, "assets/communist-goals.png");
+INCBIN(fedora_logo, "assets/fedora_logo.png");
+INCBIN(kitty_icon, "assets/kitty_icon.png");
+INCBIN(preview, "assets/preview.png");
+INCBIN(screenshot, "assets/screenshot.png");
 #define QTY(X)    (sizeof(X) / sizeof(X[0]))
 static char          *files[] = {
   "/tmp/communist-goals.png",

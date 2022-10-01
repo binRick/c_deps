@@ -6,6 +6,7 @@ subdir('args')
 subdir('inc')
 subdir('python')
 ####################################
+subdir('deps/glib')
 subdir('deps/vips')
 subdir('deps/png')
 subdir('deps/wg-dynamic')
