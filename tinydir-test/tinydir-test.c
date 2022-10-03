@@ -1,4 +1,4 @@
-#include "submodules/log.h/log.h"
+#include "submodules/log/log.h"
 #include "tinydir-test.h"
 #include <assert.h>
 #include <stdio.h>

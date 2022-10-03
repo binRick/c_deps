@@ -9,6 +9,10 @@ exec_fzf_inc = [
  '../submodules/reproc/reproc',
  '../submodules/reproc',
 ]
+exec_fzf_c_args = [
+  '-Wno-unused-functions',
+  '-Wno-unknown-warning-option',
+  ]
 exec_fzf_deps = [
  reproc_dep,
  ansi_codes_dep,
@@ -30,6 +34,7 @@ exec_fzf_lib = library('exec-fzf',
   install: false,
   dependencies: exec_fzf_deps,
   include_directories: exec_fzf_inc,
+  c_args: exec_fzf_c_args,
 )
 
 

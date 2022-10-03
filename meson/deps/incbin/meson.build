@@ -3,6 +3,7 @@ incbin_deps = [
 ]
 incbin_c_args = [
   '-DINCBIN_SILENCE_BITCODE_WARNING',
+  '-Wno-sign-compare',
 ]
 incbin_lib =library('incbin', 
   '../../../submodules/incbin/incbin.c',

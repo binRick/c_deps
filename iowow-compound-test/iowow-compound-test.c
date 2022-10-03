@@ -69,7 +69,7 @@ TEST t_iowow_compound_test1(){
   RCGO(rc, finish);
 
   // Persist all rooms with members
-  for (int i = 0; i < sizeof(rooms) / sizeof(rooms[0]); ++i) {
+  for (size_t i = 0; i < sizeof(rooms) / sizeof(rooms[0]); ++i) {
     int                j     = 0;
     struct chat_root_s *room = &rooms[i];
     for (struct user_s *user = &room->users[0]; user->id; user = &room->users[++j]) {

@@ -292,7 +292,7 @@ struct Session {
 };
 
 static ssize_t send_callback(wslay_event_context_ptr ctx, const uint8_t *data,
-                             size_t len, int flags, void *user_data) {
+                             size_t len, void *user_data) {
   struct Session *session = (struct Session *)user_data;
   ssize_t        r;
   int            sflags = 0;

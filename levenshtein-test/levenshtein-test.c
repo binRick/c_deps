@@ -9,7 +9,7 @@
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/vector/vector.h"
 #include "levenshtein/deps/levenshtein.c/levenshtein.h"
-#include "log.h/log.h"
+#include "log/log.h"
 #include "timestamp/timestamp.h"
 
 ////////////////////////////////////////////

@@ -24,7 +24,7 @@
 #include "c_vector/vector/vector.h"
 #include "go_libproc/_reference/proc_info.h"
 #include "go_libproc/golibproc.h"
-#include "log.h/log.h"
+#include "log/log.h"
 #include "timestamp/timestamp.h"
 
 ////////////////////////////////////////////

@@ -9,7 +9,7 @@
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
-#include "submodules/log.h/log.h"
+#include "submodules/log/log.h"
 #include <assert.h>
 ////////////////////////////////////////////////////////
 #include "subprocess-test-main.c"
@@ -52,14 +52,14 @@ char *subprocess_fzf_test_0(void){
 
   result = subprocess_join(&subprocess, &exited);
   assert_eq(result, 0, %d);
-  dbg(exited, %d);
+  //#dbg(exited, %d);
   assert_eq(exited, 0, %d);
 
   READ_STDOUT = stringbuffer_to_string(SB);
 
   stringbuffer_release(SB);
-  dbg(exec_cmd[5], %s);
-  dbg(strlen(READ_STDOUT), %u);
+  //#dbg(exec_cmd[5], %s);
+  //#dbg(strlen(READ_STDOUT), %u);
   if (DEBUG_STDOUT) {
     fprintf(stderr, "%s", READ_STDOUT);
   }

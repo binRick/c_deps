@@ -18,8 +18,6 @@
 TEST t_log_test(){
   log_info("info");
   log_error("error");
-  char *s = "str";
-//  log_print(s);
   PASS();
 }
 

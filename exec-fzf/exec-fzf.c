@@ -19,7 +19,7 @@
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/vector/vector.h"
 #include "exec-fzf/exec-fzf.h"
-#include "submodules/log.h/log.h"
+#include "submodules/log/log.h"
 #include "tempdir.c/tempdir.h"
 #include "timestamp/timestamp.h"
 #include "which/src/which.h"
@@ -344,8 +344,4 @@ finish:
   return(EXIT_SUCCESS);
 } /* execute_fwded_process */
 
-static void __attribute__((constructor)) __exec_fzf_constructor(){
-}
-static void __attribute__((destructor)) __exec_fzf_destructor(){
-}
 #undef FZF_DEBUG_MODE

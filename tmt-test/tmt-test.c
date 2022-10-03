@@ -1,4 +1,4 @@
-#include "submodules/log.h/log.h"
+#include "submodules/log/log.h"
 #include "tmt-test-main.c"
 #include "tmt-test.h"
 #include <assert.h>

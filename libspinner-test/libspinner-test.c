@@ -9,7 +9,7 @@
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/vector/vector.h"
 #include "libspinner/spinner.h"
-#include "log.h/log.h"
+#include "log/log.h"
 #include "timestamp/timestamp.h"
 int SLEEP_DUR_MS = 5000;
 

@@ -8,6 +8,9 @@ miniaudio_dirs = [
   inc,
 ]
 
+miniaudio_c_args = [
+  '-Wno-unused-function',
+  ]
 miniaudio_deps = [
 
 ]
@@ -17,6 +20,7 @@ miniaudio_lib =library('miniaudio',
   install: false,
   dependencies: miniaudio_deps,
   include_directories: miniaudio_dirs,
+  c_args: miniaudio_c_args,
 )
 
 miniaudio_dep = declare_dependency(

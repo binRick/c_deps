@@ -6,7 +6,7 @@
 #include "c_stringfn/include/stringfn.h"
 #include "cargs/include/cargs.h"
 #include "ee.c/src/ee.h"
-#include "log.h/log.h"
+#include "log/log.h"
 #include "parson.h"
 #include "reproc/reproc/include/reproc/export.h"
 #include "reproc/reproc/include/reproc/reproc.h"

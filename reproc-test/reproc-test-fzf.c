@@ -18,7 +18,7 @@
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/vector/vector.h"
 #include "reproc-test.h"
-#include "submodules/log.h/log.h"
+#include "submodules/log/log.h"
 #include "tempdir.c/tempdir.h"
 #include "timestamp/timestamp.h"
 #include "which/src/which.h"

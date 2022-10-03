@@ -53,7 +53,6 @@ inc = [
   include_directories('submodules/generic-print'),
   include_directories('submodules/cgif/inc'),
   include_directories('submodules/str-replace.c/src'),
-  include_directories('submodules/dbg.h'),
   include_directories('submodules/SDL_DBGP'),
   include_directories('submodules/c_sdl/sdl-app-fonts'),
   include_directories('submodules/c_ansi'),
@@ -203,4 +202,4 @@ subdir('stb-truetype-test')
 #subdir('vips-from-buffer-test')
 #subdir('vips-progress-test')
 #subdir('vips-basics-test')
-subdir('qoi-ci-test')
+#subdir('qoi-ci-test')

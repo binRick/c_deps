@@ -23,14 +23,14 @@ int subprocess_test_main(char *CMD){
 
   result = subprocess_join(&subprocess, &exited);
   assert_eq(result, 0, %d);
-  dbg(exited, %d);
+  //#dbg(exited, %d);
   assert_eq(exited, 0, %d);
 
   READ_STDOUT = stringbuffer_to_string(SB);
 
   stringbuffer_release(SB);
-  dbg(command_line[4], %s);
-  dbg(strlen(READ_STDOUT), %u);
+  //#dbg(command_line[4], %s);
+  //#dbg(strlen(READ_STDOUT), %u);
   if (DEBUG_STDOUT) {
     fprintf(stderr, "%s", READ_STDOUT);
   }

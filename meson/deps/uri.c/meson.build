@@ -8,6 +8,9 @@ uri_c_dirs = [
   inc,
 ]
 
+uri_c_args = [
+  '-Wno-sign-compare',
+  ]
 uri_c_deps = [
 
 ]
@@ -17,6 +20,7 @@ uri_c_lib =library('uri.c',
   install: false,
   dependencies: uri_c_deps,
   include_directories: uri_c_dirs,
+  c_args: uri_c_args,
 )
 
 uri_c_dep = declare_dependency(

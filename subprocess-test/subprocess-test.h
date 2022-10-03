@@ -5,8 +5,8 @@
 #include "cargs/include/cargs.h"
 #include "submodules/assertf/assertf.h"
 #include "submodules/c_greatest/greatest/greatest.h"
-#include "submodules/dbg/dbg.h"
-#include "submodules/log.h/log.h"
+//#include "dbg/dbg.h"
+#include "submodules/log/log.h"
 #include "submodules/subprocess.h/subprocess.h"
 #include <ctype.h>
 #include <stdarg.h>

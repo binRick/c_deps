@@ -9,6 +9,7 @@ b64_dirs = [
   ]
 b64_cargs = [
   '-Wno-pointer-sign',
+  '-Wno-sign-compare',
   ]
 b64_lib =library('b64', b64_srcs,
   install: false, dependencies: [

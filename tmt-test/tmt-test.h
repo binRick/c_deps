@@ -6,7 +6,7 @@
 #include "cargs/include/cargs.h"
 #include "submodules/c_greatest/greatest/greatest.h"
 #include "submodules/libtmt/tmt.h"
-#include "submodules/log.h/log.h"
+#include "submodules/log/log.h"
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>

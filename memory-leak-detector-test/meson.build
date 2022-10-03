@@ -19,6 +19,7 @@ memory_leak_detector_test_deps = [
   bytes_dep,
 ]
 memory_leak_detector_test_c_args = [
+  '-Wno-unused-variable',
 ]
 memory_leak_detector_test_link_args = [
 ]

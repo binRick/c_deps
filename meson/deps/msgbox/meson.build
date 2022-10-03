@@ -5,7 +5,9 @@ msgbox_srcs = [files(
   '../../../submodules/msgbox/cstructs/memprofile.c',
   '../../../submodules/msgbox/msgbox/msgbox.c',
 )]
-
+msgbox_c_args = [
+  '-Wno-sign-compare',
+  ]
 msgbox_dirs = [
   '../../../submodules/msgbox',
   '../../../submodules/msgbox/cstructs',
@@ -23,6 +25,7 @@ msgbox_lib =library('msgbox',
   install: false,
   dependencies: msgbox_deps,
   include_directories: msgbox_dirs,
+  c_args: msgbox_c_args,
 )
 
 msgbox_dep = declare_dependency(

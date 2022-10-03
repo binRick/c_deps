@@ -1015,3 +1015,9 @@
 [submodule "submodules/qoi_ci"]
 	path = submodules/qoi_ci
 	url = https://github.com/pfusik/qoi-ci
+[submodule "submodules/querycsv"]
+	path = submodules/querycsv
+	url = https://github.com/pjshumphreys/querycsv
+[submodule "submodules/whereami"]
+	path = submodules/whereami
+	url = https://github.com/gpakosz/whereami

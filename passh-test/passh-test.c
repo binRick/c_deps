@@ -37,7 +37,7 @@ struct passh_args_t test_cfg = {
   .argv = { "passh","-L",    OUT_FILE, "id", NULL },
 };
 
-TEST t_passh_test(void *PARAMETER){
+TEST t_passh_test(){
   if (fsio_path_exists(OUT_FILE)) {
     fsio_remove(OUT_FILE);
   }
@@ -52,9 +52,7 @@ TEST t_passh_test(void *PARAMETER){
 }
 
 SUITE(s_passh_test) {
-  void *TEST_PARAM = 0;
-
-  RUN_TESTp(t_passh_test, (void *)TEST_PARAM);
+  RUN_TEST(t_passh_test);
 }
 
 GREATEST_MAIN_DEFS();

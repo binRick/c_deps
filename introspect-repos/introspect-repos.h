@@ -23,7 +23,7 @@
 #include "submodules/c_greatest/greatest/greatest.h"
 #include "submodules/c_vector/vector/vector.h"
 #include "submodules/ee.c/src/ee.h"
-#include "submodules/log.h/log.h"
+#include "submodules/log/log.h"
 #include "submodules/ms/ms.h"
 #include "submodules/path-normalize.c/src/path-normalize.h"
 #include "submodules/progress.c/progress.h"

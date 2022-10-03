@@ -19,6 +19,11 @@ roscha_dirs = [
   inc,
 ]
 
+roscha_c_args = [
+  '-Wno-undefined-inline',
+  '-Wno-sign-compare',
+  '-Wno-unused-parameter',
+  ]
 roscha_deps = [
 
 ]
@@ -28,6 +33,7 @@ roscha_lib =library('roscha',
   install: false,
   dependencies: roscha_deps,
   include_directories: roscha_dirs,
+  c_args: roscha_c_args,
 )
 
 roscha_dep = declare_dependency(

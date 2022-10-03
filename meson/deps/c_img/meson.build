@@ -8,6 +8,10 @@ c_img_dirs = [
   inc,
 ]
 
+c_img_args = [
+  '-Wno-unused-parameter',
+  '-Wno-unused-function',
+]
 c_img_deps = [
 
 ]
@@ -17,6 +21,7 @@ c_img_lib =library('c_img',
   install: false,
   dependencies: c_img_deps,
   include_directories: c_img_dirs,
+  c_args: c_img_args,
 )
 
 c_img_dep = declare_dependency(

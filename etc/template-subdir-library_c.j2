@@ -3,6 +3,7 @@
 #pragma once
 #ifndef {{UPPER_LIBRARY_NAME}}_C
 #define {{UPPER_LIBRARY_NAME}}_C
+#define LOCAL_DEBUG_MODE {{UPPER_LIBRARY_NAME}}_DEBUG_MODE
 ////////////////////////////////////////////
 #include "{{SUBDIR_NAME}}/{{SUBDIR_NAME}}.h"
 ////////////////////////////////////////////
@@ -19,4 +20,5 @@ static void __attribute__((constructor)) __constructor__{{LIBRARY_NAME}}(void){
   }
 }
 ////////////////////////////////////////////
+#undef LOCAL_DEBUG_MODE
 #endif

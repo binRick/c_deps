@@ -11,7 +11,7 @@
 #include "libmutotp/base32codec.h"
 #include "libmutotp/sha1.h"
 #include "libmutotp/totp.h"
-#include "log.h/log.h"
+#include "log/log.h"
 #include "timestamp/timestamp.h"
 
 int32_t FillFromURANDOM(uint8_t *out, size_t outlen){

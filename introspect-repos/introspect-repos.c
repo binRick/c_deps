@@ -11,7 +11,7 @@
 //////////////////////////////////////////////
 #include "generic-print/print.h"
 #include "introspect-repos.h"
-#include "log.h/log.h"
+#include "log/log.h"
 #include "submodules/occurences.c/occurrences.h"
 //////////////////////////////////////////////
 #define PROGRESS_BAR_WIDTH             60
@@ -221,7 +221,7 @@ static void introspection_progress(progress_data_t *data) {
   progress_write(data->holder);
 }
 
-static void introspection_progress_end(progress_data_t *data) {
+static void introspection_progress_end(progress_data_t __attribute__((unused)) *data) {
   fprintf(stdout,
           AC_SHOW_CURSOR
           AC_RESETALL "\n"
@@ -241,8 +241,6 @@ struct Vector *extract_repository_executables(char *REPOSITORY_NAME, struct Vect
     }
     for (size_t ii = 0; ii < json_array_get_count(r->Targets_a); ii++) {
       if (strcmp(json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "type"), "executable") == 0) {
-        char *target_name = json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "name");
-        char *defined_id  = json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "defined_in");
         for (size_t iii = 0; iii < json_array_get_count(json_object_dotget_array(json_array_get_object(r->Targets_a, ii), "filename")); iii++) {
           char *fn = json_array_get_string(json_object_dotget_array(json_array_get_object(r->Targets_a, ii), "filename"), iii);
           if ((fn != NULL) && (strlen(fn) > 0)) {
@@ -381,27 +379,15 @@ struct Vector *get_meson_paths(char *BASE_PATH, char *PATH_FILTER, size_t PATH_L
       goto bail;
     }
 
-    int                    match_length = 0, match_idx = -1;
-    bool                   IS_MATCH = false;
-    re_t                   pattern;
+    int                    match_length = 0;
+    bool                   IS_MATCH     = false;
 
     struct StringFNStrings regexes     = stringfn_split(PATH_FILTER, '|');
     bool                   found_match = false;
     for (int i = 0; (i < regexes.count) && (found_match == false); i++) {
-      pattern   = re_compile(regexes.strings[i]);
-      match_idx = re_matchp(pattern, file.name, &match_length);
-      IS_MATCH  = (match_length > 0);
+      IS_MATCH = (match_length > 0);
       if (IS_MATCH) {
         found_match = true;
-      }
-      if (DEBUG_REGEX) {
-        /*
-         * dbg(regexes.strings[i], %s);
-         * dbg((char *)file.name, %s);
-         * dbg(match_length, %d);
-         * dbg(IS_MATCH ? "Yes" : "No", %s);
-         * dbg(match_idx, %d);
-         */
       }
     }
 
@@ -460,7 +446,7 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
   char   REPOSITORY_NAME[]         = "c_deps";
   Vector *REPOSITORY_EXECUTABLES_v = vector_new();
 
-  for (int i = 0; i < vector_size(MESON_RESULTS); i++) {
+  for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
     meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
     if (r == NULL) {
       continue;
@@ -475,30 +461,27 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
     VALIDATE_MESON_JOB_RESULT(r);
   }
   REPOSITORY_EXECUTABLES_v = extract_repository_executables(REPOSITORY_NAME, MESON_RESULTS);
-  re_t TEST_EXECUTABLE_REGEX = re_compile("-test$");
 
   TEST_EXECUTABLES_v = vector_new();
   char *TEST_EXECUTABLE;
 
-  for (int i = 0; i < vector_size(REPOSITORY_EXECUTABLES_v); i++) {
+  for (size_t i = 0; i < vector_size(REPOSITORY_EXECUTABLES_v); i++) {
     TEST_EXECUTABLE = (char *)vector_get(REPOSITORY_EXECUTABLES_v, i);
     //dbg(i, %d);
     //dbg(TEST_EXECUTABLE, %s);
-    int match_length          = 0;
-    int TEST_EXECUTABLE_MATCH = re_matchp(TEST_EXECUTABLE_REGEX, TEST_EXECUTABLE, &match_length);
-    int IS_TEST_EXECUTABLE    = (match_length > 0);
+    int match_length       = 0;
+    int IS_TEST_EXECUTABLE = (match_length > 0);
     if (IS_TEST_EXECUTABLE) {
       vector_push(TEST_EXECUTABLES_v, (char *)strdup(TEST_EXECUTABLE));
     }
   }
   char *REPOSITORY_EXECUTABLE;
 
-  for (int i = 0; i < vector_size(REPOSITORY_EXECUTABLES_v); i++) {
+  for (size_t i = 0; i < vector_size(REPOSITORY_EXECUTABLES_v); i++) {
     REPOSITORY_EXECUTABLE = (char *)vector_get(REPOSITORY_EXECUTABLES_v, i);
-    //dbg(REPOSITORY_EXECUTABLE, %s);
+    log_debug("%s", REPOSITORY_EXECUTABLE);
   }
-  //dbg(vector_size(TEST_EXECUTABLES_v), %d);
-  for (int i = 0; i < vector_size(TEST_EXECUTABLES_v); i++) {
+  for (size_t i = 0; i < vector_size(TEST_EXECUTABLES_v); i++) {
     TEST_EXECUTABLE = (char *)vector_get(TEST_EXECUTABLES_v, i);
     char   *src_file = malloc(strlen(TEST_EXECUTABLE) + 1024);
     sprintf(src_file, "%s.c", TEST_EXECUTABLE);
@@ -515,7 +498,7 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
         if (s01.count == 2) {
           struct StringFNStrings s02         = stringfn_split(s01.strings[0], '(');
           char                   *SUITE_NAME = s02.strings[1];
-          //dbg(SUITE_NAME, %s);
+          log_debug("%s", SUITE_NAME);
         }
       }
     }
@@ -578,7 +561,7 @@ repo_t init_repo(){
   return(REPO);
 }
 
-repo_t parse_repo_type(JSON_Object *O){
+repo_t parse_repo_type(JSON_Object __attribute__((unused)) *O){
   repo_t REPO = {
   };
 
@@ -633,15 +616,13 @@ char *execute_meson_introspect(void *_MESON_PATH){
   struct subprocess_s  subprocess;
   char                 stdout_buffer[STDOUT_READ_BUFFER_SIZE] = { 0 };
   struct  StringBuffer *SB                                    = stringbuffer_new_with_options(STDOUT_READ_BUFFER_SIZE, true);
-  size_t               bytes_read                             = 0,
-                       index                                  = 0;
+  size_t               bytes_read                             = 0;
 
   result = subprocess_create(command_line, 0, &subprocess);
   assert(result == 0);
   do {
     bytes_read = subprocess_read_stdout(&subprocess, stdout_buffer, STDOUT_READ_BUFFER_SIZE - 1);
     stringbuffer_append_string(SB, stdout_buffer);
-    index += bytes_read;
   } while (bytes_read != 0);
 
   result = subprocess_join(&subprocess, &exited);
@@ -656,9 +637,9 @@ char *execute_meson_introspect(void *_MESON_PATH){
 
   if (DEBUG_STDOUT) {
     /*
-     * dbg(exited, %d);
-     * dbg(command_line[2], %s);
-     * dbg(strlen(READ_STDOUT), %lu);
+     * //#dbg(exited, %d);
+     * //#dbg(command_line[2], %s);
+     * //#dbg(strlen(READ_STDOUT), %lu);
      */
     fprintf(stderr, "%s", READ_STDOUT);
   }

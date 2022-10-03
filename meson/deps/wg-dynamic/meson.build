@@ -1,7 +1,6 @@
 wg_dynamic_srcs = [files(
   #'../../../submodules/wg-dynamic/common.c',
   #'../../../submodules/wg-dynamic/common.h',
-  #  '../../../submodules/wg-dynamic/dbg.h',
   #'../../../submodules/wg-dynamic/ipm.c',
   #'../../../submodules/wg-dynamic/ipm.h',
   #'../../../submodules/wg-dynamic/khash.h',

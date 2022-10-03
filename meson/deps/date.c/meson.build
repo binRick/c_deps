@@ -7,6 +7,11 @@ date_c_dirs = [
   inc,
 ]
 
+date_c_args = [
+  '-Wno-tautological-overlap-compare',
+  '-Wno-unused-variable',
+
+]
 date_c_deps = [
 
 ]
@@ -16,6 +21,7 @@ date_c_lib =library('date-c',
   install: false,
   dependencies: date_c_deps,
   include_directories: date_c_dirs,
+  c_args: date_c_args,
 )
 
 date_c_dep = declare_dependency(

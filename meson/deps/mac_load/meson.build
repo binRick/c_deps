@@ -11,6 +11,9 @@ mac_load_dirs = [
   inc,
 ]
 
+mac_load_c_args = [
+  '-Wno-missing-field-initializers',
+  ]
 mac_load_deps = [
 
 ]

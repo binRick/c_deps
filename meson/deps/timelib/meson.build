@@ -16,7 +16,9 @@ timelib_dirs = [
   '../../../submodules/timelib/zones',
   inc,
 ]
-
+timelib_c_args = [
+  '-Wno-unused-parameter',
+  ]
 timelib_deps = [
 
 ]
@@ -26,6 +28,7 @@ timelib_lib =library('timelib',
   install: false,
   dependencies: timelib_deps,
   include_directories: timelib_dirs,
+  c_args: timelib_c_args,
 )
 
 timelib_dep = declare_dependency(

@@ -10,7 +10,7 @@
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/vector/vector.h"
 #include "libdefer/include/defer.h"
-#include "log.h/log.h"
+#include "log/log.h"
 #include "ms/ms.h"
 #include "timestamp/timestamp.h"
 

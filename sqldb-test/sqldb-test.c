@@ -1,5 +1,5 @@
 #include "generic-print/print.h"
-#include "log.h/log.h"
+#include "log/log.h"
 #include "sqldb-test.h"
 #include "submodules/c_greatest/greatest/greatest.h"
 #include <assert.h>

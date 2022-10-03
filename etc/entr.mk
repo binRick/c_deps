@@ -13,6 +13,7 @@ ENTR_CMD=env bash +e -xc "while :; do $(ENTR_RAW_CMD) < <($(WATCH)); sleep 1; do
 ###########################################
 ENTR_FIND_MAX_DEPTH=3
 ENTR_FIND_DIRS = . submodules/meson.build \
+									 ~/repos/c_deps/submodules/log \
 									 ~/repos/c_ansi \
 									 ~/repos/msf_gif \
 									 ~/repos/c_darwin/httpserver-utils/.assets \

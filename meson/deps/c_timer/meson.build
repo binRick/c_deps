@@ -1,3 +1,6 @@
+c_timer_c_args = [
+  '-Wno-unused-parameter',
+  ]
 c_timer_lib =library('c_timer', 
   c_deps_dir + '/submodules/c_timer/src/c_timer.c',
   install: false, 
@@ -8,7 +11,8 @@ c_timer_lib =library('c_timer',
   ], 
   include_directories: [
     inc
-  ]
+  ],
+  c_args: c_timer_c_args,
 )
 c_timer_dep = declare_dependency(
   include_directories: [

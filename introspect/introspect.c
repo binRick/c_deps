@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #define DEBUG_MEMORY_ENABLED    true
 #include "introspect.h"
-#include "submodules/log.h/log.h"
+#include "submodules/log/log.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

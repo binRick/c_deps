@@ -1,5 +1,5 @@
 #include "fort-test.h"
-#include "submodules/log.h/log.h"
+#include "submodules/log/log.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
