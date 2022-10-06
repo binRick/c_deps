@@ -7,17 +7,11 @@ BUILD_JOBS ?=15
 TEST_JOBS ?=3
 MESON_DEFAULT_LIBRARY ?=shared
 BUILD_OPTIMIZATION ?=0
-WARN_LEVEL ?=2
+WARN_LEVEL ?=1
 MESON_PARALLEL_JOBS=$(BUILD_JOBS)
 MESON_BUILD_TYPE=$(BUILD_TYPE)
 MESON_BUILD_LOG=$(MESON_BUILD_DIR)/build.log
-MESON_SETUP_ARGS=\
-								 --fatal-meson-warnings \
-								 --buildtype $(MESON_BUILD_TYPE) \
-								 --default-library $(MESON_DEFAULT_LIBRARY) \
-								 --warnlevel $(WARN_LEVEL) \
-								 --backend ninja \
-								 --errorlogs
+MESON_SETUP_ARGS=--fatal-meson-warnings --buildtype $(MESON_BUILD_TYPE) --default-library $(MESON_DEFAULT_LIBRARY) --warnlevel $(WARN_LEVEL) --backend ninja --errorlogs
 meson-setup:
 	@if [[ -d $(MESON_BUILD_DIR) ]]; then $(MESON) setup $(MESON_SETUP_ARGS) --reconfigure $(MESON_BUILD_DIR); else $(MESON) setup $(MESON_SETUP_ARGS) $(MESON_BUILD_DIR); fi
 meson-build: meson-setup

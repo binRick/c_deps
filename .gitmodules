@@ -1021,3 +1021,9 @@
 [submodule "submodules/whereami"]
 	path = submodules/whereami
 	url = https://github.com/gpakosz/whereami
+[submodule "submodules/lodepng"]
+	path = submodules/lodepng
+	url = https://github.com/lvandeve/lodepng
+[submodule "submodules/libnsgif"]
+	path = submodules/libnsgif
+	url = https://github.com/netsurf-plan9/libnsgif

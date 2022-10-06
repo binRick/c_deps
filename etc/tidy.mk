@@ -14,10 +14,12 @@ fmt-scripts:
 	@$(SHFMT) -w scripts/*.sh 2>/dev/null||true
 
 uncrustify:
-	@make -B get-tidied-files|$(XARGS) -P 10 -I {} $(UNCRUSTIFY) -c ~/repos/c_deps/etc/uncrustify.cfg --replace "{}" 2>/dev/null||true
+	true
+#	@make -B get-tidied-files|$(XARGS) -P 10 -I {} $(UNCRUSTIFY) -c ~/repos/c_deps/etc/uncrustify.cfg --replace "{}" 2>/dev/null||true
 
 uncrustify-clean:
-	@$(FIND) -L . -type f -name "*unc-backup*" |$(GREP) -v 'submodules|subprojects'|$(XARGS) -I % $(REALPATH) % | $(SORT) -u|$(XARGS) -P 10 -I % $(UNLINK) % 2>/dev/null ||true
+	true
+#	@$(FIND) -L . -type f -name "*unc-backup*" |$(GREP) -v 'submodules|subprojects'|$(XARGS) -I % $(REALPATH) % | $(SORT) -u|$(XARGS) -P 10 -I % $(UNLINK) % 2>/dev/null ||true
 
 fix-dbg:
 	@$(SED)   's|, %[[:space:]].*u);|, %u);|g'  -i $(TIDIED_FILES)
@@ -32,11 +34,12 @@ fix-dbg:
 	@$(SED)   's|, %[[:space:]].*zu);|, %zu);|g' -i $(TIDIED_FILES)
 
 shfmt:
-	@if [[ -d scripts ]]; then $(FIND) scripts/*.sh -type f >/dev/null 2>&1 && $(MAKE) -B fmt-scripts 2>/dev/null||true; fi
+#	@if [[ -d scripts ]]; then $(FIND) scripts/*.sh -type f >/dev/null 2>&1 && $(MAKE) -B fmt-scripts 2>/dev/null||true; fi
 	@true
 
 do-tidy: 
-	@$(MAKE) -B uncrustify uncrustify-clean shfmt fix-dbg 2>/dev/null||true
+	true
+#	@$(MAKE) -B uncrustify uncrustify-clean shfmt fix-dbg 2>/dev/null||true
 
 get-tidied-files-stats:
 	  @printf "%s files, %s lines\n" "$(shell make -B get-tidied-files-qty)" "$(shell make -B get-tidied-files-lines-qty)"
@@ -51,4 +54,5 @@ do-timed-tidy:
 		ansi --blue ms && sleep 1
 
 tidy:
-	@passh $(MAKE) -B do-timed-tidy
+	true
+#	@$(MAKE) -B do-timed-tidy
