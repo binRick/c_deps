@@ -1027,3 +1027,6 @@
 [submodule "submodules/libnsgif"]
 	path = submodules/libnsgif
 	url = https://github.com/netsurf-plan9/libnsgif
+[submodule "submodules/optparse99-master"]
+	path = submodules/optparse99-master
+	url = https://github.com/hippie68/optparse99
