@@ -101,9 +101,8 @@ void init_workers(size_t WORKERS_QTY){
 }
 
 TEST t_free_workers(){
-  if (workers) {
+  if (workers)
     free(workers);
-  }
   workers = NULL;
 
   ASSERT_EQ(workers, NULL);
@@ -172,14 +171,12 @@ TEST t_chan_jobs_worker(void *buffer_qty,
     sent_dur
     );
 
-  for (size_t i = 0; i < WORKERS_QTY; i++) {
+  for (size_t i = 0; i < WORKERS_QTY; i++)
     chan_recv(DONE_CHANNEL, NULL);
-  }
 
   I("done signals received.....waiting on threads to exit....");
-  for (size_t i = 0; i < WORKERS_QTY; i++) {
+  for (size_t i = 0; i < WORKERS_QTY; i++)
     pthread_join(&worker_threads[i], NULL);
-  }
 
   I("threads exited..disposing of channels......");
   chan_dispose(JOBS_CHANNEL);

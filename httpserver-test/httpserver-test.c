@@ -33,9 +33,9 @@ void chunk_cb(struct http_request_s *request) {
   chunk_count++;
   struct http_response_s *response = http_response_init();
   http_response_body(response, RESPONSE, sizeof(RESPONSE) - 1);
-  if (chunk_count < 3) {
+  if (chunk_count < 3)
     http_respond_chunk(request, response, chunk_cb);
-  } else {
+  else {
     http_response_header(response, "Foo-Header", "bar");
     http_respond_chunk_end(request, response);
   }
@@ -108,9 +108,8 @@ void handle_request(struct http_request_s *request) {
     int           iter = 0, i = 0;
     http_string_t key, val;
     char          buf[512];
-    while (http_request_iterate_headers(request, &key, &val, &iter)) {
+    while (http_request_iterate_headers(request, &key, &val, &iter))
       i += snprintf(buf + i, 512 - i, "%.*s: %.*s\n", key.len, key.buf, val.len, val.buf);
-    }
     http_response_header(response, "Content-Type", "text/plain");
     http_response_body(response, buf, i);
     return(http_respond(request, response));

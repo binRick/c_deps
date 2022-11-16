@@ -10,9 +10,8 @@ static int min(int a, int b) {
 static char *tp__basename(const char *path){
   const char *slash = strrchr(path, '/');
 
-  if (slash) {
+  if (slash)
     path = slash + 1;
-  }
   return((char *)path);
 }
 

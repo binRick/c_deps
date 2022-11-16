@@ -292,9 +292,8 @@ void __blocks_test__setup_executable_path(const char **argv){
   realpath(argv[0], EXECUTABLE_PATH);
   EXECUTABLE              = basename(EXECUTABLE_PATH);
   EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
-  if (DEBUG_MODE_ENABLED) {
+  if (DEBUG_MODE_ENABLED)
     fprintf(stderr, "blocks-test Initialized @ %s/%s\n", EXECUTABLE_PATH_DIRNAME, EXECUTABLE_PATH);
-  }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 void __attribute__((constructor)) __constructor__blocks_test(){

@@ -67,18 +67,17 @@ int main(int argc, char *argv[]){
 
   if (argc > 1) {
     enum LookingFor looking_for = LOOKING_FOR_FLAG;
-    for (int index = 1; index < argc; index++) {
+    for (int index = 1; index < argc; index++)
       switch (looking_for) {
       case LOOKING_FOR_FLAG:
-        if (!strcmp(argv[index], "--port")) {
+        if (!strcmp(argv[index], "--port"))
           looking_for = LOOKING_FOR_PORT;
-        }else if (!strcmp(argv[index], "--dir")) {
+        else if (!strcmp(argv[index], "--dir"))
           looking_for = LOOKING_FOR_BASE_DIR;
-        }else if (!strcmp(argv[index], "--private-key")) {
+        else if (!strcmp(argv[index], "--private-key"))
           looking_for = LOOKING_FOR_PRIVATE_KEY;
-        }else if (!strcmp(argv[index], "--certificate")) {
+        else if (!strcmp(argv[index], "--certificate"))
           looking_for = LOOKING_FOR_CERTIFICATE;
-        }
         break;
 
       case LOOKING_FOR_BASE_DIR:
@@ -101,7 +100,6 @@ int main(int argc, char *argv[]){
         server->ssl_info->certificate_pem_file = strdup(argv[index]);
         break;
       }
-    }
   }
   struct sockaddr_in address = hs_server_init_ipv4_address(port);
 
@@ -208,9 +206,9 @@ int main(int argc, char *argv[]){
 } /* main */
 
 enum HSServeFlowResponse _log_route_serve(struct HSRoute *route, struct HSServeFlowParams *params){
-  if (route == NULL) {
+  if (route == NULL)
     return(HS_SERVE_FLOW_RESPONSE_DONE);
-  }
+
 
   printf("Request: %s\n",
          params->request->resource);
@@ -219,9 +217,9 @@ enum HSServeFlowResponse _log_route_serve(struct HSRoute *route, struct HSServeF
 }
 
 bool _fs_basic_auth(char *auth_value, void *context){
-  if (context != NULL) {
+  if (context != NULL)
     return(false);
-  }
+
 
   return(!strcmp(auth_value, "bXl1c2VyOm15cGFzc3dvcmQ=")); // myuser:mypassword
 }

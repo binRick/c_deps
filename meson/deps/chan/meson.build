@@ -1,6 +1,18 @@
 chan_c_args = [
   '-Wno-macro-redefined',
 ]
+chan_lib_static =static_library('chan', 
+    '../../../submodules/chan/src/chan.c',
+    '../../../submodules/chan/src/queue.c',
+    install: false, 
+    dependencies: [
+    ], 
+    include_directories: [
+        inc,
+        '../../../submodules/chan/src',
+    ],
+    c_args: chan_c_args,
+)
 chan_lib =library('chan', 
     '../../../submodules/chan/src/chan.c',
     '../../../submodules/chan/src/queue.c',

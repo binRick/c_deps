@@ -1,6 +1,6 @@
-#include <stdio.h>
 #include "c-libadder.h"
 #include "libadder.h"
+#include <stdio.h>
 
 void go_string(void);
 
@@ -10,5 +10,3 @@ int adder(int a, int b) {
   printf(">libadder C says: Go calculated our total as %i\n", total);
   return(total);
 }
-
-

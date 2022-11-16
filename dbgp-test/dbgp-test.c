@@ -109,9 +109,8 @@ void *worker(void *WID){
             processed_qtys[WORKER_ID],
             chan_size(JOBS_CHANNEL)
             );
-    if (DEBUG_WORKERS) {
+    if (DEBUG_WORKERS)
       I("%s", workers[WORKER_ID].msg);
-    }
   }
 
   L(AC_RESETALL AC_GREEN_BLACK AC_ITALIC "%lu> received all jobs> " AC_RESETALL, WORKER_ID);
@@ -126,14 +125,13 @@ void test_send_channel(void){
 
   for (size_t i = 1; i <= JOBS_QTY; i++) {
     chan_send(JOBS_CHANNEL, (void *)i);
-    if (DEBUG_WORKERS) {
+    if (DEBUG_WORKERS)
       I(
         "          "
         AC_RESETALL AC_YELLOW AC_ITALIC "sent job "
         AC_RESETALL AC_BLUE "%3lu" AC_RESETALL,
         i
         );
-    }
   }
 
   sent_dur = ct_stop("");
@@ -196,12 +194,10 @@ void render_screen(void){
   SDL_SetRenderDrawColor(renderer, 0x30, 0x30, 0x30, 0xff);
   SDL_RenderClear(renderer);
 
-  if (strlen(msg0) > 0) {
+  if (strlen(msg0) > 0)
     DBGP_Print(&unscii16, renderer, 0, 15 * 16, DBGP_DEFAULT_COLORS, msg0);
-  }
-  if (strlen(msg) > 0) {
+  if (strlen(msg) > 0)
     DBGP_Print(&unscii16, renderer, 0, 13 * 16, DBGP_DEFAULT_COLORS, msg);
-  }
 
   DBGP_Print(
     &unscii16, renderer, 40 * 8, 0 * 16, 0x0f,
@@ -316,9 +312,8 @@ int dbgp_main(void) {
       case SDL_QUIT: should_quit = 1; break;
 
       case SDL_KEYDOWN:
-        if (event.key.keysym.sym == SDLK_s) {
+        if (event.key.keysym.sym == SDLK_s)
           screenshot(renderer, "screenshot.bmp");
-        }
         break;
       }
     }

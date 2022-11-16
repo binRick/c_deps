@@ -35,9 +35,8 @@ SUITE(s_libspinner_test) {
 GREATEST_MAIN_DEFS();
 
 int main(const int argc, const char **argv) {
-  if (!isatty(STDOUT_FILENO)) {
+  if (!isatty(STDOUT_FILENO))
     SLEEP_DUR_MS = 10;
-  }
   GREATEST_MAIN_BEGIN();
   RUN_SUITE(s_libspinner_test);
   GREATEST_MAIN_END();

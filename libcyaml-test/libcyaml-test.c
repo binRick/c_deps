@@ -432,9 +432,8 @@ int libcyaml_main(char *INPUT_FILE, char *OUTPUT_FILE){
 
   /* Use the data. */
   printf("Project: %s\n", plan->name);
-  for (unsigned i = 0; i < plan->tasks_count; i++) {
+  for (unsigned i = 0; i < plan->tasks_count; i++)
     printf("%u. %s\n", i + 1, plan->tasks[i].name);
-  }
 
   /* Modify the data */
   plan->tasks[0].estimate.days  += 3;
@@ -474,9 +473,8 @@ TEST t_libcyaml_test1(){
 
 SUITE(s_libcyaml_test) {
   RUN_TEST(t_libcyaml_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_libcyaml_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

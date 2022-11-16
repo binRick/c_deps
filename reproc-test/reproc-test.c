@@ -53,9 +53,8 @@ GREATEST_MAIN_DEFS();
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
   RUN_TEST(t_reproc_0);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_reproc_fzf_process);
-  }
   GREATEST_MAIN_END();
   return(0);
 }
@@ -70,9 +69,8 @@ static int execute_processes(){
     const char *date_args[] = { "date", NULL };
 
     r = reproc_start(process, date_args, (reproc_options){ .nonblocking = true });
-    if (r < 0) {
+    if (r < 0)
       goto finish;
-    }
 
     children[i].process   = process;
     children[i].interests = REPROC_EVENT_OUT;
@@ -86,9 +84,8 @@ static int execute_processes(){
     }
 
     for (int i = 0; i < NUM_CHILDREN; i++) {
-      if (children[i].process == NULL || !children[i].events) {
+      if (children[i].process == NULL || !children[i].events)
         continue;
-      }
       uint8_t output[4096];
       r = reproc_read(children[i].process, REPROC_STREAM_OUT, output, sizeof(output));
       if (r == REPROC_EPIPE) {
@@ -96,9 +93,8 @@ static int execute_processes(){
         continue;
       }
 
-      if (r < 0) {
+      if (r < 0)
         goto finish;
-      }
       output[r] = '\0';
 
       char msg[1024];
@@ -108,13 +104,11 @@ static int execute_processes(){
   }
 
 finish:
-  for (int i = 0; i < NUM_CHILDREN; i++) {
+  for (int i = 0; i < NUM_CHILDREN; i++)
     reproc_destroy(children[i].process);
-  }
 
-  if (r < 0) {
+  if (r < 0)
     log_error("%s", reproc_strerror(r));
-  }
 
   return(abs(r));
 } /* execute_processes */
@@ -122,9 +116,9 @@ finish:
 static void __attribute__((constructor)) __test_subprocess_constructor(){
 }
 static void __attribute__((destructor)) __test_subprocess_destructor(){
-  if (fzf_exec) {
+  if (fzf_exec)
     free(fzf_exec);
-  }
+
 #ifdef DEBUG_MEMORY
   fprintf(stderr, "<%d> [%s] Checking for memory leaks\n", getpid(), __FUNCTION__);
   print_allocated_memory();

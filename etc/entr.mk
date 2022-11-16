@@ -27,13 +27,15 @@ ENTR_FIND_NAMES = \
 									"*.html" \
 									"*.css" \
 									"*.js" \
-									"*.h"
+									"*.h" 
 empty:=
 space:= $(empty) $(empty)
 ENTR_FIND_NAMES_SWITCHED := -name $(subst $(space), -or -name ,$(ENTR_FIND_NAMES))
 ###########################################
 _entr-files:
-	@$(FIND) $(ENTR_FIND_DIRS) -type f \
+	@$(FIND) $(ENTR_FIND_DIRS) \
+		-maxdepth $(ENTR_FIND_MAX_DEPTH)\
+		-type f \
 		-not -path \*.attic\* \
 		-and -not -path \*/subprojects/\* \
 		-and -not -path \*/\.\* \
@@ -41,9 +43,11 @@ _entr-files:
 		-and -not -path \*/wrapdb/\* \
 		-and -not -path \*/build/\* \
 		-and -not -path \*/build-muon/\* \
-		-and \( $(ENTR_FIND_NAMES_SWITCHED) \) \
-		-maxdepth $(ENTR_FIND_MAX_DEPTH)
+		-and -not -path \*/gpp-\* \
+		-name "*.c" -or -name "*.h" -or -name "*.j2" -or -name "*.gpp"
+		2>/dev/null
+
 entr-files:
-	@$(MAKE) _entr-files|while read -r f; do $(REALPATH) $$f;  done | $(SORT) -u
+	@$(MAKE) _entr-files|egrep -v '"'|xargs $(REALPATH)|  $(SORT) -u
 entr:
 	@$(ENTR_CMD)

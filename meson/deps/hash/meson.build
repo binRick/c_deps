@@ -10,6 +10,12 @@ hash_dirs = [
 hash_deps = [
 
 ]
+hash_lib_static =static_library('hash',
+  hash_srcs,
+  install: false,
+  dependencies: hash_deps,
+  include_directories: hash_dirs,
+)
 
 hash_lib =library('hash',
   hash_srcs,

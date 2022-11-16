@@ -11,7 +11,7 @@ is_number_test_deps = [
   c_vector_dep,
   c_fsio_dep,
   c_stringfn_dep,
-  is_number_c_dep,
+  is_number_dep,
   ansi_codes_dep,
   log_dep,
   timestamp_dep,

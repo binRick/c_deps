@@ -25,9 +25,8 @@ TEST t_terminal_splitter_test1(){
 
 SUITE(s_terminal_splitter_test) {
   RUN_TEST(t_terminal_splitter_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_terminal_splitter_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

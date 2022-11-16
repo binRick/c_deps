@@ -26,23 +26,19 @@ int main(int argc, char **argv) {
   void      *output;
   size_t    output_length;
 
-  if (VIPS_INIT(argv[0])) {
+  if (VIPS_INIT(argv[0]))
     vips_error_exit(NULL);
-  }
 
-  if (argc != 3) {
+  if (argc != 3)
     vips_error_exit("usage: %s INPUT-FILE OUTPUT-FILE", argv[0]);
-  }
 
   if (!(image = vips_image_new_from_file(argv[1],
                                          "access", VIPS_ACCESS_SEQUENTIAL,
-                                         NULL))) {
+                                         NULL)))
     vips_error_exit(NULL);
-  }
 
-  if (vips_resize(image, &out, 0.5, NULL)) {
+  if (vips_resize(image, &out, 0.5, NULL))
     vips_error_exit(NULL);
-  }
 
   vips_image_set_progress(out, TRUE);
   g_signal_connect(out, "preeval",
@@ -54,15 +50,13 @@ int main(int argc, char **argv) {
 
   output = NULL;
   if (vips_image_write_to_buffer(out, argv[2], &output, &output_length,
-                                 NULL)) {
+                                 NULL))
     printf("error return from vips_image_write_to_buffer()\n");
-  }
 
   g_object_unref(out);
   g_object_unref(image);
-  if (output) {
+  if (output)
     g_free(output);
-  }
   vips_shutdown();
 
   return(0);

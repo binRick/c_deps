@@ -35,26 +35,27 @@ int  main(void){
 
 #if 0
   // open database that defined in SqApp-config.h
-  if (sq_app_open_database(&myapp->base, NULL) != SQCODE_OK) {
+  if (sq_app_open_database(&myapp->base, NULL) != SQCODE_OK)
     return(EXIT_FAILURE);
-  }
+
+
 #else
   // open user specified database
-  if (sq_app_open_database(&myapp->base, "myapp-db") != SQCODE_OK) {
+  if (sq_app_open_database(&myapp->base, "myapp-db") != SQCODE_OK)
     return(EXIT_FAILURE);
-  }
+
+
 #endif
 
   /*	If you use command-line program "sqxctool" to do migrate,
    *      you can remove below sq_app_migrate() code.
    */
   // if the version of schema in database is 0 (no migrations have been done)
-  if (sq_app_make_schema(&myapp->base, 0) == SQCODE_DB_SCHEMA_VERSION_0) {
+  if (sq_app_make_schema(&myapp->base, 0) == SQCODE_DB_SCHEMA_VERSION_0)
     // run migrations that defined in ../database/migrations
-    if (sq_app_migrate(&myapp->base, 0) != SQCODE_OK) {
+    if (sq_app_migrate(&myapp->base, 0) != SQCODE_OK)
       return(EXIT_FAILURE);
-    }
-  }
+
 
   /*	SQL table "users" defined in  database/migrations/2021_10_12_000000_create_users_table.c
    *      strcut User defined in  sqxcapp/CStructs.h
@@ -84,7 +85,7 @@ int  main(void){
   printf("number of rows changed : %" PRId64 "\n", n);
 
   user_ptr = sq_storage_get(storage, "users", NULL, id[0]);
-  if (user_ptr) {
+  if (user_ptr)
     printf("\n"
            "User::age   = %d" "\n"
            "User::name  = %s" "\n"
@@ -92,7 +93,6 @@ int  main(void){
            user_ptr->age,
            user_ptr->name,
            user_ptr->email);
-  }
 
 #if SQ_CONFIG_HAS_STORAGE_UPDATE_FIELD
   // update fields - User::name and User::email
@@ -108,7 +108,7 @@ int  main(void){
 #endif  // SQ_CONFIG_HAS_STORAGE_UPDATE_FIELD
 
   user_ptr = sq_storage_get(storage, "users", NULL, id[1]);
-  if (user_ptr) {
+  if (user_ptr)
     printf("\n"
            "User::age   = %d" "\n"
            "User::name  = %s" "\n"
@@ -116,7 +116,6 @@ int  main(void){
            user_ptr->age,
            user_ptr->name,
            user_ptr->email);
-  }
 
   sq_storage_remove_all(storage, "users", NULL);
 

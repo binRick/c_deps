@@ -1,12 +1,4 @@
 variation_ui_srcs = [files(
-  '../../../submodules/variation-ui/src/lib/vn_conf.h',
-  '../../../submodules/variation-ui/src/lib/vn_ui.h',
-  '../../../submodules/variation-ui/src/lib/vn_util.h',
-  '../../../submodules/variation-ui/src/lib/vn_widget.h',
-  '../../../submodules/variation-ui/src/vn_ui.c',
-  '../../../submodules/variation-ui/src/vn_util.c',
-  '../../../submodules/variation-ui/src/vn_widget.c',
-  '../../../submodules/variation-ui/vn_ui.h',
 )]
 
 variation_ui_dirs = [

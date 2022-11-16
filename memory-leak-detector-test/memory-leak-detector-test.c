@@ -37,9 +37,8 @@ TEST t_memory_leak_detector_test1(){
 
 SUITE(s_memory_leak_detector_test) {
   RUN_TEST(t_memory_leak_detector_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_memory_leak_detector_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

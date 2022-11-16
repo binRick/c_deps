@@ -51,16 +51,14 @@ TEST t_stb_truetype_test1(){
     stbtt_GetCodepointBitmapBoxSubpixel(&font, text[ch], scale, scale, x_shift, 0, &x0, &y0, &x1, &y1);
     stbtt_MakeCodepointBitmapSubpixel(&font, &screen[baseline + y0][(int)xpos + x0], x1 - x0, y1 - y0, 79, scale, scale, x_shift, 0, text[ch]);
     xpos += (advance * scale);
-    if (text[ch + 1]) {
+    if (text[ch + 1])
       xpos += scale * stbtt_GetCodepointKernAdvance(&font, text[ch], text[ch + 1]);
-    }
     ++ch;
   }
 
   for (j = 0; j < 20; ++j) {
-    for (i = 0; i < 78; ++i) {
+    for (i = 0; i < 78; ++i)
       putchar(" .:ioVM@"[screen[j][i] >> 5]);
-    }
     putchar('\n');
   }
   fsio_remove(file);

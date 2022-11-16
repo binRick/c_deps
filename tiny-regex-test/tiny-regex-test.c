@@ -20,9 +20,8 @@ TEST t_tiny_regex_test(){
   int        match_idx         = re_matchp(pattern, string_to_search, &match_length);
 
   ASSERT_GTE(match_idx, 0);
-  if (match_idx >= 0) {
+  if (match_idx >= 0)
     printf("match at idx %i, %i chars long.\n", match_idx, match_length);
-  }
   PASS();
 }
 

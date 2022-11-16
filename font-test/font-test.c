@@ -31,28 +31,24 @@ int printChar(int x, int y, char c) {
   // Loop to "null terminator character"
   int match = 0;
 
-  for (int l = 0; font[l].letter != 0; l++) {
+  for (int l = 0; font[l].letter != 0; l++)
     if (font[l].letter == c) {
       match = l;
       break;
     }
-  }
 
   // Loop through 7 high 5 wide monochrome font
   int maxLength = 0;
 
-  for (int py = 0; py < 7; py++) {
-    for (int px = 0; px < 5; px++) {
+  for (int py = 0; py < 7; py++)
+    for (int px = 0; px < 5; px++)
       if (font[match].code[py][px] == '#') {
         drawPixel(x + px, y + py);
 
         // Dynamix width character spacing
-        if (px > maxLength) {
+        if (px > maxLength)
           maxLength = px;
-        }
       }
-    }
-  }
 
   return(maxLength);
 }
@@ -63,11 +59,10 @@ int printString(int x, int y, char *string) {
 
   for (int c = 0; string[c] != '\0'; c++) {
     int length;
-    if (string[c] == ' ') {
+    if (string[c] == ' ')
       length = 5;
-    } else {
+    else
       length = printChar(cx, cy, string[c]) + 3;
-    }
 
     cx += length;
 
@@ -96,15 +91,14 @@ TEST t_font_test(){
   // Use upper half, lower half, and full to simulate graphics
   for (int y = 0; y < SCREEN_HEIGHT - 1; y += 2) {
     for (int x = 0; x < SCREEN_WIDTH; x++) {
-      if (buffer[y][x] && buffer[y + 1][x]) {
+      if (buffer[y][x] && buffer[y + 1][x])
         printf("%ls", L"\u2588");
-      } else if (buffer[y + 1][x]) {
+      else if (buffer[y + 1][x])
         printf("%ls", L"\u2584");
-      } else if (buffer[y][x]) {
+      else if (buffer[y][x])
         printf("%ls", L"\u2580");
-      } else {
+      else
         putchar(' ');
-      }
     }
 
     putchar('\r');
@@ -115,9 +109,8 @@ TEST t_font_test(){
 }
 
 SUITE(s_font_test) {
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_font_test);
-  }
 }
 
 GREATEST_MAIN_DEFS();

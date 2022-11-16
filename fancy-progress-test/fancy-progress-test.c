@@ -56,8 +56,7 @@ GREATEST_MAIN_DEFS();
 
 int main(const int argc, const char **argv) {
   GREATEST_MAIN_BEGIN();
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_SUITE(s_fancy_progress_test);
-  }
   GREATEST_MAIN_END();
 }

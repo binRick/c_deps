@@ -34,9 +34,9 @@ void *hash_get(hash_t *self, const char *key) {
  */
 
 int hash_has(hash_t *self, const char *key) {
-  if (!hash_size(self)) {
+  if (!hash_size(self))
     return(0);
-  }
+
   khiter_t k = kh_get(ptr, self, key);
   return(k != kh_end(self));
 }

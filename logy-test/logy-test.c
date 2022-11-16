@@ -16,9 +16,8 @@ TEST t_logy_test(){
 
   LogyResult logyResult = createLogger("logs", INFO_LOG_LEVEL, true, 0.0, false, &logger);
 
-  if (logyResult != SUCCESS_LOGY_RESULT) {
+  if (logyResult != SUCCESS_LOGY_RESULT)
     FAIL();
-  }
 
   int someValue = 123;
 

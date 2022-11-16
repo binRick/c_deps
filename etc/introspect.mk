@@ -18,4 +18,4 @@ meson-get-source-dirs:
 			|tr '\n' ' '
 
 meson-get-c-files:
-	@$(FIND) $(shell $(MAKE) -s meson-get-source-dirs) -type f -name "*.c" -or -name "*.h"|sort -u|egrep -v '/\.'|$(GREP) -v 'meson/deps|submodules|subprojects'
+	@$(FIND) $(shell $(MAKE) -s meson-get-source-dirs) -type f -name "*.c" -or -name "*.h"|sort -u|egrep -v '/\.'|$(GREP) -v 'meson/deps|submodules|subprojects'|$(GREP) '\.c$$|\.h$$'|$(SORT) -u

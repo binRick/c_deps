@@ -1030,3 +1030,45 @@
 [submodule "submodules/optparse99-master"]
 	path = submodules/optparse99-master
 	url = https://github.com/hippie68/optparse99
+[submodule "submodules/p99"]
+	path = submodules/p99
+	url = https://gitlab.inria.fr/gustedt/p99
+[submodule "submodules/CException"]
+	path = submodules/CException
+	url = https://github.com/ThrowTheSwitch/CException
+[submodule "submodules/submodules/c_exception"]
+	path = submodules/submodules/c_exception
+	url = https://github.com/ThrowTheSwitch/CException
+[submodule "submodules/c_exception"]
+	path = submodules/c_exception
+	url = https://github.com/ThrowTheSwitch/CException
+[submodule "submodules/stumpless"]
+	path = submodules/stumpless
+	url = https://github.com/goatshriek/stumpless
+[submodule "base64_simd"]
+	path = base64_simd
+	url = https://github.com/aklomp/base64
+[submodule "submodules/base64_simd"]
+	path = submodules/base64_simd
+	url = https://github.com/aklomp/base64
+[submodule "submodules/c_ringbuf"]
+	path = submodules/c_ringbuf
+	url = https://github.com/dhess/c-ringbuf
+[submodule "submodules/SDL_QOI"]
+	path = submodules/SDL_QOI
+	url = https://github.com/superzazu/SDL_QOI
+[submodule "submodules/qoir"]
+	path = submodules/qoir
+	url = https://github.com/nigeltao/qoir
+[submodule "submodules/roscha"]
+	path = submodules/roscha
+	url = https://github.com/binRick/c_roscha
+[submodule "submodules/c"]
+	path = submodules/c
+	url = https://github.com/concurrencykit/ck
+[submodule "submodules/ck"]
+	path = submodules/ck
+	url = https://github.com/concurrencykit/ck
+[submodule "submodules/luaautoc"]
+	path = submodules/luaautoc
+	url = https://github.com/orangeduck/LuaAutoC

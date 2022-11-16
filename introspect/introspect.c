@@ -28,11 +28,10 @@ void iterate_targets(ee_t *ee, JSON_Array *A){
     O = json_array_get_object(A, i);
     assert(json_value_get_type(V) == JSONObject);
     type = json_object_get_string(O, "type");
-    if (ee_listener_count(ee, type) > 0) {
+    if (ee_listener_count(ee, type) > 0)
       ee_emit(ee, type, V);
-    }else{
+    else
       E("NOT HANDLED> type: '%s' qty:%d", type, ee_listener_count(ee, type));
-    }
   }
   json_value_free(V);
 }
@@ -70,9 +69,8 @@ char *execute_processes(char *MESON_BUILD_FILE){
     };
 
     r = reproc_start(process, date_args, (reproc_options){ .nonblocking = true });
-    if (r < 0) {
+    if (r < 0)
       goto finish;
-    }
 
     children[i].process   = process;
     children[i].interests = REPROC_EVENT_OUT;
@@ -86,18 +84,16 @@ char *execute_processes(char *MESON_BUILD_FILE){
     }
 
     for (int i = 0; i < NUM_CHILDREN; i++) {
-      if (children[i].process == NULL || !children[i].events) {
+      if (children[i].process == NULL || !children[i].events)
         continue;
-      }
       r = reproc_read(children[i].process, REPROC_STREAM_OUT, output, sizeof(output));
       if (r == REPROC_EPIPE) {
         children[i].process = reproc_destroy(children[i].process);
         continue;
       }
 
-      if (r < 0) {
+      if (r < 0)
         goto finish;
-      }
       output[r] = '\0';
 
       if (false) {
@@ -109,13 +105,11 @@ char *execute_processes(char *MESON_BUILD_FILE){
   }
 
 finish:
-  for (int i = 0; i < NUM_CHILDREN; i++) {
+  for (int i = 0; i < NUM_CHILDREN; i++)
     reproc_destroy(children[i].process);
-  }
 
-  if (r < 0) {
+  if (r < 0)
     log_error("%s", reproc_strerror(r));
-  }
 
   char *o = malloc(strlen(output));
 

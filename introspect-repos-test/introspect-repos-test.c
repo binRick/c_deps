@@ -92,12 +92,10 @@ TEST t_get_paths(){
 }
 
 SUITE(s_free_vectors){
-  if (MESON_PATHS) {
+  if (MESON_PATHS)
     vector_release(MESON_PATHS);
-  }
-  if (INTROSPECTED_PATHS) {
+  if (INTROSPECTED_PATHS)
     iterate_free(INTROSPECTED_PATHS);
-  }
 }
 
 SUITE(s_paths){

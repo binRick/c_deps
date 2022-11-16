@@ -2,6 +2,14 @@
 ms_inc = [
     inc,
 ]
+ms_lib_static =static_library('ms', 
+  c_deps_dir + '/submodules/ms/ms.c',
+  install: false, 
+  dependencies: [
+    asprintf_dep,
+  ], 
+  include_directories: ms_inc,
+)
 ms_lib =library('ms', 
   c_deps_dir + '/submodules/ms/ms.c',
   install: false, 

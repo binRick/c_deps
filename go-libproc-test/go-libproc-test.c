@@ -94,9 +94,9 @@ SUITE(s_go_libproc_test) {
 
   if (KERN_SUCCESS != task_info(mach_task_self(),
                                 TASK_BASIC_INFO, (task_info_t)&t_info,
-                                &t_info_count)) {
+                                &t_info_count))
     return(-1);
-  }
+
 
   log_info("task info> t_info.resident_size: %lu", t_info.resident_size);
   log_info("task info> t_info.virtual_size: %lu", t_info.virtual_size);
@@ -105,9 +105,8 @@ SUITE(s_go_libproc_test) {
 
   struct rusage r_usage;
 
-  if (getrusage(RUSAGE_SELF, &r_usage)) {
+  if (getrusage(RUSAGE_SELF, &r_usage))
     FAIL();
-  }
 
   log_info("Total User CPU = %ld.%d",
            r_usage.ru_utime.tv_sec,

@@ -24,11 +24,10 @@ TEST t_tinydir_0(void *PATH){
     }
 
     printf("\t%s", file.name);
-    if (file.is_dir) {
+    if (file.is_dir)
       printf(" (DIRECTORY)");
-    }else{
+    else
       printf(" (FILE)");
-    }
 
     if (tinydir_next(&dir) == -1) {
       perror("Error getting next file");

@@ -14,17 +14,15 @@
 
 void print_mode(struct libmonitors_mode *mode){
   printf("%ix%i @ %f Hz", mode->width, mode->height, mode->refresh);
-  if (mode == mode->monitor->current_mode) {
+  if (mode == mode->monitor->current_mode)
     printf(" CURRENT");
-  }
   printf("\n");
 }
 
 void print_monitor(struct libmonitors_monitor *monitor){
   printf("Monitor %s (%ix%i)", monitor->name, monitor->width, monitor->height);
-  if (monitor->primary) {
+  if (monitor->primary)
     printf(" PRIMARY");
-  }
 
   printf("\n");
   for (int i = 0; i < monitor->mode_count; ++i) {
@@ -48,9 +46,8 @@ TEST t_libmonitors_test(){
   }
 
   printf("Detected %i monitors:\n", count);
-  for (int i = 0; i < count; ++i) {
+  for (int i = 0; i < count; ++i)
     print_monitor(monitors[i]);
-  }
 
   libmonitors_free_monitors(count, monitors);
   libmonitors_deinit();

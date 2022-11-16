@@ -114,9 +114,8 @@ TEST t_iowow_compound_test1(){
   }
 
 finish:
-  if (cur) {
+  if (cur)
     iwkv_cursor_close(&cur);
-  }
   iwkv_close(&iwkv);
 
   PASS();
@@ -124,9 +123,8 @@ finish:
 
 SUITE(s_iowow_compound_test) {
   RUN_TEST(t_iowow_compound_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_iowow_compound_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

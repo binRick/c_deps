@@ -10,6 +10,12 @@ c_stringfn_inc = [
   inc,
 ]
 
+c_stringfn_lib_static =static_library('c_stringfn', c_stringfn_srcs,
+  install: false, 
+  dependencies: [
+  ], 
+  include_directories: c_stringfn_inc,
+)
 c_stringfn_lib =library('c_stringfn', c_stringfn_srcs,
   install: false, 
   dependencies: [

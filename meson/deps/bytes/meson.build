@@ -1,6 +1,13 @@
 bytes_inc = [
   inc,
 ]
+bytes_lib_static =static_library('bytes', 
+  c_deps_dir + '/submodules/bytes/bytes.c',
+  install: false, 
+  dependencies: [
+  ], 
+  include_directories: bytes_inc,
+)
 bytes_lib =library('bytes', 
   c_deps_dir + '/submodules/bytes/bytes.c',
   install: false, 

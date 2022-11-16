@@ -46,9 +46,8 @@ TEST t_rrdtool_test(){
     FAIL();
   }
 
-  if (fsio_file_exists(filename) == true) {
+  if (fsio_file_exists(filename) == true)
     fsio_remove(filename);
-  }
 
   rrd_clear_error();
   if (rrd_create_r(filename, pdp_step, time_start, argc, (void *)argv) != 0) {
@@ -73,9 +72,8 @@ TEST t_rrdtool_test(){
       }
       log_debug("#%lu/%lu> Updated rrd %s with value %s", i + 1, updates_qty, filename, val);
     }
-    if (val) {
+    if (val)
       free(val);
-    }
   }
 
   rrd_info_t *i = rrd_info_r(filename);

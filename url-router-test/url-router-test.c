@@ -30,9 +30,8 @@ TEST t_url_router_test(){
   }
 
   err = url_router_match(r, "/a/b/c", &args, (void **)&data);
-  if (err == URL_ROUTER_E_OK) {
+  if (err == URL_ROUTER_E_OK)
     printf("data:    %s\n", data);
-  }
   url_router_dict_free(args);
 
   err = url_router_insert(r, "/r/:var/:var", str2);
@@ -44,9 +43,8 @@ TEST t_url_router_test(){
   err = url_router_match(r, "/r/b/c", &args, (void **)&data);
   if (err == URL_ROUTER_E_OK) {
     char *var = dict_get(args, "var");
-    if (var != NULL) {
+    if (var != NULL)
       printf("Args: %s\n", var);
-    }
   }
   url_router_dict_free(args);
   url_router_free(r);

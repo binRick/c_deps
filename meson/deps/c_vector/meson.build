@@ -10,6 +10,7 @@ c_vector_lib =library('c_vector',
   '../../../submodules/c_vector/vector/vector.c',
   install: false, 
   dependencies: [
+    hash_dep,
   ], 
   include_directories: c_vector_inc,
   c_args: c_vector_c_args,

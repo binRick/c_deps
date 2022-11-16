@@ -28,13 +28,12 @@ TEST t_semver_test(){
 
   int resolution = semver_compare(compare_version, current_version);
 
-  if (resolution == 0) {
+  if (resolution == 0)
     printf("Versions %s is equal to: %s\n", compare, current);
-  }else if (resolution == -1) {
+  else if (resolution == -1)
     printf("Version %s is lower than: %s\n", compare, current);
-  }else {
+  else
     printf("Version %s is higher than: %s\n", compare, current);
-  }
 
   // Free allocated memory when we're done
   semver_free(&current_version);

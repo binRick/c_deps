@@ -49,16 +49,13 @@ static int create_listen_socket(const char *service) {
   for (rp = res; rp; rp = rp->ai_next) {
     int val = 1;
     sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-    if (sfd == -1) {
+    if (sfd == -1)
       continue;
-    }
     if (setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR, &val,
-                   (socklen_t)sizeof(val)) == -1) {
+                   (socklen_t)sizeof(val)) == -1)
       continue;
-    }
-    if (bind(sfd, rp->ai_addr, rp->ai_addrlen) == 0) {
+    if (bind(sfd, rp->ai_addr, rp->ai_addrlen) == 0)
       break;
-    }
     close(sfd);
   }
   freeaddrinfo(res);
@@ -167,9 +164,9 @@ static const char *http_header_find_field_value(const char *header,
     }
   } while (field_start != NULL);
 
-  if (field_start == NULL) {
+  if (field_start == NULL)
     return(NULL);
-  }
+
 
   /* Find the field terminator */
   next_crlf = strstr(field_start, "\r\n");
@@ -179,25 +176,25 @@ static const char *http_header_find_field_value(const char *header,
     return(NULL); /* Malformed HTTP header! */
   }
   /* If not looking for a value, then return a pointer to the start of values string */
-  if (value == NULL) {
+  if (value == NULL)
     return(field_end + 2);
-  }
+
 
   value_start = strstr(field_start, value);
 
   /* Value not found */
-  if (value_start == NULL) {
+  if (value_start == NULL)
     return(NULL);
-  }
+
 
   /* Found the value we're looking for */
   if (value_start > next_crlf) {
     return(NULL); /* ... but after the CRLF terminator of the field. */
   }
   /* The value we found should be properly delineated from the other tokens */
-  if (isalnum(value_start[-1]) || isalnum(value_start[strlen(value)])) {
+  if (isalnum(value_start[-1]) || isalnum(value_start[strlen(value)]))
     return(NULL);
-  }
+
 
   return(value_start);
 } /* http_header_find_field_value */
@@ -233,9 +230,9 @@ static int http_handshake(int fd) {
     } else {
       header_length += (size_t)r;
       if (header_length >= 4
-          && memcmp(header + header_length - 4, "\r\n\r\n", 4) == 0) {
+          && memcmp(header + header_length - 4, "\r\n\r\n", 4) == 0)
         break;
-      } else if (header_length == sizeof(header)) {
+      else if (header_length == sizeof(header)) {
         fprintf(stderr, "HTTP Handshake: Too large HTTP headers");
         return(-1);
       }
@@ -276,9 +273,8 @@ static int http_handshake(int fd) {
     if (r == -1) {
       perror("write");
       return(-1);
-    } else {
+    } else
       res_header_sent += (size_t)r;
-    }
   }
   return(0);
 } /* http_handshake */
@@ -298,18 +294,17 @@ static ssize_t send_callback(wslay_event_context_ptr ctx, const uint8_t *data,
   int            sflags = 0;
 
 #ifdef MSG_MORE
-  if (flags & WSLAY_MSG_MORE) {
+  if (flags & WSLAY_MSG_MORE)
     sflags |= MSG_MORE;
-  }
+
 #endif // MSG_MORE
   while ((r = send(session->fd, data, len, sflags)) == -1 && errno == EINTR) {
   }
   if (r == -1) {
-    if (errno == EAGAIN || errno == EWOULDBLOCK) {
+    if (errno == EAGAIN || errno == EWOULDBLOCK)
       wslay_event_set_error(ctx, WSLAY_ERR_WOULDBLOCK);
-    } else {
+    else
       wslay_event_set_error(ctx, WSLAY_ERR_CALLBACK_FAILURE);
-    }
   }
   return(r);
 }
@@ -323,11 +318,10 @@ static ssize_t recv_callback(wslay_event_context_ptr ctx, uint8_t *buf,
   while ((r = recv(session->fd, buf, len, 0)) == -1 && errno == EINTR) {
   }
   if (r == -1) {
-    if (errno == EAGAIN || errno == EWOULDBLOCK) {
+    if (errno == EAGAIN || errno == EWOULDBLOCK)
       wslay_event_set_error(ctx, WSLAY_ERR_WOULDBLOCK);
-    } else {
+    else
       wslay_event_set_error(ctx, WSLAY_ERR_CALLBACK_FAILURE);
-    }
   } else if (r == 0) {
     /* Unexpected EOF is also treated as an error */
     wslay_event_set_error(ctx, WSLAY_ERR_CALLBACK_FAILURE);
@@ -365,12 +359,12 @@ static int communicate(int fd) {
   struct pollfd                event;
   int                          res = 0;
 
-  if (http_handshake(fd) == -1) {
+  if (http_handshake(fd) == -1)
     return(-1);
-  }
-  if (make_non_block(fd) == -1) {
+
+  if (make_non_block(fd) == -1)
     return(-1);
-  }
+
   if (setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &val, (socklen_t)sizeof(val)) ==
       -1) {
     perror("setsockopt: TCP_NODELAY");
@@ -406,12 +400,10 @@ static int communicate(int fd) {
       break;
     }
     event.events = 0;
-    if (wslay_event_want_read(ctx)) {
+    if (wslay_event_want_read(ctx))
       event.events |= POLLIN;
-    }
-    if (wslay_event_want_write(ctx)) {
+    if (wslay_event_want_write(ctx))
       event.events |= POLLOUT;
-    }
   }
   return(res);
 } /* communicate */
@@ -428,9 +420,9 @@ static void __attribute__((noreturn)) serve(int sfd) {
     int fd;
     while ((fd = accept(sfd, NULL, NULL)) == -1 && errno == EINTR) {
     }
-    if (fd == -1) {
+    if (fd == -1)
       perror("accept");
-    } else {
+    else {
       int r = fork();
       if (r == -1) {
         perror("fork");
@@ -439,11 +431,10 @@ static void __attribute__((noreturn)) serve(int sfd) {
         r = communicate(fd);
         shutdown(fd, SHUT_WR);
         close(fd);
-        if (r == 0) {
+        if (r == 0)
           exit(EXIT_SUCCESS);
-        } else {
+        else
           exit(EXIT_FAILURE);
-        }
       }
     }
   }
@@ -482,9 +473,8 @@ TEST t_wslay_test1(){
 
 SUITE(s_wslay_test) {
   RUN_TEST(t_wslay_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_wslay_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

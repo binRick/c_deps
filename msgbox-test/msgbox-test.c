@@ -19,12 +19,10 @@ int                    LISTEN_PORT = 49119;
 char                   *LISTEN_HOST = "127.0.0.1";
 const char             *TCP_SERVICE, *UDP_SERVICE;
 void __attribute__((constructor)) __constructor__msgbox_test(){
-  if (getenv("PORT") != NULL) {
+  if (getenv("PORT") != NULL)
     LISTEN_PORT = atoi(getenv("PORT"));
-  }
-  if (getenv("HOST") != NULL) {
+  if (getenv("HOST") != NULL)
     LISTEN_HOST = getenv("HOST");
-  }
   asprintf(&TCP_SERVICE, "tcp://%s:%d", LISTEN_HOST, LISTEN_PORT);
   asprintf(&UDP_SERVICE, "udp://%s:%d", LISTEN_HOST, LISTEN_PORT);
   log_debug("UDP Service: %s", UDP_SERVICE);
@@ -52,9 +50,8 @@ void msg_update_client(msg_Conn *conn, msg_Event event, msg_Data data) {
 
 TEST t_msgbox_tcp_client(void){
   msg_connect(TCP_SERVICE, msg_update_client, msg_no_context);
-  while (cl_recv_msgs < 1) {
+  while (cl_recv_msgs < 1)
     msg_runloop(10);
-  }
   ASSERT_GTE(cl_recv_msgs, 1);
   char *msg;
   asprintf(&msg, "Receieved %lu messages on client", cl_recv_msgs);
@@ -63,9 +60,8 @@ TEST t_msgbox_tcp_client(void){
 
 TEST t_msgbox_udp_client(void){
   msg_connect(UDP_SERVICE, msg_update_client, msg_no_context);
-  while (cl_recv_msgs < 1) {
+  while (cl_recv_msgs < 1)
     msg_runloop(10);
-  }
   ASSERT_GTE(cl_recv_msgs, 1);
   char *msg;
   asprintf(&msg, "Receieved %lu messages on client", cl_recv_msgs);
@@ -74,9 +70,8 @@ TEST t_msgbox_udp_client(void){
 
 TEST t_msgbox_tcp_server(void){
   msg_listen(TCP_SERVICE, msg_update_server);
-  while (svr_recv_msgs < 1) {
+  while (svr_recv_msgs < 1)
     msg_runloop(10);
-  }
   ASSERT_GTE(svr_recv_msgs, 1);
   char *msg;
   asprintf(&msg, "Receieved %lu messages on server", svr_recv_msgs);
@@ -85,9 +80,8 @@ TEST t_msgbox_tcp_server(void){
 
 TEST t_msgbox_udp_server(void){
   msg_listen(UDP_SERVICE, msg_update_server);
-  while (svr_recv_msgs < 1) {
+  while (svr_recv_msgs < 1)
     msg_runloop(10);
-  }
   ASSERT_GTE(svr_recv_msgs, 1);
   char *msg;
   asprintf(&msg, "Receieved %lu messages on server", svr_recv_msgs);

@@ -17,9 +17,8 @@ int tmt_test_main(){
 
   assert(vt != NULL);
 
-  while (getline(&l, &n, stdin) != -1) {
+  while (getline(&l, &n, stdin) != -1)
     tmt_write(vt, l, 0);
-  }
 
   if (DEV_MODE) {
     tmt_write(vt, "\033[0;0H", 0);         //Bring cursor to (0,0).
@@ -41,16 +40,14 @@ void callback(tmt_msg_t m, TMT *vt, const void *a, void *p){
 
   switch (m) {
   case TMT_MSG_CURSOR:
-    if (false) {
+    if (false)
       puts(">");
-    }
 
     char *cstate;
-    if (((const char *)a)[0] == 't') {
+    if (((const char *)a)[0] == 't')
       cstate = strdup("displayed");
-    } else{
+    else
       cstate = strdup("hidden");
-    }
 
     fprintf(stderr,
             AC_RESETALL AC_REVERSED AC_BRIGHT_YELLOW "Cursor Moved! cursor is now at %zd,%zd and is" AC_RESETALL
@@ -94,9 +91,8 @@ void printTerminal(TMT *vt){
   unsigned int    qty_cells_printed = 0;
 
   for (size_t r = 0; r < s->nline; r++) {
-    if (!s->lines[r]->dirty) {
+    if (!s->lines[r]->dirty)
       continue;
-    }
 
     for (size_t c = 0; c < s->ncol; c++) {
       printf(

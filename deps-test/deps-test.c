@@ -305,13 +305,12 @@ void handle_request(struct http_request_s *request) {
     struct StringFNStrings url_strings    = stringfn_split(U, '/');
     struct Vector          *url_v         = vector_new();
     struct StringBuffer    *url_sb        = stringbuffer_new();
-    for (size_t usi = 0; usi < url_strings.count; usi++) {
+    for (size_t usi = 0; usi < url_strings.count; usi++)
       if (strlen(url_strings.strings[usi]) > 0) {
         vector_push(url_v, url_strings.strings[usi]);
         stringbuffer_append_string(url_sb, "/");
         stringbuffer_append_string(url_sb, url_strings.strings[usi]);
       }
-    }
     char                   *normalized_url = stringbuffer_to_string(url_sb);
     //#dbg(normalized_url, %s);
     struct StringFNStrings normalized_url_strings = stringfn_split(normalized_url, '/');
@@ -345,38 +344,32 @@ void handle_request(struct http_request_s *request) {
     printf("Print Path items\n");
     if (normalized_url_strings.count > 1 && strlen(normalized_url) > 1) {
       yuarel_split_path(yurl.path, parts, normalized_url_strings.count - 1);
-      for (int i = 0; i < normalized_url_strings.count - 1; i++) {
-        if (parts[i]) {
+      for (int i = 0; i < normalized_url_strings.count - 1; i++)
+        if (parts[i])
           printf("part #%d: %s\n", i, parts[i]);
-        }
-      }
     }
     printf("Query string parameters:\n");
     p = yuarel_parse_query(yurl.query, '&', params, params_strings.count);
-    while (p-- > 0) {
-      if (params[p].key && params[p].val) {
+    while (p-- > 0)
+      if (params[p].key && params[p].val)
         printf("\t%s: %s\n", params[p].key, params[p].val);
-      }
-    }
 
     char *uri_encoded = uri_encode("Betty's favorite language is Français");
     char *uri_decoded = uri_decode(req_data);
 
     char *u;
     asprintf(&u, "\n\turl:%s\n\tlen:%d\n", url.buf, url.len);
-    if (false) {
+    if (false)
       //#dbg(uri_decoded, %s);
       //#dbg(uri_encoded, %s);
       printf("%s", u);
-    }
   }
   struct http_response_s *response = http_response_init();
   http_response_status(response, 200);
   char                   *R;
   asprintf(&R, "%lld", timestamp());
-  if (false) {
+  if (false)
     printf("R:%s\n", R);
-  }
   if (request_target_is(request, "/echo")) {
     http_string_t body = http_request_body(request);
     http_response_header(response, "Content-Type", "text/plain");
@@ -427,11 +420,10 @@ void do_socket99_tcp_server(void *PARAM){
 
   if (!ok) {
     char buf[128];
-    if (128 < socket99_snprintf(buf, 128, &res)) {
+    if (128 < socket99_snprintf(buf, 128, &res))
       socket99_fprintf(stderr, &res);
-    } else {
+    else
       fprintf(stderr, "%s\n", buf);
-    }
     FAIL();
   }
 
@@ -455,9 +447,8 @@ void do_socket99_tcp_server(void *PARAM){
           if (errno == EAGAIN) {
             errno = 0;
             continue;
-          } else {
+          } else
             break;
-          }
         } else {
           fds[1].fd     = client_fd;
           fds[1].events = POLLIN;
@@ -478,17 +469,16 @@ void do_socket99_tcp_server(void *PARAM){
             printf("Got: '%s'\n", buf);
             close(client_fd);
           } else {
-            if (errno == EAGAIN) {
+            if (errno == EAGAIN)
               errno = 0;
-            } else {
+            else {
               fprintf(stderr, "recv: %s\n", strerror(errno));
               close(client_fd);
             }
           }
 
-          if (received > 0) {
+          if (received > 0)
             break;
-          }
         } else if (fds[1].revents & POLLERR || fds[1].revents & POLLHUP) {
           printf("POLLERR / POLLHUP\n");
           close(client_fd);
@@ -748,9 +738,9 @@ void do_test_statusbar(void){
 int32_t FillFromURANDOM(uint8_t *out, size_t outlen){
   FILE *fpurandom = fopen("/dev/urandom", "r");
 
-  if (!fpurandom) {
+  if (!fpurandom)
     return(-1);
-  }
+
   int32_t bread = fread(out, 1, outlen, fpurandom);
 
   fclose(fpurandom);
@@ -842,12 +832,10 @@ TEST t_spin(void){
       spin_upd_msg(s, "Getting close now");
       spin_drw(s);
     }
-    if (x % 9999999 == 0) {
+    if (x % 9999999 == 0)
       spin_drw(s);
-    }
-    if (x++ > big_number) {
+    if (x++ > big_number)
       working = 0;
-    }
   }
   spin_del(s);
   printf("Done!\n");
@@ -895,28 +883,23 @@ TEST t_process_json_lines(void){
   struct StringFNStrings LINES = stringfn_split_lines_and_trim(JSON_TESTS_CONTENT);
 
   free(JSON_TESTS_CONTENT);
-  if (false) {
+  if (false)
     DEBUG_PRINT(LINES.count, .colorscheme = FORE_BLUE BACK_BLACK, .filestream = stdout);
-  }
   for (int i = 0; i < LINES.count; i++) {
-    if (strlen(LINES.strings[i]) < 2) {
+    if (strlen(LINES.strings[i]) < 2)
       continue;
-    }
-    if (false) {
+    if (false)
       DEBUG_PRINT(LINES.strings[i], .colorscheme = FORE_GREEN BACK_BLACK, .filestream = stdout);
-    }
     JSON_Value  *Line        = json_parse_string(LINES.strings[i]);
     JSON_Object *LineObject  = json_object(Line);
     char        *suite_name  = json_object_get_string(LineObject, "suite");
     char        *binary_name = json_object_get_string(LineObject, "binary");
-    if (false) {
+    if (false)
       DEBUG_PRINT(suite_name, .colorscheme = FORE_GREEN BACK_BLACK, .filestream = stdout);
-    }
     JSON_Array *Tests    = json_object_get_array(LineObject, "tests");
     size_t     tests_qty = json_array_get_count(Tests);
-    if (false) {
+    if (false)
       DEBUG_PRINT((int)tests_qty, .colorscheme = FORE_YELLOW BACK_BLACK, .filestream = stdout);
-    }
     for (size_t i = 0; i < tests_qty; i++) {
       char *test_name = json_array_get_string(Tests, i);
       fprintf(stdout, "[%s] %15s %3lu/%lu  %12s\n",
@@ -1456,9 +1439,8 @@ int do_libforks_test2() {
   while (true) {
     char c;
     int  read_res = read(STDIN_FILENO, &c, 1);
-    if (read_res == 0) {
+    if (read_res == 0)
       break;
-    }
     assert(read_res == 1);
 
     assert(write(socket_fd, &c, 1) == 1);
@@ -1602,9 +1584,8 @@ static void print_devs(libusb_device **devs){
     r = libusb_get_port_numbers(dev, path, sizeof(path));
     if (r > 0) {
       printf(" path: %d", path[0]);
-      for (j = 1; j < r; j++) {
+      for (j = 1; j < r; j++)
         printf(".%d", path[j]);
-      }
     }
     printf("\n");
   }
@@ -1616,9 +1597,9 @@ TEST t_libusb1(void){
   ssize_t       cnt;
 
   r = libusb_init(NULL);
-  if (r < 0) {
+  if (r < 0)
     return(r);
-  }
+
 
   cnt = libusb_get_device_list(NULL, &devs);
   if (cnt < 0) {
@@ -1658,9 +1639,8 @@ static void print_endpoint(const struct libusb_endpoint_descriptor *endpoint){
       struct libusb_ss_endpoint_companion_descriptor *ep_comp;
 
       ret = libusb_get_ss_endpoint_companion_descriptor(NULL, endpoint, &ep_comp);
-      if (LIBUSB_SUCCESS != ret) {
+      if (LIBUSB_SUCCESS != ret)
         continue;
-      }
 
       print_endpoint_comp(ep_comp);
 
@@ -1683,9 +1663,8 @@ static void print_altsetting(const struct libusb_interface_descriptor *interface
   printf("      bInterfaceProtocol:    %u\n", interface->bInterfaceProtocol);
   printf("      iInterface:            %u\n", interface->iInterface);
 
-  for (i = 0; i < interface->bNumEndpoints; i++) {
+  for (i = 0; i < interface->bNumEndpoints; i++)
     print_endpoint(&interface->endpoint[i]);
-  }
 }
 
 static void print_2_0_ext_cap(struct libusb_usb_2_0_extension_descriptor *usb_2_0_ext_cap){
@@ -1710,9 +1689,9 @@ static void print_bos(libusb_device_handle *handle){
   int                          ret;
 
   ret = libusb_get_bos_descriptor(handle, &bos);
-  if (ret < 0) {
+  if (ret < 0)
     return;
-  }
+
 
   printf("  Binary Object Store (BOS):\n");
   printf("    wTotalLength:            %u\n", bos->wTotalLength);
@@ -1725,9 +1704,9 @@ static void print_bos(libusb_device_handle *handle){
       struct libusb_usb_2_0_extension_descriptor *usb_2_0_extension;
 
       ret = libusb_get_usb_2_0_extension_descriptor(NULL, dev_cap, &usb_2_0_extension);
-      if (ret < 0) {
+      if (ret < 0)
         return;
-      }
+
 
       print_2_0_ext_cap(usb_2_0_extension);
       libusb_free_usb_2_0_extension_descriptor(usb_2_0_extension);
@@ -1735,9 +1714,9 @@ static void print_bos(libusb_device_handle *handle){
       struct libusb_ss_usb_device_capability_descriptor *ss_dev_cap;
 
       ret = libusb_get_ss_usb_device_capability_descriptor(NULL, dev_cap, &ss_dev_cap);
-      if (ret < 0) {
+      if (ret < 0)
         return;
-      }
+
 
       print_ss_usb_cap(ss_dev_cap);
       libusb_free_ss_usb_device_capability_descriptor(ss_dev_cap);
@@ -1750,9 +1729,8 @@ static void print_bos(libusb_device_handle *handle){
 static void print_interface(const struct libusb_interface *interface){
   int i;
 
-  for (i = 0; i < interface->num_altsetting; i++) {
+  for (i = 0; i < interface->num_altsetting; i++)
     print_altsetting(&interface->altsetting[i]);
-  }
 }
 
 static void print_configuration(struct libusb_config_descriptor *config){
@@ -1766,9 +1744,8 @@ static void print_configuration(struct libusb_config_descriptor *config){
   printf("    bmAttributes:            %02xh\n", config->bmAttributes);
   printf("    MaxPower:                %u\n", config->MaxPower);
 
-  for (i = 0; i < config->bNumInterfaces; i++) {
+  for (i = 0; i < config->bNumInterfaces; i++)
     print_interface(&config->interface[i]);
-  }
 }
 
 static void print_device(libusb_device *dev, libusb_device_handle *handle){
@@ -1797,30 +1774,26 @@ static void print_device(libusb_device *dev, libusb_device_handle *handle){
          libusb_get_bus_number(dev), libusb_get_device_address(dev),
          desc.idVendor, desc.idProduct, speed);
 
-  if (!handle) {
+  if (!handle)
     libusb_open(dev, &handle);
-  }
 
   if (handle) {
     if (desc.iManufacturer) {
       ret = libusb_get_string_descriptor_ascii(handle, desc.iManufacturer, string, sizeof(string));
-      if (ret > 0) {
+      if (ret > 0)
         printf("  Manufacturer:              %s\n", (char *)string);
-      }
     }
 
     if (desc.iProduct) {
       ret = libusb_get_string_descriptor_ascii(handle, desc.iProduct, string, sizeof(string));
-      if (ret > 0) {
+      if (ret > 0)
         printf("  Product:                   %s\n", (char *)string);
-      }
     }
 
     if (desc.iSerialNumber && verbose) {
       ret = libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, string, sizeof(string));
-      if (ret > 0) {
+      if (ret > 0)
         printf("  Serial Number:             %s\n", (char *)string);
-      }
     }
   }
 
@@ -1839,14 +1812,12 @@ static void print_device(libusb_device *dev, libusb_device_handle *handle){
       libusb_free_config_descriptor(config);
     }
 
-    if (handle && desc.bcdUSB >= 0x0201) {
+    if (handle && desc.bcdUSB >= 0x0201)
       print_bos(handle);
-    }
   }
 
-  if (handle) {
+  if (handle)
     libusb_close(handle);
-  }
 } /* print_device */
 
 static int test_wrapped_device(const char *device_name){
@@ -1877,22 +1848,21 @@ TEST t_libusb2(void){
   int           r, i;
 
   r = libusb_init(NULL);
-  if (r < 0) {
+  if (r < 0)
     return(r);
-  }
 
-  if (device_name) {
+
+  if (device_name)
     r = test_wrapped_device(device_name);
-  } else {
+  else {
     cnt = libusb_get_device_list(NULL, &devs);
     if (cnt < 0) {
       libusb_exit(NULL);
       return(1);
     }
 
-    for (i = 0; devs[i]; i++) {
+    for (i = 0; devs[i]; i++)
       print_device(devs[i], NULL);
-    }
 
     libusb_free_device_list(devs, 1);
   }
@@ -1912,9 +1882,9 @@ void record_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_u
 void play_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount){
   ma_decoder *pDecoder = (ma_decoder *)pDevice->pUserData;
 
-  if (pDecoder == NULL) {
+  if (pDecoder == NULL)
     return;
-  }
+
 
   ma_decoder_read_pcm_frames(pDecoder, pOutput, frameCount, NULL);
 
@@ -1989,9 +1959,9 @@ int do_miniaudio_play_file(char *wav_file){
   ma_sound sound;
 
   result = ma_sound_init_from_file(&engine, wav_file, 0, NULL, NULL, &sound);
-  if (result != MA_SUCCESS) {
+  if (result != MA_SUCCESS)
     return(result);
-  }
+
 
 //ma_sound_set_stop_time_in_pcm_frames(&sound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 2));
 
@@ -2044,9 +2014,8 @@ TEST t_regex(void){
   int        match_idx         = re_matchp(pattern, string_to_search, &match_length);
 
   ASSERT_GTE(match_idx, 0);
-  if (match_idx >= 0) {
+  if (match_idx >= 0)
     printf("match at idx %i, %i chars long.\n", match_idx, match_length);
-  }
   PASS();
 }
 
@@ -2083,28 +2052,26 @@ TEST t_libtinyfiledialogs(void){
 
   lWillBeGraphicMode = tinyfd_inputBox("tinyfd_query", NULL, NULL);
 
-  if (lWillBeGraphicMode) {
+  if (lWillBeGraphicMode)
     strcpy(lBuffer, "graphic mode: ");
-  }else {
+  else
     strcpy(lBuffer, "console mode: ");
-  }
   strcat(lBuffer, tinyfd_response);
   strcpy(lThePassword, "tinyfiledialogs v");
   strcat(lThePassword, tinyfd_version);
   tinyfd_messageBox(lThePassword, lBuffer, "ok", "info", 0);
 
-  if (lWillBeGraphicMode && !tinyfd_forceConsole) {
+  if (lWillBeGraphicMode && !tinyfd_forceConsole)
     tinyfd_forceConsole = !tinyfd_messageBox("Hello World",
                                              "graphic dialogs [yes] / console mode [no]?",
                                              "yesno", "question", 1);
-  }
 
   lTmp = tinyfd_inputBox(
     "a password box", "your password will be revealed", NULL);
 
-  if (!lTmp) {
+  if (!lTmp)
     return(1);
-  }
+
 
   /* copy lTmp because saveDialog would overwrites
    * inputBox static buffer in basicinput mode */
@@ -2276,9 +2243,8 @@ void delete_all(){
 void print_users(){
   struct my_struct *s;
 
-  for (s = users; s != NULL; s = (struct my_struct *)(s->hh.next)) {
+  for (s = users; s != NULL; s = (struct my_struct *)(s->hh.next))
     printf("user id %d: name %s\n", s->id, s->name);
-  }
 }
 
 int by_name(const struct my_struct *a, const struct my_struct *b){
@@ -2372,9 +2338,8 @@ void msg_update_client(msg_Conn *conn, msg_Event event, msg_Data data) {
 
 TEST t_msgbox_tcp_client(void){
   msg_connect("tcp://127.0.0.1:2101", msg_update_client, msg_no_context);
-  while (cl_recv_msgs < 1) {
+  while (cl_recv_msgs < 1)
     msg_runloop(10);
-  }
   ASSERT_GTE(cl_recv_msgs, 1);
   char *msg;
   asprintf(&msg, "Receieved %lu messages on client", cl_recv_msgs);
@@ -2383,9 +2348,8 @@ TEST t_msgbox_tcp_client(void){
 
 TEST t_msgbox_udp_client(void){
   msg_connect("udp://127.0.0.1:2100", msg_update_client, msg_no_context);
-  while (cl_recv_msgs < 1) {
+  while (cl_recv_msgs < 1)
     msg_runloop(10);
-  }
   ASSERT_GTE(cl_recv_msgs, 1);
   char *msg;
   asprintf(&msg, "Receieved %lu messages on client", cl_recv_msgs);
@@ -2394,9 +2358,8 @@ TEST t_msgbox_udp_client(void){
 
 TEST t_msgbox_tcp_server(void){
   msg_listen("tcp://*:2101", msg_update_server);
-  while (svr_recv_msgs < 2) {
+  while (svr_recv_msgs < 2)
     msg_runloop(10);
-  }
   ASSERT_GTE(svr_recv_msgs, 2);
   char *msg;
   asprintf(&msg, "Receieved %lu messages on server", svr_recv_msgs);
@@ -2405,9 +2368,8 @@ TEST t_msgbox_tcp_server(void){
 
 TEST t_msgbox_udp_server(void){
   msg_listen("udp://*:2100", msg_update_server);
-  while (svr_recv_msgs < 2) {
+  while (svr_recv_msgs < 2)
     msg_runloop(10);
-  }
   ASSERT_GTE(svr_recv_msgs, 2);
   char *msg;
   asprintf(&msg, "Receieved %lu messages on server", svr_recv_msgs);
@@ -2457,13 +2419,12 @@ struct parsed_data {
 void querystring_parser(void *data, char *fst, char *snd) {
   struct parsed_data *parsed_data = (struct parsed_data *)data;
 
-  if (strcmp(fst, "name") == 0) {
+  if (strcmp(fst, "name") == 0)
     parsed_data->name = snd;
-  }else if (strcmp(fst, "size") == 0) {
+  else if (strcmp(fst, "size") == 0)
     parsed_data->size = atoi(snd);
-  }else if (strcmp(fst, "age") == 0) {
+  else if (strcmp(fst, "age") == 0)
     parsed_data->age = atoi(snd);
-  }
 }
 
 TEST t_kitty_send_text(void){
@@ -2906,19 +2867,17 @@ TEST t_sense_c(){
 
   int git = has_git("./");
 
-  if (git) {
+  if (git)
     printf("Is git!\n");
-  } else {
+  else
     printf("Is not git.\n");
-  }
 
   int local = is_local_git("./");
 
-  if (local) {
+  if (local)
     printf("Is local!\n");
-  } else {
+  else
     printf("Is not local.\n");
-  }
 
   PASS();
 }
@@ -3005,9 +2964,9 @@ bookmark kernel {\n\
   cfg_t             *cfg;
 
   cfg = cfg_init(opts, CFGF_NONE);
-  if (cfg_parse(cfg, "/tmp/simple1.conf") == CFG_PARSE_ERROR) {
+  if (cfg_parse(cfg, "/tmp/simple1.conf") == CFG_PARSE_ERROR)
     return(1);
-  }
+
   cfg_set_validate_func(cfg, "bookmark", conf_validate_bookmark1);
   cfg_print_indent(cfg, stdout, 1);
 
@@ -3097,9 +3056,9 @@ bookmark baz1 {\n\
   cfg_t             *cfg;
 
   cfg = cfg_init(opts, CFGF_NONE);
-  if (cfg_parse(cfg, "/tmp/simple.conf") == CFG_PARSE_ERROR) {
+  if (cfg_parse(cfg, "/tmp/simple.conf") == CFG_PARSE_ERROR)
     return(1);
-  }
+
 
   cfg_print_indent(cfg, stdout, 1);
 
@@ -3181,13 +3140,12 @@ TEST t_semver(){
 
   int resolution = semver_compare(compare_version, current_version);
 
-  if (resolution == 0) {
+  if (resolution == 0)
     printf("Versions %s is equal to: %s\n", compare, current);
-  }else if (resolution == -1) {
+  else if (resolution == -1)
     printf("Version %s is lower than: %s\n", compare, current);
-  }else {
+  else
     printf("Version %s is higher than: %s\n", compare, current);
-  }
 
   // Free allocated memory when we're done
   semver_free(&current_version);
@@ -3278,9 +3236,8 @@ TEST t_url_router(){
   }
 
   err = url_router_match(r, "/a/b/c", &args, (void **)&data);
-  if (err == URL_ROUTER_E_OK) {
+  if (err == URL_ROUTER_E_OK)
     printf("data:    %s\n", data);
-  }
   url_router_dict_free(args);
 
   err = url_router_insert(r, "/r/:var/:var", str2);
@@ -3292,9 +3249,8 @@ TEST t_url_router(){
   err = url_router_match(r, "/r/b/c", &args, (void **)&data);
   if (err == URL_ROUTER_E_OK) {
     char *var = dict_get(args, "var");
-    if (var != NULL) {
+    if (var != NULL)
       printf("Args: %s\n", var);
-    }
   }
   url_router_dict_free(args);
   url_router_free(r);
@@ -3390,9 +3346,8 @@ TEST t_list_iterate_reverse(void){
   list_node_t     *node;
   list_iterator_t *it = list_iterator_new(langs, LIST_TAIL);
 
-  while ((node = list_iterator_next(it))) {
+  while ((node = list_iterator_next(it)))
     fprintf(stderr, "\tITERATE> %s\n", (char *)node->val);
-  }
 
   list_iterator_destroy(it);
   list_destroy(langs);
@@ -3409,9 +3364,8 @@ TEST t_list_iterate(void){
   list_node_t     *node;
   list_iterator_t *it = list_iterator_new(langs, LIST_HEAD);
 
-  while ((node = list_iterator_next(it))) {
+  while ((node = list_iterator_next(it)))
     fprintf(stderr, "\tITERATE> %s\n", (char *)node->val);
-  }
 
   list_iterator_destroy(it);
   list_destroy(langs);
@@ -3599,9 +3553,9 @@ TEST t_libterminput(void){
   }
 
   while ((r = libterminput_read(STDIN_FILENO, &input, &ctx)) > 0) {
-    if (input.type == LIBTERMINPUT_NONE) {
+    if (input.type == LIBTERMINPUT_NONE)
       printf("none\n");
-    } else if (input.type == LIBTERMINPUT_KEYPRESS) {
+    else if (input.type == LIBTERMINPUT_KEYPRESS) {
       printf("keypress:\n");
       switch (input.keypress.key) {
       case LIBTERMINPUT_SYMBOL:
@@ -3663,11 +3617,11 @@ TEST t_libterminput(void){
       printf("\t%s: %s\n", "meta", (input.keypress.mods & LIBTERMINPUT_META)  ? "yes" : "no");
       printf("\t%s: %s\n", "ctrl", (input.keypress.mods & LIBTERMINPUT_CTRL)  ? "yes" : "no");
       printf("\t%s: %s (%llu)\n", "will repeat", input.keypress.times > 1 ? "yes" : "no", input.keypress.times);
-    } else if (input.type == LIBTERMINPUT_BRACKETED_PASTE_START) {
+    } else if (input.type == LIBTERMINPUT_BRACKETED_PASTE_START)
       printf("bracketed paste start\n");
-    } else if (input.type == LIBTERMINPUT_BRACKETED_PASTE_END) {
+    else if (input.type == LIBTERMINPUT_BRACKETED_PASTE_END)
       printf("bracketed paste end\n");
-    } else if (input.type == LIBTERMINPUT_TEXT) {
+    else if (input.type == LIBTERMINPUT_TEXT) {
       printf("text:\n");
       printf("\tlength: %zu\n", input.text.nbytes);
       printf("\tdata: %.512s\n", input.text.bytes);
@@ -3713,22 +3667,20 @@ was_highlight:
         printf("\033[1;4;4;10;10T");
         fflush(stdout);
       }
-    } else if (input.type == LIBTERMINPUT_TERMINAL_IS_OK) {
+    } else if (input.type == LIBTERMINPUT_TERMINAL_IS_OK)
       printf("terminal ok\n");
-    } else if (input.type == LIBTERMINPUT_TERMINAL_IS_NOT_OK) {
+    else if (input.type == LIBTERMINPUT_TERMINAL_IS_NOT_OK)
       printf("terminal not ok\n");
-    } else if (input.type == LIBTERMINPUT_CURSOR_POSITION) {
+    else if (input.type == LIBTERMINPUT_CURSOR_POSITION) {
       printf("cursor position:\n");
       printf("\tx: %zu\n", input.position.x);
       printf("\ty: %zu\n", input.position.y);
-    } else {
+    } else
       printf("other\n");
-    }
   }
 
-  if (r < 0) {
+  if (r < 0)
     perror("libterminput_read STDIN_FILENO");
-  }
 
   tcsetattr(STDERR_FILENO, TCSAFLUSH, &saved_stty);
 
@@ -4234,9 +4186,8 @@ int main(int argc, char **argv) {
    * RUN_SUITE(s_libprinthex);
    * RUN_SUITE(s_function_overload);
    */
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_SUITE(s_libforks);
-  }
   RUN_SUITE(s_libconfuse);
   RUN_SUITE(s_chfreq);
   //RUN_SUITE(s_string);

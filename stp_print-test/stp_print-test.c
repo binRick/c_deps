@@ -42,9 +42,8 @@ typedef struct {
 
 void push_str(char *buf, int expr, char *val, int *flag){
   if (expr) {
-    if (*flag) {
+    if (*flag)
       sprintf(buf, "%s | ", buf);
-    }
     *flag = 1;
     sprintf(buf, "%s%s", buf, val);
   }

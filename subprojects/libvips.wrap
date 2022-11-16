@@ -1,8 +1,0 @@
-[wrap-git]
-directory=libvips
-url=https://github.com/libvips/libvips
-revision=head
-
-
-[provide]
-libvips = libvips_dep

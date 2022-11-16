@@ -111,11 +111,11 @@ TEST t_bestline_test(){
       fputs("'\n", stdout);
       bestlineHistoryAdd(line);                   /* Add to the history. */
       bestlineHistorySave(BESTLINE_HISTORY_FILE); /* Save the history on disk. */
-    } else if (!strncmp(line, "/mask", 5)) {
+    } else if (!strncmp(line, "/mask", 5))
       bestlineMaskModeEnable();
-    } else if (!strncmp(line, "/unmask", 7)) {
+    else if (!strncmp(line, "/unmask", 7))
       bestlineMaskModeDisable();
-    } else if (line[0] == '/') {
+    else if (line[0] == '/') {
       fputs("Unreconized command: ", stdout);
       fputs(line, stdout);
       fputs("\n", stdout);
@@ -126,9 +126,8 @@ TEST t_bestline_test(){
 }
 
 SUITE(s_bestline_test) {
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_bestline_test);
-  }
 }
 
 GREATEST_MAIN_DEFS();

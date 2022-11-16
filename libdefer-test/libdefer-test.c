@@ -18,15 +18,15 @@
 DEFER_SCOPED(int64_t, copy_file_deferred, (const char *, dst_name, const char *, src_name)) {
   FILE *dst = fopen(dst_name, "w");
 
-  if (!dst) {
+  if (!dst)
     return(-1);
-  }
+
   defer(fclose, dst);
   FILE *src = fopen(src_name, "r");
 
-  if (!src) {
+  if (!src)
     return(-1);
-  }
+
   defer(fclose, src);
 
   return(0);
@@ -35,9 +35,9 @@ DEFER_SCOPED(int64_t, copy_file_deferred, (const char *, dst_name, const char *,
 int copy_file(const char *dst_name, const char *src_name) {
   FILE *dst = fopen(dst_name, "w");
 
-  if (!dst) {
+  if (!dst)
     return(-1);
-  }
+
   FILE *src = fopen(src_name, "r");
 
   if (!src) {

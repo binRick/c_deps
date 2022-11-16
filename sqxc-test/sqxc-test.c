@@ -123,17 +123,15 @@ void user_print(User *user) {
          user->id, user->name, user->email, user->city_id);
   printf("user.ints[] = ");
   for (int i = 0; i < user->ints.length; i++) {
-    if (i > 0) {
+    if (i > 0)
       printf(",");
-    }
     printf("%d", (int)user->ints.data[i]);
   }
   printf("\n" "user.post = 0x%p\n", user->post);
-  if (user->post) {
+  if (user->post)
     printf("user.post.title = %s\n"
            "user.post.desc = %s\n",
            user->post->title, user->post->desc);
-  }
 
   char *timestr;
   timestr = sq_time_to_string(user->created_at, 0);
@@ -257,13 +255,12 @@ void  storage_query_join(SqStorage *storage){
   query = sq_query_new(NULL);
 //	sq_query_select(query, "cities.id AS 'cities.id'", "users.id AS 'users.id'", NULL);
   sq_query_from(query, "cities");
-  if (storage->db->version < 5) {
+  if (storage->db->version < 5)
     sq_query_join(query, "users", "cities.id", "users.city_id");
-  }else{
+  else
     // TABLE "users" was renamed to "users2" in schema version 5
     // DROP TABLE "user2" in schema version 6
     sq_query_join(query, "users2", "cities.id", "users2.city_id");
-  }
 
   array = sq_storage_query(storage, query, NULL, NULL);
   if (array) {
@@ -357,11 +354,10 @@ int  main(void){
 
   // TABLE "users" was renamed to "users2" in schema version 5
   // DROP TABLE "user2" in schema version 6
-  if (db->version >= 5) {
+  if (db->version >= 5)
     user = sq_storage_get(storage, "users2", NULL, 1);
-  }else{
+  else
     user = sq_storage_get(storage, "users", NULL, 1);
-  }
   if (user) {
     user_print(user);
     user_free(user);

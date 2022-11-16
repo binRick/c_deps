@@ -1,4 +1,5 @@
 libansilove_srcs = [
+  '../../../submodules/libansilove/src/config.h',
   '../../../submodules/libansilove/src/clean.c',
   '../../../submodules/libansilove/src/drawchar.c',
   '../../../submodules/libansilove/src/error.c',

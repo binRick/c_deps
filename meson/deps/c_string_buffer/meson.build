@@ -14,6 +14,13 @@ _c_string_buffer_inc = [
   c_string_buffer_dir + '/src',
 ]
 
+c_string_buffer_lib_static =static_library('c_string_buffer', c_string_buffer_srcs,
+  install: false, 
+  dependencies: [
+  ], 
+  include_directories: c_string_buffer_inc,
+)
+
 c_string_buffer_lib =library('c_string_buffer', c_string_buffer_srcs,
   install: false, 
   dependencies: [

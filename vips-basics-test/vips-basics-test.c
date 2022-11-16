@@ -41,12 +41,11 @@ static int annotate_image(VipsObject *context, VipsImage *image, VipsImage **out
 
   /* Split the image into frames.
    */
-  for ( i = 0; i < n_pages; i++ ) {
+  for ( i = 0; i < n_pages; i++ )
     if (vips_crop(image, &page[i],
-                  0, page_height * i, image->Xsize, page_height, NULL)) {
+                  0, page_height * i, image->Xsize, page_height, NULL))
       return(-1);
-    }
-  }
+
 
   /* Make an overlay ... a solid red square, with a transparent hole.
    */
@@ -57,26 +56,25 @@ static int annotate_image(VipsObject *context, VipsImage *image, VipsImage **out
                       transparent, VIPS_NUMBER(transparent),
                       10, 10, overlay[0]->Xsize - 20, overlay[0]->Ysize - 20,
                       "fill", TRUE,
-                      NULL)) {
+                      NULL))
     return(-1);
-  }
+
 
   /* Draw the overlay on every page.
    */
-  for ( i = 0; i < n_pages; i++ ) {
+  for ( i = 0; i < n_pages; i++ )
     if (vips_composite2(page[i], overlay[0], &annotated[i],
-                        VIPS_BLEND_MODE_OVER, NULL)) {
+                        VIPS_BLEND_MODE_OVER, NULL))
       return(-1);
-    }
-  }
+
 
   /* Reassemble the frames.
    */
   if (vips_arrayjoin(annotated, out, n_pages,
                      "across", 1,
-                     NULL)) {
+                     NULL))
     return(-1);
-  }
+
 
   return(0);
 } /* annotate_image */
@@ -96,28 +94,25 @@ void posteval_callback(VipsImage *image, VipsProgress *progress, void *pdata) {
 VipsImage *image;
 
 TEST t_vips_basics_test3(){
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 2; i++)
     for (int o = 0; o < 4; o++) {
       char *outfile;
       asprintf(&outfile, "/tmp/output-%d-%d-%d.%s", i, o, 3, exts[o]);
 
-      if (VIPS_INIT(files[i])) {
+      if (VIPS_INIT(files[i]))
         FAIL();
-      }
 
       if (!(image = vips_image_new_from_file(files[i],
                                              "access", VIPS_ACCESS_SEQUENTIAL,
-                                             NULL))) {
+                                             NULL)))
         FAIL();
-      }
 
       VipsImage *out;
       float     resize = (float)1 / (float)(i + 1);
       log_debug("%f|%s", resize, outfile);
 
-      if (vips_resize(image, &out, resize, NULL)) {
+      if (vips_resize(image, &out, resize, NULL))
         FAIL();
-      }
 
       vips_image_set_progress(out, PROGRESS);
       g_signal_connect(out, "preeval",
@@ -127,19 +122,17 @@ TEST t_vips_basics_test3(){
       g_signal_connect(out, "posteval",
                        G_CALLBACK(posteval_callback), NULL);
 
-      if (vips_image_write_to_file(out, outfile, NULL)) {
+      if (vips_image_write_to_file(out, outfile, NULL))
         FAIL();
-      }
       g_object_unref(out);
 
       g_object_unref(image);
     }
-  }
   PASS();
 } /* t_vips_basics_test3 */
 
 TEST t_vips_basics_test2(){
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 2; i++)
     for (int o = 0; o < 4; o++) {
       char *outfile, *infile;
       asprintf(&outfile, "/tmp/output-%d-%d-%d.%s", i, o, 2, exts[o]);
@@ -149,15 +142,13 @@ TEST t_vips_basics_test2(){
       VipsObject *context;
       VipsImage  *x;
 
-      if (VIPS_INIT(infile)) {
+      if (VIPS_INIT(infile))
         FAIL();
-      }
 
       if (!(image = vips_image_new_from_file(infile,
                                              "access", VIPS_ACCESS_SEQUENTIAL,
-                                             NULL))) {
+                                             NULL)))
         FAIL();
-      }
 
       vips_object_print_summary(VIPS_OBJECT(image));
 
@@ -178,13 +169,12 @@ TEST t_vips_basics_test2(){
         g_object_unref(image);
       }
     }
-  }
 
   PASS();
 } /* t_vips_basics_test2 */
 
 TEST t_vips_basics_test1(){
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 2; i++)
     for (int o = 0; o < 4; o++) {
       char *outfile, *infile;
       asprintf(&outfile, "/tmp/output-%d-%d-%d.%s", i, o, 1, exts[o]);
@@ -194,13 +184,11 @@ TEST t_vips_basics_test1(){
       gsize len;
       int   i;
 
-      if (VIPS_INIT(infile)) {
+      if (VIPS_INIT(infile))
         FAIL();
-      }
 
-      if (!g_file_get_contents(infile, &buf, &len, NULL)) {
+      if (!g_file_get_contents(infile, &buf, &len, NULL))
         FAIL();
-      }
 
       for ( i = 0; i < 10; i++ ) {
         VipsImage *image;
@@ -211,16 +199,14 @@ TEST t_vips_basics_test1(){
 
         if (!(image = vips_image_new_from_buffer(buf, len, "",
                                                  "access", VIPS_ACCESS_SEQUENTIAL,
-                                                 NULL))) {
+                                                 NULL)))
           FAIL();
-        }
 
         if (vips_image_write_to_buffer(image,
                                        ".jpg", &new_buf, &new_len,
                                        "Q", 95,
-                                       NULL)) {
+                                       NULL))
           FAIL();
-        }
 
         g_object_unref(image);
         g_free(new_buf);
@@ -228,7 +214,6 @@ TEST t_vips_basics_test1(){
 
       g_free(buf);
     }
-  }
 
   PASS();
 } /* t_vips_basics_test1 */

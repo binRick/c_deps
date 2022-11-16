@@ -34,9 +34,9 @@ int main(){
       add_cell_fmt(&table, " %s ", test.name);
       add_cell_fmt(&table, " %d ", test.num_cases);
 
-      if (test.suite(&error_builder)) {
+      if (test.suite(&error_builder))
         add_cell(&table, F_GREEN " passed " COL_RESET);
-      }else {
+      else {
         printf("[" F_RED "%s" COL_RESET "] %s",
                test_getters[i]().name,
                (char *)error_builder.buffer);

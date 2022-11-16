@@ -52,11 +52,10 @@ TEST t_smaz_test(){
       printf("BUG: error compressing '%s'\n", strings[j]);
       exit(1);
     }
-    if (comprlevel < 0) {
+    if (comprlevel < 0)
       printf("'%s' enlarged by %d%%\n", strings[j], -comprlevel);
-    } else {
+    else
       printf("'%s' compressed by %d%%\n", strings[j], comprlevel);
-    }
     j++;
   }
   printf("Encrypting and decrypting %d test strings...\n", times);
@@ -65,11 +64,10 @@ TEST t_smaz_test(){
     ranlen = random() % 512;
 
     for (j = 0; j < ranlen; j++) {
-      if (times & 1) {
+      if (times & 1)
         in[j] = charset[random() % (sizeof(charset) - 1)];
-      }else{
+      else
         in[j] = (char)(random() & 0xff);
-      }
     }
     comprlen   = smaz_compress(in, ranlen, out, sizeof(out));
     decomprlen = smaz_decompress(out, comprlen, d, sizeof(out));

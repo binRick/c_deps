@@ -18,9 +18,8 @@
 void print(char const *buf, size_t len){
   size_t i = 0;
 
-  for ( ; i < len; ++i) {
+  for ( ; i < len; ++i)
     printf("%02x ", 0xff & buf[i]);
-  }
   printf("\n");
 }
 

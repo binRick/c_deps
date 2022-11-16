@@ -32,32 +32,27 @@ int main(){
   int           nextwait = -1;
 
   while (running) {
-    if (poll(&fd, 1, nextwait) == 0) {
+    if (poll(&fd, 1, nextwait) == 0)
       // Timed out
-      if (termkey_getkey_force(tk, &key) == TERMKEY_RES_KEY) {
+      if (termkey_getkey_force(tk, &key) == TERMKEY_RES_KEY)
         on_key(tk, &key);
-      }
-    }
 
-    if (fd.revents & (POLLIN | POLLHUP | POLLERR)) {
+    if (fd.revents & (POLLIN | POLLHUP | POLLERR))
       termkey_advisereadable(tk);
-    }
 
     while ((ret = termkey_getkey(tk, &key)) == TERMKEY_RES_KEY) {
       on_key(tk, &key);
 
       if (key.type == TERMKEY_TYPE_UNICODE
           && key.modifiers & TERMKEY_KEYMOD_CTRL
-          && (key.code.codepoint == 'C' || key.code.codepoint == 'c')) {
+          && (key.code.codepoint == 'C' || key.code.codepoint == 'c'))
         running = 0;
-      }
     }
 
-    if (ret == TERMKEY_RES_AGAIN) {
+    if (ret == TERMKEY_RES_AGAIN)
       nextwait = termkey_get_waittime(tk);
-    }else{
+    else
       nextwait = -1;
-    }
   }
 
   termkey_destroy(tk);

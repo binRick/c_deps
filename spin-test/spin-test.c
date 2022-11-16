@@ -27,12 +27,10 @@ TEST t_spin_test(){
       spin_upd_msg(s, "Getting close now");
       spin_drw(s);
     }
-    if (x % 9999999 == 0) {  // this is just to throttle it a bit
+    if (x % 9999999 == 0)    // this is just to throttle it a bit
       spin_drw(s);
-    }
-    if (x++ > big_number) {
+    if (x++ > big_number)
       working = 0;
-    }
   }
   spin_del(s);   // cleanup
   printf("Done!\n");
@@ -46,9 +44,8 @@ SUITE(s_spin_test) {
 GREATEST_MAIN_DEFS();
 
 int main(const int argc, const char **argv) {
-  if (!isatty(STDOUT_FILENO)) {
+  if (!isatty(STDOUT_FILENO))
     big_number = big_number / 1000 / 10;
-  }
   GREATEST_MAIN_BEGIN();
   RUN_SUITE(s_spin_test);
   GREATEST_MAIN_END();

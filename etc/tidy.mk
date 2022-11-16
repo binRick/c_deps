@@ -1,4 +1,4 @@
-TIDIED_FILES ?=*/*.c */*.h */*/*.c */*/*.h */*/test/*.h */*/test/*.c
+TIDIED_FILES ?=*/*.c */*.h */*/*.c */*/*.h
 EXCLUDED_TIDIED_FILES = kfc-utils-colors.c|xxxxxxxxx.c
 
 get-tidied-files-lines-qty:
@@ -6,19 +6,20 @@ get-tidied-files-lines-qty:
 get-tidied-files-qty:
 	@$(MAKE) -s get-tidied-files|wc -l
 get-tidied-files:
-	@$(MAKE) -s meson-get-c-files
+	@$(FIND) $(TIDIED_FILES) -type f -maxdepth 3 -name "*.h" -or -name "*.c" 2>/dev/null| $(SORT) -u|egrep -v '/submodules|/subprojects'
 
-#$(FIND) -L $(TIDIED_FILES) -type f -maxdepth 3| $(SORT) -u
+
+#@$(MAKE) -s meson-get-c-files
 
 fmt-scripts:
 	@$(SHFMT) -w scripts/*.sh 2>/dev/null||true
 
 uncrustify:
-	true
-#	@make -B get-tidied-files|$(XARGS) -P 10 -I {} $(UNCRUSTIFY) -c ~/repos/c_deps/etc/uncrustify.cfg --replace "{}" 2>/dev/null||true
+	@$(MAKE) -s get-tidied-files \
+		|$(XARGS) -P 10 -I "{}" $(UNCRUSTIFY) -c ~/repos/c_deps/etc/uncrustify.cfg --replace "{}"||true
 
 uncrustify-clean:
-	@$(FIND) . -type f -name "*unc-backup*" |$(GREP) -v 'submodules|subprojects'|$(XARGS) -I % $(REALPATH) % | $(SORT) -u|$(XARGS) -P 10 -I % $(UNLINK) % 2>/dev/null ||true
+	@$(FIND) . -type f -name "*unc-backup*" |$(GREP) -v 'submodules|subprojects'|$(XARGS) -I % $(REALPATH) % | $(SORT) -u|$(XARGS) -P 10 -I % $(UNLINK) % 
 
 fix-dbg:
 	@$(SED)   's|, %[[:space:]].*u);|, %u);|g'  -i $(TIDIED_FILES)
@@ -33,10 +34,9 @@ fix-dbg:
 	@$(SED)   's|, %[[:space:]].*zu);|, %zu);|g' -i $(TIDIED_FILES)
 
 shfmt:
-	@if [[ -d scripts ]]; then $(FIND) scripts/*.sh -type f >/dev/null 2>&1 && $(MAKE) -s fmt-scripts 2>/dev/null||true; fi
+	@if [[ -d scripts ]]; then $(FIND) scripts/*.sh -type f >/dev/null 2>&1 && $(MAKE) fmt-scripts 2>/dev/null||true; fi
 
-do-tidy: 
-	@$(MAKE) -s uncrustify uncrustify-clean shfmt fix-dbg 2>/dev/null||true
+do-tidy: uncrustify uncrustify-clean shfmt fix-dbg
 
 get-tidied-files-stats:
 	  @printf "%s files, %s lines\n" "$(shell make -B get-tidied-files-qty)" "$(shell make -B get-tidied-files-lines-qty)"
@@ -50,4 +50,5 @@ do-timed-tidy:
 		bc <<< `printf "%s-%s" "$$end_ts" "$$ts"`|tr -d '\n' && \
 		ansi --blue ms && sleep 1
 
-tidy: do-timed-tidy
+tidy: 
+	@$(MAKE) do-timed-tidy||true

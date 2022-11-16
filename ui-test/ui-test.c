@@ -23,9 +23,8 @@ TEST t_ui_test1(){
 
 SUITE(s_ui_test) {
   RUN_TEST(t_ui_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_ui_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

@@ -18,9 +18,8 @@ TEST t_list_iterate_reverse(void){
   list_node_t     *node;
   list_iterator_t *it = list_iterator_new(langs, LIST_TAIL);
 
-  while ((node = list_iterator_next(it))) {
+  while ((node = list_iterator_next(it)))
     fprintf(stderr, "\tITERATE> %s\n", (char *)node->val);
-  }
 
   list_iterator_destroy(it);
   list_destroy(langs);
@@ -37,9 +36,8 @@ TEST t_list_iterate(void){
   list_node_t     *node;
   list_iterator_t *it = list_iterator_new(langs, LIST_HEAD);
 
-  while ((node = list_iterator_next(it))) {
+  while ((node = list_iterator_next(it)))
     fprintf(stderr, "\tITERATE> %s\n", (char *)node->val);
-  }
 
   list_iterator_destroy(it);
   list_destroy(langs);

@@ -65,9 +65,8 @@ TEST t_xorscura_test1(){
   // START CODE
 
   // Initialize my xod data structure.
-  if ((data = (struct xod *)calloc(1, sizeof(struct xod))) == NULL) {
+  if ((data = (struct xod *)calloc(1, sizeof(struct xod))) == NULL)
     FAIL();
-  }
 
   // Point the xod structure to the appropriate "prompt" string structures.
   data->key_buf        = prompt_key;
@@ -75,9 +74,8 @@ TEST t_xorscura_test1(){
   data->buf_count      = sizeof(prompt_ciphertext);
 
   // Decrypt the prompt.
-  if (xorscura_decrypt(data) == -1) {
+  if (xorscura_decrypt(data) == -1)
     FAIL();
-  }
 
   // Print the prompt.
   printf("%s", data->plaintext_buf);
@@ -94,9 +92,8 @@ TEST t_xorscura_test1(){
 
   // Let's get rid of that final newline.
   tmp_ptr = strchr(tmp_buf, '\n');
-  if (tmp_ptr) {
+  if (tmp_ptr)
     *tmp_ptr = '\0';
-  }
 
   // Fill xod. Give him all the buffers.
   data->plaintext_buf = (unsigned char *)tmp_buf;
@@ -106,17 +103,15 @@ TEST t_xorscura_test1(){
   // Default to non-match.
   int result = 1;
 
-  if (data->buf_count != sizeof(secret_ciphertext)) {
+  if (data->buf_count != sizeof(secret_ciphertext))
     goto REPORT_RESULT;
-  }
 
   data->ciphertext_buf = secret_ciphertext;
   data->seed           = secret_seed;
 
   // Compare.
-  if ((result = xorscura_compare(data)) == -1) {
+  if ((result = xorscura_compare(data)) == -1)
     FAIL();
-  }
 
 REPORT_RESULT:
 
@@ -137,9 +132,8 @@ REPORT_RESULT:
   }
 
   // Decrypt response.
-  if (xorscura_decrypt(data) == -1) {
+  if (xorscura_decrypt(data) == -1)
     FAIL();
-  }
 
   // Report success / failure!
   printf("%s", data->plaintext_buf);
@@ -153,9 +147,8 @@ REPORT_RESULT:
 
 SUITE(s_xorscura_test) {
   RUN_TEST(t_xorscura_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_xorscura_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

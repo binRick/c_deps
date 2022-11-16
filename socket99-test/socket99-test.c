@@ -30,11 +30,10 @@ void do_socket99_tcp_server(void *PARAM){
 
   if (!ok) {
     char buf[128];
-    if (128 < socket99_snprintf(buf, 128, &res)) {
+    if (128 < socket99_snprintf(buf, 128, &res))
       socket99_fprintf(stderr, &res);
-    } else {
+    else
       fprintf(stderr, "%s\n", buf);
-    }
     FAIL();
   }
 
@@ -58,9 +57,8 @@ void do_socket99_tcp_server(void *PARAM){
           if (errno == EAGAIN) {
             errno = 0;
             continue;
-          } else {
+          } else
             break;
-          }
         } else {
           fds[1].fd     = client_fd;
           fds[1].events = POLLIN;
@@ -81,17 +79,16 @@ void do_socket99_tcp_server(void *PARAM){
             printf("Got: '%s'\n", buf);
             close(client_fd);
           } else {
-            if (errno == EAGAIN) {
+            if (errno == EAGAIN)
               errno = 0;
-            } else {
+            else {
               fprintf(stderr, "recv: %s\n", strerror(errno));
               close(client_fd);
             }
           }
 
-          if (received > 0) {
+          if (received > 0)
             break;
-          }
         } else if (fds[1].revents & POLLERR || fds[1].revents & POLLHUP) {
           printf("POLLERR / POLLHUP\n");
           close(client_fd);

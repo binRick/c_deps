@@ -34,31 +34,26 @@ TEST t_hashmap_test1(){
   const unsigned   initial_size = 2;
   struct hashmap_s hashmap;
 
-  if (0 != hashmap_create(initial_size, &hashmap)) {
+  if (0 != hashmap_create(initial_size, &hashmap))
     FAIL();
-  }
   int  meaning_of_life = 42;
   char question        = 6 * 8;
 
-  if (0 != hashmap_put(&hashmap, "life", strlen("life"), &meaning_of_life)) {
+  if (0 != hashmap_put(&hashmap, "life", strlen("life"), &meaning_of_life))
     FAIL();
-  }
 
-  if (0 != hashmap_put(&hashmap, "?", strlen("?"), &question)) {
+  if (0 != hashmap_put(&hashmap, "?", strlen("?"), &question))
     FAIL();
-  }
   void * const element = hashmap_get(&hashmap, "life", strlen("life"));
 
-  if (NULL == element) {
+  if (NULL == element)
     FAIL();
-  }
 
   int *value;
 
   if (0 != hashmap_iterate(&hashmap, iterate, &value)) {
-    if (*value != 42) {
+    if (*value != 42)
       FAIL();
-    }
     log_info("value:%d", *value);
   } else {
   }
@@ -71,9 +66,8 @@ TEST t_hashmap_test1(){
 
 SUITE(s_hashmap_test) {
   RUN_TEST(t_hashmap_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_hashmap_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

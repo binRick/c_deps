@@ -22,11 +22,10 @@ struct parsed_data {
 void querystring_parser(void *data, char *fst, char *snd) {
   struct parsed_data *parsed_data = (struct parsed_data *)data;
 
-  if (strcmp(fst, "name") == 0) {
+  if (strcmp(fst, "name") == 0)
     parsed_data->name = snd;
-  }else if (strcmp(fst, "age") == 0) {
+  else if (strcmp(fst, "age") == 0)
     parsed_data->age = atoi(snd);
-  }
 }
 
 TEST t_querystring_test(){

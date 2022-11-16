@@ -37,9 +37,8 @@ static void setup_fzf_exec(void){
 }
 
 int execute_fzf_process(){
-  if (fzf_exec->selected_options == NULL) {
+  if (fzf_exec->selected_options == NULL)
     fzf_exec->selected_options = vector_new();
-  }
   fzf_exec->reproc_options = (reproc_options) { .redirect.parent = true, };
   fzf_exec->tempdir        = gettempdir();
   fzf_exec->fzf_path       = (char *)which_path("fzf", getenv("PATH")),
@@ -68,13 +67,11 @@ int execute_fzf_process(){
   fzf_exec->proc_result = REPROC_ENOMEM;
 
   fzf_exec->proc = reproc_new();
-  if (fzf_exec->proc == NULL) {
+  if (fzf_exec->proc == NULL)
     goto finish;
-  }
 
-  if (fsio_file_exists(fzf_exec->output_file)) {
+  if (fsio_file_exists(fzf_exec->output_file))
     fsio_remove(fzf_exec->output_file);
-  }
 
   log_info("%s", fzf_exec->fzf_cmd);
   fzf_exec->proc_result = reproc_start(fzf_exec->proc, exec_cmd, (reproc_options){
@@ -83,9 +80,8 @@ int execute_fzf_process(){
 
   log_info("%d", fzf_exec->proc_result);
 
-  if (fzf_exec->proc_result < 0) {
+  if (fzf_exec->proc_result < 0)
     goto finish;
-  }
 
   fzf_exec->proc_exit_code = reproc_wait(fzf_exec->proc, REPROC_INFINITE);
   log_info("%d", fzf_exec->proc_exit_code);
@@ -95,19 +91,17 @@ finish:
   reproc_destroy(fzf_exec->proc);
   log_info("destroyed");
 
-  if (fzf_exec->proc_result < 0) {
+  if (fzf_exec->proc_result < 0)
     fprintf(stderr, "Error: %s\n", reproc_strerror(fzf_exec->proc_result));
-  }else{
-    if (fsio_file_exists(fzf_exec->output_file)) {
-      char *output = stringfn_mut_trim(fsio_read_text_file(fzf_exec->output_file));
-      log_info("out file: %s", fzf_exec->output_file);
-      fzf_exec->output_lines = stringfn_split_lines_and_trim(output);
-      log_info("out file lines: %d", fzf_exec->output_lines.count);
-      fsio_remove(fzf_exec->output_file);
-      for (int i = 0; i < fzf_exec->output_lines.count; i++) {
-        log_info("line #%d- %s", i, fzf_exec->output_lines.strings[i]);
-        vector_push(fzf_exec->selected_options, fzf_exec->output_lines.strings[i]);
-      }
+  else if (fsio_file_exists(fzf_exec->output_file)) {
+    char *output = stringfn_mut_trim(fsio_read_text_file(fzf_exec->output_file));
+    log_info("out file: %s", fzf_exec->output_file);
+    fzf_exec->output_lines = stringfn_split_lines_and_trim(output);
+    log_info("out file lines: %d", fzf_exec->output_lines.count);
+    fsio_remove(fzf_exec->output_file);
+    for (int i = 0; i < fzf_exec->output_lines.count; i++) {
+      log_info("line #%d- %s", i, fzf_exec->output_lines.strings[i]);
+      vector_push(fzf_exec->selected_options, fzf_exec->output_lines.strings[i]);
     }
   }
   log_info("OK, %lu options selected", vector_size(fzf_exec->selected_options));
@@ -117,12 +111,11 @@ finish:
            vector_size(fzf_exec->input_options)
            );
 
-  for (size_t i = 0; i < vector_size(fzf_exec->selected_options); i++) {
+  for (size_t i = 0; i < vector_size(fzf_exec->selected_options); i++)
     log_info("Selected Option #%lu:  '%s'",
              i,
              (char *)vector_get(fzf_exec->selected_options, i)
              );
-  }
   return(EXIT_SUCCESS);
 } /* execute_fwded_process */
 

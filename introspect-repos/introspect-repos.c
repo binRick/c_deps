@@ -236,19 +236,15 @@ struct Vector *extract_repository_executables(char *REPOSITORY_NAME, struct Vect
 
   for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
     meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
-    if (strcmp(REPOSITORY_NAME, r->name) != 0) {
+    if (strcmp(REPOSITORY_NAME, r->name) != 0)
       continue;
-    }
-    for (size_t ii = 0; ii < json_array_get_count(r->Targets_a); ii++) {
-      if (strcmp(json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "type"), "executable") == 0) {
+    for (size_t ii = 0; ii < json_array_get_count(r->Targets_a); ii++)
+      if (strcmp(json_object_dotget_string(json_array_get_object(r->Targets_a, ii), "type"), "executable") == 0)
         for (size_t iii = 0; iii < json_array_get_count(json_object_dotget_array(json_array_get_object(r->Targets_a, ii), "filename")); iii++) {
           char *fn = json_array_get_string(json_object_dotget_array(json_array_get_object(r->Targets_a, ii), "filename"), iii);
-          if ((fn != NULL) && (strlen(fn) > 0)) {
+          if ((fn != NULL) && (strlen(fn) > 0))
             vector_push(REPOSITORY_EXECUTABLES_v, fn);
-          }
         }
-      }
-    }
   }
   return(REPOSITORY_EXECUTABLES_v);
 }
@@ -270,11 +266,10 @@ static void generate_results_table(struct Vector *MESON_RESULTS){
 
   for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
     meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
-    if (i == 0) {
+    if (i == 0)
       set_hline(&table, BORDER_DOUBLE);
-    }else{
+    else
       set_hline(&table, BORDER_SINGLE);
-    }
     override_alignment_of_row(&table, ALIGN_CENTER);
     override_alignment(&table, ALIGN_LEFT);
     add_cell(&table, r->styled_name);
@@ -294,14 +289,13 @@ static void generate_results_table(struct Vector *MESON_RESULTS){
 } /* gen_table */
 
 static void write_cached_key_file_content(const char *KEY, const char *KEY_CONTENT){
-  if (KEY_CONTENT == NULL) {
+  if (KEY_CONTENT == NULL)
     return;
-  }
+
   char *K  = get_cached_key_file(KEY);
   int  res = fsio_write_text_file(K, KEY_CONTENT);
-  if (K) {
+  if (K)
     free(K);
-  }
   return(res);
 }
 
@@ -309,9 +303,8 @@ static char * cached_key_file_content(const char *KEY){
   char *K   = get_cached_key_file(KEY);
   char *res = fsio_read_text_file(K);
 
-  if (K) {
+  if (K)
     free(K);
-  }
   return(res);
 }
 
@@ -319,9 +312,8 @@ bool cached_key_file_exists(const char *KEY){
   char *K  = get_cached_key_file(KEY);
   bool res = fsio_file_exists(K);
 
-  if (K) {
+  if (K)
     free(K);
-  }
   return((res) && (fsio_file_size(K) > 1024));
 }
 
@@ -330,12 +322,10 @@ char * get_cached_key_file(const char *KEY){
   char *p  = calloc(1, strlen(FN) + strlen(CACHE_DIRECTORY) + 32);
 
   sprintf(p, "%s/%s", CACHE_DIRECTORY, FN);
-  if (FN) {
+  if (FN)
     free(FN);
-  }
-  if (!fsio_dir_exists(CACHE_DIRECTORY)) {
+  if (!fsio_dir_exists(CACHE_DIRECTORY))
     fsio_mkdirs(CACHE_DIRECTORY, 0700);
-  }
   return(p);
 }
 
@@ -386,9 +376,8 @@ struct Vector *get_meson_paths(char *BASE_PATH, char *PATH_FILTER, size_t PATH_L
     bool                   found_match = false;
     for (int i = 0; (i < regexes.count) && (found_match == false); i++) {
       IS_MATCH = (match_length > 0);
-      if (IS_MATCH) {
+      if (IS_MATCH)
         found_match = true;
-      }
     }
 
     if ((file.is_dir) && (found_match) && strlen(file.name) > 1 && (list_find(meson_paths, file.name) == NULL)) {
@@ -396,17 +385,15 @@ struct Vector *get_meson_paths(char *BASE_PATH, char *PATH_FILTER, size_t PATH_L
       sprintf(mbp, "%s/%s/%s/meson.build", cwd, BASE_PATH, file.name);
       bool meson_build_exists = fsio_file_exists(mbp);
       if (meson_build_exists) {
-        if (DEBUG_PATHS) {
+        if (DEBUG_PATHS)
           fprintf(stdout,
                   AC_YELLOW AC_ITALIC "\t(%s)\t\t(meson.build [%s] exists:%d)\n" AC_RESETALL,
                   file.name,
                   mbp,
                   meson_build_exists
                   );
-        }
-        if (vector_size(vector) < PATH_LIMIT) {
+        if (vector_size(vector) < PATH_LIMIT)
           vector_push(vector, path_normalize(mbp));
-        }
       }
     }
     if (tinydir_next(&dir) == -1) {
@@ -424,9 +411,8 @@ void iterate_free(struct Vector *VECTOR){
   for (size_t i = 0; i < vector_size(VECTOR); i++) {
     meson_job_result_t *j = (meson_job_result_t *)vector_get(VECTOR, i);
     if (j != NULL) {
-      if (j->name != NULL) {
+      if (j->name != NULL)
         free(j->name);
-      }
       free(j);
     }
   }
@@ -436,9 +422,8 @@ void iterate_free(struct Vector *VECTOR){
 size_t iterate_get_total_size(struct Vector *VECTOR){
   size_t total_size = 0;
 
-  for (size_t i = 0; i < vector_size(VECTOR); i++) {
+  for (size_t i = 0; i < vector_size(VECTOR); i++)
     total_size += strlen((char *)vector_get(VECTOR, i));
-  }
   return(total_size);
 }
 
@@ -448,15 +433,12 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
 
   for (size_t i = 0; i < vector_size(MESON_RESULTS); i++) {
     meson_job_result_t *r = (meson_job_result_t *)vector_get(MESON_RESULTS, i);
-    if (r == NULL) {
+    if (r == NULL)
       continue;
-    }
-    if (r->json == NULL) {
+    if (r->json == NULL)
       continue;
-    }
-    if (strlen(r->json) < 2) {
+    if (strlen(r->json) < 2)
       continue;
-    }
     PARSE_MESON_JOB_RESULT(r);
     VALIDATE_MESON_JOB_RESULT(r);
   }
@@ -471,9 +453,8 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
     //dbg(TEST_EXECUTABLE, %s);
     int match_length       = 0;
     int IS_TEST_EXECUTABLE = (match_length > 0);
-    if (IS_TEST_EXECUTABLE) {
+    if (IS_TEST_EXECUTABLE)
       vector_push(TEST_EXECUTABLES_v, (char *)strdup(TEST_EXECUTABLE));
-    }
   }
   char *REPOSITORY_EXECUTABLE;
 
@@ -487,9 +468,8 @@ void iterate_parse_results(struct Vector *MESON_RESULTS){
     sprintf(src_file, "%s.c", TEST_EXECUTABLE);
     char   *src_file_contents = fsio_read_text_file(src_file);
     size_t qty                = occurrences("GREATEST_MAIN_DEFS", src_file_contents);
-    if (qty < 1) {
+    if (qty < 1)
       continue;
-    }
     struct StringFNStrings src_file_lines = stringfn_split_lines_and_trim(src_file_contents);
     for (int ii = 0; ii < src_file_lines.count; ii++) {
       qty = occurrences("RUN_SUITE(", src_file_lines.strings[ii]);
@@ -520,11 +500,10 @@ void iterate_targets(ee_t *ee, JSON_Array *A){
     assert(json_value_get_type(V) == JSONObject);
     assert(props_qty > 0);
     type = json_object_get_string(O, "type");
-    if (ee_listener_count(ee, type) > 0) {
+    if (ee_listener_count(ee, type) > 0)
       ee_emit(ee, type, V);
-    }else{
+    else
       log_error("NOT HANDLED> type: '%s' qty:%d", type, ee_listener_count(ee, type));
-    }
   }
   json_value_free(V);
 }
@@ -572,26 +551,23 @@ void *receive_meson_results(void *_RESULTS_QTY){
   void   *_result;
   size_t qty = 0, RESULTS_QTY = (size_t)_RESULTS_QTY;
 
-  if (DEBUG_RECEIVE_MESON_RESULTS) {
+  if (DEBUG_RECEIVE_MESON_RESULTS)
     fprintf(stderr, ">Waiting for %lu results\n", RESULTS_QTY);
-  }
   while ((qty < RESULTS_QTY) && chan_recv(RESULTS_CHANNEL, &_result) == 0) {
     char *result = (char *)_result;
-    if (DEBUG_RECEIVE_MESON_RESULTS) {
+    if (DEBUG_RECEIVE_MESON_RESULTS)
       fprintf(stderr, AC_RESETALL AC_GREEN_BLACK AC_REVERSED "> received result of %lu bytes\n" AC_REVERSED,
               strlen(result));
-    }
     vector_push(meson_results, (void *)result);
     qty++;
     // usleep(1000 * 10);
   }
-  if (DEBUG_RECEIVE_MESON_RESULTS) {
+  if (DEBUG_RECEIVE_MESON_RESULTS)
     fprintf(stderr,
             "\n"
             AC_GREEN AC_REVERSED "Waiter finished %lu jobs" AC_RESETALL
             "\n",
             RESULTS_QTY);
-  }
   chan_send(DONE_CHANNEL, NULL);
 }
 
@@ -626,23 +602,21 @@ char *execute_meson_introspect(void *_MESON_PATH){
   } while (bytes_read != 0);
 
   result = subprocess_join(&subprocess, &exited);
-  if (result != 0) {
+  if (result != 0)
     fprintf(stderr, "Meson path '%s' failed with result code '%d'\n", MESON_PATH, result);
-  }
   assert(result == 0);
   assert(exited == 0);
 
   READ_STDOUT = stringbuffer_to_string(SB);
   stringbuffer_release(SB);
 
-  if (DEBUG_STDOUT) {
+  if (DEBUG_STDOUT)
     /*
      * //#dbg(exited, %d);
      * //#dbg(command_line[2], %s);
      * //#dbg(strlen(READ_STDOUT), %lu);
      */
     fprintf(stderr, "%s", READ_STDOUT);
-  }
   write_cached_key_file_content(MESON_PATH, READ_STDOUT);
   return(READ_STDOUT);
 } /* execute_meson_introspect */
@@ -661,11 +635,10 @@ void *execute_meson_job(void *_WORKER_ID){
     job_result->name = calloc(1, strlen(items.strings[items.count - 2]) + 1);
     sprintf(job_result->name, "%s", items.strings[items.count - 2]);
 
-    if (DEBUG_EXECUTE_MESON_JOB) {
+    if (DEBUG_EXECUTE_MESON_JOB)
       fprintf(stderr,
               AC_RESETALL AC_REVERSED AC_YELLOW "%lu> Worker processing job #%lu of %lu bytes:     '%s'\n" AC_RESETALL,
               WORKER_ID, qty, strlen(job), job);
-    }
     unsigned long started = timestamp();
     job_result->json = execute_meson_introspect(job);
     job_result->dur  = timestamp() - started;
@@ -674,9 +647,8 @@ void *execute_meson_job(void *_WORKER_ID){
     chan_send(RESULTS_CHANNEL, (void *)job_result);
     qty++;
   }
-  if (DEBUG_EXECUTE_MESON_JOB) {
+  if (DEBUG_EXECUTE_MESON_JOB)
     fprintf(stderr, "Worker #%lu finished\n", WORKER_ID);
-  }
   stringfn_release_strings_struct(items);
 }
 
@@ -707,9 +679,8 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
     assert(0 == res);
     workers_qty++;
   }
-  for (size_t i = 0; i < vector_size(MESON_PATHS); i++) {
+  for (size_t i = 0; i < vector_size(MESON_PATHS); i++)
     chan_send(JOBS_CHANNEL, (void *)((char *)vector_get(MESON_PATHS, i)));
-  }
   chan_close(JOBS_CHANNEL);
 
   chan_recv(DONE_CHANNEL, NULL);
@@ -721,13 +692,12 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
   chan_dispose(JOBS_CHANNEL);
   chan_dispose(RESULTS_CHANNEL);
   chan_dispose(DONE_CHANNEL);
-  for (size_t i = 0; i < workers_qty; i++) {
+  for (size_t i = 0; i < workers_qty; i++)
     pthread_join(&worker_threads[i], NULL);
-  }
   pthread_join(&waiter_thread, NULL);
   char *dur = ct_stop("");
 
-  if (DEBUG_CHANNELS) {
+  if (DEBUG_CHANNELS)
     fprintf(stdout,
             AC_RESETALL AC_GREEN AC_REVERSED "done channel recvd %lu results of %lub using %lu workers in %s\n" AC_RESETALL,
             (size_t)vector_size(meson_results),
@@ -735,7 +705,6 @@ struct Vector * execute_meson_introspects(struct Vector *MESON_PATHS){
             workers_qty,
             dur
             );
-  }
   //usleep(1000*10);
   progress_value(progress, prog_qty);
   usleep(1000 * 10);
@@ -764,9 +733,8 @@ char *execute_processes(char *MESON_BUILD_FILE){
     };
 
     r = reproc_start(process, date_args, (reproc_options){ .nonblocking = true });
-    if (r < 0) {
+    if (r < 0)
       goto finish;
-    }
 
     children[i].process   = process;
     children[i].interests = REPROC_EVENT_OUT;
@@ -780,18 +748,16 @@ char *execute_processes(char *MESON_BUILD_FILE){
     }
 
     for (int i = 0; i < 1; i++) {
-      if (children[i].process == NULL || !children[i].events) {
+      if (children[i].process == NULL || !children[i].events)
         continue;
-      }
       r = reproc_read(children[i].process, REPROC_STREAM_OUT, output, sizeof(output));
       if (r == REPROC_EPIPE) {
         children[i].process = reproc_destroy(children[i].process);
         continue;
       }
 
-      if (r < 0) {
+      if (r < 0)
         goto finish;
-      }
       output[r] = '\0';
 
       if (false) {
@@ -803,13 +769,11 @@ char *execute_processes(char *MESON_BUILD_FILE){
   }
 
 finish:
-  for (int i = 0; i < 1; i++) {
+  for (int i = 0; i < 1; i++)
     reproc_destroy(children[i].process);
-  }
 
-  if (r < 0) {
+  if (r < 0)
     log_error("%s", reproc_strerror(r));
-  }
 
   char *o = calloc(1, strlen(output) + 1);
 

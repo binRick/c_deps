@@ -12,6 +12,7 @@ endif
 
 cmake = import('cmake')
 #############################################################
+#c_timestamp_proj = subproject('c_timestamp')
 subdir('meson/programs')
 #subdir('meson/programs/go')
 fs = import('fs')
@@ -54,7 +55,7 @@ inc = [
   include_directories('submodules/cgif/inc'),
   include_directories('submodules/str-replace.c/src'),
   include_directories('submodules/SDL_DBGP'),
-  include_directories('submodules/c_sdl/sdl-app-fonts'),
+  #  include_directories('submodules/c_sdl/sdl-app-fonts'),
   include_directories('submodules/c_ansi'),
   include_directories('submodules/c_pick'),
   include_directories(
@@ -72,8 +73,8 @@ install_subdir('etc/sounds', install_dir: meson.current_build_dir(), install_tag
 install_subdir('etc/images', install_dir: meson.current_build_dir(), install_tag:'build')
 ###########################################
 subdir('meson')
-subdir('lodepng')
 subdir('submodules')
+subdir('lodepng')
 ###########################################
 subdir('deps')
 subdir('ctable')
@@ -96,12 +97,12 @@ subdir('introspect-test')
 subdir('subprocess-test')
 subdir('introspect-repos-test')
 subdir('sqldb-test')
-subdir('submodules/c_sdl/sdl-app-test')
+#subdir('submodules/c_sdl/sdl-app-test')
 subdir('wg-test')
 subdir('kgflags-test')
 subdir('exec-fzf-test')
 subdir('blocks-test')
-subdir('roscha-test')
+#subdir('roscha-test')
 subdir('filecopy-test')
 subdir('iowow-test')
 subdir('passh-test')
@@ -112,7 +113,7 @@ subdir('passh-test')
 #subdir('confirm1')
 #subdir('c-go-interface')
 subdir('hash-test')
-subdir('rrdtool-test')
+#subdir('rrdtool-test')
 subdir('get-next-line-test')
 subdir('alloc-or-die-test')
 subdir('librnd-test')
@@ -203,3 +204,7 @@ subdir('stb-truetype-test')
 #subdir('vips-progress-test')
 #subdir('vips-basics-test')
 #subdir('qoi-ci-test')
+subdir('stumpless-test')
+subdir('ck-test')
+subdir('match')
+subdir('match-test')

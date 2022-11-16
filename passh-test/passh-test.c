@@ -38,9 +38,8 @@ struct passh_args_t test_cfg = {
 };
 
 TEST t_passh_test(){
-  if (fsio_path_exists(OUT_FILE)) {
+  if (fsio_path_exists(OUT_FILE))
     fsio_remove(OUT_FILE);
-  }
 
   int  res = passh(test_cfg.argc, test_cfg.argv);
   ASSERT_EQ(res, 0);
@@ -70,9 +69,8 @@ void __passh_test__setup_executable_path(const char **argv){
   realpath(argv[0], EXECUTABLE_PATH);
   EXECUTABLE              = basename(EXECUTABLE_PATH);
   EXECUTABLE_PATH_DIRNAME = dirname(EXECUTABLE_PATH);
-  if (DEBUG_MODE_ENABLED) {
+  if (DEBUG_MODE_ENABLED)
     fprintf(stderr, "passh-test Initialized @ %s/%s\n", EXECUTABLE_PATH_DIRNAME, EXECUTABLE_PATH);
-  }
 }
 
 void __attribute__((constructor)) __constructor__passh_test(){

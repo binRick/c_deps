@@ -13,9 +13,9 @@ MB=$DEPS_BASE/$NAME/meson.build
 
 #[[ -f "$MB" ]] && exit 1
 [[ -d ../submodules/$NAME ]] || exit 1
-
+MD=3
 submodule_local_headers() {
-  find -L ../submodules/$NAME -type f -name "*.h"|sort -u|format_file|gsed 's|../../../submodules/||g'|egrep -v '/test\.'
+  find -L ../submodules/$NAME -maxdepth $MD -type f -name "*.h"|sort -u|format_file|gsed 's|../../../submodules/||g'|egrep -v '/test\.'
 }
 submodule_system_headers() {
   echo
@@ -23,13 +23,13 @@ submodule_system_headers() {
 }
 submodule_files() {
 	{
-		find -L ../submodules/$NAME -type f -name "*.c"
+		find -L ../submodules/$NAME -maxdepth $MD -type f -name "*.c"
 	} | sort -u
 }
 
 inc_dirs() {
 	{
-		find ../submodules/$NAME -type d
+		find ../submodules/$NAME -maxdepth $MD -type d
 		submodule_files | filter_files | xargs -I % dirname %
 		printf "../../../submodules/%s\n" "$NAME"
 	} | sort -u

@@ -45,9 +45,8 @@ TEST t_qoi_ci_test_qoi_to_png(){
     }
     QOIDecoder *qoi = QOIDecoder_LoadStdio(f);
     fclose(f);
-    if (qoi == NULL) {
+    if (qoi == NULL)
       FAILm("Invalid QOI Decoder result");
-    }
     png_image png = { 0 };
     png.version = PNG_IMAGE_VERSION;
     png.width   = QOIDecoder_GetWidth(qoi);
@@ -94,12 +93,10 @@ TEST t_qoi_ci_test_png_to_qoi(){
       return(false);
     }
     uint8_t magic[8];
-    if (fread(magic, 1, sizeof(magic), f) != sizeof(magic)) {
+    if (fread(magic, 1, sizeof(magic), f) != sizeof(magic))
       FAIL();
-    }
-    if (!png_check_sig(magic, sizeof(magic))) {
+    if (!png_check_sig(magic, sizeof(magic)))
       FAIL();
-    }
 
     if (fseek(f, 0, SEEK_SET) != 0) {
       perror(input_file);
@@ -116,9 +113,8 @@ TEST t_qoi_ci_test_png_to_qoi(){
     bool alpha = (png.format & PNG_FORMAT_FLAG_ALPHA) != 0;
     png.format = PNG_FORMAT_BGRA;
     void *pixels = malloc(PNG_IMAGE_SIZE(png));
-    if (pixels == NULL) {
+    if (pixels == NULL)
       FAIL();
-    }
     if (png_image_finish_read(&png, NULL, pixels, 0, NULL) == 0) {
       free(pixels);
       fclose(f);

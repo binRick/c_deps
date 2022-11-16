@@ -21,9 +21,8 @@ TEST t_siphash_test1(){
 
 SUITE(s_siphash_test) {
   RUN_TEST(t_siphash_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_siphash_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

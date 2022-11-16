@@ -3,7 +3,7 @@ $include: etc/config.yaml
 
 config:
   <<: *config
-  max-parallel-commands: 2
+  max-parallel-commands: 4
   update-interval: 5000
 
 tasks:
@@ -21,7 +21,7 @@ tasks:
       - name: Tidy Meson Repo %
         for-each: *meson-dirs
         ignore-failure: false
-        cmd: env bash -c "cd ~/repos/%/. && make -B tidy"
+        cmd: cd ~/repos/%/. && make -B tidy
 
   - name: Build Meson Repos
     tags: [build]

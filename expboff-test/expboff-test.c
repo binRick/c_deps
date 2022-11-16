@@ -35,9 +35,8 @@ SUITE(s_expboff_test) {
 GREATEST_MAIN_DEFS();
 
 int main(const int argc, const char **argv) {
-  if (!isatty(STDOUT_FILENO)) {
+  if (!isatty(STDOUT_FILENO))
     MAX_BACKOFF_MS = 5;
-  }
   GREATEST_MAIN_BEGIN();
   RUN_SUITE(s_expboff_test);
   GREATEST_MAIN_END();

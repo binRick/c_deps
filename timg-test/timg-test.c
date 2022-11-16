@@ -26,9 +26,8 @@ TEST t_timg_test1(){
 
 SUITE(s_timg_test) {
   RUN_TEST(t_timg_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_timg_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

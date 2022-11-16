@@ -22,9 +22,8 @@ TEST t_imagequant_test1(){
 
 SUITE(s_imagequant_test) {
   RUN_TEST(t_imagequant_test1);
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(STDOUT_FILENO))
     RUN_TEST(t_imagequant_test2);
-  }
 }
 
 GREATEST_MAIN_DEFS();

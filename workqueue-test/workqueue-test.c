@@ -46,22 +46,18 @@ TEST t_workqueue_test1(){
     }
   }
 
-  for (size_t wq = 0; wq < 5; wq++) {
+  for (size_t wq = 0; wq < 5; wq++)
     printf("Backlog Size: %zu\n", workqueue_get_backlog_size(queues[wq]));
-  }
 
   // wait for queue to finish, queue can still be used afterwards
-  for (size_t wq = 0; wq < 5; wq++) {
+  for (size_t wq = 0; wq < 5; wq++)
     workqueue_drain(queues[wq]);
-  }
-  for (size_t wq = 0; wq < 5; wq++) {
+  for (size_t wq = 0; wq < 5; wq++)
     printf("Backlog Size: %zu\n", workqueue_get_backlog_size(queues[wq]));
-  }
 
   // release when done
-  for (size_t wq = 0; wq < 5; wq++) {
+  for (size_t wq = 0; wq < 5; wq++)
     workqueue_release(queues[wq]);
-  }
   PASS();
 }
 

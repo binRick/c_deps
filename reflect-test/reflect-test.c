@@ -23,9 +23,8 @@ TestStruct test_structs[] = {
 size_t get_field_name_size(const char *FIELD_NAME){
   for (size_t i = 0; i < S_FIELDS_COUNT(TestStruct); i++) {
     MKCREFLECT_FieldInfo *F = &S_INFO(TestStruct)()->fields[i];
-    if (strcmp(FIELD_NAME, F->field_name) == 0) {
+    if (strcmp(FIELD_NAME, F->field_name) == 0)
       return(F->size);
-    }
   }
   return(-1);
 }
@@ -41,23 +40,21 @@ void *get_struct_field_name(void *STRUCT, const char *FIELD_NAME){
     MKCREFLECT_FieldInfo *F = &S_INFO(TestStruct)()->fields[i];
     FIELD_DATA_TYPE_ID = (int)F->data_type;
     IS_SIGNED          = F->is_signed;
-    if (strcmp(FIELD_NAME, F->field_name) == 0) {
+    if (strcmp(FIELD_NAME, F->field_name) == 0)
       //#dbg(F->field_type, %s);
       switch (F->data_type) {
       case MKCREFLECT_TYPES_INTEGER:
         FIELD = calloc(1, F->size);
         memcpy(FIELD, (STRUCT + F->offset), F->size);
         if (F->is_signed) {
-          if (strcmp(F->field_type, "int") == 0) {
+          if (strcmp(F->field_type, "int") == 0)
             FIELD = *(int *)FIELD;
-          }else if (strcmp(F->field_type, "short") == 0) {
+          else if (strcmp(F->field_type, "short") == 0)
             FIELD = *(short *)FIELD;
-          }else{
+          else
             FIELD = *(long long *)FIELD;
-          }
-        }else{
+        }else
           FIELD = *(size_t *)FIELD;
-        }
         FIELD_LEN = ((long long)FIELD == 0) ? 1 : (int)log10(abs((long long)FIELD)) + 1;
         break;
       case MKCREFLECT_TYPES_STRING:
@@ -67,7 +64,6 @@ void *get_struct_field_name(void *STRUCT, const char *FIELD_NAME){
         FIELD_LEN = strlen(FIELD);
         break;
       }
-    }
   }
   switch (FIELD_DATA_TYPE_ID) {
   case MKCREFLECT_TYPES_INTEGER:
@@ -88,16 +84,16 @@ void *get_struct_field_name(void *STRUCT, const char *FIELD_NAME){
     PRINT("UNHANDLED FIELD!", (char *)FIELD_NAME, "type:", (int)FIELD_DATA_TYPE_ID);
     break;
   }
-  if (VALID_FIELD) {
+  if (VALID_FIELD)
     return(FIELD);
-  }else{
+  else{
     log_error("invalid field!- %s", FIELD_NAME);
     return(NULL);
   }
 } /* get_struct_field_name */
 
 TEST t_mkcreflect(void){
-  for (size_t si = 0; si < (sizeof(test_structs) / sizeof(test_structs[0])); si++) {
+  for (size_t si = 0; si < (sizeof(test_structs) / sizeof(test_structs[0])); si++)
     for (size_t fi = 0; fi < S_FIELDS_COUNT(TestStruct); fi++) {
       MKCREFLECT_FieldInfo *FIELD           = &S_INFO(TestStruct)()->fields[fi];
       void                 *EXTRACTED_FIELD = get_struct_field_name(
@@ -105,7 +101,6 @@ TEST t_mkcreflect(void){
         (char *)FIELD->field_name
         );
     }
-  }
   if (false) {
     //#dbg(S_NAME(Address), %s);
     //#dbg(S_NAME(TestStruct), %s);
