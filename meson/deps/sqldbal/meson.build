@@ -14,16 +14,27 @@ sqldbal_dirs = [
   inc,
 ]
 
+sqldbal_cargs = [
+  '-DSQLDBAL_SQLITE',
+  ]
 sqldbal_deps = [
 
 ]
 
 if sqldbal_srcs.length() > 0
-  sqldbal_lib =library('sqldbal',
+  sqldbal_lib_static =static_library('sqldbal',
     files(sqldbal_srcs),
     install: false,
     dependencies: sqldbal_deps,
     include_directories: sqldbal_dirs,
+    c_args: sqldbal_cargs,
+  )
+  sqldbal_lib =shared_library('sqldbal',
+    files(sqldbal_srcs),
+    install: false,
+    dependencies: sqldbal_deps,
+    include_directories: sqldbal_dirs,
+    c_args: sqldbal_cargs,
   )
   sqldbal_links = [sqldbal_lib]
 else
