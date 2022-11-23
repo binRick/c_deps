@@ -25,6 +25,13 @@ qoir_deps = [
 ]
 
 if qoir_srcs.length() > 0
+  qoir_lib_static = static_library('qoir',
+    files(qoir_srcs),
+    install: false,
+    dependencies: qoir_deps,
+    include_directories: qoir_dirs,
+    c_args: qoir_c_args,
+  )
   qoir_lib = library('qoir',
     files(qoir_srcs),
     install: false,

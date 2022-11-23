@@ -59,6 +59,9 @@ inc = [
   include_directories('submodules/c_ansi'),
   include_directories('submodules/c_pick'),
   include_directories(
+    'submodules/c_darwin',
+  ),
+  include_directories(
     'submodules/c_deps/submodules/iowow/src',
     'submodules/c_deps/submodules/iowow/src/kv',
     'submodules/c_deps/submodules/iowow/src/fs',
@@ -91,7 +94,6 @@ subdir('fort-test')
 subdir('tinydir-test')
 subdir('cgif-test')
 subdir('ee-test')
-subdir('chan-test')
 subdir('reproc-test')
 subdir('introspect-test')
 subdir('subprocess-test')
@@ -208,3 +210,5 @@ subdir('stumpless-test')
 subdir('ck-test')
 subdir('match')
 subdir('match-test')
+subdir('chan-test')
+#subdir('sdl')

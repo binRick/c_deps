@@ -21,7 +21,7 @@ c_string_buffer_lib_static =static_library('c_string_buffer', c_string_buffer_sr
   include_directories: c_string_buffer_inc,
 )
 
-c_string_buffer_lib =library('c_string_buffer', c_string_buffer_srcs,
+c_string_buffer_lib =shared_library('c_string_buffer', c_string_buffer_srcs,
   install: false, 
   dependencies: [
   ], 

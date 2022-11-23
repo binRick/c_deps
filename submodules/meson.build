@@ -1,5 +1,6 @@
 ##subdir(c_deps/meson/args)
 subdir('c_ansi/ansi-utils')
+subdir('c_darwin/async')
 ##subdir(c_deps/meson/deps/cargs)
 ##subdir(c_deps/meson/sqlite3)
 ##subdir(c_deps/meson/deps/fort)

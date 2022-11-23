@@ -17,7 +17,7 @@ log_lib_static =static_library('log',
   include_directories: log_dirs,
 )
 
-log_lib =library('log',
+log_lib =shared_library('log',
   log_srcs,
   install: false,
   dependencies: log_deps,

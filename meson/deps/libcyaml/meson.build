@@ -48,9 +48,19 @@ libcyaml_c_args = [
   '-Wdeclaration-after-statement',
   '-O0',
 ]
+libcyaml_link_whole = [
+  ]
 libcyaml_deps = [
   yaml_dep,
 ]
+libcyaml_static_lib = static_library('libcyaml',
+    files(libcyaml_srcs),
+    install: false,
+    link_whole: libcyaml_link_whole,
+    dependencies: libcyaml_deps,
+    include_directories: libcyaml_dirs,
+    c_args: libcyaml_c_args,
+  )
 
 if libcyaml_srcs.length() > 0
   libcyaml_lib = shared_library('libcyaml',

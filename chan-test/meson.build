@@ -13,6 +13,10 @@ chan_test_deps = [
  timestamp_dep,
  c_timer_dep,
  bytes_dep,
+ async_dep,
+ match_dep,
+ c_vector_dep,
+ log_dep,
 ]
 
 if get_option('enable-binaries')

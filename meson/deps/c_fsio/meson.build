@@ -12,7 +12,7 @@ c_fsio_lib_static =static_library('c_fsio',
   ], 
   include_directories: c_fsio_inc,
 )
-c_fsio_lib =library('c_fsio', 
+c_fsio_lib =shared_library('c_fsio', 
   c_deps_dir +  '/submodules/c_fsio/src/fsio.c',
   install: false, 
   dependencies: [

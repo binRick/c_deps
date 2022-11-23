@@ -10,7 +10,7 @@ ms_lib_static =static_library('ms',
   ], 
   include_directories: ms_inc,
 )
-ms_lib =library('ms', 
+ms_lib =shared_library('ms', 
   c_deps_dir + '/submodules/ms/ms.c',
   install: false, 
   dependencies: [

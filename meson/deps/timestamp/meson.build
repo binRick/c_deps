@@ -8,7 +8,7 @@ timestamp_lib_static =static_library('timestamp', timestamp_srcs,
   dependencies: [],
   include_directories: [inc],
 )
-timestamp_lib =library('timestamp', timestamp_srcs,
+timestamp_lib =shared_library('timestamp', timestamp_srcs,
   install: false,
   dependencies: [],
   include_directories: [inc],
