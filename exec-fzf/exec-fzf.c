@@ -10,20 +10,20 @@
 //////////////////////////////////////////////
 #include "ansi-utils/ansi-utils.h"
 #include "b64.c/b64.h"
+#include "bytes/bytes.h"
 #include "c_fsio/include/fsio.h"
 #include "c_string_buffer/include/stringbuffer.h"
 #include "c_stringfn/include/stringfn.h"
 #include "c_vector/vector/vector.h"
+#include "exec-fzf/exec-fzf-effects.h"
 #include "exec-fzf/exec-fzf.h"
 #include "submodules/log/log.h"
 #include "tempdir.c/tempdir.h"
 #include "timestamp/timestamp.h"
 #include "which/src/which.h"
-#include "bytes/bytes.h"
-#include "exec-fzf/exec-fzf-effects.h"
 #define INCBIN_SILENCE_BITCODE_WARNING
 #include "incbin/incbin.h"
-INCBIN(fzf_bin,"/usr/local/bin/fzf");
+INCBIN(fzf_bin, "/usr/local/bin/fzf");
 
 char *__fzf_items(module(fzf) *exports, void **items, size_t qty, char *item_name){
   clib_module_init(fzf, exports);
@@ -33,8 +33,8 @@ char *__fzf_items(module(fzf) *exports, void **items, size_t qty, char *item_nam
 int __fzf_init(module(fzf) *exports) {
   clib_module_init(fzf, exports);
   exports->qty++;
-  log_info("%lu",exports->qty);
-  return 0;
+  log_info("%lu", exports->qty);
+  return(0);
 }
 
 void __fzf_deinit(module(fzf) *exports) {
@@ -43,6 +43,7 @@ void __fzf_deinit(module(fzf) *exports) {
 
 //////////////////////////////////////////////
 #define FZF_DEBUG_MODE    (fe->debug_mode == true)
+
 bool encode_preview_cmd(struct fzf_exec_t *fe){
   asprintf(&fe->sub_preview_cmd_file,
            "%s.encoded-preview-cmd-%lld.txt",
@@ -64,21 +65,23 @@ bool encode_preview_cmd(struct fzf_exec_t *fe){
   log_info("preview_cmd: %s", fe->preview_cmd);
   return(true);
 }
-#define EF_FREE_IF(FE, VAR) if(FE->VAR)free(FE->VAR);
-#define EF_FREE_IF_FXN(FE, VAR, FXN) if(FE->VAR)FXN(FE->VAR);
+#define EF_FREE_IF(FE, VAR)             if (FE->VAR) free(FE->VAR);
+#define EF_FREE_IF_FXN(FE, VAR, FXN)    if (FE->VAR) FXN(FE->VAR);
+
 void exec_fzf_release(struct fzf_exec_t *fe){
   if (fe) {
     if (fe->fzf_keybinds_v) {
+      struct fzf_keybind_t *kb;
       for (size_t i = 0; i < vector_size(fe->fzf_keybinds_v); i++){
-        struct fzf_keybind_t *kb = vector_get(fe->fzf_keybinds_v, i);
+        kb = vector_get(fe->fzf_keybinds_v, i);
       }
       vector_release(fe->fzf_keybinds_v);
     }
-    EF_FREE_IF(fe,selected_options);
-    EF_FREE_IF(fe,input_options);
+    EF_FREE_IF(fe, selected_options);
+    EF_FREE_IF(fe, input_options);
     if (fe->fzf_keybinds_sb)
       stringbuffer_release(fe->fzf_keybinds_sb);
-    if(fe->encoded_preview_cmd)
+    if (fe->encoded_preview_cmd)
       free(fe->encoded_preview_cmd);
     free(fe);
   }
@@ -107,8 +110,8 @@ struct fzf_exec_t *exec_fzf_setup(void){
   e->fzf_default_opts    = "";
   e->fzf_default_command = "";
   e->fzf_info            = "inline";
-  e->separator            = stringfn_trim(b64_decode(EXEC_FZF_EFFECT_DOTS_ENCODED,strlen(EXEC_FZF_EFFECT_DOTS_ENCODED)));
-  e->border_style            = "double";
+  e->separator           = stringfn_trim(b64_decode(EXEC_FZF_EFFECT_DOTS_ENCODED, strlen(EXEC_FZF_EFFECT_DOTS_ENCODED)));
+  e->border_style        = "double";
   e->fzf_history_file    = "/dev/null";
   e->height              = 100;
   e->header_lines        = 0;
@@ -124,13 +127,13 @@ struct fzf_exec_t *exec_fzf_setup(void){
   e->bottom_padding      = 0;
   e->preview_size        = 70;
   e->preview_type        = "right";
-  e->fzf_path       = (char *)which_path("fzf", getenv("PATH"));
-  e->env_path       = (char *)which_path("env", getenv("PATH"));
-  e->sh_path        = (char *)which_path("sh", getenv("PATH"));
-  e->tempdir        = gettempdir();
-  e->selected_options = vector_new();
+  e->fzf_path            = (char *)which_path("fzf", getenv("PATH"));
+  e->env_path            = (char *)which_path("env", getenv("PATH"));
+  e->sh_path             = (char *)which_path("sh", getenv("PATH"));
+  e->tempdir             = gettempdir();
+  e->selected_options    = vector_new();
   return(e);
-}
+} /* exec_fzf_setup */
 
 int exec_fzf(struct fzf_exec_t *fe){
   fe->reproc_options = (reproc_options) { .redirect.parent = true, };
@@ -265,10 +268,9 @@ int exec_fzf(struct fzf_exec_t *fe){
   if (FZF_DEBUG_MODE || (fe->debug_mode == true))
     log_debug("%s", fe->fzf_cmd);
 
-  if(getenv("SAVE_FZF_CMD_FILE"))
-    if(fsio_write_text_file(getenv("SAVE_FZF_CMD_FILE"),fe->fzf_cmd))
-      log_debug("Saved %s fzf command to %s",bytes_to_string(strlen(fe->fzf_cmd)), getenv("SAVE_FZF_CMD_FILE"));
-
+  if (getenv("SAVE_FZF_CMD_FILE"))
+    if (fsio_write_text_file(getenv("SAVE_FZF_CMD_FILE"), fe->fzf_cmd))
+      log_debug("Saved %s fzf command to %s", bytes_to_string(strlen(fe->fzf_cmd)), getenv("SAVE_FZF_CMD_FILE"));
 
 //  bool ok = encode_preview_cmd(fe);
 
@@ -347,35 +349,35 @@ finish:
 } /* execute_fwded_process */
 
 char *exec_fzf_select_from_items_v(struct Vector *v, char *item_name){
-  return(exec_fzf_select_from_items(vector_to_array(v),vector_size(v),item_name));
+  return(exec_fzf_select_from_items(vector_to_array(v), vector_size(v), item_name));
 }
 
 char *exec_fzf_select_from_items(void **items, size_t qty, char *item_name){
-  int res;
-  char *result=NULL;
-  struct fzf_exec_t *fe = exec_fzf_setup();
+  int               res;
+  char              *result = NULL;
+  struct fzf_exec_t *fe     = exec_fzf_setup();
   {
-    asprintf(&(fe->header),"Select a %s", item_name);
-    asprintf(&(fe->fzf_prompt),"%s> ", item_name);
+    asprintf(&(fe->header), "Select a %s", item_name);
+    asprintf(&(fe->fzf_prompt), "%s> ", item_name);
     fe->debug_mode      = false;
     fe->height          = 50;
     fe->select_multiple = false;
-    fe->preview_size = 25;
-    fe->preview_type = "bottom";
-    fe->preview_cmd  = "echo selected item {}";
+    fe->preview_size    = 25;
+    fe->preview_type    = "bottom";
+    fe->preview_cmd     = "echo selected item {}";
 
-  fe->height       = 25;
-  fe->preview_size = 75;
-  fe->preview_type = "right";
-  fe->fzf_pointer  = "->";
-  fe->fzf_marker   = "* ";
-  fe->fzf_info     = "inline";
-
+    fe->height       = 25;
+    fe->preview_size = 75;
+    fe->preview_type = "right";
+    fe->fzf_pointer  = "->";
+    fe->fzf_marker   = "* ";
+    fe->fzf_info     = "inline";
   }
-  for(int i = 0;i<qty;i++)
-    vector_push(fe->input_options,(char *)(items[i]));
-  res = exec_fzf(fe);
-  result = (vector_size(fe->selected_options)>0) ? (char*)vector_get(fe->selected_options,0) : NULL;
+
+  for (int i = 0; i < qty; i++)
+    vector_push(fe->input_options, (char *)(items[i]));
+  res    = exec_fzf(fe);
+  result = (vector_size(fe->selected_options) > 0) ? (char *)vector_get(fe->selected_options, 0) : NULL;
   exec_fzf_release(fe);
   return(result);
 }

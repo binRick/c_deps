@@ -167,7 +167,6 @@ static const char *http_header_find_field_value(const char *header,
   if (field_start == NULL)
     return(NULL);
 
-
   /* Find the field terminator */
   next_crlf = strstr(field_start, "\r\n");
 
@@ -179,13 +178,11 @@ static const char *http_header_find_field_value(const char *header,
   if (value == NULL)
     return(field_end + 2);
 
-
   value_start = strstr(field_start, value);
 
   /* Value not found */
   if (value_start == NULL)
     return(NULL);
-
 
   /* Found the value we're looking for */
   if (value_start > next_crlf) {
@@ -194,7 +191,6 @@ static const char *http_header_find_field_value(const char *header,
   /* The value we found should be properly delineated from the other tokens */
   if (isalnum(value_start[-1]) || isalnum(value_start[strlen(value)]))
     return(NULL);
-
 
   return(value_start);
 } /* http_header_find_field_value */
@@ -296,7 +292,6 @@ static ssize_t send_callback(wslay_event_context_ptr ctx, const uint8_t *data,
 #ifdef MSG_MORE
   if (flags & WSLAY_MSG_MORE)
     sflags |= MSG_MORE;
-
 #endif // MSG_MORE
   while ((r = send(session->fd, data, len, sflags)) == -1 && errno == EINTR) {
   }

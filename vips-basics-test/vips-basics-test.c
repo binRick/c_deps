@@ -46,7 +46,6 @@ static int annotate_image(VipsObject *context, VipsImage *image, VipsImage **out
                   0, page_height * i, image->Xsize, page_height, NULL))
       return(-1);
 
-
   /* Make an overlay ... a solid red square, with a transparent hole.
    */
   if (
@@ -59,7 +58,6 @@ static int annotate_image(VipsObject *context, VipsImage *image, VipsImage **out
                       NULL))
     return(-1);
 
-
   /* Draw the overlay on every page.
    */
   for ( i = 0; i < n_pages; i++ )
@@ -67,14 +65,12 @@ static int annotate_image(VipsObject *context, VipsImage *image, VipsImage **out
                         VIPS_BLEND_MODE_OVER, NULL))
       return(-1);
 
-
   /* Reassemble the frames.
    */
   if (vips_arrayjoin(annotated, out, n_pages,
                      "across", 1,
                      NULL))
     return(-1);
-
 
   return(0);
 } /* annotate_image */

@@ -11,14 +11,16 @@
 #include "match/match.h"
 #include "ms/ms.h"
 #include "timestamp/timestamp.h"
+
 TEST t_match_test2(){
-  int png_files_qty=0,qoir_files_qty=0;
-  char *path="/tmp/png";
-  char **qoir_files = __MATCH__GET_FILES_FROM_PATH(path,"*.qoir",&qoir_files_qty);
-  char **png_files = __MATCH__GET_FILES_FROM_PATH(path,"*.png",&png_files_qty);
-  Dbg(png_files_qty,%d);
-  Dbg(qoir_files_qty,%d);
-  for(int i=0;i<png_files_qty;i++)
+  int  png_files_qty = 0, qoir_files_qty = 0;
+  char *path        = "/tmp/png";
+  char **qoir_files = __MATCH__GET_FILES_FROM_PATH(path, "*.qoir", &qoir_files_qty);
+  char **png_files  = __MATCH__GET_FILES_FROM_PATH(path, "*.png", &png_files_qty);
+
+  Dbg(png_files_qty, %d);
+  Dbg(qoir_files_qty, %d);
+  for (int i = 0; i < png_files_qty; i++)
     Ds(png_files[i]);
   PASS();
 }

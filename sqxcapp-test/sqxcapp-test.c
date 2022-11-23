@@ -37,14 +37,10 @@ int  main(void){
   // open database that defined in SqApp-config.h
   if (sq_app_open_database(&myapp->base, NULL) != SQCODE_OK)
     return(EXIT_FAILURE);
-
-
 #else
   // open user specified database
   if (sq_app_open_database(&myapp->base, "myapp-db") != SQCODE_OK)
     return(EXIT_FAILURE);
-
-
 #endif
 
   /*	If you use command-line program "sqxctool" to do migrate,
@@ -55,7 +51,6 @@ int  main(void){
     // run migrations that defined in ../database/migrations
     if (sq_app_migrate(&myapp->base, 0) != SQCODE_OK)
       return(EXIT_FAILURE);
-
 
   /*	SQL table "users" defined in  database/migrations/2021_10_12_000000_create_users_table.c
    *      strcut User defined in  sqxcapp/CStructs.h

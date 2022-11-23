@@ -20,7 +20,6 @@ int32_t FillFromURANDOM(uint8_t *out, size_t outlen){
   if (!fpurandom)
     return(-1);
 
-
   int32_t bread = fread(out, 1, outlen, fpurandom);
 
   fclose(fpurandom);

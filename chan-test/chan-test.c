@@ -1,4 +1,7 @@
+#include "async/async.h"
+#include "c_vector/vector/vector.h"
 #include "chan-test.h"
+#include "log/log.h"
 #include <assert.h>
 #include <ctype.h>
 #include <pthread.h>
@@ -11,9 +14,6 @@
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
-#include "c_vector/vector/vector.h"
-#include "async/async.h"
-#include "log/log.h"
 typedef struct WORKER_T {
   int delay_ms;
   int thread_index;
@@ -63,10 +63,11 @@ volatile int processed_jobs_qty = 0, processed_qtys[1024];
 chan_t       *JOBS_CHANNEL, *DONE_CHANNEL;
 
 TEST t_bufs(){
-  size_t qty=5000;
-  struct Vector *v=vector_new();
-  for(size_t i =0;i<qty;i++)
-    vector_push(v,(void*)(i));
+  size_t        qty = 5000;
+  struct Vector *v  = vector_new();
+
+  for (size_t i = 0; i < qty; i++)
+    vector_push(v, (void *)(i));
   Dn(qty);
 
   PASS();
@@ -74,6 +75,7 @@ TEST t_bufs(){
 SUITE(s_bufs){
   RUN_TEST(t_bufs);
 }
+
 void *worker(void *WID){
   void   *job;
   int    processed_qty = 0;
@@ -199,7 +201,6 @@ TEST t_chan_jobs_worker(void *buffer_qty,
   L("cleaned up jobs channels");
 
   PASS();
-
 } /* t_chan_jobs_worker */
 CREATE_JOBS_SUITES()
 GREATEST_MAIN_DEFS();

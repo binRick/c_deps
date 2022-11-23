@@ -1600,7 +1600,6 @@ TEST t_libusb1(void){
   if (r < 0)
     return(r);
 
-
   cnt = libusb_get_device_list(NULL, &devs);
   if (cnt < 0) {
     libusb_exit(NULL);
@@ -1692,7 +1691,6 @@ static void print_bos(libusb_device_handle *handle){
   if (ret < 0)
     return;
 
-
   printf("  Binary Object Store (BOS):\n");
   printf("    wTotalLength:            %u\n", bos->wTotalLength);
   printf("    bNumDeviceCaps:          %u\n", bos->bNumDeviceCaps);
@@ -1707,7 +1705,6 @@ static void print_bos(libusb_device_handle *handle){
       if (ret < 0)
         return;
 
-
       print_2_0_ext_cap(usb_2_0_extension);
       libusb_free_usb_2_0_extension_descriptor(usb_2_0_extension);
     } else if (dev_cap->bDevCapabilityType == LIBUSB_BT_SS_USB_DEVICE_CAPABILITY) {
@@ -1716,7 +1713,6 @@ static void print_bos(libusb_device_handle *handle){
       ret = libusb_get_ss_usb_device_capability_descriptor(NULL, dev_cap, &ss_dev_cap);
       if (ret < 0)
         return;
-
 
       print_ss_usb_cap(ss_dev_cap);
       libusb_free_ss_usb_device_capability_descriptor(ss_dev_cap);
@@ -1851,7 +1847,6 @@ TEST t_libusb2(void){
   if (r < 0)
     return(r);
 
-
   if (device_name)
     r = test_wrapped_device(device_name);
   else {
@@ -1884,7 +1879,6 @@ void play_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uin
 
   if (pDecoder == NULL)
     return;
-
 
   ma_decoder_read_pcm_frames(pDecoder, pOutput, frameCount, NULL);
 
@@ -1961,7 +1955,6 @@ int do_miniaudio_play_file(char *wav_file){
   result = ma_sound_init_from_file(&engine, wav_file, 0, NULL, NULL, &sound);
   if (result != MA_SUCCESS)
     return(result);
-
 
 //ma_sound_set_stop_time_in_pcm_frames(&sound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 2));
 
@@ -2071,7 +2064,6 @@ TEST t_libtinyfiledialogs(void){
 
   if (!lTmp)
     return(1);
-
 
   /* copy lTmp because saveDialog would overwrites
    * inputBox static buffer in basicinput mode */
@@ -3058,7 +3050,6 @@ bookmark baz1 {\n\
   cfg = cfg_init(opts, CFGF_NONE);
   if (cfg_parse(cfg, "/tmp/simple.conf") == CFG_PARSE_ERROR)
     return(1);
-
 
   cfg_print_indent(cfg, stdout, 1);
 

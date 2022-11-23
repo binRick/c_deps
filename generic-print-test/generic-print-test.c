@@ -14,15 +14,19 @@
 
 ////////////////////////////////////////////
 TEST t_generic_print_test_number(){
-  int i=100;
+  int i = 100;
+
   PRINT("some number", i);
   PASS();
 }
+
 TEST t_generic_print_test_string(){
   char *s = "xxxxxxxxxxxX";
+
   PRINT("string", s);
   PASS();
 }
+
 TEST t_generic_print_test_array(){
   int  x[]     = { 1, 2, 3 };
   char *args[] = { "gcc", "hello.c", "-o", "hello" };

@@ -209,7 +209,6 @@ enum HSServeFlowResponse _log_route_serve(struct HSRoute *route, struct HSServeF
   if (route == NULL)
     return(HS_SERVE_FLOW_RESPONSE_DONE);
 
-
   printf("Request: %s\n",
          params->request->resource);
 
@@ -219,7 +218,6 @@ enum HSServeFlowResponse _log_route_serve(struct HSRoute *route, struct HSServeF
 bool _fs_basic_auth(char *auth_value, void *context){
   if (context != NULL)
     return(false);
-
 
   return(!strcmp(auth_value, "bXl1c2VyOm15cGFzc3dvcmQ=")); // myuser:mypassword
 }

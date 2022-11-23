@@ -31,44 +31,51 @@ static void __attribute__((constructor)) __exec_fzf_test_constructor();
 
 //////////////////////////////////////////////
 TEST t_fzf_module1(void){
-  struct Vector *v = vector_new();
-  size_t qty=5;
-  char *s[qty];
-  for(size_t i=0;i<qty;i++){
-    asprintf(&(s[i]),"%lld",timestamp());
-    vector_push(v,(void*)s[i]);
+  struct Vector *v  = vector_new();
+  size_t        qty = 5;
+  char          *s[qty];
+
+  for (size_t i = 0; i < qty; i++) {
+    asprintf(&(s[i]), "%lld", timestamp());
+    vector_push(v, (void *)s[i]);
   }
-  module(fzf) *fzf = require(fzf);
+  module(fzf) * fzf = require(fzf);
   Dn(fzf->qty);
-  fzf->items(vector_to_array(v),vector_size(v),"timestamp from array");
-  fzf->items_v(v,"timestamp from vector");
+  fzf->items(vector_to_array(v), vector_size(v), "timestamp from array");
+  fzf->items_v(v, "timestamp from vector");
   clib_module_free(fzf);
   PASS();
 }
+
 TEST t_fzf_select_from_vector(void){
-  struct Vector *v = vector_new();
-  size_t qty=5;
-  char *s[qty];
-  for(size_t i=0;i<qty;i++){
-    asprintf(&(s[i]),"%lld",timestamp());
-    vector_push(v,(void*)s[i]);
+  struct Vector *v  = vector_new();
+  size_t        qty = 5;
+  char          *s[qty];
+
+  for (size_t i = 0; i < qty; i++) {
+    asprintf(&(s[i]), "%lld", timestamp());
+    vector_push(v, (void *)s[i]);
   }
-  char *res = exec_fzf_select_from_items_v(v,"fingers");
+  char *res = exec_fzf_select_from_items_v(v, "fingers");
   char *msg;
-  asprintf(&msg,"Selected item: %s", res);
+
+  asprintf(&msg, "Selected item: %s", res);
   PASSm(msg);
 }
 
 TEST t_fzf_select_from_array(void){
-  size_t qty=5;
-  char *items[qty];
-  for(size_t i=0;i<qty;i++)
-    asprintf(&(items[i]),"%lld",timestamp());
-  char *res = exec_fzf_select_from_items(items,qty,"fingers");
+  size_t qty = 5;
+  char   *items[qty];
+
+  for (size_t i = 0; i < qty; i++)
+    asprintf(&(items[i]), "%lld", timestamp());
+  char *res = exec_fzf_select_from_items(items, qty, "fingers");
   char *msg;
-  asprintf(&msg,"Selected item: %s", res);
+
+  asprintf(&msg, "Selected item: %s", res);
   PASSm(msg);
 }
+
 TEST t_fzf_keybind_change_preview(void){
   struct fzf_exec_t *fe = exec_fzf_setup();
 
@@ -260,10 +267,10 @@ TEST t_fzf_multiple(void){
   fe->fzf_info        = "default";
   fe->header          = "Multiple Test";
   fe->preview_size    = 50;
-  asprintf(&(fe->preview_cmd),"%s -g %dx%d -pk -o /tmp/png/window-{}.ansi /tmp/png/window-{}.png && echo kitty +kitten icat --align=right --place 40x20@100x20 --scale-up /tmp/png/window-{}.png && qoiconv /tmp/png/window-{}.png /tmp/png/window-{}.qoi && qoirconv /tmp/png/window-{}.png /tmp/png/window-{}.qoir && qoirview /tmp/png/window-{}.qoir",
-      which("timg"),
-      120,40
-      );
+  asprintf(&(fe->preview_cmd), "%s -g %dx%d -pk -o /tmp/png/window-{}.ansi /tmp/png/window-{}.png && echo kitty +kitten icat --align=right --place 40x20@100x20 --scale-up /tmp/png/window-{}.png && qoiconv /tmp/png/window-{}.png /tmp/png/window-{}.qoi && qoirconv /tmp/png/window-{}.png /tmp/png/window-{}.qoir && qoirview /tmp/png/window-{}.qoir",
+           which("timg"),
+           120, 40
+           );
   vector_push(fe->input_options, "162");
   vector_push(fe->input_options, "327");
   vector_push(fe->input_options, "343");
@@ -353,7 +360,7 @@ GREATEST_MAIN_DEFS();
 
 int main(int argc, char **argv) {
   GREATEST_MAIN_BEGIN();
-  if (isatty(STDOUT_FILENO)){
+  if (isatty(STDOUT_FILENO)) {
     RUN_SUITE(s_fzf_basic);
     RUN_SUITE(s_fzf_v2);
     RUN_SUITE(s_fzf_module);

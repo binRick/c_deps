@@ -183,7 +183,6 @@ int term_tests_main(const int argc, const char **argv) {
   if (term_init() != EXIT_SUCCESS)
     return(1);
 
-
   repaint_all(attr_ui, attr_sample);
   menu(attr_ui, attr_sample);
 

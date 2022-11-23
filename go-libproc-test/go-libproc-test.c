@@ -97,7 +97,6 @@ SUITE(s_go_libproc_test) {
                                 &t_info_count))
     return(-1);
 
-
   log_info("task info> t_info.resident_size: %lu", t_info.resident_size);
   log_info("task info> t_info.virtual_size: %lu", t_info.virtual_size);
 

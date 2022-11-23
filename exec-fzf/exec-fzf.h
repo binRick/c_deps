@@ -8,8 +8,8 @@
 #include <time.h>
 #include <unistd.h>
 //////////////////////////////////////////////
-#include "c_vector/vector/vector.h"
 #include "c_stringfn/include/stringfn.h"
+#include "c_vector/vector/vector.h"
 #include "reproc/reproc.h"
 //////////////////////////////////////////////
 //////////////////////////////////////////////
@@ -18,32 +18,29 @@
 #include "module/require.h"
 module(fzf) {
   define(fzf, CLIB_MODULE);
-  pid_t pid;
+  pid_t  pid;
   size_t qty;
-  int (*open)();
-  int (*close)();
-  int (*send)(void *buf, size_t size);
-  int (*recv)(void *buf, size_t size);
-  char (*items)(void **items, size_t qty, char *item_name);
-  char (*items_v)(struct Vector *v, char *item_name);
+  int    (*open)();
+  int    (*close)();
+  int    (*send)(void *buf, size_t size);
+  int    (*recv)(void *buf, size_t size);
+  char   (*items)(void **items, size_t qty, char *item_name);
+  char   (*items_v)(struct Vector *v, char *item_name);
 };
-int __fzf_init(module(fzf) *exports);
-void __fzf_deinit(module(fzf) *exports);
-char *__fzf_items(module(fzf) *exports, void **items, size_t qty, char *item_name);
+int  __fzf_init(module(fzf) * exports);
+void __fzf_deinit(module(fzf) * exports);
+char *__fzf_items(module(fzf) * exports, void **items, size_t qty, char *item_name);
 char *exec_fzf_select_from_items(void **items, size_t qty, char *item_name);
 char *exec_fzf_select_from_items_v(struct Vector *v, char *item_name);
 exports(fzf) {
-  .init = __fzf_init,
-  .deinit = __fzf_deinit,
-  .items = exec_fzf_select_from_items,
+  .init    = __fzf_init,
+  .deinit  = __fzf_deinit,
+  .items   = exec_fzf_select_from_items,
   .items_v = exec_fzf_select_from_items_v,
-  .qty = 0,
+  .qty     = 0,
 };
 //////////////////////////////////////////////
 //////////////////////////////////////////////
-
-
-
 
 struct fzf_keybind_t {
   char *key, *cmd, *type, *desc;
@@ -85,11 +82,11 @@ struct fzf_exec_t {
   char                   *options_file_content_s;
   char                   *input_lines_s;
   char                   *fzf_header_lines_s;
-  char *border_label;
-  int border_label_pos_number;
-  char *border_label_pos_string;
-  char *separator;
-  char *border_style;
+  char                   *border_label;
+  int                    border_label_pos_number;
+  char                   *border_label_pos_string;
+  char                   *separator;
+  char                   *border_style;
 
   reproc_t               *proc;
   reproc_options         reproc_options;

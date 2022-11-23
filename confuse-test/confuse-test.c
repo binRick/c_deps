@@ -26,7 +26,6 @@ static int reserve_cmdv(int cmdc){
   if (cmdc < cmd_max)
     return(0);
 
-
   do{
     cmd_max += 10;
   }while (cmdc >= cmd_max);
@@ -34,7 +33,6 @@ static int reserve_cmdv(int cmdc){
   tmp = realloc(cmdv, cmd_max * sizeof(*tmp));
   if (!tmp)
     return(-1);
-
 
   cmdv     = tmp;
   cmdv_max = cmd_max;
@@ -99,7 +97,6 @@ static char *input_cmd(void){
   if (!cmd)
     return(NULL);
 
-
   for ( ;;) {
     ch = fgetc(stdin);
     if (ch < 0)
@@ -146,14 +143,11 @@ static const char *set(int argc, char *argv[]){
   if (argc < 3)
     return("Need more args\n");
 
-
   if (!cfg_getopt(cfg, argv[1]))
     return("Unknown option\n");
 
-
   if (cfg_setmulti(cfg, argv[1], argc - 2, &argv[2]))
     return("Failure\n");
-
 
   return("OK\n");
 }
@@ -167,19 +161,15 @@ static const char *subset(int argc, char *argv[]){
   if (argc > 4)
     return("Too many args\n");
 
-
   sub = cfg_gettsec(cfg, "sub", argv[1]);
   if (!sub)
     return("No such section\n");
 
-
   if (!cfg_getopt(sub, argv[2]))
     return("Unknown option\n");
 
-
   if (cfg_setmulti(sub, argv[2], argc - 3, &argv[3]))
     return("Failure\n");
-
 
   return("OK\n");
 }
@@ -190,15 +180,12 @@ static const char *create(int argc, char *argv[]){
   if (argc != 2)
     return("Need one arg\n");
 
-
   if (cfg_gettsec(cfg, "sub", argv[1]))
     return("Section exists already\n");
-
 
   opt = cfg_getopt(cfg, "sub");
   if (!opt || !cfg_setopt(cfg, opt, argv[1]))
     return("Failure\n");
-
 
   return("OK\n");
 }
@@ -207,10 +194,8 @@ static const char *destroy(int argc, char *argv[]){
   if (argc < 2)
     return("Need one arg\n");
 
-
   if (!cfg_gettsec(cfg, "sub", argv[1]))
     return("No such section\n");
-
 
   cfg_rmtsec(cfg, "sub", argv[1]);
   return("OK\n");
@@ -223,15 +208,12 @@ static int print_modified(cfg_t *cfg, cfg_opt_t *opt){
   if (opt->type != CFGT_SEC)
     return(!(opt->flags & CFGF_MODIFIED));
 
-
   if (opt->flags & CFGF_MULTI)
     return(0);
-
 
   sec = cfg_opt_getnsec(opt, 0);
   if (!sec)
     return(1);
-
 
   for (i = 0; sec->opts[i].name; i++)
     if (!print_modified(sec, &sec->opts[i]))
