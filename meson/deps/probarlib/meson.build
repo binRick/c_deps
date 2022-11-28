@@ -11,6 +11,9 @@ probarlib_dirs = [
   inc,
 ]
 
+probarlib_c_args = [
+  '-Wno-format-security',
+  ]
 probarlib_deps = [
 
 ]
@@ -20,6 +23,7 @@ probarlib_lib =library('probarlib',
   install: false,
   dependencies: probarlib_deps,
   include_directories: probarlib_dirs,
+  c_args: probarlib_c_args,
 )
 
 probarlib_dep = declare_dependency(

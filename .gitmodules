@@ -1072,3 +1072,15 @@
 [submodule "submodules/luaautoc"]
 	path = submodules/luaautoc
 	url = https://github.com/orangeduck/LuaAutoC
+[submodule "submodules/tray"]
+	path = submodules/tray
+	url = https://github.com/zserge/tray
+[submodule "submodules/c_tray"]
+	path = submodules/c_tray
+	url = https://github.com/binRick/c_tray
+[submodule "submodules/qrcode"]
+	path = submodules/qrcode
+	url = https://github.com/gurushida/qrcode
+[submodule "submodules/FEN2SVG"]
+	path = submodules/FEN2SVG
+	url = https://github.com/michael-i-f-george/FEN2SVG

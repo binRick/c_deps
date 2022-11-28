@@ -19,7 +19,7 @@ TEST t_stumpless_test2(){
 
 TEST t_stumpless_test1(){
   int  count    = 123;
-  char username = "richard";
+  char *username = "richard";
 
   stumplog(LOG_INFO | LOG_USER, "My message #%d", count);
   /*
@@ -47,7 +47,7 @@ GREATEST_MAIN_DEFS();
 
 int main(int argc, char **argv) {
   int  count    = 123;
-  char username = "richard";
+  char *username = "richard";
 
   stumplog(LOG_INFO | LOG_USER, "My message #%d", count);
   GREATEST_MAIN_BEGIN();

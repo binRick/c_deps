@@ -51,4 +51,4 @@ add_global_link_arguments(osx_img_flags, language : ['c'])
 
 osx_link_args = osx_ldflags
 
-
+add_project_arguments('-DTRAY_APPKIT=1', language : 'c')

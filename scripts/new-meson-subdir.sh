@@ -86,6 +86,11 @@ DEPENDENCIES="\
 ansi_codes_dep\
  c_vector_dep\
  c_fsio_dep\
+ incbin_dep\
+ tempdir_dep\
+ which_dep\
+ chan_dep\
+ c_eventemitter_dep\
  c_stringfn_dep\
  c_string_buffer_dep\
  timestamp_dep\
@@ -97,10 +102,16 @@ INCLUDED_HEADERS="\
 ansi-codes/ansi-codes.h\
  c_vector/vector/vector.h\
  c_fsio/include/fsio.h\
+ c_eventemitter/include/eventemitter.h\
  c_stringfn/include/stringfn.h\
  c_string_buffer/include/stringbuffer.h\
  timestamp/timestamp.h\
  log/log.h ms/ms.h\
+ incbin/incbin.h\
+ chan/src/chan.h chan/src/queue.h\
+ which/src/which.h\
+ tempdir.c/tempdir.h\
+ module/def.h module/module.h module/require.h\
  bytes/bytes.h\
 "
 ############################################################################################################

@@ -3,8 +3,6 @@
 #ifndef {{SUBDIR_NAME|upper|replace('-','_')}}_C
 #define {{SUBDIR_NAME|upper|replace('-','_')}}_C
 ////////////////////////////////////////////
-{%if SUBDIR_TEST_DEBUG_MEMORY_ENABLED%}#define DEBUG_MEMORY{%endif%}
-////////////////////////////////////////////
 #include "{{SUBDIR_NAME}}/{{SUBDIR_NAME}}.h"
 ////////////////////////////////////////////
 {%for i in INCLUDED_HEADERS.split(' ') -%}
@@ -28,28 +26,6 @@ int {{MODULE_NAME}}_init(module({{MODULE_NAME}}) *exports) {
 
 void {{MODULE_NAME}}_deinit(module({{MODULE_NAME}}) *exports) {
   clib_module_deinit({{MODULE_NAME}});
-}
-////////////////////////////////////////////
-static inline int {{MODULE_NAME}}_GetPID(){
-  return(require({{MODULE_NAME}})->pid);
-}
-
-static inline void {{MODULE_NAME}}_info(char *message) {
-  if (require({{MODULE_NAME}})->log_mode >= {{MODULE_NAME|upper}}_LOG_MODE_INFO) {
-    fprintf(stdout, " info: %s\n", message);
-  }
-}
-
-static inline void {{MODULE_NAME}}_error(char *message) {
-  if (require({{MODULE_NAME}})->log_mode >= {{MODULE_NAME|upper}}_LOG_MODE_ERROR) {
-    fprintf(stderr, "error: %s\n", message);
-  }
-}
-
-static inline void {{MODULE_NAME}}_debug(char *message) {
-  if (require({{MODULE_NAME}})->log_mode >= {{MODULE_NAME|upper}}_LOG_MODE_DEBUG) {
-    fprintf(stderr, "debug: %s\n", message);
-  }
 }
 ////////////////////////////////////////////
 #endif

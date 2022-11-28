@@ -28,15 +28,12 @@ static struct ck_malloc alloc = {
 };
 
 TEST t_ck_bitmap(){
-  bool                 r;
   unsigned int         length = 1024 * 1024 * 16;
   ck_bitmap_t          *g_bits;
   unsigned int         i;
   bool                 initial = false;
-  unsigned int         bytes, base;
-  ck_bitmap_iterator_t iter;
+  unsigned int         bytes;
 
-  base  = ck_bitmap_base(length);
   bytes = ck_bitmap_size(length);
   log_info("Configuration: %s", bytes_to_string(bytes));
 

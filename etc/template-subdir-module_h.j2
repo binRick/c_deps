@@ -28,14 +28,7 @@ enum {{MODULE_NAME}}_log_mode_t {
 
 module({{MODULE_NAME}}) {
   define({{MODULE_NAME}}, CLIB_MODULE);
-
   enum {{MODULE_NAME}}_log_mode_t log_mode;
-  int pid;
-
-  int              (*GetPID)();
-  void             (*info)(char *);
-  void             (*debug)(char *);
-  void             (*error)(char *);
 };
 
 int {{MODULE_NAME}}_init(module({{MODULE_NAME}}) *exports);
@@ -45,7 +38,6 @@ exports({{MODULE_NAME}}) {
   .log_mode     = {{MODULE_NAME|upper}}_LOG_MODE_NONE,
   .init     = {{MODULE_NAME}}_init,
   .deinit   = {{MODULE_NAME}}_deinit,
-  .pid  = -1,
 };
 
 #define {{MODULE_NAME}}_m        module({{MODULE_NAME}})

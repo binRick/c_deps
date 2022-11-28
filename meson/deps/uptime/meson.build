@@ -14,6 +14,12 @@ uptime_deps = [
 
 ]
 
+uptime_lib_static =static_library('uptime',
+  uptime_srcs,
+  install: false,
+  dependencies: uptime_deps,
+  include_directories: uptime_dirs,
+)
 uptime_lib =library('uptime',
   uptime_srcs,
   install: false,

@@ -5,7 +5,7 @@ qoir_local_headers = [
   'qoir/src/qoir.h',
 ]
 qoir_srcs = [
-  '../../../submodules/qoir/util/pixbufs_are_equal.c',
+  #//  '../../../submodules/qoir/util/pixbufs_are_equal.c',
   '../../../submodules/qoir/util/load_file.c',
 ]
 

@@ -3,6 +3,7 @@ include submodules/c_deps/etc/includes.mk
 local-setup: setup-binaries setup-golang setup-wg setup
 MESON_DEFAULT_LIBRARY = static
 MESON_DEFAULT_LIBRARY = shared
+WARN_LEVEL = 1
 ##############################################################
 TIDIED_FILES = deps*/*.c deps*/*.h term*/*.c term*/*.h ctable*/*.c ctable*/*.h *table*/*.c *table*/*.h cgif-test/*.c *-test/*.c *-test/*.h chan-test/*.c chan-test/*.h \
                           introspect-test/*.c introspect-test/*.h \

@@ -24,3 +24,4 @@ incbin_dep = declare_dependency(
 incbin_headers = [
   'incbin.h',
 ]
+
